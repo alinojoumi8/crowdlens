@@ -15,9 +15,8 @@ from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from openai import OpenAI
-
 from ..config import Config
+from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
 from ..storage import GraphStorage
@@ -515,7 +514,9 @@ class OasisProfileGenerator:
         if self.client is None:
             if not self.api_key:
                 raise ValueError("LLM_API_KEY not configured")
-            self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+            self.client = LLMClient(
+                api_key=self.api_key, base_url=self.base_url, model=self.model_name
+            )
 
         is_individual = self._is_individual_entity(entity_type)
 
@@ -534,24 +535,15 @@ class OasisProfileGenerator:
 
         for attempt in range(max_attempts):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model_name,
+                content = self.client.chat(
                     messages=[
                         {"role": "system", "content": self._get_system_prompt(is_individual)},
                         {"role": "user", "content": prompt}
                     ],
                     response_format={"type": "json_object"},
-                    temperature=0.7 - (attempt * 0.1)  # Lower temperature with each retry
-                    # Don't set max_tokens, let LLM generate freely
+                    temperature=0.7 - (attempt * 0.1),
+                    max_tokens=8192,
                 )
-
-                content = response.choices[0].message.content
-
-                # Check if output was truncated (finish_reason is not 'stop')
-                finish_reason = response.choices[0].finish_reason
-                if finish_reason == 'length':
-                    logger.warning(f"LLM output truncated (attempt {attempt+1}), attempting to fix...")
-                    content = self._fix_truncated_json(content)
 
                 # Try to parse JSON
                 try:
@@ -568,7 +560,7 @@ class OasisProfileGenerator:
                 except json.JSONDecodeError as je:
                     logger.warning(f"JSON parsing failed (attempt {attempt+1}): {str(je)[:80]}")
 
-                    # Try to fix JSON
+                    # Repair malformed or truncated JSON from either transport.
                     result = self._try_fix_json(content, entity_name, entity_type, entity_summary)
                     if result.get("_fixed"):
                         del result["_fixed"]

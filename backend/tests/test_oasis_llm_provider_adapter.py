@@ -1,3 +1,4 @@
+import pytest
 from openai.types.chat import ChatCompletion
 
 from scripts.llm_provider_adapter import (
@@ -19,11 +20,12 @@ class FakeResponse:
         return self.payload
 
 
-def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch):
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
+def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch, model_name):
     monkeypatch.setenv("LLM_DEFAULT_PROVIDER", "minimax")
     monkeypatch.setenv("LLM_API_KEY", "test-key")
     monkeypatch.setenv("LLM_BASE_URL", "https://api.minimax.io/anthropic")
-    monkeypatch.setenv("LLM_MODEL_NAME", "MiniMax-M2.7")
+    monkeypatch.setenv("LLM_MODEL_NAME", model_name)
 
     config = resolve_oasis_llm_config({})
 
@@ -31,11 +33,12 @@ def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch):
     assert config.transport == "anthropic_messages"
     assert config.api_key == "test-key"
     assert config.base_url == "https://api.minimax.io/anthropic"
-    assert config.model == "MiniMax-M2.7"
+    assert config.model == model_name
 
 
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
 def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
-    monkeypatch,
+    monkeypatch, model_name,
 ):
     captured = {}
 
@@ -47,7 +50,7 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
         return FakeResponse(
             {
                 "id": "msg_test",
-                "model": "MiniMax-M2.7",
+                "model": model_name,
                 "usage": {"input_tokens": 8, "output_tokens": 2},
                 "content": [
                     {"type": "thinking", "thinking": "internal"},
@@ -62,7 +65,7 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
     )
 
     model = AnthropicMessagesModel(
-        model_type="MiniMax-M2.7",
+        model_type=model_name,
         api_key="test-key",
         url="https://api.minimax.io/anthropic",
         timeout=12,
@@ -80,7 +83,7 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
     assert captured["url"] == "https://api.minimax.io/anthropic/v1/messages"
     assert captured["headers"]["x-api-key"] == "test-key"
     assert captured["headers"]["anthropic-version"] == "2023-06-01"
-    assert captured["json"]["model"] == "MiniMax-M2.7"
+    assert captured["json"]["model"] == model_name
     assert captured["json"]["system"] == "You are a legal agent."
     assert captured["json"]["messages"] == [
         {"role": "user", "content": "What is your position?"}

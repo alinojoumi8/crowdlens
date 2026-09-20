@@ -1,5 +1,6 @@
 import logging
 
+import pytest
 import requests
 
 from app.utils.llm_client import LLMClient
@@ -48,7 +49,8 @@ def capture_logger(name):
     return target_logger, handler, previous_level
 
 
-def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch):
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
+def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model_name):
     captured = {}
 
     def fake_post(url, headers, json, timeout):
@@ -64,7 +66,7 @@ def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch):
     client = LLMClient(
         api_key="test-key",
         base_url="https://api.minimax.io/anthropic",
-        model="MiniMax-M2.7",
+        model=model_name,
         timeout=12,
     )
 
@@ -81,7 +83,7 @@ def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch):
     assert captured["url"] == "https://api.minimax.io/anthropic/v1/messages"
     assert captured["headers"]["x-api-key"] == "test-key"
     assert captured["headers"]["anthropic-version"] == "2023-06-01"
-    assert captured["json"]["model"] == "MiniMax-M2.7"
+    assert captured["json"]["model"] == model_name
     assert captured["json"]["system"] == "You are terse."
     assert captured["json"]["messages"] == [
         {"role": "user", "content": "Reply with exactly OK."}

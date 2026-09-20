@@ -16,9 +16,8 @@ from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 
-from openai import OpenAI
-
 from ..config import Config
+from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
 from .stance import infer_stance
@@ -268,9 +267,10 @@ class SimulationConfigGenerator:
         if not self.api_key:
             raise ValueError("LLM_API_KEY not configured")
 
-        self.client = OpenAI(
+        self.client = LLMClient(
             api_key=self.api_key,
-            base_url=self.base_url
+            base_url=self.base_url,
+            model=self.model_name,
         )
     
     def generate_config(
@@ -499,24 +499,15 @@ class SimulationConfigGenerator:
 
         for attempt in range(max_attempts):
             try:
-                response = self.client.chat.completions.create(
-                    model=self.model_name,
+                content = self.client.chat(
                     messages=[
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": prompt}
                     ],
                     response_format={"type": "json_object"},
-                    temperature=0.7 - (attempt * 0.1)  # Lower temperature with each retry
-                    # Don't set max_tokens, let LLM generate freely
+                    temperature=0.7 - (attempt * 0.1),
+                    max_tokens=8192,
                 )
-
-                content = response.choices[0].message.content
-                finish_reason = response.choices[0].finish_reason
-
-                # Check if output was truncated
-                if finish_reason == 'length':
-                    logger.warning(f"LLM output truncated (attempt {attempt+1})")
-                    content = self._fix_truncated_json(content)
 
                 # Try to parse JSON
                 try:
@@ -524,7 +515,7 @@ class SimulationConfigGenerator:
                 except json.JSONDecodeError as e:
                     logger.warning(f"JSON parsing failed (attempt {attempt+1}): {str(e)[:80]}")
 
-                    # Try to fix JSON
+                    # Repair malformed or truncated JSON from either transport.
                     fixed = self._try_fix_config_json(content)
                     if fixed:
                         return fixed

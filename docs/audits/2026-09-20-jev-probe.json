@@ -1,0 +1,149 @@
+{
+  "scope": "Synthetic connectivity and typed-response probe only; not a domain benchmark. No repository documents were submitted.",
+  "request": {
+    "model": "jev-1.13.0",
+    "state": {
+      "query": "What deadline was set for filing the response?",
+      "candidates": [
+        {
+          "id": "e0",
+          "text": "The response must be filed by 12 October 2026."
+        },
+        {
+          "id": "e1",
+          "text": "The parties attended a hearing on 2 September 2026."
+        },
+        {
+          "id": "e2",
+          "text": "The office serves coffee at noon."
+        }
+      ],
+      "claim": "The response deadline is 12 October 2026.",
+      "speaker_statement": "The plaintiff has not established its case. The motion should fail."
+    },
+    "questions": {
+      "relevance_0": {
+        "type": "score",
+        "instructions": "How directly does `candidates[0].text` answer `query`?",
+        "criteria": [
+          "Does not address the filing deadline.",
+          "Discusses a response or schedule but gives no filing deadline.",
+          "Explicitly states the deadline for filing the response."
+        ]
+      },
+      "relevance_1": {
+        "type": "score",
+        "instructions": "How directly does `candidates[1].text` answer `query`?",
+        "criteria": [
+          "Does not address the filing deadline.",
+          "Discusses a response or schedule but gives no filing deadline.",
+          "Explicitly states the deadline for filing the response."
+        ]
+      },
+      "relevance_2": {
+        "type": "score",
+        "instructions": "How directly does `candidates[2].text` answer `query`?",
+        "criteria": [
+          "Does not address the filing deadline.",
+          "Discusses a response or schedule but gives no filing deadline.",
+          "Explicitly states the deadline for filing the response."
+        ]
+      },
+      "support": {
+        "type": "choice",
+        "instructions": "Does `candidates[0].text` support `claim`?",
+        "criteria": {
+          "supported": "The source states the claim.",
+          "contradicted": "The source states something incompatible.",
+          "insufficient": "The source does not establish the claim."
+        }
+      },
+      "stance": {
+        "type": "choice",
+        "instructions": "Which position does the speaker endorse in `speaker_statement`? A mention of a party alone is not endorsement.",
+        "criteria": {
+          "plaintiff_favorable": "Endorses the plaintiff or granting the motion.",
+          "defendant_favorable": "Endorses rejecting the plaintiff case or denying the motion.",
+          "neutral": "Reports without endorsing either side.",
+          "unclear": "Insufficient information to determine the position."
+        }
+      }
+    }
+  },
+  "response": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "relevance_0": {
+        "type": "score",
+        "score": 2.0,
+        "confidence": 1.0,
+        "legend": {
+          "0": "Does not address the filing deadline.",
+          "1": "Discusses a response or schedule but gives no filing deadline.",
+          "2": "Explicitly states the deadline for filing the response."
+        },
+        "probabilities": {
+          "0": 0.0,
+          "1": 0.0,
+          "2": 1.0
+        }
+      },
+      "relevance_1": {
+        "type": "score",
+        "score": 0.27,
+        "confidence": 0.59,
+        "legend": {
+          "0": "Does not address the filing deadline.",
+          "1": "Discusses a response or schedule but gives no filing deadline.",
+          "2": "Explicitly states the deadline for filing the response."
+        },
+        "probabilities": {
+          "0": 0.73,
+          "1": 0.27,
+          "2": 0.0
+        }
+      },
+      "relevance_2": {
+        "type": "score",
+        "score": 0.0,
+        "confidence": 1.0,
+        "legend": {
+          "0": "Does not address the filing deadline.",
+          "1": "Discusses a response or schedule but gives no filing deadline.",
+          "2": "Explicitly states the deadline for filing the response."
+        },
+        "probabilities": {
+          "0": 1.0,
+          "1": 0.0,
+          "2": 0.0
+        }
+      },
+      "support": {
+        "type": "choice",
+        "choice": "supported",
+        "confidence": 0.98,
+        "probabilities": {
+          "supported": 0.99,
+          "insufficient": 0.01,
+          "contradicted": 0.0
+        }
+      },
+      "stance": {
+        "type": "choice",
+        "choice": "defendant_favorable",
+        "confidence": 1.0,
+        "probabilities": {
+          "neutral": 0.0,
+          "plaintiff_favorable": 0.0,
+          "unclear": 0.0,
+          "defendant_favorable": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 868,
+      "output_tokens": 151
+    }
+  },
+  "elapsed_seconds": 0.383
+}

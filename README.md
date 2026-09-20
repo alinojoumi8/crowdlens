@@ -60,6 +60,11 @@ cp .env.example .env
 # Generate a password, then paste it into NEO4J_PASSWORD= in .env
 openssl rand -hex 24
 
+# For local Ollama in Docker, set these two values in .env:
+# LLM_BASE_URL=http://ollama:11434/v1
+# OPENAI_API_BASE_URL=http://ollama:11434/v1
+# For MiniMax M3, use the hosted configuration below instead.
+
 # Start all services in CPU-compatible mode
 docker compose up -d
 
@@ -142,7 +147,38 @@ EMBEDDING_DIMENSIONS=768
 MARKET_DATA_PROVIDER=none
 ```
 
-Works with any OpenAI-compatible API — swap Ollama for Claude, GPT, or any other provider by changing `LLM_BASE_URL` and `LLM_API_KEY`.
+OpenAI-compatible providers use the chat-completions transport. The backend and
+OASIS also support MiniMax through the Anthropic Messages adapter.
+
+### MiniMax M3
+
+To use M3 for generation and simulation, set these values in `.env`:
+
+```dotenv
+LLM_DEFAULT_PROVIDER=minimax
+LLM_API_KEY=your-minimax-api-key
+LLM_BASE_URL=https://api.minimax.io/anthropic
+LLM_MODEL_NAME=MiniMax-M3
+LLM_TRANSPORT=anthropic_messages
+```
+
+Both `LLMClient` and the OASIS/CAMEL adapter read `LLM_MODEL_NAME`.
+`MINIMAX_MODEL` alone is not read by these paths. If you keep legacy
+`OPENAI_API_KEY` and `OPENAI_API_BASE_URL` aliases, match them to `LLM_API_KEY`
+and `LLM_BASE_URL`. Compose respects the selected LLM endpoint; Neo4j and
+Ollama embeddings still use container service names. With M3, pull only the
+embedding model in the Docker quick start.
+
+Restart the manual backend after editing `.env`. For Docker, recreate the app
+with `docker compose up -d --no-deps --force-recreate mirofish`; an image rebuild
+is needed only when application code changes. Check `GET /api/status` for
+`data.llm.model == "MiniMax-M3"`. Saved simulations that explicitly specify an
+LLM model (including economy configuration) should be re-prepared before a new
+run; the switch does not rewrite old simulation artifacts.
+
+See MiniMax's [Anthropic API documentation](https://platform.minimax.io/docs/api-reference/text-anthropic-api)
+for the supported M3 model ID and endpoint.
+
 Embeddings default to local Ollama. To benchmark Gemini, set `EMBEDDING_PROVIDER=gemini`, `GEMINI_API_KEY`, and `GEMINI_EMBEDDING_MODEL=gemini-embedding-2`; rebuild or re-embed graphs before searching with a different embedding provider.
 
 Runtime readiness is exposed at `GET /api/status`. It reports Neo4j, embedding,
