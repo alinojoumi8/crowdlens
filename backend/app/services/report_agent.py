@@ -408,6 +408,9 @@ class ReportSection:
     content: str = ""
     description: str = ""
     evidence_cards: List[Dict[str, Any]] = field(default_factory=list)
+    claims: List[Dict[str, Any]] = field(default_factory=list)
+    claim_checks: List[Dict[str, Any]] = field(default_factory=list)
+    claim_check_hash: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -415,6 +418,9 @@ class ReportSection:
             "content": self.content,
             "description": self.description,
             "evidence_cards": self.evidence_cards,
+            "claims": self.claims,
+            "claim_checks": self.claim_checks,
+            "claim_check_hash": self.claim_check_hash,
         }
 
     def to_markdown(self, level: int = 2) -> str:
@@ -467,6 +473,8 @@ class Report:
     quality_score: Dict[str, Any] = field(default_factory=dict)
     forecast: Dict[str, Any] = field(default_factory=dict)
     timing: Dict[str, Any] = field(default_factory=dict)
+    claim_checks: List[Dict[str, Any]] = field(default_factory=list)
+    decision_config: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -486,6 +494,8 @@ class Report:
             "quality_score": self.quality_score,
             "forecast": self.forecast,
             "timing": self.timing,
+            "claim_checks": self.claim_checks,
+            "decision_config": self.decision_config,
         }
 
 
@@ -1041,6 +1051,15 @@ class ReportAgent:
                 "Create it via GraphToolsService(storage=...) and pass it in."
             )
         self.graph_tools = graph_tools
+        self._last_tool_evidence = []
+        if isinstance(graph_tools, GraphToolsService):
+            # A report owns its scope; do not mutate a shared graph service.
+            self.graph_tools = GraphToolsService(graph_tools.storage, graph_tools._llm_client)
+            self.graph_tools.decision_scope = {
+                "graph_id": graph_id, "simulation_id": simulation_id,
+                "case_id": self.simulation_config.get("case_id"),
+                "case_version_id": self.simulation_config.get("case_version_id"),
+            }
         
         # Tool definitions
         self.tools = self._define_tools()
@@ -1051,6 +1070,49 @@ class ReportAgent:
         self.console_logger: Optional[ReportConsoleLogger] = None
 
         logger.info(f"ReportAgent initialization complete: graph_id={graph_id}, simulation_id={simulation_id}")
+
+    def _check_report_claims(self, report):
+        from .decision_records import DecisionRunner
+        from .evidence_verifier import associate_claims, verify_claims, text_hash, POLICY_VERSION
+        mode = Config.JEV_EVIDENCE_MODE
+        if mode == "off" or not report.outline:
+            return
+        scope = {"graph_id": self.graph_id, "simulation_id": self.simulation_id,
+                 "report_id": report.report_id,
+                 "case_id": self.simulation_config.get("case_id"),
+                 "case_version_id": self.simulation_config.get("case_version_id")}
+        runner = DecisionRunner(scope)
+        report.claim_checks = []
+        for section in report.outline.sections:
+            fingerprint = text_hash(json.dumps({"content": section.content, "evidence": section.evidence_cards,
+                "scope": scope, "mode": mode, "model": Config.TYPESAFE_MODEL, "policy": POLICY_VERSION},
+                sort_keys=True, ensure_ascii=False))
+            if fingerprint != section.claim_check_hash:
+                section.claims = []
+                section.claim_checks = []
+                section.claim_check_hash = ""
+                section.claims = associate_claims(section.content, section.evidence_cards, self.llm, scope)
+                section.claim_checks = verify_claims(section.claims, section.evidence_cards, mode=mode, runner=runner)
+                section.claim_check_hash = fingerprint
+            report.claim_checks.extend({**check, "section_title": section.title} for check in section.claim_checks)
+        if mode == "on":
+            report.validation_issues.extend({"code": "source_claim_review", "blocking": False,
+                "message": f"Source claim requires review in {check['section_title']}: {check.get('reason', check['outcome'])}"}
+                for check in report.claim_checks if check.get("outcome") != "supported")
+
+    def _render_evidence_result(self, result):
+        text = result.to_text()
+        records = getattr(result, "edges", None) or getattr(result, "evidence", [])
+        self._last_tool_evidence = []
+        for record in records:
+            for source in record.get("source_evidence", []):
+                self._last_tool_evidence.append({**source, "fact": record.get("fact", ""),
+                    "normalized_fact": ReportManager._normalize_fact(record.get("fact", "")), "usage": "retrieved"})
+        if Config.JEV_EVIDENCE_MODE != "off" and self._last_tool_evidence:
+            text += "\nSource evidence IDs and original excerpts (graph facts are extracted claims):\n" + json.dumps(
+                [{"evidence_id": e["evidence_id"], "excerpt": e["excerpt"], "locator": e["locator"]}
+                 for e in self._last_tool_evidence[:30]], ensure_ascii=False)
+        return text
 
     def _economy_is_enabled(self) -> bool:
         enabled = (self.simulation_config.get("economy") or {}).get("enabled", False)
@@ -1227,6 +1289,7 @@ class ReportAgent:
         Returns:
             Tool execution result (text format)
         """
+        self._last_tool_evidence = []
         logger.info(f"Executing tool: {tool_name}, parameters: {parameters}")
         
         try:
@@ -1241,7 +1304,7 @@ class ReportAgent:
                     max_sub_queries=5 if self.report_depth == "deep" else 1,
                     use_llm_decomposition=self.report_depth == "deep",
                 )
-                return result.to_text()
+                return self._render_evidence_result(result)
             
             elif tool_name == "panorama_search":
                 # Breadth search - get complete panorama
@@ -1254,7 +1317,7 @@ class ReportAgent:
                     query=query,
                     include_expired=include_expired
                 )
-                return result.to_text()
+                return self._render_evidence_result(result)
             
             elif tool_name == "quick_search":
                 # Simple search - quick retrieval
@@ -1267,7 +1330,7 @@ class ReportAgent:
                     query=query,
                     limit=limit
                 )
-                return result.to_text()
+                return self._render_evidence_result(result)
             
             elif tool_name == "interview_agents":
                 if self.disable_interviews:
@@ -1284,7 +1347,7 @@ class ReportAgent:
                     simulation_requirement=self.simulation_requirement,
                     max_agents=max_agents
                 )
-                return result.to_text()
+                return self._render_evidence_result(result)
 
             elif tool_name == "economy_evidence":
                 from .economy import economy_evidence
@@ -1840,6 +1903,10 @@ class ReportAgent:
                     call.get("parameters", {}),
                     report_context=report_context
                 )
+                for card in self._last_tool_evidence:
+                    if not any(existing.get("evidence_id") == card.get("evidence_id") for existing in evidence_cards):
+                        evidence_cards.append({**card, "tool_name": call["name"], "section_title": section.title})
+                        evidence_seen.add(card.get("normalized_fact"))
                 for card in ReportManager.extract_evidence_cards(
                     text=result,
                     tool_name=call["name"],
@@ -2164,6 +2231,7 @@ class ReportAgent:
             self.phase_timings["forecast_synthesis_seconds"] = timing.snapshot()["phase_totals"].get("forecast_synthesis", 0.0)
             with timing.time("validation", label="Validate report output"):
                 report.validation_issues = ReportManager.validate_report_output(report)
+                self._check_report_claims(report)
                 report.quality_score = ReportManager.evaluate_report_quality(report)
             self.phase_timings["validation_seconds"] = timing.snapshot()["phase_totals"].get("validation", 0.0)
             blocking_issues = [issue for issue in report.validation_issues if issue.get("blocking")]
@@ -2347,6 +2415,7 @@ class ReportAgent:
                     "Report output validation failed: "
                     + "; ".join(issue["message"] for issue in blocking_issues)
                 )
+            self._check_report_claims(report)
             report.quality_score = ReportManager.evaluate_report_quality(report)
             ReportManager.apply_quality_status(report)
             report.completed_at = datetime.now().isoformat()
@@ -2419,6 +2488,8 @@ class ReportAgent:
             self.report_logger = ReportLogger(report.report_id)
             self.console_logger = ReportConsoleLogger(report.report_id)
             section = report.outline.sections[section_index - 1]
+            section.claims, section.claim_checks, section.claim_check_hash = [], [], ""
+            report.claim_checks = [c for c in report.claim_checks if c.get("section_title") != section.title]
             self.report_logger.log(
                 action="section_regenerate_start",
                 stage="generating",
@@ -2466,6 +2537,7 @@ class ReportAgent:
                     "Report output validation failed: "
                     + "; ".join(issue["message"] for issue in blocking_issues)
                 )
+            self._check_report_claims(report)
             report.quality_score = ReportManager.evaluate_report_quality(report)
             ReportManager.apply_quality_status(report)
             report.completed_at = datetime.now().isoformat()
@@ -3381,7 +3453,9 @@ class ReportManager:
         """Set completed vs needs_review based on quality score."""
         if not report.quality_score:
             report.quality_score = cls.evaluate_report_quality(report)
-        if report.quality_score.get("score", 0) < cls.QUALITY_REVIEW_THRESHOLD:
+        source_review = any(check.get("mode") == "on" and check.get("critical", True)
+                            and check.get("outcome") != "supported" for check in report.claim_checks)
+        if source_review or report.quality_score.get("score", 0) < cls.QUALITY_REVIEW_THRESHOLD:
             report.status = ReportStatus.NEEDS_REVIEW
         else:
             report.status = ReportStatus.COMPLETED
@@ -3526,6 +3600,9 @@ class ReportManager:
                     content=s.get('content', ''),
                     description=s.get('description', ''),
                     evidence_cards=s.get('evidence_cards', []),
+                    claims=s.get('claims', []),
+                    claim_checks=s.get('claim_checks', []),
+                    claim_check_hash=s.get('claim_check_hash', ''),
                 ))
             outline = ReportOutline(
                 title=outline_data['title'],
@@ -3558,6 +3635,8 @@ class ReportManager:
             quality_score=data.get('quality_score', {}),
             forecast=data.get('forecast', {}),
             timing=data.get('timing', {}),
+            claim_checks=data.get('claim_checks', []),
+            decision_config=data.get('decision_config', {}),
         )
     
     @classmethod

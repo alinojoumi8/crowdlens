@@ -1363,6 +1363,37 @@ class Neo4jStorage(GraphStorage):
                     session, graph_id, query, limit
                 )
 
+        # Resolve original episodes in a bounded query. The remote decision layer
+        # runs only after both database sessions have closed.
+        edges = result.get("edges", [])
+        episode_ids = list(dict.fromkeys(eid for edge in edges for eid in edge.get("episode_ids", [])))
+        if episode_ids:
+            import hashlib
+            with self._driver.session() as session:
+                rows = session.run(
+                    "MATCH (e:Episode {graph_id: $gid}) WHERE e.uuid IN $ids RETURN properties(e) AS episode",
+                    gid=graph_id, ids=episode_ids,
+                )
+                episodes = {row["episode"]["uuid"]: dict(row["episode"]) for row in rows}
+            for edge in edges:
+                sources = []
+                for eid in edge.get("episode_ids", []):
+                    episode = episodes.get(eid)
+                    if not episode or not isinstance(episode.get("data"), str):
+                        continue
+                    excerpt = episode["data"]
+                    sources.append({
+                        "evidence_id": f"episode:{eid}", "episode_id": eid,
+                        "origin": "source_document" if episode.get("document_id") else "unknown",
+                        "excerpt": excerpt, "source_hash": hashlib.sha256(excerpt.encode()).hexdigest(),
+                        "graph_id": graph_id, "case_id": episode.get("case_id"),
+                        "case_version_id": episode.get("case_version_id"),
+                        "document_id": episode.get("document_id"), "filename": episode.get("filename"),
+                        "locator": {"page": episode.get("page"), "paragraph": episode.get("paragraph"),
+                                    "chunk_index": episode.get("chunk_index"), "char_start": 0,
+                                    "char_end": len(excerpt), "offset_basis": "stored_chunk"},
+                    })
+                edge["source_evidence"] = sources
         return result
 
     # ----------------------------------------------------------------

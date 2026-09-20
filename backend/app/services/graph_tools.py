@@ -149,6 +149,7 @@ class InsightForgeResult:
 
     # Retrieval results by dimension
     semantic_facts: List[str] = field(default_factory=list)
+    evidence: List[Dict[str, Any]] = field(default_factory=list)
     entity_insights: List[Dict[str, Any]] = field(default_factory=list)
     relationship_chains: List[str] = field(default_factory=list)
 
@@ -163,6 +164,7 @@ class InsightForgeResult:
             "simulation_requirement": self.simulation_requirement,
             "sub_queries": self.sub_queries,
             "semantic_facts": self.semantic_facts,
+            "evidence": self.evidence,
             "entity_insights": self.entity_insights,
             "relationship_chains": self.relationship_chains,
             "total_facts": self.total_facts,
@@ -911,11 +913,13 @@ class GraphToolsService:
                 limit=20,
                 scope="edges"
             )
+            all_edges.extend(main_search.edges)
             for fact in main_search.facts:
                 if fact not in seen_facts:
                     all_facts.append(fact)
                     seen_facts.add(fact)
 
+        result.evidence = all_edges
         result.semantic_facts = all_facts
         result.total_facts = len(all_facts)
 
