@@ -75,7 +75,7 @@ def test_oasis_profile_forecast_fields_avoid_generic_personas():
     assert profile["risk_tolerance"] == "medium"
 
 
-def test_forecast_synthesizer_outputs_probability_table_data():
+def test_forecast_synthesizer_outputs_probability_table_data(monkeypatch):
     synthesizer = ForecastSynthesizer(
         "sim-forecast",
         {
@@ -89,6 +89,11 @@ def test_forecast_synthesizer_outputs_probability_table_data():
         },
     )
 
+    monkeypatch.setattr(synthesizer, "build_simulation_signal", lambda: {
+        "total_actions": 10, "active_agents": 3, "net_sentiment": .2,
+        "agents_supporting": 2, "agents_opposing": 1,
+    })
+    monkeypatch.setattr(synthesizer, "_load_ensemble_signal", lambda: None)
     forecast = synthesizer.synthesize(
         "The evidence is strong but missing records create risk. The court has procedural leverage.",
         [{"fact": "The court scheduled a motion hearing.", "tool_name": "quick_search"}],

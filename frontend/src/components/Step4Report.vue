@@ -8,11 +8,14 @@
           <!-- Report Header -->
           <div class="report-header-block">
             <div class="report-meta">
-              <span class="report-tag">Prediction Report</span>
+              <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Prediction Report' }}</span>
               <span class="report-id">ID: {{ reportId || 'REF-2024-X92' }}</span>
             </div>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
             <p class="sub-title">{{ reportOutline.summary }}</p>
+            <p v-if="forecastData?.status === 'unavailable'" class="sub-title" role="status">
+              {{ forecastData.limitations }}
+            </p>
             <div v-if="forecastRows.length" class="forecast-summary-panel">
               <div class="forecast-summary-head">
                 <span class="forecast-summary-title">Forecast probabilities</span>

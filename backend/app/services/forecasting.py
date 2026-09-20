@@ -693,8 +693,23 @@ class ForecastSynthesizer:
         evidence_refs = self._evidence_references(markdown_content, evidence_cards or [])
         ensemble = self._load_ensemble_signal()
 
+        if not (signal and signal.get("total_actions", 0) > 0) and not (
+            ensemble and ensemble.get("total_actions", 0) > 0
+            and ensemble.get("runs", 0) > 1 and ensemble.get("mean_probabilities")
+            and len(ensemble["mean_probabilities"]) == len(outcomes)
+        ):
+            return {
+                "status": "unavailable", "reason": "no_simulation_actions",
+                "forecast_mode": mode, "forecast_horizon": self.settings.forecast_horizon,
+                "prediction_target": target, "confidence": "unavailable",
+                "probabilities": [], "numeric": None, "simulation_signal": None,
+                "ensemble": None, "evidence_references": evidence_refs,
+                "limitations": "No recorded simulation actions support an outcome forecast. Source documents alone are not a calibrated probability model.",
+            }
+
         if (
             ensemble
+            and ensemble.get("total_actions", 0) > 0
             and ensemble.get("runs", 0) > 1
             and ensemble.get("mean_probabilities")
             and len(ensemble["mean_probabilities"]) == len(outcomes)
@@ -900,6 +915,8 @@ class ForecastSynthesizer:
 
 
 def forecast_to_markdown(forecast: Dict[str, Any]) -> str:
+    if forecast.get("status") == "unavailable":
+        return "## Forecast Availability\n\n" + forecast.get("limitations", "No supported forecast is available.")
     rows = forecast.get("probabilities") or []
     lines = [
         "## Forecast Probability Summary",
