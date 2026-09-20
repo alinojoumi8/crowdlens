@@ -401,7 +401,19 @@ class GraphToolsService:
     def __init__(self, storage: GraphStorage, llm_client: Optional[LLMClient] = None):
         self.storage = storage
         self._llm_client = llm_client
+        self.decision_scope = {}
+        self._decision_runners = {}
         logger.info("GraphToolsService initialization complete")
+
+    def _decisions(self, **scope):
+        from .decision_records import DecisionRunner
+        combined = {**self.decision_scope, **{k: v for k, v in scope.items() if v}}
+        key = json.dumps(combined, sort_keys=True)
+        if key not in self._decision_runners:
+            if len(self._decision_runners) >= 32:
+                self._decision_runners.pop(next(iter(self._decision_runners)))
+            self._decision_runners[key] = DecisionRunner(combined)
+        return self._decision_runners[key]
 
     @property
     def llm(self) -> LLMClient:
@@ -1150,7 +1162,8 @@ Return the sub-questions as a JSON list."""
             profiles=profiles,
             interview_requirement=interview_requirement,
             simulation_requirement=simulation_requirement,
-            max_agents=max_agents
+            max_agents=max_agents,
+            simulation_id=simulation_id
         )
 
         result.selected_agents = selected_agents
@@ -1357,6 +1370,20 @@ Return the sub-questions as a JSON list."""
         return profiles
 
     def _select_agents_for_interview(
+        self, profiles, interview_requirement, simulation_requirement, max_agents,
+        simulation_id=None,
+    ) -> tuple:
+        from .interview_selection import choose_interviews
+        return choose_interviews(
+            profiles=profiles, interview_requirement=interview_requirement,
+            simulation_requirement=simulation_requirement, max_agents=max_agents,
+            mode=Config.JEV_INTERVIEW_MODE,
+            runner=self._decisions(simulation_id=simulation_id),
+            baseline=lambda: self._select_agents_for_interview_baseline(
+                profiles, interview_requirement, simulation_requirement, max_agents),
+        )
+
+    def _select_agents_for_interview_baseline(
         self,
         profiles: List[Dict[str, Any]],
         interview_requirement: str,
