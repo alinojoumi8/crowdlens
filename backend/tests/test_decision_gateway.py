@@ -53,6 +53,19 @@ def test_valid_contract():
     assert calls[0][1]['timeout'] == 3
 
 
+@pytest.mark.parametrize('last, expected', [(.01, 'ok'), (.03, 'ok'), (0, 'invalid'), (.04, 'invalid')])
+def test_rounded_probability_sum_boundary(last, expected):
+    criteria = ['none', 'indirect', 'direct', 'central']
+    questions = {'fit': {'type': 'score', 'instructions': 'Fit', 'criteria': criteria}}
+    body = {'model': 'jev-1.13.0', 'answers': {'fit': {
+        'type': 'score', 'score': .42, 'confidence': .58,
+        'legend': {str(i): label for i, label in enumerate(criteria)},
+        'probabilities': {'0': .68, '1': .23, '2': .07, '3': last},
+    }}}
+    result = gateway(lambda *a, **kw: Response(body)).evaluate(state={}, questions=questions, mode='shadow')
+    assert result.status == expected
+
+
 @pytest.mark.parametrize('status', [401, 422, 429, 529])
 def test_http_errors_are_safe_single_attempt(status):
     calls = []

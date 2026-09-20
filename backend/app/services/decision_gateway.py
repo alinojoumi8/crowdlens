@@ -48,7 +48,8 @@ def _valid_answer(question, answer):
     probabilities = answer.get('probabilities')
     if not isinstance(probabilities, dict) or set(probabilities) != keys:
         return False
-    if not all(_number(p, 0, 1) for p in probabilities.values()) or abs(sum(probabilities.values()) - 1) > .01:
+    # Preserve the 1% rounding allowance, including binary-float boundary noise.
+    if not all(_number(p, 0, 1) for p in probabilities.values()) or not math.isclose(sum(probabilities.values()), 1, rel_tol=0, abs_tol=.01 + 1e-12):
         return False
     if kind == 'choice':
         return isinstance(answer.get('choice'), str) and answer['choice'] in keys
