@@ -128,3 +128,34 @@ def test_storage_resolves_original_episode_not_extracted_fact():
     assert source['locator']['page'] == 4
     assert source['locator']['offset_basis'] == 'stored_chunk'
     assert source['origin'] == 'source_document'
+
+
+def test_shadow_tool_text_is_identical_to_off(monkeypatch):
+    from app.config import Config
+    from app.services.report_agent import ReportAgent
+    class Result:
+        edges = [{'fact': 'Extracted fact.', 'source_evidence': [EVIDENCE]}]
+        def to_text(self):
+            return 'Baseline tool output.'
+    agent = object.__new__(ReportAgent)
+    monkeypatch.setattr(Config, 'JEV_EVIDENCE_MODE', 'off')
+    original = agent._render_evidence_result(Result())
+    monkeypatch.setattr(Config, 'JEV_EVIDENCE_MODE', 'shadow')
+    assert agent._render_evidence_result(Result()) == original
+    assert agent._last_tool_evidence[0]['excerpt'] == TEXT
+
+
+def test_rollback_preserves_historical_checks_without_applying_them(monkeypatch):
+    from app.config import Config
+    from app.services.report_agent import ReportAgent
+    monkeypatch.setattr(Config, 'JEV_EVIDENCE_MODE', 'off')
+    agent = object.__new__(ReportAgent)
+    agent.graph_id, agent.simulation_id, agent.simulation_config = 'g', 's', {}
+    check = {'critical': True, 'mode': 'on', 'outcome': 'contradicted', 'section_title': 'Original'}
+    report = Report('r', 's', 'g', 'req', ReportStatus.GENERATING,
+                    outline=ReportOutline('Title', '', [ReportSection('Original'), ReportSection('Regenerated')]),
+                    claim_checks=[check], quality_score={'score': 100})
+    agent._check_report_claims(report)
+    ReportManager.apply_quality_status(report)
+    assert report.status == ReportStatus.COMPLETED
+    assert report.claim_checks == [check]

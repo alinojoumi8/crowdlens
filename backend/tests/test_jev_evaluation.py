@@ -52,3 +52,25 @@ def test_status_snapshot_never_contains_credentials(monkeypatch):
     assert 'super-secret' not in str(data)
     assert data['features']['evidence']['mode'] == 'shadow'
     assert data['features']['evidence']['available'] is True
+
+
+def test_recall_includes_unavailable_decisions():
+    result = evaluate_records([
+        {'feature': 'reranking', 'expected': ['a'], 'predicted': ['a'], 'shortlist_ids': ['a']},
+        {'feature': 'reranking', 'expected': ['b'], 'predicted': None, 'shortlist_ids': [], 'status': 'unavailable'},
+    ])
+    assert result['recall_at_30'] == .5
+    assert result['skipped'] == 1
+
+
+def test_nested_malformed_records_are_counted_without_crashing():
+    records = [
+        {'expected': ['a'], 'predicted': ['a'], 'usage': None},
+        {'feature': 'reranking', 'expected': [{}], 'predicted': []},
+        {'expected': 'supported', 'predicted': 'supported', 'elapsed_ms': float('nan')},
+        {'feature': 'reranking', 'expected': ['a'], 'predicted': ['a'], 'relevance': {'a': 'high'}},
+        {'expected': 'supported', 'predicted': 'supported'},
+    ]
+    result = evaluate_records(records)
+    assert result['invalid'] == 4
+    assert result['correct'] == 1

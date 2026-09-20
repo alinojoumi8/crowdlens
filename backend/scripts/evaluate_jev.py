@@ -23,14 +23,45 @@ def _percentile(values, p):
     return values[lo] + (values[hi] - values[lo]) * (position - lo)
 
 
+def _valid_record(row):
+    if not isinstance(row, dict):
+        return False
+    expected, predicted = row.get('expected'), row.get('predicted')
+    if type(expected) not in (str, list) or (predicted is not None and type(predicted) is not type(expected)):
+        return False
+    for values in (expected, predicted, row.get('shortlist_ids', [])):
+        if isinstance(values, list) and any(not isinstance(value, str) for value in values):
+            return False
+    if not isinstance(row.get('shortlist_ids', []), list):
+        return False
+    if row.get('feature') in ('reranking', 'interviews') and not isinstance(expected, list):
+        return False
+    for field in ('case_id', 'feature', 'status'):
+        if field in row and not isinstance(row[field], str):
+            return False
+    usage = row.get('usage', {})
+    if not isinstance(usage, dict) or any(type(v) is not int or v < 0 for v in usage.values()):
+        return False
+    relevance = row.get('relevance', {})
+    if not isinstance(relevance, dict) or any(not isinstance(k, str) or type(v) not in (int, float)
+            or not 0 <= v <= 3 or not math.isfinite(v) for k, v in relevance.items()):
+        return False
+    professions = row.get('professions', {})
+    if not isinstance(professions, dict) or any(not isinstance(k, str) or not isinstance(v, str) for k, v in professions.items()):
+        return False
+    for field in ('elapsed_ms', 'report_seconds'):
+        value = row.get(field)
+        if value is not None and (type(value) not in (int, float) or not 0 <= value <= 1e300 or not math.isfinite(value)):
+            return False
+    count = row.get('request_count', 0)
+    return type(count) is int and count >= 0
+
+
 def evaluate_records(records):
     """Literal labels are required. Missing predictions count as skipped, not errors."""
     valid, invalid = [], 0
     for row in records:
-        if not isinstance(row, dict) or not isinstance(row.get('expected'), (str, list)):
-            invalid += 1
-            continue
-        if row.get('predicted') is not None and not isinstance(row['predicted'], type(row['expected'])):
+        if not _valid_record(row):
             invalid += 1
             continue
         valid.append(row)
@@ -38,6 +69,11 @@ def evaluate_records(records):
     correct = sum(r['predicted'] == r['expected'] for r in scored)
     false_supported = sum(r['predicted'] == 'supported' and r['expected'] != 'supported' for r in scored)
     precision, diversity, recall, ndcg = [], [], [], []
+    for row in valid:
+        if row.get('feature') == 'reranking':
+            expected = set(row['expected'])
+            if expected:
+                recall.append(len(expected & set(row.get('shortlist_ids', [])[:30])) / len(expected))
     for row in scored:
         if row.get('feature') == 'interviews':
             selected, useful = row['predicted'], set(row['expected'])
@@ -45,9 +81,6 @@ def evaluate_records(records):
                 precision.append(sum(i in useful for i in selected) / len(selected))
                 diversity.append(len({row.get('professions', {}).get(str(i), 'unknown') for i in selected}) / len(selected))
         if row.get('feature') == 'reranking':
-            expected = set(row['expected'])
-            if expected:
-                recall.append(len(expected & set(row.get('shortlist_ids', [])[:30])) / len(expected))
             relevance = row.get('relevance', {})
             gains = [relevance.get(str(i), 0) for i in row['predicted'][:10]]
             ideal = sorted(relevance.values(), reverse=True)[:10]

@@ -1110,7 +1110,7 @@ class ReportAgent:
             for source in record.get("source_evidence", []):
                 self._last_tool_evidence.append({**source, "fact": record.get("fact", ""),
                     "normalized_fact": ReportManager._normalize_fact(record.get("fact", "")), "usage": "retrieved"})
-        if Config.JEV_EVIDENCE_MODE != "off" and self._last_tool_evidence:
+        if Config.JEV_EVIDENCE_MODE == "on" and self._last_tool_evidence:
             text += "\nSource evidence IDs and original excerpts (graph facts are extracted claims):\n" + json.dumps(
                 [{"evidence_id": e["evidence_id"], "excerpt": e["excerpt"], "locator": e["locator"]}
                  for e in self._last_tool_evidence[:30]], ensure_ascii=False)
@@ -3455,8 +3455,10 @@ class ReportManager:
         """Set completed vs needs_review based on quality score."""
         if not report.quality_score:
             report.quality_score = cls.evaluate_report_quality(report)
-        source_review = any(check.get("mode") == "on" and check.get("critical", True)
-                            and check.get("outcome") != "supported" for check in report.claim_checks)
+        active_evidence_mode = report.decision_config.get("features", {}).get("evidence", {}).get("mode")
+        source_review = active_evidence_mode not in {"off", "shadow"} and any(
+            check.get("mode") == "on" and check.get("critical", True)
+            and check.get("outcome") != "supported" for check in report.claim_checks)
         if source_review or report.quality_score.get("score", 0) < cls.QUALITY_REVIEW_THRESHOLD:
             report.status = ReportStatus.NEEDS_REVIEW
         else:

@@ -24,7 +24,7 @@ def canonical_json(value):
 
 
 def _number(value, lower, upper):
-    return type(value) in (int, float) and math.isfinite(value) and lower <= value <= upper
+    return type(value) in (int, float) and lower <= value <= upper and math.isfinite(value)
 
 
 def _valid_answer(question, answer):

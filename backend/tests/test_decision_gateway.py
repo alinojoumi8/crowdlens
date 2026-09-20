@@ -143,3 +143,16 @@ def test_runner_caches_only_success_and_rejects_non_json_state(tmp_path):
     assert len(calls) == 2
     assert runner.evaluate(**{**args, 'state': {'bad': float('nan')}}).status == 'invalid'
     assert len(calls) == 2
+
+
+@pytest.mark.parametrize('field', ['noul', 'score', 'probability'])
+def test_extreme_integers_return_invalid_instead_of_raising(field):
+    body = copy.deepcopy(BODY)
+    if field == 'noul':
+        body['answers']['present']['noul'] = 10 ** 400
+    elif field == 'score':
+        body['answers']['rank']['score'] = 10 ** 400
+    else:
+        body['answers']['verify']['probabilities']['yes'] = 10 ** 400
+    result = gateway(lambda *a, **kw: Response(body)).evaluate(state={}, questions=QUESTIONS, mode='on')
+    assert result.status == 'invalid'
