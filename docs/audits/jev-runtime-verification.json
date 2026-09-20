@@ -1,0 +1,10 @@
+{
+  "llm_model": "MiniMax-M3",
+  "jev_model": "jev-1.13.0",
+  "mode": "shadow",
+  "retrieved_facts": 2,
+  "source_cards": 2,
+  "check_outcome": "supported",
+  "decision_records": 2,
+  "source_scope_valid": true
+}
