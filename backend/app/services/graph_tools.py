@@ -453,6 +453,19 @@ class GraphToolsService:
                 scope=scope,
             )
 
+            # Storage.search has closed its Neo4j session before any remote judgment.
+            if Config.JEV_RERANK_MODE != 'off':
+                from .evidence_reranker import rerank_evidence
+                shortlist = self.storage.search(graph_id=graph_id, query=query, limit=30, scope=scope)
+                if isinstance(search_results, dict) and isinstance(shortlist, dict):
+                    search_results = dict(search_results)
+                    for kind in ('edges', 'nodes'):
+                        search_results[kind] = rerank_evidence(
+                            shortlist.get(kind, []), query, limit,
+                            mode=Config.JEV_RERANK_MODE, runner=self._decisions(graph_id=graph_id),
+                            baseline=search_results.get(kind, []),
+                        )
+
             facts = []
             edges = []
             nodes = []
@@ -471,6 +484,7 @@ class GraphToolsService:
                     if fact:
                         facts.append(fact)
                     edges.append({
+                        **edge,
                         "uuid": edge.get('uuid', ''),
                         "name": edge.get('name', ''),
                         "fact": fact,
@@ -489,6 +503,7 @@ class GraphToolsService:
             for node in node_list:
                 if isinstance(node, dict):
                     nodes.append({
+                        **node,
                         "uuid": node.get('uuid', ''),
                         "name": node.get('name', ''),
                         "labels": node.get('labels', []),
