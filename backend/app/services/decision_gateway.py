@@ -23,6 +23,14 @@ def canonical_json(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)
 
 
+def request_within_limits(*, state, questions, model):
+    """Shared admission check for the gateway and callers packing batches."""
+    payload = {'model': model, 'state': state, 'questions': questions}
+    return (len(questions) <= 64 and len(state.get('candidates', [])) <= 30
+            and len(canonical_json(state).encode()) <= 24000
+            and len(canonical_json(payload).encode()) <= 48000)
+
+
 def _number(value, lower, upper):
     return type(value) in (int, float) and lower <= value <= upper and math.isfinite(value)
 
@@ -70,9 +78,7 @@ class DecisionGateway:
             return result('unavailable', 'missing_credentials')
         try:
             payload = {'model': self.model, 'state': state, 'questions': questions}
-            if (len(questions) > 64 or len(state.get('candidates', [])) > 30
-                    or len(canonical_json(state).encode()) > 24000
-                    or len(canonical_json(payload).encode()) > 48000):
+            if not request_within_limits(state=state, questions=questions, model=self.model):
                 return result('budget_exceeded', 'request_limit')
             if not questions:
                 return result('invalid', 'empty_questions')

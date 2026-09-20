@@ -2,7 +2,7 @@
 import hashlib
 import json
 
-POLICY_VERSION = 'evidence-v1'
+POLICY_VERSION = 'evidence-v2'
 # Provisional shadow threshold, must be evaluated before promotion.
 MIN_CONFIDENCE = .8
 
@@ -102,9 +102,27 @@ def verify_claims(claims, evidence, *, mode, runner):
         checks.append(check)
         for source in sources:
             pending.append((check, {'claim': claim, 'evidence': source}))
-    # Batches are capped; long excerpts are rejected by the gateway without truncation.
-    for start in range(0, len(pending), 12):
-        batch = pending[start:start + 12]
+    # Pack full excerpts by the same byte limits enforced at the HTTP boundary.
+    # A single oversized pair still reaches admission and becomes unverified;
+    # never truncate source context just to get a positive semantic decision.
+    from .decision_gateway import request_within_limits
+    from ..config import Config
+    model = getattr(getattr(runner, 'gateway', None), 'model', Config.TYPESAFE_MODEL)
+    batches, current = [], []
+    for item in pending:
+        proposed = current + [item]
+        fits = request_within_limits(
+            state={'pairs': [pair for _, pair in proposed]},
+            questions={f'support_{i}': build_support_question(f'pairs[{i}]') for i in range(len(proposed))},
+            model=model,
+        )
+        if current and (len(proposed) > 12 or not fits):
+            batches.append(current)
+            current = []
+        current.append(item)
+    if current:
+        batches.append(current)
+    for batch in batches:
         result = runner.evaluate(feature='evidence', policy_version=POLICY_VERSION, mode=mode,
                                  state={'pairs': [pair for _, pair in batch]},
                                  questions={f'support_{i}': build_support_question(f'pairs[{i}]') for i in range(len(batch))},

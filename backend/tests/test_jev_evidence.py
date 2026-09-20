@@ -159,3 +159,29 @@ def test_rollback_preserves_historical_checks_without_applying_them(monkeypatch)
     ReportManager.apply_quality_status(report)
     assert report.status == ReportStatus.COMPLETED
     assert report.claim_checks == [check]
+
+
+def test_large_source_pairs_are_split_before_gateway_budget(tmp_path):
+    from app.services.decision_gateway import DecisionGateway
+    from app.services.decision_records import DecisionRunner, DecisionRecords
+    calls = []
+    class Response:
+        status_code = 200
+        def __init__(self, payload):
+            self.payload = payload
+        def json(self):
+            return {'model': 'jev-1.13.0', 'answers': {key: {'type': 'choice', 'choice': 'supported',
+                'confidence': .95, 'probabilities': {'supported': .95, 'contradicted': .025, 'insufficient': .025}}
+                for key in self.payload['questions']}, 'usage': {'input_tokens': 100, 'output_tokens': 20}}
+    def post(url, **kwargs):
+        calls.append(kwargs['json'])
+        return Response(kwargs['json'])
+    source = {**EVIDENCE, 'excerpt': 'Original source context. ' * 250}
+    source['source_hash'] = hashlib.sha256(source['excerpt'].encode()).hexdigest()
+    runner = DecisionRunner({'graph_id': 'g'}, DecisionGateway('test', 'jev-1.13.0', post=post), DecisionRecords(tmp_path))
+    claims = [{**CLAIM, 'claim_id': f'c{i}'} for i in range(8)]
+    checks = verify_claims(claims, [source], mode='shadow', runner=runner)
+    assert len(calls) > 1
+    assert all(check['outcome'] == 'supported' for check in checks)
+    assert sum(len(call['state']['pairs']) for call in calls) == 8
+    assert all(pair['evidence']['excerpt'] == source['excerpt'] for call in calls for pair in call['state']['pairs'])
