@@ -58,8 +58,12 @@ class DecisionRunner:
     def evaluate(self, *, feature, policy_version, state, questions, mode, candidate_ids=None):
         if mode == 'off':
             return self.gateway.evaluate(state=state, questions=questions, mode=mode)
-        key = decision_key(state=state, questions=questions, model=self.gateway.model,
-                           policy_version=policy_version, scope=self.scope)
+        try:
+            key = decision_key(state=state, questions=questions, model=self.gateway.model,
+                               policy_version=policy_version, scope=self.scope)
+        except (ValueError, TypeError):
+            from .decision_gateway import DecisionResult
+            return DecisionResult('invalid', model=self.gateway.model, reason='invalid_request')
         with self._lock:
             result = self._cache.get(key)
         hit = result is not None

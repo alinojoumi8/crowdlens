@@ -69,3 +69,30 @@ def test_graph_integration_ranks_after_storage_returns(monkeypatch):
     result = service.search_graph('g', 'What is the deadline?', 2)
     assert [e['uuid'] for e in result.edges] == ['deadline', 'contradiction']
     assert result.edges[0]['score'] == .4
+
+
+def test_shortlist_failure_keeps_successful_baseline(monkeypatch):
+    monkeypatch.setattr(Config, 'JEV_RERANK_MODE', 'shadow')
+    class Storage:
+        def search(self, **kwargs):
+            if kwargs['limit'] == 30:
+                raise RuntimeError('shortlist unavailable')
+            return {'edges': [{'uuid': 'original', 'fact': 'Original evidence.'}], 'nodes': []}
+    service = GraphToolsService(Storage())
+    monkeypatch.setattr(service, '_local_search', lambda *a, **kw: None)
+    result = service.search_graph('g', 'query', 1)
+    assert result is not None
+    assert result.edges[0]['uuid'] == 'original'
+
+
+def test_search_response_keeps_provenance_without_database_embedding_payload(monkeypatch):
+    import json
+    from neo4j.time import DateTime
+    class Storage:
+        def search(self, **kwargs):
+            return {'edges': [{'uuid': 'e', 'fact': 'fact', 'score': .7, 'source_evidence': [],
+                               'fact_embedding': [0.1] * 768, 'created_at': DateTime(2026, 9, 20)}], 'nodes': []}
+    result = GraphToolsService(Storage()).search_graph('g', 'query')
+    assert 'fact_embedding' not in result.edges[0]
+    assert result.edges[0]['score'] == .7
+    json.dumps(result.to_dict())

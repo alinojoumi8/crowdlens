@@ -1,0 +1,233 @@
+{
+  "feature": "interviews",
+  "mode": "live",
+  "promotion_ready": false,
+  "limitation": "Fixtures and provider agreement are not domain-reviewed promotion evidence.",
+  "metrics": {
+    "total": 2,
+    "valid": 2,
+    "invalid": 0,
+    "evaluated": 2,
+    "skipped": 0,
+    "correct": 2,
+    "incorrect": 0,
+    "accuracy": 1.0,
+    "accuracy_case_bootstrap_95": [
+      1.0,
+      1.0
+    ],
+    "case_count": 2,
+    "false_supported": 0,
+    "false_supported_rate": 0.0,
+    "critical_false_supported": 0,
+    "review_coverage": 0.0,
+    "interview_precision": 1.0,
+    "profession_diversity": 1.0,
+    "recall_at_30": null,
+    "ndcg_at_10": null,
+    "request_count": 2,
+    "usage": {
+      "input_tokens": 1153,
+      "output_tokens": 68
+    },
+    "cache_hit_rate": 0.0,
+    "fallback_rate": 0.0,
+    "latency_ms": {
+      "p50": 395.18341950315516,
+      "p95": 412.75045245565707
+    },
+    "report_seconds": null
+  },
+  "records": [
+    {
+      "feature": "interviews",
+      "case_id": "transit",
+      "split": "development",
+      "label_source": "synthetic_unreviewed",
+      "expected": [
+        "0",
+        "2"
+      ],
+      "predicted": [
+        "0",
+        "2"
+      ],
+      "limit": 2,
+      "professions": {
+        "0": "engineer",
+        "1": "chef",
+        "2": "resident"
+      },
+      "state": {
+        "interview_requirement": "Interview people with direct knowledge of a proposed bus-route change.",
+        "simulation_requirement": "The city is replacing bus route 7.",
+        "candidates": [
+          {
+            "profession": "engineer",
+            "bio": "Designed the proposed route 7 change."
+          },
+          {
+            "profession": "chef",
+            "bio": "Works in a different city, no connection to transit planning."
+          },
+          {
+            "profession": "resident",
+            "bio": "Uses route 7 daily to reach work."
+          }
+        ]
+      },
+      "status": "ok",
+      "reason": "",
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 723,
+        "output_tokens": 49
+      },
+      "elapsed_ms": 414.70234500593506,
+      "request_count": 1,
+      "baseline_predicted": [],
+      "baseline_status": "ok",
+      "baseline_model": "MiniMax-M3",
+      "baseline_elapsed_ms": 1243.737910001073
+    },
+    {
+      "feature": "interviews",
+      "case_id": "no_match",
+      "split": "held_out",
+      "label_source": "synthetic_unreviewed",
+      "expected": [],
+      "predicted": [],
+      "limit": 2,
+      "state": {
+        "interview_requirement": "Discuss spacecraft engine design.",
+        "simulation_requirement": "Technical design interview.",
+        "candidates": [
+          {
+            "profession": "gardener",
+            "bio": "Works exclusively on flowers."
+          }
+        ]
+      },
+      "status": "ok",
+      "reason": "",
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 430,
+        "output_tokens": 19
+      },
+      "elapsed_ms": 375.66449400037527,
+      "request_count": 1,
+      "baseline_predicted": [],
+      "baseline_status": "ok",
+      "baseline_model": "MiniMax-M3",
+      "baseline_elapsed_ms": 773.1494570034556
+    }
+  ],
+  "baseline_metrics": {
+    "total": 2,
+    "valid": 2,
+    "invalid": 0,
+    "evaluated": 2,
+    "skipped": 0,
+    "correct": 1,
+    "incorrect": 1,
+    "accuracy": 0.5,
+    "accuracy_case_bootstrap_95": [
+      0.0,
+      1.0
+    ],
+    "case_count": 2,
+    "false_supported": 0,
+    "false_supported_rate": 0.0,
+    "critical_false_supported": 0,
+    "review_coverage": 0.0,
+    "interview_precision": null,
+    "profession_diversity": null,
+    "recall_at_30": null,
+    "ndcg_at_10": null,
+    "request_count": 2,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "cache_hit_rate": 0.0,
+    "fallback_rate": 0.0,
+    "latency_ms": {
+      "p50": 1008.4436835022643,
+      "p95": 1220.2084873511922
+    },
+    "report_seconds": null
+  },
+  "metrics_by_split": {
+    "held_out": {
+      "total": 1,
+      "valid": 1,
+      "invalid": 0,
+      "evaluated": 1,
+      "skipped": 0,
+      "correct": 1,
+      "incorrect": 0,
+      "accuracy": 1.0,
+      "accuracy_case_bootstrap_95": [
+        null,
+        null
+      ],
+      "case_count": 1,
+      "false_supported": 0,
+      "false_supported_rate": 0.0,
+      "critical_false_supported": 0,
+      "review_coverage": 0.0,
+      "interview_precision": null,
+      "profession_diversity": null,
+      "recall_at_30": null,
+      "ndcg_at_10": null,
+      "request_count": 1,
+      "usage": {
+        "input_tokens": 430,
+        "output_tokens": 19
+      },
+      "cache_hit_rate": 0.0,
+      "fallback_rate": 0.0,
+      "latency_ms": {
+        "p50": 375.66449400037527,
+        "p95": 375.66449400037527
+      },
+      "report_seconds": null
+    },
+    "development": {
+      "total": 1,
+      "valid": 1,
+      "invalid": 0,
+      "evaluated": 1,
+      "skipped": 0,
+      "correct": 1,
+      "incorrect": 0,
+      "accuracy": 1.0,
+      "accuracy_case_bootstrap_95": [
+        null,
+        null
+      ],
+      "case_count": 1,
+      "false_supported": 0,
+      "false_supported_rate": 0.0,
+      "critical_false_supported": 0,
+      "review_coverage": 0.0,
+      "interview_precision": 1.0,
+      "profession_diversity": 1.0,
+      "recall_at_30": null,
+      "ndcg_at_10": null,
+      "request_count": 1,
+      "usage": {
+        "input_tokens": 723,
+        "output_tokens": 49
+      },
+      "cache_hit_rate": 0.0,
+      "fallback_rate": 0.0,
+      "latency_ms": {
+        "p50": 414.70234500593506,
+        "p95": 414.70234500593506
+      },
+      "report_seconds": null
+    }
+  }
+}

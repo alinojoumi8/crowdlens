@@ -1,0 +1,254 @@
+{
+  "feature": "reranking",
+  "mode": "live",
+  "promotion_ready": false,
+  "limitation": "Fixtures and provider agreement are not domain-reviewed promotion evidence.",
+  "metrics": {
+    "total": 2,
+    "valid": 2,
+    "invalid": 0,
+    "evaluated": 2,
+    "skipped": 0,
+    "correct": 0,
+    "incorrect": 2,
+    "accuracy": 0.0,
+    "accuracy_case_bootstrap_95": [
+      0.0,
+      0.0
+    ],
+    "case_count": 2,
+    "false_supported": 0,
+    "false_supported_rate": 0.0,
+    "critical_false_supported": 0,
+    "review_coverage": 0.0,
+    "interview_precision": null,
+    "profession_diversity": null,
+    "recall_at_30": 0.5,
+    "ndcg_at_10": 0.5,
+    "request_count": 2,
+    "usage": {
+      "input_tokens": 1099,
+      "output_tokens": 76
+    },
+    "cache_hit_rate": 0.0,
+    "fallback_rate": 0.0,
+    "latency_ms": {
+      "p50": 394.6753679920221,
+      "p95": 444.5372733011027
+    },
+    "report_seconds": null
+  },
+  "records": [
+    {
+      "feature": "reranking",
+      "case_id": "deadline",
+      "split": "development",
+      "label_source": "synthetic_unreviewed",
+      "expected": [
+        "deadline",
+        "extension"
+      ],
+      "predicted": [
+        "extension",
+        "deadline",
+        "hearing"
+      ],
+      "shortlist_ids": [
+        "hearing",
+        "deadline",
+        "extension"
+      ],
+      "relevance": {
+        "hearing": 0,
+        "deadline": 3,
+        "extension": 3
+      },
+      "state": {
+        "query": "What is the response deadline?",
+        "time_scope": "current",
+        "candidates": [
+          {
+            "id": "hearing",
+            "text": "The hearing was held in September."
+          },
+          {
+            "id": "deadline",
+            "text": "The response is due on 12 October."
+          },
+          {
+            "id": "extension",
+            "text": "The response deadline was subsequently extended to 19 October."
+          }
+        ]
+      },
+      "status": "ok",
+      "reason": "",
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 684,
+        "output_tokens": 55
+      },
+      "elapsed_ms": 339.2732509819325,
+      "request_count": 1,
+      "baseline_predicted": [
+        "hearing",
+        "deadline",
+        "extension"
+      ],
+      "baseline_status": "ok",
+      "baseline_model": "MiniMax-M3",
+      "baseline_elapsed_ms": 2025.8212579938117
+    },
+    {
+      "feature": "reranking",
+      "case_id": "global_ann_miss",
+      "split": "held_out",
+      "label_source": "synthetic_unreviewed",
+      "expected": [
+        "missing_relevant"
+      ],
+      "predicted": [
+        "noise"
+      ],
+      "shortlist_ids": [
+        "noise"
+      ],
+      "relevance": {
+        "missing_relevant": 3,
+        "noise": 0
+      },
+      "state": {
+        "query": "What is the response deadline?",
+        "time_scope": "current",
+        "candidates": [
+          {
+            "id": "noise",
+            "text": "A hearing is scheduled."
+          }
+        ]
+      },
+      "status": "ok",
+      "reason": "",
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 415,
+        "output_tokens": 21
+      },
+      "elapsed_ms": 450.07748500211164,
+      "request_count": 1,
+      "baseline_predicted": [
+        "noise"
+      ],
+      "baseline_status": "ok",
+      "baseline_model": "MiniMax-M3",
+      "baseline_elapsed_ms": 410.69196301396005
+    }
+  ],
+  "baseline_metrics": {
+    "total": 2,
+    "valid": 2,
+    "invalid": 0,
+    "evaluated": 2,
+    "skipped": 0,
+    "correct": 0,
+    "incorrect": 2,
+    "accuracy": 0.0,
+    "accuracy_case_bootstrap_95": [
+      0.0,
+      0.0
+    ],
+    "case_count": 2,
+    "false_supported": 0,
+    "false_supported_rate": 0.0,
+    "critical_false_supported": 0,
+    "review_coverage": 0.0,
+    "interview_precision": null,
+    "profession_diversity": null,
+    "recall_at_30": 0.5,
+    "ndcg_at_10": 0.3467132018086354,
+    "request_count": 2,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "cache_hit_rate": 0.0,
+    "fallback_rate": 0.0,
+    "latency_ms": {
+      "p50": 1218.256610503886,
+      "p95": 1945.0647932448192
+    },
+    "report_seconds": null
+  },
+  "metrics_by_split": {
+    "held_out": {
+      "total": 1,
+      "valid": 1,
+      "invalid": 0,
+      "evaluated": 1,
+      "skipped": 0,
+      "correct": 0,
+      "incorrect": 1,
+      "accuracy": 0.0,
+      "accuracy_case_bootstrap_95": [
+        null,
+        null
+      ],
+      "case_count": 1,
+      "false_supported": 0,
+      "false_supported_rate": 0.0,
+      "critical_false_supported": 0,
+      "review_coverage": 0.0,
+      "interview_precision": null,
+      "profession_diversity": null,
+      "recall_at_30": 0.0,
+      "ndcg_at_10": 0.0,
+      "request_count": 1,
+      "usage": {
+        "input_tokens": 415,
+        "output_tokens": 21
+      },
+      "cache_hit_rate": 0.0,
+      "fallback_rate": 0.0,
+      "latency_ms": {
+        "p50": 450.07748500211164,
+        "p95": 450.07748500211164
+      },
+      "report_seconds": null
+    },
+    "development": {
+      "total": 1,
+      "valid": 1,
+      "invalid": 0,
+      "evaluated": 1,
+      "skipped": 0,
+      "correct": 0,
+      "incorrect": 1,
+      "accuracy": 0.0,
+      "accuracy_case_bootstrap_95": [
+        null,
+        null
+      ],
+      "case_count": 1,
+      "false_supported": 0,
+      "false_supported_rate": 0.0,
+      "critical_false_supported": 0,
+      "review_coverage": 0.0,
+      "interview_precision": null,
+      "profession_diversity": null,
+      "recall_at_30": 1.0,
+      "ndcg_at_10": 1.0,
+      "request_count": 1,
+      "usage": {
+        "input_tokens": 684,
+        "output_tokens": 55
+      },
+      "cache_hit_rate": 0.0,
+      "fallback_rate": 0.0,
+      "latency_ms": {
+        "p50": 339.2732509819325,
+        "p95": 339.2732509819325
+      },
+      "report_seconds": null
+    }
+  }
+}

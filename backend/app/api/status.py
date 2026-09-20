@@ -5,6 +5,7 @@ Application status endpoints.
 from flask import current_app, jsonify
 
 from ..config import Config
+from ..services.jev_policy import decision_configuration
 from . import status_bp
 
 
@@ -36,6 +37,7 @@ def get_status():
             "service": "MiroFish-Offline Backend",
             "healthy": False,
             "llm": llm,
+            "decisions": decision_configuration(),
             "neo4j": {
                 "healthy": False,
                 "uri": Config.NEO4J_URI,
@@ -63,6 +65,7 @@ def get_status():
             and control_status.get("healthy")
         ),
         "llm": llm,
+            "decisions": decision_configuration(),
         "neo4j": {k: v for k, v in neo4j_status.items() if k != "embedding"},
         "embedding": embedding_status,
         "vector_search_usable": bool(neo4j_status.get("vector_search_usable")),

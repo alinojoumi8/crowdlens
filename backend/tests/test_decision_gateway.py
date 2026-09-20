@@ -127,3 +127,19 @@ def test_atomic_records_discard_raw_source_and_secrets(tmp_path):
         assert 'secret-test-key' not in path.read_text()
         assert 'private' not in path.read_text()
     assert not list(tmp_path.glob('*.tmp'))
+
+
+def test_runner_caches_only_success_and_rejects_non_json_state(tmp_path):
+    from app.services.decision_records import DecisionRunner
+    calls = []
+    def post(*args, **kwargs):
+        calls.append(1)
+        return Response(status=429 if len(calls) == 1 else 200)
+    runner = DecisionRunner({'graph_id': 'g', 'case_version_id': 'v1'}, gateway(post), DecisionRecords(tmp_path))
+    args = dict(feature='test', policy_version='v1', state={}, questions=QUESTIONS, mode='shadow')
+    assert runner.evaluate(**args).status == 'unavailable'
+    assert runner.evaluate(**args).status == 'ok'
+    assert runner.evaluate(**args).status == 'ok'
+    assert len(calls) == 2
+    assert runner.evaluate(**{**args, 'state': {'bad': float('nan')}}).status == 'invalid'
+    assert len(calls) == 2

@@ -1074,6 +1074,8 @@ class ReportAgent:
     def _check_report_claims(self, report):
         from .decision_records import DecisionRunner
         from .evidence_verifier import associate_claims, verify_claims, text_hash, POLICY_VERSION
+        from .jev_policy import decision_configuration
+        report.decision_config = decision_configuration()
         mode = Config.JEV_EVIDENCE_MODE
         if mode == "off" or not report.outline:
             return

@@ -17,6 +17,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 
 from ..config import Config
+from .jev_policy import decision_configuration
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
@@ -188,6 +189,9 @@ class SimulationParameters:
     report_mode: str = "litigation_case"
     report_depth: str = "standard"
 
+    # Decision model and policy identity captured when the run is created.
+    decision_config: Dict[str, Any] = field(default_factory=decision_configuration)
+
     # LLM configuration
     llm_model: str = ""
     llm_base_url: str = ""
@@ -218,6 +222,7 @@ class SimulationParameters:
             "prediction_settings": self.prediction_settings,
             "report_mode": self.report_mode,
             "report_depth": self.report_depth,
+            "decision_config": self.decision_config,
             "llm_model": self.llm_model,
             "llm_base_url": self.llm_base_url,
             "generated_at": self.generated_at,
