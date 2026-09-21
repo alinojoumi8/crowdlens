@@ -1086,17 +1086,30 @@ class ReportAgent:
                  "case_id": self.simulation_config.get("case_id"),
                  "case_version_id": self.simulation_config.get("case_version_id")}
         runner = DecisionRunner(scope)
+        from .source_tracing import SourceIndex, trace_claims, include_uncovered_blocks
+        storage = getattr(getattr(self, 'graph_tools', None), 'storage', None)
+        source_index = None
+        if callable(getattr(storage, 'get_source_chunks', None)):
+            try:
+                source_index = SourceIndex(storage.get_source_chunks(self.graph_id, scope['case_id'], scope['case_version_id']), scope)
+            except Exception:
+                logger.warning("Original source retrieval unavailable; retaining retrieved evidence only")
         report.claim_checks = []
         for section in report.outline.sections:
             fingerprint = text_hash(json.dumps({"content": section.content, "evidence": section.evidence_cards,
-                "scope": scope, "mode": mode, "model": Config.TYPESAFE_MODEL, "policy": POLICY_VERSION},
+                "scope": scope, "mode": mode, "model": Config.TYPESAFE_MODEL, "policy": POLICY_VERSION,
+                "source_digest": source_index.digest if source_index is not None else None},
                 sort_keys=True, ensure_ascii=False))
             if fingerprint != section.claim_check_hash:
                 section.claims = []
                 section.claim_checks = []
                 section.claim_check_hash = ""
                 section.claims = associate_claims(section.content, section.evidence_cards, self.llm, scope)
-                section.claim_checks = verify_claims(section.claims, section.evidence_cards, mode=mode, runner=runner)
+                section.claims = include_uncovered_blocks(section.content, section.claims, scope)
+                check_evidence = section.evidence_cards
+                if source_index is not None and source_index.sources:
+                    section.claims, check_evidence = trace_claims(section.claims, source_index)
+                section.claim_checks = verify_claims(section.claims, check_evidence, mode=mode, runner=runner)
                 section.claim_check_hash = fingerprint
             report.claim_checks.extend({**check, "section_title": section.title} for check in section.claim_checks)
         if mode == "on":

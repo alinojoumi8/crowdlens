@@ -1336,6 +1336,19 @@ class Neo4jStorage(GraphStorage):
     # Search
     # ----------------------------------------------------------------
 
+    def get_source_chunks(self, graph_id, case_id, case_version_id):
+        """Read original text only within an explicit case version; sentinel detects truncation."""
+        if not case_id or not case_version_id:
+            return []
+        with self._driver.session() as session:
+            rows = session.run(
+                "MATCH (e:Episode {graph_id: $gid, case_id: $cid, case_version_id: $vid}) "
+                "WHERE e.document_id IS NOT NULL RETURN properties(e) AS episode "
+                "ORDER BY e.document_id, e.page, e.chunk_index, e.uuid LIMIT 2001",
+                gid=graph_id, cid=case_id, vid=case_version_id,
+            )
+            return [dict(row["episode"]) for row in rows]
+
     def get_document_covers(self, graph_id, case_id, case_version_id):
         """Bounded original page-one chunks, strictly scoped to a case version."""
         if not case_id or not case_version_id:

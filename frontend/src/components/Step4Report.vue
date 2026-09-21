@@ -144,6 +144,7 @@
               </div>
               
               <div class="section-body" v-show="!collapsedSections.has(idx)">
+                <ClaimEvidence :checks="section.claim_checks || []" />
                 <!-- Completed Content -->
                 <SafeMarkdown
                   v-if="generatedSections[idx + 1]"
@@ -566,6 +567,7 @@ import { generateReport, getAgentLog, getConsoleLog, getReport, getReportProgres
 import { benchmarkGraphEmbeddings, getGraphQuality, reembedGraph } from '../api/graph'
 import { renderSafeMarkdown as renderMarkdown } from '../utils/markdown'
 import SafeMarkdown from './SafeMarkdown.vue'
+import ClaimEvidence from './ClaimEvidence.vue'
 
 const router = useRouter()
 
