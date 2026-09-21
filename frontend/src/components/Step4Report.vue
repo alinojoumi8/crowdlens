@@ -13,6 +13,7 @@
             </div>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
             <p class="sub-title">{{ reportOutline.summary }}</p>
+            <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
             <p v-if="forecastData?.status === 'unavailable'" class="sub-title" role="status">
               {{ forecastData.limitations }}
             </p>

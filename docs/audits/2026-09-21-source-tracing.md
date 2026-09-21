@@ -29,3 +29,5 @@ Private metrics and full review data are in ignored `backend/uploads/evaluations
 244 backend tests, 11 frontend unit tests, 4 frontend component tests, and production build passed before deployment. Browser verification expanded a section, a claim, and its original excerpts with document/episode hashes. HTML in source excerpts is escaped. MiniMax remains primary and Jev remains in shadow mode.
 
 Next quality work: independently review relevance/support labels, improve source candidate precision, and resolve quotation/attribution failures before treating the report as verified. No unsupported claim has been silently changed into a fact.
+
+The report summary now has its own persisted, expandable checks as well. The frozen pilot summary was evaluated separately and is unverified; this brings the displayed total to 122 checks without changing the fixed 69-claim comparison or the 52 additional body passages. Summary results are recorded in `summary-tracing.json`.

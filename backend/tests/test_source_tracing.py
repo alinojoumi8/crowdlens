@@ -57,3 +57,12 @@ def test_uncertain_candidate_cannot_hide_behind_a_supported_source():
     index = SourceIndex([source(1, 'Alex filed the motion on 4 May 2025.'), source(2, 'Alex filed the motion on 5 May 2025.')], SCOPE)
     claims, evidence = trace_claims([{'claim_id': 'c', 'text': 'Alex filed the motion on 4 May 2025.'}], index)
     assert verify_claims(claims, evidence, mode='shadow', runner=UncertainRunner())[0]['outcome'] == 'unverified'
+
+
+def test_report_summary_checks_are_persisted_and_kept_distinct():
+    from app.services.report_agent import Report, ReportOutline, ReportManager, ReportStatus
+    check={'claim_text':'Summary factual assertion.','outcome':'unverified','sources':[]}
+    report=Report('r','s','g','req',ReportStatus.NEEDS_REVIEW,
+                  outline=ReportOutline('Title','Summary factual assertion.',[],summary_claim_checks=[check]))
+    loaded=ReportManager._dict_to_report('r',report.to_dict())
+    assert loaded.outline.summary_claim_checks==[check]

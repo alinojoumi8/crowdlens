@@ -437,12 +437,18 @@ class ReportOutline:
     title: str
     summary: str
     sections: List[ReportSection]
+    summary_claims: List[Dict[str, Any]] = field(default_factory=list)
+    summary_claim_checks: List[Dict[str, Any]] = field(default_factory=list)
+    summary_claim_check_hash: str = ""
     
     def to_dict(self) -> Dict[str, Any]:
         return {
             "title": self.title,
             "summary": self.summary,
-            "sections": [s.to_dict() for s in self.sections]
+            "sections": [s.to_dict() for s in self.sections],
+            "summary_claims": self.summary_claims,
+            "summary_claim_checks": self.summary_claim_checks,
+            "summary_claim_check_hash": self.summary_claim_check_hash,
         }
     
     def to_markdown(self) -> str:
@@ -1095,7 +1101,12 @@ class ReportAgent:
             except Exception:
                 logger.warning("Original source retrieval unavailable; retaining retrieved evidence only")
         report.claim_checks = []
-        for section in report.outline.sections:
+        summary = ReportSection("Report summary", content=report.outline.summary,
+                                claims=report.outline.summary_claims,
+                                claim_checks=report.outline.summary_claim_checks,
+                                claim_check_hash=report.outline.summary_claim_check_hash)
+        sections_to_check = ([summary] if summary.content else []) + report.outline.sections
+        for section in sections_to_check:
             fingerprint = text_hash(json.dumps({"content": section.content, "evidence": section.evidence_cards,
                 "scope": scope, "mode": mode, "model": Config.TYPESAFE_MODEL, "policy": POLICY_VERSION,
                 "source_digest": source_index.digest if source_index is not None else None},
@@ -1112,6 +1123,9 @@ class ReportAgent:
                 section.claim_checks = verify_claims(section.claims, check_evidence, mode=mode, runner=runner)
                 section.claim_check_hash = fingerprint
             report.claim_checks.extend({**check, "section_title": section.title} for check in section.claim_checks)
+        report.outline.summary_claims = summary.claims
+        report.outline.summary_claim_checks = summary.claim_checks
+        report.outline.summary_claim_check_hash = summary.claim_check_hash
         if mode == "on":
             report.validation_issues.extend({"code": "source_claim_review", "blocking": False,
                 "message": f"Source claim requires review in {check['section_title']}: {check.get('reason', check['outcome'])}"}
@@ -3679,7 +3693,10 @@ class ReportManager:
             outline = ReportOutline(
                 title=outline_data['title'],
                 summary=outline_data['summary'],
-                sections=sections
+                sections=sections,
+                summary_claims=outline_data.get('summary_claims', []),
+                summary_claim_checks=outline_data.get('summary_claim_checks', []),
+                summary_claim_check_hash=outline_data.get('summary_claim_check_hash', ''),
             )
         
         # ifmarkdown_contentempty，attempt tofromfull_report.mdRead
