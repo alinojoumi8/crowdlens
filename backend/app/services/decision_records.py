@@ -1,6 +1,6 @@
 """Scoped decision identity, safe audit records, and bounded success-only cache."""
 from collections import OrderedDict
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import hashlib
 import json
 import os
@@ -55,9 +55,10 @@ class DecisionRunner:
         self._cache = OrderedDict()
         self._lock = threading.Lock()
 
-    def evaluate(self, *, feature, policy_version, state, questions, mode, candidate_ids=None):
+    def evaluate(self, *, feature, policy_version, state, questions, mode, candidate_ids=None, request_timeout=None):
+        controls = {} if request_timeout is None else {"request_timeout": request_timeout}
         if mode == 'off':
-            return self.gateway.evaluate(state=state, questions=questions, mode=mode)
+            return self.gateway.evaluate(state=state, questions=questions, mode=mode, **controls)
         try:
             key = decision_key(state=state, questions=questions, model=self.gateway.model,
                                policy_version=policy_version, scope=self.scope)
@@ -68,7 +69,7 @@ class DecisionRunner:
             result = self._cache.get(key)
         hit = result is not None
         if not hit:
-            result = self.gateway.evaluate(state=state, questions=questions, mode=mode)
+            result = self.gateway.evaluate(state=state, questions=questions, mode=mode, **controls)
             if result.status == 'ok':
                 with self._lock:
                     self._cache[key] = result
@@ -83,4 +84,4 @@ class DecisionRunner:
             # Audit storage failure must not break the existing report/simulation path.
             from .decision_gateway import DecisionResult
             return DecisionResult('unavailable', model=self.gateway.model, reason='record_write_failed')
-        return result
+        return replace(result, cache_hit=hit)

@@ -60,6 +60,7 @@ class LLMClient:
         messages: List[Dict[str, str]],
         temperature: float = 0.7,
         max_tokens: int = 4096,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None,
     ) -> str:
         """Send chat request to an Anthropic Messages compatible endpoint."""
         system_messages = [m.get("content", "") for m in messages if m.get("role") == "system"]
@@ -85,8 +86,18 @@ class LLMClient:
             "anthropic-version": "2023-06-01",
             "content-type": "application/json",
         }
-        response = self._post_anthropic_with_retry(url, headers, body)
-        data = response.json()
+        started = time.monotonic()
+        try:
+            response = self._post_anthropic_with_retry(url, headers, body,
+                request_timeout=request_timeout, request_max_retries=request_max_retries)
+            data = response.json()
+        except Exception:
+            if usage_callback:
+                usage_callback('anthropic', self.model, {}, (time.monotonic() - started) * 1000)
+            raise
+        if usage_callback:
+            usage_callback('anthropic', data.get('model', self.model), data.get('usage', {}),
+                           (time.monotonic() - started) * 1000)
 
         text_parts = [
             item.get("text", "")
@@ -103,8 +114,9 @@ class LLMClient:
         url: str,
         headers: Dict[str, str],
         body: Dict[str, Any],
+        *, request_timeout=None, request_max_retries=None,
     ) -> requests.Response:
-        max_retries = int(os.environ.get("LLM_HTTP_MAX_RETRIES", "4"))
+        max_retries = int(os.environ.get("LLM_HTTP_MAX_RETRIES", "4")) if request_max_retries is None else request_max_retries
         base_delay = float(os.environ.get("LLM_HTTP_RETRY_BASE_SECONDS", "2"))
         max_delay = float(os.environ.get("LLM_HTTP_RETRY_MAX_SECONDS", "30"))
         last_error: Optional[Exception] = None
@@ -115,7 +127,7 @@ class LLMClient:
                     url,
                     headers=headers,
                     json=body,
-                    timeout=self.timeout,
+                    timeout=self.timeout if request_timeout is None else request_timeout,
                 )
                 response.raise_for_status()
                 return response
@@ -147,7 +159,8 @@ class LLMClient:
         messages: List[Dict[str, str]],
         temperature: float = 0.7,
         max_tokens: int = 4096,
-        response_format: Optional[Dict] = None
+        response_format: Optional[Dict] = None,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None,
     ) -> str:
         """
         Send chat request
@@ -166,6 +179,7 @@ class LLMClient:
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,
+                request_timeout=request_timeout, request_max_retries=request_max_retries, usage_callback=usage_callback,
             )
 
         kwargs = {
@@ -184,7 +198,24 @@ class LLMClient:
                 "options": {"num_ctx": self._num_ctx}
             }
 
-        response = self.client.chat.completions.create(**kwargs)
+        client = self.client
+        overrides = {}
+        if request_timeout is not None:
+            overrides['timeout'] = request_timeout
+        if request_max_retries is not None:
+            overrides['max_retries'] = request_max_retries
+        if overrides:
+            client = client.with_options(**overrides)
+        started = time.monotonic()
+        try:
+            response = client.chat.completions.create(**kwargs)
+        except Exception:
+            if usage_callback:
+                usage_callback('openai_compatible', self.model, {}, (time.monotonic() - started) * 1000)
+            raise
+        if usage_callback:
+            usage = response.usage.model_dump() if getattr(response, 'usage', None) else {}
+            usage_callback('openai_compatible', response.model or self.model, usage, (time.monotonic() - started) * 1000)
         content = response.choices[0].message.content
         # Some models (like MiniMax M2.5) include <think>thinking content in response, need to remove
         content = re.sub(r'<think>[\s\S]*?</think>', '', content).strip()
@@ -196,6 +227,7 @@ class LLMClient:
         temperature: float = 0.3,
         max_tokens: int = 4096,
         disable_reasoning: bool = False,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None,
     ) -> Dict[str, Any]:
         """
         Send chat request and return JSON
@@ -219,6 +251,7 @@ class LLMClient:
             }
             if self._num_ctx:
                 options["num_ctx"] = self._num_ctx
+            started = time.monotonic()
             native_response = requests.post(
                 f"{base_url}/api/chat",
                 json={
@@ -229,10 +262,14 @@ class LLMClient:
                     "format": "json",
                     "options": options,
                 },
-                timeout=self.timeout,
+                timeout=self.timeout if request_timeout is None else request_timeout,
             )
             native_response.raise_for_status()
             body = native_response.json()
+            if usage_callback:
+                usage_callback('ollama', body.get('model', self.model),
+                    {'input_tokens': body.get('prompt_eval_count'), 'output_tokens': body.get('eval_count')},
+                    (time.monotonic() - started) * 1000)
             response = (body.get("message") or {}).get("content", "")
             if not isinstance(response, str) or not response.strip():
                 raise ValueError("Ollama returned no JSON content")
@@ -241,7 +278,9 @@ class LLMClient:
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,
-                response_format={"type": "json_object"}
+                response_format={"type": "json_object"},
+                **({k: v for k, v in dict(request_timeout=request_timeout,
+                     request_max_retries=request_max_retries, usage_callback=usage_callback).items() if v is not None})
             )
         # Clean markdown code block markers
         cleaned_response = response.strip()
@@ -252,4 +291,4 @@ class LLMClient:
         try:
             return json.loads(cleaned_response)
         except json.JSONDecodeError:
-            raise ValueError(f"Invalid JSON format from LLM: {cleaned_response}")
+            raise ValueError("invalid_llm_json")
