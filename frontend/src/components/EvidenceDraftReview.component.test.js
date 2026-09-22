@@ -88,3 +88,33 @@ it('immediately disables saving after a stale acceptance response', async () => 
   expect(wrapper.text()).toContain('source documents changed')
   wrapper.unmount()
 })
+
+it('can recover an interrupted save after loading persisted accepting state', async () => {
+  sessionStorage.setItem('evidence-proposal:report_root:1', JSON.stringify({ requestKey: 'key', proposalId: 'proposal_1' }))
+  api.getEvidenceProposal.mockResolvedValue({ success: true, data: proposal('accepting') })
+  api.acceptEvidenceProposal.mockResolvedValue({ success: true, data: { report_id: 'recovered_revision' } })
+  const wrapper = mountReview(); await flushPromises()
+  await button(wrapper, 'Retry saving revision').trigger('click'); await flushPromises()
+  expect(api.acceptEvidenceProposal).toHaveBeenCalledWith('report_root', 'proposal_1', 'digest')
+  expect(wrapper.emitted('revision-created')[0]).toEqual(['recovered_revision'])
+  wrapper.unmount()
+})
+
+it.each(['reject', 'accept'])('ignores an older status response after %s succeeds', async action => {
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: proposal() })
+  let finish
+  api.getEvidenceProposal.mockImplementation(() => new Promise(resolve => { finish = resolve }))
+  api.acceptEvidenceProposal.mockRejectedValueOnce(new Error('network'))
+  api.acceptEvidenceProposal.mockResolvedValue({ success: true, data: { report_id: 'revision_saved' } })
+  api.rejectEvidenceProposal.mockResolvedValue({ success: true, data: proposal('rejected') })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  await button(wrapper, 'Save as new revision').trigger('click'); await flushPromises()
+  await button(wrapper, 'Refresh status').trigger('click')
+  await button(wrapper, action === 'reject' ? 'Keep original' : 'Save as new revision').trigger('click')
+  await flushPromises()
+  finish({ success: true, data: proposal() }); await flushPromises()
+  expect(wrapper.text()).toContain(action === 'reject' ? 'Original retained' : 'Revision saved')
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  wrapper.unmount()
+})

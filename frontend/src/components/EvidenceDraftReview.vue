@@ -54,8 +54,9 @@
       </details>
       <p v-if="proposal.state === 'failed'" role="status">This draft could not finish. {{ words(proposal.error_code || '') }}. You can start a new proposal.</p>
       <p v-if="proposal.state === 'stale'" role="status">The report or its sources changed. Start a new proposal to review current material.</p>
+      <p v-if="proposal.state === 'accepting'" role="status">Saving was interrupted. Retry to finish saving or open the revision if it was already saved.</p>
       <div class="actions">
-        <button :disabled="busy || !isProposalAcceptable(proposal)" @click="accept">Save as new revision</button>
+        <button :disabled="busy || !canSave" @click="accept">{{ proposal.state === 'accepting' ? 'Retry saving revision' : 'Save as new revision' }}</button>
         <button v-if="canReject" class="secondary" :disabled="busy" @click="reject">Keep original</button>
         <button v-if="!active && !busy" class="secondary" @click="fresh">New proposal</button>
         <button v-if="error" class="secondary" :disabled="busy" @click="refresh()">Refresh status</button>
@@ -75,11 +76,13 @@ const props = defineProps({ reportId: String, sectionIndex: Number, initialPropo
 const emit = defineEmits(['revision-created', 'close'])
 const proposal = ref(null), busy = ref(false), error = ref('')
 let generation = 0, timer = null, requestKey = null
-const active = computed(() => ['queued', 'running', 'accepting'].includes(proposal.value?.state))
-const canReject = computed(() => ['queued', 'running', 'ready', 'blocked', 'stale'].includes(proposal.value?.state))
+const active = computed(() => ['queued', 'running'].includes(proposal.value?.state))
+const canReject = computed(() => ['queued', 'running', 'ready', 'blocked', 'stale', 'accepting'].includes(proposal.value?.state))
+const canSave = computed(() => isProposalAcceptable(proposal.value) ||
+  (proposal.value?.state === 'accepting' && isProposalAcceptable({ ...proposal.value, state: 'ready' })))
 const citationNumber = id => [...new Set((proposal.value?.ledger || []).flatMap(c => c.citation_ids || []))].indexOf(id) + 1
 const words = text => String(text).replaceAll('_', ' ')
-const statusLabel = computed(() => ({ queued: 'Waiting', running: words(proposal.value.phase), ready: 'Ready for your review', blocked: 'Changes required', accepted: 'Revision saved', rejected: 'Original retained', failed: 'Draft failed', stale: 'Sources changed', accepting: 'Saving revision' })[proposal.value?.state] || '')
+const statusLabel = computed(() => ({ queued: 'Waiting', running: words(proposal.value.phase), ready: 'Ready for your review', blocked: 'Changes required', accepted: 'Revision saved', rejected: 'Original retained', failed: 'Draft failed', stale: 'Sources changed', accepting: 'Save needs recovery' })[proposal.value?.state] || '')
 const cacheKey = () => `evidence-proposal:${props.reportId}:${props.sectionIndex}`
 const remember = () => { try { sessionStorage.setItem(cacheKey(), JSON.stringify({ requestKey, proposalId: proposal.value?.proposal_id })) } catch { /* private browsing may disable storage */ } }
 const stop = () => { clearTimeout(timer); timer = null }
@@ -112,8 +115,9 @@ async function create() {
   finally { if (token === generation) busy.value = false }
 }
 async function accept() {
-  if (busy.value || !isProposalAcceptable(proposal.value)) return
-  const token = generation
+  if (busy.value || !canSave.value) return
+  const token = ++generation
+  stop()
   busy.value = true; error.value = ''
   try {
     const result = await acceptEvidenceProposal(props.reportId, proposal.value.proposal_id, proposal.value.proposal_digest)
@@ -128,18 +132,19 @@ async function accept() {
       if (err.response?.status === 410) proposal.value = { ...proposal.value, state: 'failed', error_code: 'revision_deleted' }
     }
   }
-  finally { if (token === generation) busy.value = false }
+  finally { if (token === generation) { busy.value = false; schedule(token) } }
 }
 async function reject() {
   if (busy.value) return
-  const token = generation
+  const token = ++generation
+  stop()
   busy.value = true; error.value = ''
   try {
     const result = await rejectEvidenceProposal(props.reportId, proposal.value.proposal_id)
     if (token !== generation) return
     proposal.value = result.data; remember(); stop(); emit('close')
   } catch (err) { if (token === generation) error.value = message(err) }
-  finally { if (token === generation) busy.value = false }
+  finally { if (token === generation) { busy.value = false; schedule(token) } }
 }
 function fresh() { generation++; stop(); proposal.value = null; requestKey = null; error.value = ''; remember(); create() }
 watch(() => [props.reportId, props.sectionIndex, props.initialProposalId], () => {

@@ -49,6 +49,9 @@ def test_create_poll_accept_retry_and_guards(app):
     assert client.post(url, json={**body, 'section_index': 2}).status_code == 409
     proposal = terminal(client, identifier)
     assert proposal['state'] == 'ready'
+    import threading
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal': worker.join(10)
     accepted = client.post(url+f'/{identifier}/accept', json={'proposal_digest': proposal['proposal_digest']})
     assert accepted.status_code == 200
     revision = accepted.json['data']['report_id']
@@ -99,3 +102,79 @@ def test_watchdog_fences_late_response_without_releasing_capacity(app, monkeypat
         release.set()
     time.sleep(.03)
     assert terminal(client, identifier)['state'] == 'failed'
+
+
+@pytest.mark.parametrize('cancel', ['deadline', 'reject'])
+def test_cancelled_worker_keeps_usage_from_completed_and_late_calls(app, monkeypatch, cancel):
+    import threading
+    entered, release = threading.Event(), threading.Event()
+    original = app.extensions['evidence_llm_factory']
+    def factory(identifier):
+        llm = original(identifier)
+        call = llm.chat_json
+        def measured(*args, **kwargs):
+            if len(llm.calls) == 1:
+                entered.set(); release.wait(10)
+            value = call(*args, **kwargs)
+            kwargs['usage_callback']('synthetic', llm.model, {'input_tokens': 20, 'output_tokens': 10}, 5)
+            return value
+        llm.chat_json = measured
+        return llm
+    app.extensions['evidence_llm_factory'] = factory
+    timers = []
+    class ManualTimer:
+        def __init__(self, seconds, callback): timers.append(callback)
+        def start(self): pass
+        def cancel(self): pass
+    monkeypatch.setattr('app.api.evidence_proposals.threading.Timer', ManualTimer)
+    client = app.test_client()
+    url = '/api/report/report_root/evidence-proposals'
+    identifier = client.post(url, json={'section_index': 1, 'request_key': 'measured'}).json['data']['proposal_id']
+    try:
+        assert entered.wait(10)
+        if cancel == 'deadline':
+            timers[0]()
+        else:
+            assert client.post(url + f'/{identifier}/reject', json={}).status_code == 200
+    finally:
+        release.set()
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal': worker.join(10)
+    record = terminal(client, identifier)
+    assert record['state'] == ('failed' if cancel == 'deadline' else 'rejected')
+    assert len(record['usage']['calls']) == 2
+    assert record['usage']['calls'][1]['output_tokens'] == 10
+    assert record['timing']['drafting'] >= 0
+    assert record['proposal_digest'] is None
+
+
+def test_delete_busy_report_returns_conflict_without_traceback(app):
+    store = app.extensions['evidence_proposal_store']
+    with store.operation('report_root'):
+        response = app.test_client().delete('/api/report/report_root')
+    assert response.status_code == 409
+    assert response.json == {'success': False, 'error': 'report_busy'}
+
+
+@pytest.mark.parametrize('committed', [False, True])
+def test_accept_endpoint_recovers_interrupted_publication(app, monkeypatch, committed):
+    from app.services.report_revisions import ReportRevisionService
+    client = app.test_client()
+    url = '/api/report/report_root/evidence-proposals'
+    identifier = client.post(url, json={'section_index': 1, 'request_key': 'recover'}).json['data']['proposal_id']
+    proposal = terminal(client, identifier)
+    import threading
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal': worker.join(10)
+    original = ReportRevisionService._publish
+    def interrupted(self, *args):
+        if committed: original(self, *args)
+        raise OSError('interrupted')
+    monkeypatch.setattr(ReportRevisionService, '_publish', interrupted)
+    body = {'proposal_digest': proposal['proposal_digest']}
+    assert client.post(url + f'/{identifier}/accept', json=body).status_code == 503
+    assert client.get(url + f'/{identifier}').json['data']['state'] == 'accepting'
+    monkeypatch.setattr(ReportRevisionService, '_publish', original)
+    response = client.post(url + f'/{identifier}/accept', json=body)
+    assert response.status_code == 200
+    assert response.json['data']['report_id'] == proposal['revision_report_id']

@@ -14,7 +14,9 @@ Each proposal is limited to 2,000 admitted chunks / 8 million characters, six re
 
 Raw source snapshots and proposals are stored under the existing private report root in `.evidence-proposals`. Leases live separately in `.evidence-locks`; staging and deletion tombstones have separate hidden directories. Keep these directories with report backups. Startup marks abandoned queued/running work interrupted without restarting inference. Do not remove lock files while any backend is running.
 
-A creation retry must reuse its request key. Acceptance uses the displayed immutable proposal digest. Parent/source changes make an unpublished proposal stale; source outages leave it retryable. If publication succeeded before a crash, retry recovers that revision without parent/source availability. Deleted revisions return 410 and are not recreated. Existing reports need no data migration.
+A creation retry must reuse its request key. Acceptance uses the displayed immutable proposal digest. Parent/source changes make an unpublished proposal stale; source outages leave it retryable. After an interrupted save, **Retry saving revision** uses the same digest and works after reloading. If publication succeeded before the interruption, retry recovers that revision without parent/source availability. **Keep original** can abandon an interrupted save only when no revision was published; a published revision must first be recovered. Deleted revisions return 410 and are not recreated. Existing reports need no data migration.
+
+Cancelled or expired proposals retain observed usage and phase timings, including responses that arrive after cancellation, without becoming ready again. Retrieval windows follow literal quotations or matching search terms, and the review panel discloses clipped windows and capped candidate coverage.
 
 ## Verification and offline evaluation
 

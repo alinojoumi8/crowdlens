@@ -1,9 +1,29 @@
 """Bounded retrieval from frozen original source chunks, with visible coverage."""
 import math
 import re
+from collections import Counter
 from .claim_ledger import SCOPE_KEYS, canonical_digest
 from .evidence_verifier import text_hash
-from .source_tracing import SourceIndex
+from .source_tracing import SourceIndex, tokens
+
+
+def lexical_anchor(text, query_terms):
+    """Choose the densest matching span using original Unicode offsets."""
+    hits = [(match.start(), match.group().casefold()) for match in re.finditer(r'\w+', text)
+            if match.group().casefold() in query_terms]
+    counts, left, best, anchor = Counter(), 0, (0, 0), 0
+    for right, (offset, term) in enumerate(hits):
+        counts[term] += 1
+        while offset - hits[left][0] > 1600:
+            expired = hits[left][1]
+            counts[expired] -= 1
+            if not counts[expired]:
+                del counts[expired]
+            left += 1
+        score = (len(counts), right - left + 1)
+        if score > best:
+            best, anchor = score, hits[left][0]
+    return anchor
 
 
 def valid_vector(value, dimensions=None):
@@ -54,7 +74,10 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
     index = SourceIndex(rows, corpus['scope'])
     quotes = list(dict.fromkeys(phrase for q in queries for phrase in (re.findall(r'["“]([^"”]+)["”]', q) or [q])))
     exact = sorted(identifier for identifier, source in sources.items() if any(q in source['excerpt'] for q in quotes))
-    rankings = [[s['evidence_id'] for s in index.search(q, limit=30)] for q in queries]
+    rankings = [[s['evidence_id'] for s in index.search(q, limit=31)] for q in queries]
+    if any(len(ranking) > 30 for ranking in rankings):
+        limitations.append('retrieval_candidates_truncated')
+    rankings = [ranking[:30] for ranking in rankings]
     lexical = reciprocal_rank_fusion(rankings)
     vectors, semantic_rankings = {}, []
     if embedder is None:
@@ -92,8 +115,10 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
                 norm = math.sqrt(sum(v*v for v in vector))
                 scores = {key: sum(a*b for a,b in zip(vector, other)) / (norm * math.sqrt(sum(v*v for v in other)))
                           for key, other in vectors.items()}
-                semantic_rankings.append(sorted((key for key, score in scores.items() if score > 0),
-                                                key=lambda key: (-scores[key], key))[:30])
+                ranking = sorted((key for key, score in scores.items() if score > 0), key=lambda key: (-scores[key], key))
+                if len(ranking) > 30:
+                    limitations.append('retrieval_candidates_truncated')
+                semantic_rankings.append(ranking[:30])
         except Exception as exc:
             from ..utils.draft_budget import DeadlineExceeded
             if isinstance(exc, DeadlineExceeded):
@@ -102,7 +127,10 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         if len(vectors) < len(sources):
             limitations.append('partial_semantic_coverage')
     fused = reciprocal_rank_fusion(rankings + semantic_rankings)
-    selected = list(dict.fromkeys(exact + fused))[:30]
+    selected = list(dict.fromkeys(exact + fused))
+    if len(selected) > 30:
+        limitations.append('retrieval_candidates_truncated')
+    selected = selected[:30]
     if len(exact) > 30:
         limitations.append(f'exact_hits_truncated:{len(exact) - 30}')
     # Chunk indices, not lexicographic episode IDs, establish adjacent context.
@@ -116,19 +144,35 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
             if sources[other]['document_id'] == current['document_id']
             and type(sources[other]['locator'].get('chunk_index')) is int
             and abs(sources[other]['locator']['chunk_index'] - chunk_index) == 1)
-    selected = list(dict.fromkeys(selected + neighbors))[:30]
+    selected = list(dict.fromkeys(selected + neighbors))
+    if len(selected) > 30:
+        limitations.append('adjacent_context_truncated')
+    selected = selected[:30]
     packet, used = [], 0
+    query_terms = set(tokens(' '.join(queries)))
     for key in selected:
+        budget.check()
         source = sources[key]
         text = source['excerpt']
         matches = [(text.index(q), len(q)) for q in quotes if q in text]
-        at, length = min(matches) if matches else (0, 0)
+        at, length = min(matches) if matches else (lexical_anchor(text, query_terms), 0)
         window_size = max(2000, length + 400)
-        if window_size > 60000 - used:
-            limitations.append('drafting_packet_truncated')
-            continue
         start = max(0, at - 200)
         end = min(len(text), start + window_size)
+        # Expand both boundaries until every intersecting requested quote is whole.
+        previous = None
+        while previous != (start, end):
+            previous = (start, end)
+            for offset, size in matches:
+                if offset < end and offset + size > start:
+                    start, end = min(start, offset), max(end, offset + size)
+        if end - start > 60000 - used:
+            limitations.append('drafting_packet_truncated')
+            continue
+        if start or end < len(text):
+            limitations.append('source_windows_clipped')
+        if any(offset < start or offset + size > end for offset, size in matches):
+            limitations.append('requested_quotes_outside_windows')
         window = text[start:end]
         used += len(window)
         packet.append({k: v for k, v in source.items() if k not in {'embedding', 'embedding_provider_id'}} |

@@ -20,6 +20,7 @@ from ..services.simulation_manager import SimulationManager
 from ..models.project import ProjectManager
 from ..models.task import TaskManager, TaskStatus
 from ..services.graph_tools import GraphToolsService
+from ..services.proposal_store import ProposalError
 from ..utils.logger import get_logger
 
 logger = get_logger('mirofish.api.report')
@@ -332,6 +333,8 @@ def delete_report(report_id: str):
         if not success:
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
         return jsonify({"success": True, "message": f"Report deleted: {report_id}"})
+    except ProposalError as exc:
+        return jsonify(success=False, error=exc.code), exc.status
     except Exception as e:
         logger.error(f"Failed to delete report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

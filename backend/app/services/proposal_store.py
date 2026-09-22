@@ -22,7 +22,7 @@ TRANSITIONS = {
     'running': {'ready', 'blocked', 'failed', 'rejected'},
     'ready': {'accepting', 'stale', 'rejected', 'failed'},
     'blocked': {'rejected'},
-    'accepting': {'accepted', 'stale', 'failed'},
+    'accepting': {'accepted', 'stale', 'failed', 'rejected'},
     'accepted': set(), 'rejected': set(), 'failed': set(), 'stale': {'rejected'},
 }
 CONTENT_FIELDS = ('scope', 'before', 'after', 'source_digest', 'parent_digest', 'section_index',
@@ -230,6 +230,24 @@ class ProposalStore:
         path = self._file(proposal_id, name)
         atomic_json(path, value)
         return canonical_digest(value)
+
+    def record_telemetry(self, proposal_id, *, usage, timing=None):
+        """Retain observations after cancellation without changing state or content."""
+        deadline = time.monotonic() + 1
+        while True:
+            try:
+                with self.lock('record-' + self.identifier(proposal_id), 'state_busy'):
+                    record = self.read(proposal_id)
+                    record['usage'] = usage
+                    if timing is not None:
+                        record['timing'] = timing
+                    record['updated_at'] = now()
+                    atomic_json(self._file(proposal_id), record)
+                    return record
+            except ProposalError as exc:
+                if exc.code != 'state_busy' or time.monotonic() >= deadline:
+                    raise
+                time.sleep(.01)
 
     def load_snapshot(self, proposal_id, name, expected_digest):
         try:

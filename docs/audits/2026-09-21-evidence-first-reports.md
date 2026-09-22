@@ -29,4 +29,28 @@ The disposable harness ran at loopback port 40017 with artifact root `/tmp/mirof
 
 The offline evaluator ran six synthetic paired fixtures. It reported zero independently reviewed pairs and null proposed accuracy, correctly excluding synthetic/unlabeled judgments from quality denominators. These checks establish workflow mechanics, not accuracy or efficacy on real cases. No private inputs or paid/live model evaluation were used, and no Jev promotion/configuration was changed.
 
-Independent whole-change review and resulting corrections are recorded below when completed.
+## Independent review and corrections
+
+One fresh reviewer examined the frozen range `b8d7a82..018c87c` against the plan and design. The verdict at that head was request changes: no critical findings, six important findings, and one minor finding. The final patch addresses all seven; no second independent review is claimed.
+
+| Finding | Correction and regression evidence |
+| --- | --- |
+| Low-level writers bypassed immutable revisions | Outline, section, progress, assembly, and supplied-ID generation now reject immutable revisions before writes. Tombstoned IDs are also guarded. Four low-level writer regressions and a generation regression passed. |
+| Leaf-file symlinks escaped artifact containment | Complete file paths, including legacy paths and recovery manifests, are validated. A metadata symlink regression reproduced the old read and now rejects it. |
+| Interrupted acceptance stranded the UI | Reloaded `accepting` proposals offer an explicit same-digest retry. Pre-publication rejection is allowed only while holding both leases and confirming no committed target. API tests cover failures before and after publication; component and browser checks cover recovery after reload. |
+| Cancellation/deadlines discarded observed usage | Phase checkpoints and state-independent telemetry persistence retain completed and late-response usage/timing without reviving proposals. Watchdog/rejection regressions retain both observed calls; late Jev usage is recorded before fencing. |
+| Lexical evidence was cut from model windows | Matching term spans anchor windows even for nonliteral, case-insensitive queries. Window boundaries preserve intersecting literal quotes; clipping/candidate limits are disclosed. Late-source and second-quote regressions passed. |
+| Late GET responses undid terminal UI actions | Acceptance/rejection invalidate older status reads before starting. Regressions cover a delayed ready response arriving after each successful mutation. |
+| Deletion conflicts returned HTTP 500 | The existing endpoint now translates typed proposal errors. An occupied report returns 409 with a stable error and no traceback. |
+
+The failing regressions were observed before their corresponding fixes. API acceptance tests explicitly await worker cleanup, since observing a ready record may precede release of its operation lease. This retains the production concurrency protection.
+
+## Final verification
+
+- Focused backend verification: 56 passed.
+- `UV_PYTHON=3.11 npm run check`: **345 backend tests**, **12 frontend unit tests**, **16 component tests**, and production Vite build passed (3.13 seconds). Log: `/tmp/evidence-final-project-check.log`.
+- Fresh credential-neutral copy: `/tmp/mirofish-evidence-final-clean-ra9mvvlx/repo`; root/backend `.env` absent, credential environment keys unset, new Python 3.11 environment, frozen dependency lock. **345 passed in 19.10 seconds**, exit 0. Log: `/tmp/evidence-final-clean-check.log`.
+- Final browser recovery: a separate temporary harness at port 44875 injected one interruption immediately after atomic publication. Reload showed **Save needs recovery** and **Retry saving revision**. Retrying opened `report_919c91ac825a43dc8082c41cc678f24d`, still Needs review, with immutable controls. The filesystem evidence at `/tmp/mirofish-evidence-recovery-final/browser-evidence.json` confirms unchanged parent hashes, one accepted proposal, exactly one child revision, and only the original three synthetic model calls.
+- `git diff --check` passed. The feature remains in its local branch/worktree; no merge, push, deployment, private-input evaluation, or Jev promotion was performed.
+
+All actionable correctness findings from the independent review have targeted corrections and passing regressions. Independent quality on real cases remains unmeasured as described above.

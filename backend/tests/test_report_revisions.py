@@ -122,3 +122,40 @@ def test_legacy_mutation_and_deletion_share_proposal_lease(root):
             ReportAgent.__new__(ReportAgent).regenerate_section(sample_report(), 1)
     finally:
         lease.close()
+
+
+@pytest.mark.parametrize('operation', ['outline', 'section', 'progress', 'assemble'])
+def test_low_level_writers_reject_immutable_revision(root, operation):
+    record, service = ready(root)
+    revision = service.accept('report_root', record['proposal_id'], record['proposal_digest'])
+    calls = {'outline': lambda: ReportManager.save_outline(revision.report_id, revision.outline),
+             'section': lambda: ReportManager.save_section(revision.report_id, 1, revision.outline.sections[0]),
+             'progress': lambda: ReportManager.update_progress(revision.report_id, 'completed', 100, 'modified'),
+             'assemble': lambda: ReportManager.assemble_full_report(revision.report_id, revision.outline)}
+    with pytest.raises(ProposalError, match='immutable_revision'):
+        calls[operation]()
+
+
+def test_report_file_symlink_cannot_escape_root(root, tmp_path):
+    outside = root/'outside.json'
+    outside.write_text(json.dumps(sample_report('outside').to_dict()))
+    metadata = root/'report_root'/'meta.json'
+    metadata.unlink(); metadata.symlink_to(outside)
+    with pytest.raises(ProposalError, match='unsafe_path'):
+        ReportManager.get_report('report_root')
+
+
+def test_generate_cannot_reuse_immutable_revision_id(root):
+    record, service = ready(root)
+    revision = service.accept('report_root', record['proposal_id'], record['proposal_digest'])
+    with pytest.raises(ProposalError, match='immutable_revision'):
+        ReportAgent.__new__(ReportAgent).generate_report(report_id=revision.report_id)
+
+
+def test_rejection_recovers_interrupted_prepublication_save(root, monkeypatch):
+    record, service = ready(root)
+    monkeypatch.setattr(service, '_publish', lambda *args: (_ for _ in ()).throw(OSError('disk-full')))
+    with pytest.raises(OSError):
+        service.accept('report_root', record['proposal_id'], record['proposal_digest'])
+    assert service.store.read(record['proposal_id'])['state'] == 'accepting'
+    assert service.reject('report_root', record['proposal_id'])['state'] == 'rejected'

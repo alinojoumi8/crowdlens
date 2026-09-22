@@ -58,12 +58,19 @@ def default_embedder():
 
 def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, embedder_factory, tasks):
     identifier, task_id = record['proposal_id'], record['task_id']
+    service = None
     def expire():
-        try:
-            store.update(identifier, {'queued', 'running'}, {'state': 'failed', 'error_code': 'deadline_exceeded', 'phase': 'deadline'})
-            tasks.fail_task(task_id, 'deadline_exceeded')
-        except ProposalError:
-            pass
+        retry_until = time.monotonic() + 1
+        while True:
+            try:
+                store.update(identifier, {'queued', 'running'}, {'state': 'failed', 'error_code': 'deadline_exceeded',
+                             'phase': 'deadline', 'usage': budget.snapshot()})
+                tasks.fail_task(task_id, 'deadline_exceeded')
+                return
+            except ProposalError as exc:
+                if exc.code != 'state_busy' or time.monotonic() >= retry_until:
+                    return
+                time.sleep(.01)
     watchdog = threading.Timer(budget.remaining(), expire)
     watchdog.daemon = True
     try:
@@ -84,7 +91,11 @@ def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, emb
         tasks.fail_task(task_id, store.read(identifier).get('error_code', 'drafting_unavailable'))
     finally:
         watchdog.cancel()
-        lease.close()
+        try:
+            if service is None:
+                store.record_telemetry(identifier, usage=budget.snapshot())
+        finally:
+            lease.close()
 
 
 @report_bp.route('/<report_id>/evidence-proposals', methods=['POST'])

@@ -22,7 +22,7 @@ from ..config import Config
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from ..utils.timing import PhaseTimer
-from .report_revisions import guard_report_mutation
+from .report_revisions import guard_report_mutation, guard_report_generation
 from .proposal_store import ProposalStore, ProposalError
 from .graph_tools import (
     GraphToolsService,
@@ -2097,6 +2097,7 @@ class ReportAgent:
         
         return final_answer
     
+    @guard_report_generation
     def generate_report(
         self, 
         progress_callback: Optional[Callable[[str, int, str], None]] = None,
@@ -2843,44 +2844,61 @@ class ReportManager:
     @classmethod
     def _ensure_report_folder(cls, report_id: str) -> str:
         """ensurereportfolderexists andreturnedpath"""
+        cls.assert_report_writable(report_id)
         folder = cls._get_report_folder(report_id)
         os.makedirs(folder, exist_ok=True)
         return folder
+
+    @classmethod
+    def assert_report_writable(cls, report_id: str) -> None:
+        store = ProposalStore(cls._get_reports_dir())
+        store.identifier(report_id)
+        if store.path('.evidence-tombstones', report_id + '.json').exists():
+            raise ProposalError('report_deleted', 410)
+        existing = cls.get_report(report_id)
+        if existing and existing.revision.get('immutable'):
+            raise ProposalError('immutable_revision')
+
+    @classmethod
+    def _get_report_file(cls, report_id: str, filename: str) -> str:
+        store = ProposalStore(cls._get_reports_dir())
+        store.identifier(report_id)
+        return str(store.path(report_id, filename))
     
     @classmethod
     def _get_report_path(cls, report_id: str) -> str:
         """getreportmetainformationfile path"""
-        return os.path.join(cls._get_report_folder(report_id), "meta.json")
+        return cls._get_report_file(report_id, "meta.json")
     
     @classmethod
     def _get_report_markdown_path(cls, report_id: str) -> str:
         """getcompletereportMarkdownfile path"""
-        return os.path.join(cls._get_report_folder(report_id), "full_report.md")
+        return cls._get_report_file(report_id, "full_report.md")
     
     @classmethod
     def _get_outline_path(cls, report_id: str) -> str:
         """getoutlinefile path"""
-        return os.path.join(cls._get_report_folder(report_id), "outline.json")
+        return cls._get_report_file(report_id, "outline.json")
     
     @classmethod
     def _get_progress_path(cls, report_id: str) -> str:
         """getprogressfile path"""
-        return os.path.join(cls._get_report_folder(report_id), "progress.json")
+        return cls._get_report_file(report_id, "progress.json")
     
     @classmethod
     def _get_section_path(cls, report_id: str, section_index: int) -> str:
         """getSectionMarkdownfile path"""
-        return os.path.join(cls._get_report_folder(report_id), f"section_{section_index:02d}.md")
+        return cls._get_report_file(report_id, f"section_{section_index:02d}.md")
     
     @classmethod
     def _get_agent_log_path(cls, report_id: str) -> str:
         """get Agent logsfile path"""
-        return os.path.join(cls._get_report_folder(report_id), "agent_log.jsonl")
+        return cls._get_report_file(report_id, "agent_log.jsonl")
     
     @classmethod
     def _get_console_log_path(cls, report_id: str) -> str:
         """getconsolelogsfile path"""
-        return os.path.join(cls._get_report_folder(report_id), "console_log.txt")
+        return cls._get_report_file(report_id, "console_log.txt")
     
     @classmethod
     def get_console_log(cls, report_id: str, from_line: int = 0) -> Dict[str, Any]:
@@ -3049,7 +3067,7 @@ class ReportManager:
 
         # savefile
         file_suffix = f"section_{section_index:02d}.md"
-        file_path = os.path.join(cls._get_report_folder(report_id), file_suffix)
+        file_path = cls._get_section_path(report_id, section_index)
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(md_content)
 
@@ -3222,7 +3240,7 @@ class ReportManager:
         sections = []
         for filename in sorted(os.listdir(folder)):
             if filename.startswith('section_') and filename.endswith('.md'):
-                file_path = os.path.join(folder, filename)
+                file_path = cls._get_report_file(report_id, filename)
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
 
@@ -3245,7 +3263,7 @@ class ReportManager:
         
         fromsaveSectionfileassembleComplete report，and processrowtitleclean
         """
-        folder = cls._get_report_folder(report_id)
+        cls.assert_report_writable(report_id)
         
         # BuildReportheader
         md_content = f"# {outline.title}\n\n"
@@ -3677,7 +3695,7 @@ class ReportManager:
         
         if not os.path.exists(path):
             # backward compatibleformat：Checkdirectlystored inreportsunder directoryfile
-            old_path = os.path.join(cls._get_reports_dir(), f"{report_id}.json")
+            old_path = str(ProposalStore(cls._get_reports_dir()).path(f"{report_id}.json"))
             if os.path.exists(old_path):
                 path = old_path
             else:
@@ -3804,9 +3822,9 @@ class ReportManager:
         
         # backward compatibleformat：Deleteseparatefile
         deleted = False
-        reports_dir = cls._get_reports_dir()
-        old_json_path = os.path.join(reports_dir, f"{report_id}.json")
-        old_md_path = os.path.join(reports_dir, f"{report_id}.md")
+        store = ProposalStore(cls._get_reports_dir())
+        old_json_path = str(store.path(f"{report_id}.json"))
+        old_md_path = str(store.path(f"{report_id}.md"))
         
         if os.path.exists(old_json_path):
             os.remove(old_json_path)

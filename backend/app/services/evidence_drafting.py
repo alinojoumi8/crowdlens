@@ -73,11 +73,11 @@ class BudgetedRunner:
     def evaluate(self, **kwargs):
         self.fence()
         result = self.runner.evaluate(**kwargs, request_timeout=min(30, self.budget.remaining()))
-        self.fence()
         if result.cache_hit:
             self.cache_hits += 1
         else:
             self.budget.record_usage('typesafe', result.model, result.usage, result.elapsed_ms)
+        self.fence()
         return result
 
 
@@ -90,6 +90,7 @@ class EvidenceDraftingService:
         store = self.store
         timing, phase_started = {}, time.monotonic()
         phase_name = 'retrieving'
+        telemetry_saved = False
         def fence():
             budget.check()
             if store.read(proposal_id)['state'] != 'running':
@@ -99,7 +100,8 @@ class EvidenceDraftingService:
             fence()
             timing[phase_name] = round((time.monotonic() - phase_started) * 1000, 2)
             phase_name, phase_started = name, time.monotonic()
-            return store.update(proposal_id, {'running'}, {'phase': name, **changes})
+            return store.update(proposal_id, {'running'}, {'phase': name, 'timing': dict(timing),
+                                'usage': budget.snapshot(), **changes})
         def call(prompt, payload):
             fence()
             value = self.llm.chat_json([{'role': 'system', 'content': prompt},
@@ -111,10 +113,13 @@ class EvidenceDraftingService:
                 raise ValueError('invalid_model_output')
             return value
         def finish(findings, **changes):
+            nonlocal telemetry_saved
             fence()
             timing[phase_name] = round((time.monotonic() - phase_started) * 1000, 2)
-            return store.finish(proposal_id, {'state': 'blocked' if any(f['blocking'] for f in findings) else 'ready',
+            result = store.finish(proposal_id, {'state': 'blocked' if any(f['blocking'] for f in findings) else 'ready',
                 'phase': 'review', 'findings': findings, 'usage': budget.snapshot(), 'timing': timing, **changes})
+            telemetry_saved = True
+            return result
         try:
             record = store.read(proposal_id)
             scope = record['scope']
@@ -185,3 +190,7 @@ class EvidenceDraftingService:
             return finish([finding('invalid_model_or_source_contract')])
         except Exception:
             return store.update(proposal_id, {'running'}, {'state': 'failed', 'error_code': 'drafting_unavailable', 'usage': budget.snapshot()})
+        finally:
+            if not telemetry_saved:
+                timing[phase_name] = round((time.monotonic() - phase_started) * 1000, 2)
+                store.record_telemetry(proposal_id, usage=budget.snapshot(), timing=timing)

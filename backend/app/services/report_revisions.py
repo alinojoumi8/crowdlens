@@ -12,6 +12,19 @@ from .proposal_store import ProposalStore, ProposalError, atomic_json, fsync_dir
 from .source_retrieval import freeze_sources
 
 
+def guard_report_generation(function):
+    @wraps(function)
+    def guarded(self, progress_callback=None, report_id=None):
+        from .report_agent import ReportManager
+        import uuid
+        report_id = report_id or 'report_' + uuid.uuid4().hex[:12]
+        store = ProposalStore(ReportManager._get_reports_dir())
+        with store.operation(report_id):
+            ReportManager.assert_report_writable(report_id)
+            return function(self, progress_callback=progress_callback, report_id=report_id)
+    return guarded
+
+
 def guard_report_mutation(function):
     @wraps(function)
     def guarded(self, report, *args, **kwargs):
@@ -58,7 +71,7 @@ class ReportRevisionService:
             raise ProposalError('revision_conflict')
         # Every published artifact is sealed, not just the metadata view.
         try:
-            manifest = json.loads((target_dir / 'manifest.json').read_text())
+            manifest = json.loads(self.store.path(target, 'manifest.json').read_text())
             import hashlib
             for name, digest in manifest.items():
                 if '/' in name or name.startswith('.'):
@@ -179,9 +192,12 @@ class ReportRevisionService:
     def reject(self, parent_report_id, proposal_id):
         record = self.store.get(parent_report_id, proposal_id)
         # Running workers hold the parent lease; rejection only fences their state.
-        if self.store.path(record['revision_report_id']).exists() or record['state'] == 'accepted':
+        if self.store.path(record['revision_report_id']).exists() or record['state'] in {'accepted', 'accepting'}:
             with self.store.operation(parent_report_id), self.store.operation(record['revision_report_id']):
-                self._recover(self.store.get(parent_report_id, proposal_id))
+                current = self.store.get(parent_report_id, proposal_id)
+                if not self._recover(current):
+                    # Only abandon a pre-publication save while holding both leases.
+                    return self.store.update(proposal_id, {'accepting'}, {'state': 'rejected'})
             raise ProposalError('already_accepted')
         return self.store.reject(parent_report_id, proposal_id)
 

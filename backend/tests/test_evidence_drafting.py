@@ -93,3 +93,18 @@ def test_analysis_cannot_attach_invented_citation(tmp_path):
     result, llm = run(tmp_path, {'EVIDENCE_LEDGER_V1': {'claims': [sample_claim(), claim]}})
     assert result['state'] == 'blocked'
     assert len(llm.calls) == 1
+
+
+def test_verifier_records_late_usage_before_deadline_fence():
+    from types import SimpleNamespace
+    from app.services.evidence_drafting import BudgetedRunner
+    from app.utils.draft_budget import DeadlineExceeded
+    clock = [0]
+    budget = DraftBudget(seconds=1, clock=lambda: clock[0])
+    class Runner:
+        def evaluate(self, **kwargs):
+            clock[0] = 2
+            return SimpleNamespace(cache_hit=False, model='synthetic', usage={'input_tokens': 5}, elapsed_ms=2000)
+    with pytest.raises(DeadlineExceeded):
+        BudgetedRunner(Runner(), budget, budget.check).evaluate()
+    assert budget.snapshot()['calls'][0]['input_tokens'] == 5

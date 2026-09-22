@@ -52,3 +52,22 @@ def test_remote_embeddings_never_called_and_neighbors_stay_scoped():
     packet = retrieve_sources(freeze_sources(rows, SCOPE), [TEXT], budget=DraftBudget(), embedder=Remote())
     assert {s['episode_id'] for s in packet['sources']} == {'one', 'two'}
     assert 'remote_embeddings_skipped' in packet['limitations']
+
+
+def test_window_never_cuts_a_second_requested_literal_quote():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    quote = 'A long quotation ' * 40
+    text = 'First quotation.' + 'x' * 1850 + quote + ' tail'
+    packet = retrieve_sources(freeze_sources([episode('one',text)],SCOPE),
+        ['"First quotation."', '"'+quote+'"'],budget=DraftBudget())
+    assert quote in packet['sources'][0]['window']
+
+
+def test_lexical_window_includes_nonliteral_late_match_and_discloses_clipping():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    relevant = 'The hearing now appears on the Friday schedule.'
+    text = 'Unrelated administrative paragraph. ' * 70 + relevant
+    packet = retrieve_sources(freeze_sources([episode('one', text)], SCOPE),
+                              ['Hearing schedule'], budget=DraftBudget())
+    assert relevant in packet['sources'][0]['window']
+    assert 'source_windows_clipped' in packet['limitations']
