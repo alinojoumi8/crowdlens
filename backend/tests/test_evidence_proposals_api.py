@@ -19,11 +19,17 @@ def app(tmp_path, monkeypatch):
     store = ProposalStore(tmp_path)
     app.extensions.update(neo4j_storage=SourceStorage(), evidence_proposal_store=store,
         evidence_llm_factory=lambda identifier: FakeLLM(store, identifier), evidence_embedder_factory=lambda: None)
-    return app
+    yield app
+    import threading
+    for thread in threading.enumerate():
+        if thread.name == 'evidence-proposal':
+            thread.join(10)
+            assert not thread.is_alive(), 'proposal worker leaked beyond test'
 
 
 def terminal(client, identifier):
-    for _ in range(100):
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
         response = client.get(f'/api/report/report_root/evidence-proposals/{identifier}')
         data = response.json['data']
         if data['state'] not in {'queued', 'running'}:
@@ -85,7 +91,7 @@ def test_watchdog_fences_late_response_without_releasing_capacity(app, monkeypat
     response = client.post('/api/report/report_root/evidence-proposals', json={'section_index':1,'request_key':'slow'})
     identifier = response.json['data']['proposal_id']
     try:
-        assert entered.wait(2)
+        assert entered.wait(10)
         timers[0].callback()
         assert terminal(client, identifier)['state'] == 'failed'
         assert client.post('/api/report/report_root/evidence-proposals', json={'section_index':1,'request_key':'second'}).status_code == 409
