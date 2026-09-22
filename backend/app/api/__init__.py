@@ -14,5 +14,6 @@ from . import graph  # noqa: E402, F401
 from . import simulation  # noqa: E402, F401
 from . import simulation_diagnostics  # noqa: E402, F401
 from . import report  # noqa: E402, F401
+from . import evidence_proposals  # noqa: E402, F401
 from . import status  # noqa: E402, F401
 from . import market  # noqa: E402, F401
