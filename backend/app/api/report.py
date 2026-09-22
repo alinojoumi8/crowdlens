@@ -107,7 +107,7 @@ def generate_report():
             )
 
         if not force_regenerate:
-            existing_report = ReportManager.get_report_by_simulation(simulation_id)
+            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth)
             if (
                 existing_report
                 and existing_report.report_mode == report_mode
@@ -436,12 +436,15 @@ def get_single_section(report_id: str, section_index: int):
 
 @report_bp.route('/<report_id>/section/<int:section_index>/regenerate', methods=['POST'])
 def regenerate_report_section(report_id: str, section_index: int):
+    from ..services.proposal_store import ProposalError
     try:
         data = request.get_json() or {}
         report = ReportManager.get_report(report_id)
         if not report:
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
 
+        if report.revision.get('immutable'):
+            raise ProposalError('immutable_revision')
         storage = current_app.extensions.get('neo4j_storage')
         if not storage:
             raise ValueError("GraphStorage not initialized - check Neo4j connection")
@@ -465,6 +468,8 @@ def regenerate_report_section(report_id: str, section_index: int):
             strict_antirepetition=strict_antirepetition,
         )
         return jsonify({"success": True, "data": updated_report.to_dict()})
+    except ProposalError as e:
+        return jsonify({'success': False, 'error': e.code}), e.status
     except Exception as e:
         logger.error(f"Failed to regenerate section: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -472,11 +477,14 @@ def regenerate_report_section(report_id: str, section_index: int):
 
 @report_bp.route('/<report_id>/resume', methods=['POST'])
 def resume_report(report_id: str):
+    from ..services.proposal_store import ProposalError
     try:
         data = request.get_json() or {}
         report = ReportManager.get_report(report_id)
         if not report:
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
+        if report.revision.get('immutable'):
+            raise ProposalError('immutable_revision')
         progress = ReportManager.get_progress(report_id) or {}
         resumable_statuses = [
             ReportStatus.FAILED,
@@ -539,6 +547,8 @@ def resume_report(report_id: str):
             "status": "generating",
             "message": "Report resume task started"
         }})
+    except ProposalError as e:
+        return jsonify({'success': False, 'error': e.code}), e.status
     except Exception as e:
         logger.error(f"Failed to resume report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

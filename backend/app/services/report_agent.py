@@ -22,6 +22,8 @@ from ..config import Config
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from ..utils.timing import PhaseTimer
+from .report_revisions import guard_report_mutation
+from .proposal_store import ProposalStore, ProposalError
 from .graph_tools import (
     GraphToolsService,
     SearchResult,
@@ -411,6 +413,7 @@ class ReportSection:
     claims: List[Dict[str, Any]] = field(default_factory=list)
     claim_checks: List[Dict[str, Any]] = field(default_factory=list)
     claim_check_hash: str = ""
+    claim_ledger: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -421,6 +424,7 @@ class ReportSection:
             "claims": self.claims,
             "claim_checks": self.claim_checks,
             "claim_check_hash": self.claim_check_hash,
+            "claim_ledger": self.claim_ledger,
         }
 
     def to_markdown(self, level: int = 2) -> str:
@@ -482,6 +486,7 @@ class Report:
     claim_checks: List[Dict[str, Any]] = field(default_factory=list)
     decision_config: Dict[str, Any] = field(default_factory=dict)
     source_grounding: Dict[str, Any] = field(default_factory=dict)
+    revision: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -504,6 +509,7 @@ class Report:
             "claim_checks": self.claim_checks,
             "decision_config": self.decision_config,
             "source_grounding": self.source_grounding,
+            "revision": self.revision,
         }
 
 
@@ -2388,6 +2394,7 @@ class ReportAgent:
             
             return report
 
+    @guard_report_mutation
     def resume_report(
         self,
         report: Report,
@@ -2539,6 +2546,7 @@ class ReportAgent:
                 self.console_logger.close()
                 self.console_logger = None
 
+    @guard_report_mutation
     def regenerate_section(
         self,
         report: Report,
@@ -2828,7 +2836,9 @@ class ReportManager:
     @classmethod
     def _get_report_folder(cls, report_id: str) -> str:
         """getreportfolderpath"""
-        return os.path.join(cls._get_reports_dir(), report_id)
+        store = ProposalStore(cls._get_reports_dir())
+        store.identifier(report_id)
+        return str(store.path(report_id))
     
     @classmethod
     def _ensure_report_folder(cls, report_id: str) -> str:
@@ -3387,6 +3397,9 @@ class ReportManager:
     @classmethod
     def save_report(cls, report: Report) -> None:
         """SavereportmetainformationandcompleteReport"""
+        existing = cls.get_report(report.report_id)
+        if existing and existing.revision.get('immutable'):
+            raise ProposalError('immutable_revision')
         cls._ensure_report_folder(report.report_id)
         
         # savemetainformationJSON
@@ -3535,6 +3548,9 @@ class ReportManager:
     @classmethod
     def apply_quality_status(cls, report: Report) -> None:
         """Set completed vs needs_review based on quality score."""
+        if report.revision.get('immutable'):
+            report.status = ReportStatus.NEEDS_REVIEW
+            return
         if not report.quality_score:
             report.quality_score = cls.evaluate_report_quality(report)
         active_evidence_mode = report.decision_config.get("features", {}).get("evidence", {}).get("mode")
@@ -3689,6 +3705,7 @@ class ReportManager:
                     claims=s.get('claims', []),
                     claim_checks=s.get('claim_checks', []),
                     claim_check_hash=s.get('claim_check_hash', ''),
+                    claim_ledger=s.get('claim_ledger', []),
                 ))
             outline = ReportOutline(
                 title=outline_data['title'],
@@ -3727,29 +3744,17 @@ class ReportManager:
             claim_checks=data.get('claim_checks', []),
             decision_config=data.get('decision_config', {}),
             source_grounding=data.get('source_grounding', {}),
+            revision=data.get('revision', {}),
         )
     
     @classmethod
-    def get_report_by_simulation(cls, simulation_id: str) -> Optional[Report]:
-        """based onsimulationIDgetreport"""
-        reports_dir = cls._get_reports_dir()
-        
-        for item in os.listdir(reports_dir):
-            item_path = os.path.join(reports_dir, item)
-            # newformat：filefolder
-            if os.path.isdir(item_path):
-                report = cls.get_report(item)
-                if report and report.simulation_id == simulation_id:
-                    return report
-            # backward compatibleformat：JSONfile
-            elif item.endswith('.json'):
-                report_id = item[:-5]
-                report = cls.get_report(report_id)
-                if report and report.simulation_id == simulation_id:
-                    return report
-        
-        return None
-    
+    def get_report_by_simulation(cls, simulation_id: str, *, report_mode=None, report_depth=None) -> Optional[Report]:
+        reports = [report for report in cls.list_reports(simulation_id, limit=None)
+                   if not report.revision.get('parent_report_id')
+                   and (report_mode is None or report.report_mode == report_mode)
+                   and (report_depth is None or report.report_depth == report_depth)]
+        return reports[0] if reports else None
+
     @classmethod
     def list_reports(cls, simulation_id: Optional[str] = None, limit: int = 50) -> List[Report]:
         """columnappearreport"""
@@ -3757,6 +3762,8 @@ class ReportManager:
         
         reports = []
         for item in os.listdir(reports_dir):
+            if item.startswith('.'):
+                continue
             item_path = os.path.join(reports_dir, item)
             # newformat：filefolder
             if os.path.isdir(item_path):
@@ -3773,12 +3780,17 @@ class ReportManager:
                         reports.append(report)
         
         # sorted by creation time descending
-        reports.sort(key=lambda r: r.created_at, reverse=True)
+        reports.sort(key=lambda r: (r.created_at, r.report_id), reverse=True)
         
         return reports[:limit]
     
     @classmethod
     def delete_report(cls, report_id: str) -> bool:
+        from .report_revisions import ReportRevisionService
+        return ReportRevisionService(ProposalStore(cls._get_reports_dir()), storage=None, report_manager=cls).delete(report_id)
+
+    @classmethod
+    def _delete_report_unlocked(cls, report_id: str) -> bool:
         """Deletereport（entirefolder）"""
         import shutil
         
