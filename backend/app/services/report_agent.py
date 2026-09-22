@@ -2802,15 +2802,16 @@ class ReportManager:
 
     @classmethod
     def _is_writable_dir(cls, directory: str) -> bool:
-        probe = os.path.join(directory, f".write_test_{os.getpid()}")
+        import tempfile
+        probe = None
         try:
-            with open(probe, "w", encoding="utf-8") as handle:
-                handle.write("")
+            descriptor, probe = tempfile.mkstemp(prefix='.write_test_', dir=directory)
+            os.close(descriptor)
             os.remove(probe)
             return True
         except OSError:
             try:
-                if os.path.exists(probe):
+                if probe and os.path.exists(probe):
                     os.remove(probe)
             except OSError:
                 pass

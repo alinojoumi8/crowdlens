@@ -45,11 +45,13 @@ One fresh reviewer examined the frozen range `b8d7a82..018c87c` against the plan
 
 The failing regressions were observed before their corresponding fixes. API acceptance tests explicitly await worker cleanup, since observing a ready record may precede release of its operation lease. This retains the production concurrency protection.
 
+Final harness-log inspection exposed a related pre-existing storage race: simultaneous writability checks used the same process-ID probe filename. One request could delete another's probe, falsely report the configured root unwritable, and route that operation to fallback storage. A two-thread barrier regression with distinct primary/fallback roots reproduced the split. Exclusive temporary probe files now prevent the collision. The report persistence and quality suites passed all 27 tests after this correction; final project and clean-copy results below include it.
+
 ## Final verification
 
 - Focused backend verification: 56 passed.
-- `UV_PYTHON=3.11 npm run check`: **345 backend tests**, **12 frontend unit tests**, **16 component tests**, and production Vite build passed (3.13 seconds). Log: `/tmp/evidence-final-project-check.log`.
-- Fresh credential-neutral copy: `/tmp/mirofish-evidence-final-clean-ra9mvvlx/repo`; root/backend `.env` absent, credential environment keys unset, new Python 3.11 environment, frozen dependency lock. **345 passed in 19.10 seconds**, exit 0. Log: `/tmp/evidence-final-clean-check.log`.
+- `UV_PYTHON=3.11 npm run check`: **346 backend tests**, **12 frontend unit tests**, **16 component tests**, and production Vite build passed (3.14 seconds). Log: `/tmp/evidence-final-project-check.log`.
+- Fresh credential-neutral copy: `/tmp/mirofish-evidence-final-clean-i_tikmvh/repo`; root/backend `.env` absent, credential environment keys unset, new Python 3.11 environment, frozen dependency lock. **346 passed in 20.93 seconds**, exit 0. Log: `/tmp/evidence-final-clean-check.log`.
 - Final browser recovery: a separate temporary harness at port 44875 injected one interruption immediately after atomic publication. Reload showed **Save needs recovery** and **Retry saving revision**. Retrying opened `report_919c91ac825a43dc8082c41cc678f24d`, still Needs review, with immutable controls. The filesystem evidence at `/tmp/mirofish-evidence-recovery-final/browser-evidence.json` confirms unchanged parent hashes, one accepted proposal, exactly one child revision, and only the original three synthetic model calls.
 - `git diff --check` passed. The feature remains in its local branch/worktree; no merge, push, deployment, private-input evaluation, or Jev promotion was performed.
 

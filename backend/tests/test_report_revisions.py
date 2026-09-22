@@ -159,3 +159,22 @@ def test_rejection_recovers_interrupted_prepublication_save(root, monkeypatch):
         service.accept('report_root', record['proposal_id'], record['proposal_digest'])
     assert service.store.read(record['proposal_id'])['state'] == 'accepting'
     assert service.reject('report_root', record['proposal_id'])['state'] == 'rejected'
+
+
+def test_concurrent_storage_probes_do_not_switch_report_roots(tmp_path, monkeypatch):
+    import os
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+    primary, fallback = tmp_path/'primary', tmp_path/'fallback'
+    monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(primary))
+    monkeypatch.setattr(ReportManager, 'FALLBACK_REPORTS_DIR', str(fallback))
+    barrier, remove = Barrier(2), os.remove
+    def concurrent_remove(path):
+        if Path(path).parent == primary and Path(path).name.startswith('.write_test_'):
+            barrier.wait(timeout=5)
+        return remove(path)
+    monkeypatch.setattr(os, 'remove', concurrent_remove)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(lambda _: ReportManager._get_reports_dir(), range(2)))
+    assert results == [str(primary), str(primary)]
+    assert not fallback.exists()
