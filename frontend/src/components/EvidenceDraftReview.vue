@@ -12,13 +12,13 @@
       <p class="review-note">Compare the wording and inspect its sources. Saving creates a separate report that remains Needs review. Model checks can miss errors.</p>
       <div v-if="proposal.before?.section" class="comparison" aria-label="Section comparison">
         <article><h5>Original section</h5><SafeMarkdown :content="proposal.before.section" /></article>
-        <article><h5>Proposed section</h5><SafeMarkdown :content="proposal.after?.section || 'Draft in progress…'" /></article>
+        <article><h5>Proposed section</h5><SafeMarkdown :content="proposal.after?.section || (active ? 'Draft in progress…' : 'No proposed section available.')" /></article>
       </div>
       <details v-if="proposal.before?.summary" class="summary-comparison" open>
         <summary>Summary changes{{ proposal.summary_unchanged ? ' · unchanged' : '' }}</summary>
         <div class="comparison" aria-label="Summary comparison">
           <article><h5>Original summary</h5><p>{{ proposal.before.summary }}</p></article>
-          <article><h5>Proposed summary</h5><p>{{ proposal.after?.summary || 'Draft in progress…' }}</p></article>
+          <article><h5>Proposed summary</h5><p>{{ proposal.after?.summary || (active ? 'Draft in progress…' : 'No proposed summary available.') }}</p></article>
         </div>
       </details>
       <ul v-if="proposal.findings?.length" class="findings" aria-label="Review findings">
@@ -120,7 +120,14 @@ async function accept() {
     if (token !== generation) return
     proposal.value = { ...proposal.value, state: 'accepted', accepted_report_id: result.data.report_id }
     remember(); stop(); emit('revision-created', result.data.report_id)
-  } catch (err) { if (token === generation) error.value = message(err) }
+  } catch (err) {
+    if (token === generation) {
+      error.value = message(err)
+      const code = err.response?.data?.error
+      if (['stale_parent', 'stale_sources'].includes(code)) proposal.value = { ...proposal.value, state: 'stale' }
+      if (err.response?.status === 410) proposal.value = { ...proposal.value, state: 'failed', error_code: 'revision_deleted' }
+    }
+  }
   finally { if (token === generation) busy.value = false }
 }
 async function reject() {

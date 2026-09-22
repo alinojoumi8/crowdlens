@@ -77,3 +77,14 @@ it('polls without recreating and stops after unmount', async () => {
   expect(api.getEvidenceProposal).toHaveBeenCalledTimes(1)
   vi.useRealTimers()
 })
+
+it('immediately disables saving after a stale acceptance response', async () => {
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: proposal() })
+  api.acceptEvidenceProposal.mockRejectedValue({ response: { status: 409, data: { error: 'stale_sources' } } })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  await button(wrapper, 'Save as new revision').trigger('click'); await flushPromises()
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  expect(wrapper.text()).toContain('source documents changed')
+  wrapper.unmount()
+})
