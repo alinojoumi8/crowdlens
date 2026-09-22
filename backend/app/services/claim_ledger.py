@@ -79,6 +79,8 @@ def validate_ledger(ledger, sources, scope):
             findings.append(finding('new_simulation_observation' if kind == 'simulation_observation' else 'invalid_claim_kind', identifier))
             continue
         if kind == 'analysis':
+            if claim.get('citation_ids', []) != []:
+                findings.append(finding('analysis_citations_must_use_premises', identifier))
             if not _strings(claim.get('premise_claim_ids')) or not claim['premise_claim_ids']:
                 findings.append(finding('missing_premises', identifier))
             continue

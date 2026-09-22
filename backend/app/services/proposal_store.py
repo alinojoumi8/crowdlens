@@ -145,7 +145,7 @@ class ProposalStore:
 
     def _file(self, proposal_id, name='record'):
         self.identifier(proposal_id)
-        if name not in {'record', 'parent', 'sources'}:
+        if name not in {'record', 'parent', 'sources', 'ledger'}:
             raise ProposalError('invalid_snapshot', 400)
         return self.path('.evidence-proposals', proposal_id, name + '.json')
 
