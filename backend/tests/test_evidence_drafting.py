@@ -61,6 +61,14 @@ def test_invalid_ledger_never_requests_prose(tmp_path, claims):
     assert len(llm.calls) == 1
 
 
+def test_short_section_rejects_oversized_ledger_before_drafting(tmp_path):
+    claims = [{**sample_claim(), 'claim_id': f'claim_{index:02}'} for index in range(1, 7)]
+    result, llm = run(tmp_path, {'EVIDENCE_LEDGER_V1': {'claims': claims, 'gaps': []}})
+    assert result['state'] == 'blocked'
+    assert [finding['code'] for finding in result['findings']] == ['invalid_ledger']
+    assert llm.calls == ['EVIDENCE_LEDGER_V1']
+
+
 @pytest.mark.parametrize('audit', [{}, {'findings': [], 'covered_paragraph_indices': [],
     'covered_summary_edit_indices': [0], 'summary_unchanged_consistent': True},
     {'findings': [{'code': 'added_fact', 'target_kind': 'paragraph', 'target_index': 0,
