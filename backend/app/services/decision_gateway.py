@@ -17,6 +17,7 @@ class DecisionResult:
     usage: dict[str, int] = field(default_factory=dict)
     elapsed_ms: float = 0.0
     reason: str = ''
+    cache_hit: bool = False
 
 
 def canonical_json(value):
@@ -67,7 +68,7 @@ class DecisionGateway:
         self.timeout = max(.1, min(float(timeout), 30))
         self.post = post
 
-    def evaluate(self, *, state, questions, mode):
+    def evaluate(self, *, state, questions, mode, request_timeout=None):
         started = time.monotonic()
         def result(status, reason='', **kwargs):
             return DecisionResult(status, model=self.model, elapsed_ms=(time.monotonic() - started) * 1000, reason=reason, **kwargs)
@@ -102,7 +103,7 @@ class DecisionGateway:
         try:
             response = self.post('https://api.typesafe.ai/v1/systemone',
                                  headers={'Authorization': f'Bearer {self.api_key}'},
-                                 json=payload, timeout=self.timeout)
+                                 json=payload, timeout=self.timeout if request_timeout is None else min(self.timeout, request_timeout))
             if not 200 <= response.status_code < 300:
                 return result('unavailable', f'http_{response.status_code}')
             body = response.json()

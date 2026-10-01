@@ -87,7 +87,9 @@ If no summary span is affected, preserve the summary and record `summary_unchang
 
 Add `report_revisions.py` for proposal/revision storage and transitions, `evidence_drafting.py` for orchestration and structured drafting, and a focused original-source retrieval module. Keep the large report agent focused on compatibility serialization and shared validation. Reuse existing source checks without changing global evidence thresholds or aggregation policy.
 
-Proposal states: `queued`, `running`, `ready`, `blocked`, `failed`, `accepted`, `rejected`, `stale`. Each proposal stores the parent report ID and content digest, selected section index, scope, source digest, frozen before/after content, ledger, checks, model/policy identity, usage, phase timings, limitations, and the accepted revision ID when present. Raw excerpts stay with private report artifacts, not generic logs or tracked evaluation fixtures.
+Proposal states: `queued`, `running`, `ready`, `blocked`, `failed`, `accepting`, `accepted`, `rejected`, `stale`. Each proposal stores the parent report ID and content digest, selected section index, scope, source digest, frozen before/after content, ledger, checks, model/policy identity, usage, phase timings, limitations, and the accepted revision ID when present. Raw excerpts stay with private report artifacts, not generic logs or tracked evaluation fixtures.
+
+An interrupted `accepting` state offers explicit recovery using the saved digest, including after a page reload. Rejection may abandon that state only while holding parent/target leases and confirming that no revision was published. In-flight status responses cannot undo successful acceptance or rejection. Usage and timing updates may finish after cancellation, but they cannot change immutable content or revive terminal state.
 
 Store proposals under the existing report artifact root in a dedicated proposal subtree; report listing must exclude that subtree. Validate every report/proposal identifier and resolve paths beneath the configured root. A server-generated proposal ID determines a unique target revision ID, allowing recovery and repeat acceptance without duplicate reports.
 

@@ -1,0 +1,341 @@
+{
+  "source": {
+    "url": "https://www.supremecourt.gov/opinions/23pdf/22-429_h315.pdf",
+    "sha256": "7dba0b08254d8d0eccd91ccfe915ecccd33ac1daaada7daabcae3f5bc743a952",
+    "pdf_pages_used": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "opinion_pages_used": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "chunk_count": 4,
+    "scope": {
+      "graph_id": "public_acheson_graph",
+      "case_id": "public_acheson_case",
+      "case_version_id": "public_acheson_opinion_2023_12_05"
+    }
+  },
+  "model": "MiniMax-M3",
+  "baseline": {
+    "section": "Laufer urged the Court to dismiss the case as moot and to refrain from resolving the standing question, characterizing mootness as easy and standing as hard. Acheson urged the Court to decide the standing issue despite mootness, emphasizing the live circuit split and concerns about litigants manipulating the Court's jurisdiction. The Court dismissed the case as moot, vacated the First Circuit's judgment, and remanded with instructions to dismiss, without reaching the standing issue.",
+    "summary": "The Court dismissed Acheson Hotels v. Laufer as moot after Laufer voluntarily dismissed her underlying claims, declining to address whether she had Article III standing to sue.",
+    "usage": {
+      "calls": [
+        {
+          "provider": "anthropic",
+          "model": "MiniMax-M3",
+          "attempt_count": 1,
+          "input_tokens": 1707,
+          "output_tokens": 140,
+          "elapsed_ms": 825.3
+        }
+      ],
+      "elapsed_ms": 827.07,
+      "remaining_ms": 89172.92,
+      "cost": null
+    },
+    "elapsed_seconds": 0.83,
+    "estimated_usd": 0.00068
+  },
+  "proposed": {
+    "proposal_id": "proposal_674e04c55d884618a7445d6eb1c0a9c2",
+    "state": "ready",
+    "section": "Laufer urged the Court to refrain from resolving the standing question and to dismiss the case as moot, characterizing mootness as easy and standing as hard. [1]\n\nAcheson urged the Court to decide the standing issue despite mootness, emphasizing the live circuit split, efficiency concerns, and the risk that litigants could manipulate the Court's jurisdiction by abandoning claims to evade review. [1]\n\nLaufer voluntarily dismissed her pending ADA cases with prejudice, including her complaint against Acheson in the District of Maine, following the suspension of her lawyer Tristan Gillespie by the U.S. District Court for the District of Maryland. [2]\n\nThe Court dismissed the case as moot, expressing sensitivity to Acheson's concern about litigants manipulating the Court's jurisdiction but concluding it was not convinced Laufer abandoned her case to evade review; the Court emphasized it might exercise its discretion differently in a future case. [1]\n\nThe Court vacated the judgment and remanded the case to the First Circuit with instructions to dismiss the case as moot under the Munsingwear practice, without reaching the standing issue. [1] [3]",
+    "summary": "The Court dismissed Acheson Hotels v. Laufer as moot after Laufer voluntarily dismissed her underlying claims, declining to address whether she had Article III standing to sue.",
+    "usage": {
+      "calls": [
+        {
+          "provider": "anthropic",
+          "model": "MiniMax-M3",
+          "attempt_count": 1,
+          "input_tokens": 3090,
+          "output_tokens": 426,
+          "elapsed_ms": 1725.67
+        },
+        {
+          "provider": "anthropic",
+          "model": "MiniMax-M3",
+          "attempt_count": 1,
+          "input_tokens": 3702,
+          "output_tokens": 301,
+          "elapsed_ms": 1765.64
+        },
+        {
+          "provider": "anthropic",
+          "model": "MiniMax-M3",
+          "attempt_count": 1,
+          "input_tokens": 4274,
+          "output_tokens": 38,
+          "elapsed_ms": 1084.2
+        }
+      ],
+      "elapsed_ms": 4737.97,
+      "remaining_ms": 175245.15,
+      "cost": null
+    },
+    "timing": {
+      "retrieving": 32.81,
+      "planning": 1759.56,
+      "drafting": 1783.2,
+      "auditing": 1103.27
+    },
+    "elapsed_seconds": 4.74,
+    "estimated_usd": 0.004238,
+    "source_claim_count": 5,
+    "citation_count": 6,
+    "exact_quote_count": 0,
+    "exact_quotes_found": 0,
+    "retrieved_source_count": 4,
+    "findings": [],
+    "limitations": [
+      "semantic_retrieval_unavailable",
+      "source_windows_clipped",
+      "model_audit_is_not_factual_certification",
+      "Evidence gap: Whether Justice Jackson's separate writing addresses the standing question left unresolved or only objects to the mootness disposition."
+    ]
+  },
+  "review_status": "pending_human_review",
+  "factual_accuracy": null,
+  "attribution_accuracy": null,
+  "citation_validity_reviewed": null,
+  "human_review_seconds": null,
+  "pricing": {
+    "url": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+    "input_usd_per_million": 0.3,
+    "output_usd_per_million": 1.2,
+    "basis": "published MiniMax-M3 standard priority, context <=512K; estimate only"
+  },
+  "trial_attempts": [
+    {
+      "proposal_id": "proposal_72e044ea2a4c48f390a37260db0ee065",
+      "state": "blocked",
+      "findings": [
+        {
+          "code": "quote_absent",
+          "blocking": true,
+          "claim_id": "claim_12"
+        },
+        {
+          "code": "quote_absent",
+          "blocking": true,
+          "claim_id": "claim_18"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_21"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_22"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_23"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_24"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_28"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_29"
+        },
+        {
+          "code": "analysis_citations_must_use_premises",
+          "blocking": true,
+          "claim_id": "claim_30"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_21"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_22"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_23"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_24"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_28"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_29"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_30"
+        }
+      ],
+      "usage": {
+        "calls": [
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 3070,
+            "output_tokens": 2859,
+            "elapsed_ms": 58306.55
+          }
+        ],
+        "elapsed_ms": 58409.16,
+        "remaining_ms": 121565.92,
+        "cost": null
+      },
+      "estimated_usd": 0.004352
+    },
+    {
+      "proposal_id": "proposal_b749f157527840648bfab71c870820ae",
+      "state": "blocked",
+      "findings": [
+        {
+          "code": "quote_absent",
+          "blocking": true,
+          "claim_id": "claim_02"
+        },
+        {
+          "code": "quote_absent",
+          "blocking": true,
+          "claim_id": "claim_10"
+        },
+        {
+          "code": "missing_attribution",
+          "blocking": true,
+          "claim_id": "claim_13"
+        },
+        {
+          "code": "quote_absent",
+          "blocking": true,
+          "claim_id": "claim_13"
+        },
+        {
+          "code": "premise_unverified",
+          "blocking": false,
+          "claim_id": "claim_16"
+        }
+      ],
+      "usage": {
+        "calls": [
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 3188,
+            "output_tokens": 1564,
+            "elapsed_ms": 10314.05
+          }
+        ],
+        "elapsed_ms": 10416.13,
+        "remaining_ms": 169568.86,
+        "cost": null
+      },
+      "estimated_usd": 0.002833
+    },
+    {
+      "proposal_id": "proposal_fa187043999948dfbb796487a2298fc6",
+      "state": "blocked",
+      "findings": [
+        {
+          "code": "paragraph_kind_mismatch",
+          "blocking": true,
+          "paragraph_index": 0
+        },
+        {
+          "code": "invalid_summary_edits",
+          "blocking": true
+        }
+      ],
+      "usage": {
+        "calls": [
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 3105,
+            "output_tokens": 501,
+            "elapsed_ms": 5269.52
+          },
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 3777,
+            "output_tokens": 434,
+            "elapsed_ms": 7015.49
+          }
+        ],
+        "elapsed_ms": 12412.98,
+        "remaining_ms": 167571.2,
+        "cost": null
+      },
+      "estimated_usd": 0.003187
+    },
+    {
+      "proposal_id": "proposal_674e04c55d884618a7445d6eb1c0a9c2",
+      "state": "ready",
+      "findings": [],
+      "usage": {
+        "calls": [
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 3090,
+            "output_tokens": 426,
+            "elapsed_ms": 1725.67
+          },
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 3702,
+            "output_tokens": 301,
+            "elapsed_ms": 1765.64
+          },
+          {
+            "provider": "anthropic",
+            "model": "MiniMax-M3",
+            "attempt_count": 1,
+            "input_tokens": 4274,
+            "output_tokens": 38,
+            "elapsed_ms": 1084.2
+          }
+        ],
+        "elapsed_ms": 4737.97,
+        "remaining_ms": 175245.15,
+        "cost": null
+      },
+      "estimated_usd": 0.004238
+    }
+  ]
+}

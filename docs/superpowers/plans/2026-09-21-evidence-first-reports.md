@@ -10,6 +10,8 @@
 
 **Spec:** [Revised design](../specs/2026-09-21-evidence-first-reports-design.md).
 
+**Execution status:** All nine tasks are implemented on `codex/evidence-first-reports`. The plan was finalized before implementation. See the [verification audit](../../audits/2026-09-21-evidence-first-reports.md) for the independent review, corrections, test counts, and observed browser behavior.
+
 ## Global Constraints
 
 - MiniMax remains the drafting model through the existing LLM client. Jev modes and promotion policy do not change. The workflow must function with Jev off, and shadow results remain advisory.
@@ -488,6 +490,8 @@ Implement `score_claims(claims: list[dict]) -> dict` and `evaluate_pairs(rows: l
 - [ ] Commit documentation, evaluation harness, and validation evidence as `test: verify evidence report revisions end to end`. Final report links the revised design, implementation plan, principal feature entry points, and audit; states observed tests/browser behavior and remaining independent-quality limitations.
 
 ## Completion contract and execution record
+
+Final-review implementation rulings: enforce immutability at every shared report writer and at generation with a supplied report ID; validate complete artifact paths including leaf files and legacy files; expose explicit `accepting` recovery and permit rejection only before publication under both operation leases; persist telemetry independently of terminal-state transitions; anchor lexical windows on matching terms, preserve intersecting requested quotations, and disclose clipping/candidate caps; invalidate pending status reads before UI mutations; and return typed deletion conflicts. These clarify the existing persistence, recovery, coverage, and concurrency contracts without expanding the feature's scope.
 
 The implementation is complete only when all nine tasks and their verification steps are satisfied, the five review findings have explicit regression coverage, parent/revision persistence works through the real browser/API flow, and the final review has no unresolved actionable correctness finding. Merely finishing a document, mocked unit tests, or an LLM response is not completion.
 

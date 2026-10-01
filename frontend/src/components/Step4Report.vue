@@ -11,6 +11,13 @@
               <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Prediction Report' }}</span>
               <span class="report-id">ID: {{ reportId || 'REF-2024-X92' }}</span>
             </div>
+            <nav v-if="reportRevision.parent_report_id" class="revision-navigation" aria-label="Report revision history">
+              <strong>Saved revision · Needs review</strong>
+              <a :href="`/report/${encodeURIComponent(reportRevision.parent_report_id)}`">Parent report</a>
+              <a :href="`/report/${encodeURIComponent(reportRevision.root_report_id)}`">Original report</a>
+              <a :href="`/report/${encodeURIComponent(reportRevision.parent_report_id)}?proposal=${encodeURIComponent(reportRevision.proposal_id)}&section=${reportRevision.section_index}`">Review accepted proposal</a>
+              <span>Forecasts and unselected sections are inherited.</span>
+            </nav>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
             <p class="sub-title">{{ reportOutline.summary }}</p>
             <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
@@ -116,14 +123,14 @@
                 <div v-if="isSectionCompleted(idx + 1)" class="section-actions">
                   <button
                     class="section-action-btn"
-                    :disabled="regeneratingSection === idx + 1"
+                    :disabled="reportRevision.immutable || regeneratingSection === idx + 1"
                     @click.stop="regenerateSection(idx + 1, {})"
                   >
                     {{ regeneratingSection === idx + 1 ? 'Rerunning...' : 'Rerun' }}
                   </button>
                   <button
                     class="section-action-btn"
-                    :disabled="regeneratingSection === idx + 1"
+                    :disabled="reportRevision.immutable || regeneratingSection === idx + 1"
                     @click.stop="regenerateSection(idx + 1, { disable_interviews: true })"
                   >
                     No interviews
@@ -145,7 +152,24 @@
               </div>
               
               <div class="section-body" v-show="!collapsedSections.has(idx)">
+                <details v-if="section.claim_ledger?.length" class="saved-ledger">
+                  <summary>Saved claim ledger · {{ section.claim_ledger.length }} statements</summary>
+                  <details v-for="claim in section.claim_ledger" :key="claim.claim_id">
+                    <summary>{{ claim.kind.replaceAll('_', ' ') }} — {{ claim.text }}</summary>
+                    <p v-if="claim.attribution">Attributed to {{ claim.attribution }}</p>
+                    <p v-if="claim.premise_claim_ids?.length">Premises: {{ claim.premise_claim_ids.join(', ') }}</p>
+                    <p v-if="!claim.checks?.length">Source support remains unverified.</p>
+                    <article v-for="source in (section.evidence_cards || []).filter(s => claim.citation_ids?.includes(s.evidence_id))" :key="source.evidence_id">
+                      <strong>{{ source.filename || source.document_id }}</strong> · page {{ source.locator?.page ?? 'not recorded' }}
+                      <blockquote>{{ source.window || source.excerpt }}</blockquote>
+                    </article>
+                  </details>
+                </details>
                 <ClaimEvidence :checks="section.claim_checks || []" />
+                <EvidenceDraftReview v-if="isComplete && ['completed', 'needs_review'].includes(reportStatus)"
+                  :report-id="reportId" :section-index="idx + 1"
+                  :initial-proposal-id="String(route.query.section) === String(idx + 1) ? route.query.proposal : undefined"
+                  @revision-created="openRevision" />
                 <!-- Completed Content -->
                 <SafeMarkdown
                   v-if="generatedSections[idx + 1]"
@@ -563,14 +587,19 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick, h, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { generateReport, getAgentLog, getConsoleLog, getReport, getReportProgress, regenerateReportSection, resumeReport } from '../api/report'
 import { benchmarkGraphEmbeddings, getGraphQuality, reembedGraph } from '../api/graph'
 import { renderSafeMarkdown as renderMarkdown } from '../utils/markdown'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
+import EvidenceDraftReview from './EvidenceDraftReview.vue'
 
 const router = useRouter()
+const route = useRoute()
+const reportRevision = ref({})
+let reportGeneration = 0
+const openRevision = reportId => router.push({ name: 'Report', params: { reportId } })
 
 const props = defineProps({
   reportId: String,
@@ -1910,7 +1939,7 @@ const statusText = computed(() => {
 })
 
 const canResumeReport = computed(() => {
-  return !!props.reportId && (reportStatus.value === 'failed' || reportProgress.value?.is_stale)
+  return !reportRevision.value.immutable && !!props.reportId && (reportStatus.value === 'failed' || reportProgress.value?.is_stale)
 })
 
 const graphQualityStatusClass = computed(() => {
@@ -2187,7 +2216,7 @@ const regenerateReport = async (options = {}) => {
 }
 
 const resumeFailedReport = async (options = {}) => {
-  if (!props.reportId || isResuming.value) return
+  if (!props.reportId || reportRevision.value.immutable || isResuming.value) return
   isResuming.value = true
   try {
     addLog(`Resuming report from failed section: ${JSON.stringify(options)}`)
@@ -2217,7 +2246,7 @@ const refreshReportState = async () => {
 }
 
 const regenerateSection = async (sectionIndex, options = {}) => {
-  if (!props.reportId || regeneratingSection.value) return
+  if (!props.reportId || reportRevision.value.immutable || regeneratingSection.value) return
   regeneratingSection.value = sectionIndex
   try {
     const payload = {
@@ -2344,10 +2373,12 @@ let consoleLogTimer = null
 
 const fetchAgentLog = async () => {
   if (!props.reportId) return
+  const token = reportGeneration
   
   try {
     const res = await getAgentLog(props.reportId, agentLogLine.value)
     
+    if (token !== reportGeneration) return
     if (res.success && res.data) {
       const newLogs = res.data.logs || []
       
@@ -2407,6 +2438,7 @@ const fetchAgentLog = async () => {
 
 const fetchReportSnapshot = async () => {
   if (!props.reportId) return
+  const token = reportGeneration
 
   try {
     const [reportRes, progressRes] = await Promise.allSettled([
@@ -2414,8 +2446,10 @@ const fetchReportSnapshot = async () => {
       getReportProgress(props.reportId)
     ])
 
+    if (token !== reportGeneration) return
     if (reportRes.status === 'fulfilled' && reportRes.value?.success && reportRes.value.data) {
       const report = reportRes.value.data
+      reportRevision.value = report.revision || {}
       reportStatus.value = report.status || reportStatus.value
       reportQuality.value = report.quality_score || null
       reportTiming.value = report.timing || reportTiming.value
@@ -2426,6 +2460,7 @@ const fetchReportSnapshot = async () => {
       if (reportGraphId.value && graphQuality.value?.graph_id !== reportGraphId.value) {
         try {
           const qualityRes = await getGraphQuality(reportGraphId.value)
+          if (token !== reportGeneration) return
           if (qualityRes.success) {
             graphQuality.value = qualityRes.data
           }
@@ -2433,6 +2468,7 @@ const fetchReportSnapshot = async () => {
           console.warn('Failed to fetch graph quality:', err)
         }
       }
+      if (token !== reportGeneration) return
       if (report.outline) {
         reportOutline.value = report.outline
         const savedSections = {}
@@ -2521,10 +2557,12 @@ const extractFinalContent = (response) => {
 
 const fetchConsoleLog = async () => {
   if (!props.reportId) return
+  const token = reportGeneration
   
   try {
     const res = await getConsoleLog(props.reportId, consoleLogLine.value)
     
+    if (token !== reportGeneration) return
     if (res.success && res.data) {
       const newLogs = res.data.logs || []
       
@@ -2578,10 +2616,14 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  reportGeneration++
   stopPolling()
 })
 
 watch(() => props.reportId, (newId) => {
+  reportGeneration++
+  reportRevision.value = {}
+  stopPolling()
   if (newId) {
     agentLogs.value = []
     consoleLogs.value = []
@@ -2609,6 +2651,13 @@ watch(() => props.reportId, (newId) => {
 </script>
 
 <style scoped>
+.revision-navigation { display: flex; flex-wrap: wrap; gap: .6rem 1rem; margin: 1rem 0; padding: .8rem; background: #eef3f8; font-size: 12px; }
+.revision-navigation a { color: #254b73; text-decoration: underline; }
+.saved-ledger { margin: 1rem 0; padding: 1rem; background: #f4f7fa; border: 1px solid #cbd7e3; }
+.saved-ledger summary { cursor: pointer; line-height: 1.6; }
+.saved-ledger details, .saved-ledger article { padding: .6rem; }
+.saved-ledger blockquote { white-space: pre-wrap; overflow-wrap: anywhere; }
+
 .report-panel {
   height: 100%;
   display: flex;

@@ -176,7 +176,7 @@ class EmbeddingService:
     def provider_id(self) -> str:
         return self.info.provider_id
 
-    def embed(self, text: str, task_type: str = RETRIEVAL_QUERY) -> List[float]:
+    def embed(self, text: str, task_type: str = RETRIEVAL_QUERY, *, request_timeout=None, request_max_retries=None) -> List[float]:
         """Generate an embedding for one text."""
         if not text or not text.strip():
             raise EmbeddingError("Cannot embed empty text")
@@ -186,7 +186,8 @@ class EmbeddingService:
         if cache_key in self._cache:
             return self._cache[cache_key]
 
-        vector = self._request_embeddings([text], task_type=task_type)[0]
+        controls = {k: v for k, v in dict(request_timeout=request_timeout, request_max_retries=request_max_retries).items() if v is not None}
+        vector = self._request_embeddings([text], task_type=task_type, **controls)[0]
         self._cache_put(cache_key, vector)
         return vector
 
@@ -310,8 +311,14 @@ class EmbeddingService:
             self._mark_unavailable(exc)
             raise EmbeddingError(f"Failed to pull Ollama embedding model '{self.model}': {exc}") from exc
 
-    def _request_embeddings(self, texts: List[str], task_type: str) -> List[List[float]]:
+    def _request_embeddings(self, texts: List[str], task_type: str, *, request_timeout=None, request_max_retries=None) -> List[List[float]]:
         self._raise_if_circuit_open()
+        if request_timeout is not None or request_max_retries is not None:
+            # Proposal calls never pull models or run a separate readiness request.
+            if self.provider != 'ollama':
+                raise EmbeddingError('remote_embedding_disabled')
+            return self._post_embeddings(self._embed_url, {'model': self.model, 'input': texts}, None,
+                request_timeout=request_timeout, request_max_retries=request_max_retries)
         self.ensure_ready(check_only=False)
 
         if self.provider == "ollama":
@@ -355,11 +362,13 @@ class EmbeddingService:
         url: str,
         payload: Dict[str, Any],
         headers: Optional[Dict[str, str]],
+        *, request_timeout=None, request_max_retries=None,
     ) -> List[List[float]]:
         last_error = None
-        for attempt in range(self.max_retries):
+        attempts = self.max_retries if request_max_retries is None else request_max_retries + 1
+        for attempt in range(attempts):
             try:
-                response = requests.post(url, json=payload, headers=headers, timeout=self.timeout)
+                response = requests.post(url, json=payload, headers=headers, timeout=self.timeout if request_timeout is None else request_timeout)
                 response.raise_for_status()
                 vectors = self._parse_embedding_response(response.json(), expected_count=len(payload.get("input", payload.get("requests", []))))
                 for vector in vectors:
@@ -376,6 +385,8 @@ class EmbeddingService:
                 self._mark_unavailable(exc)
                 raise EmbeddingError(f"{self.provider} embedding request timed out: {exc}") from exc
             except requests.exceptions.HTTPError as exc:
+                if request_max_retries is not None:
+                    raise EmbeddingError('embedding_http_error') from None
                 last_error = exc
                 body = exc.response.text if exc.response is not None else str(exc)
                 if exc.response is not None and exc.response.status_code < 500:
@@ -390,7 +401,7 @@ class EmbeddingService:
             except (KeyError, TypeError, ValueError) as exc:
                 raise EmbeddingError(f"Invalid {self.provider} embedding response: {exc}") from exc
 
-            if attempt < self.max_retries - 1:
+            if attempt < attempts - 1:
                 time.sleep(2 ** attempt)
 
         raise EmbeddingError(f"{self.provider} embedding failed after {self.max_retries} retries: {last_error}")
