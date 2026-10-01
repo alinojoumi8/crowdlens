@@ -34,7 +34,7 @@ def get_status():
 
     if storage is None:
         data = {
-            "service": "MiroFish-Offline Backend",
+            "service": "CrowdLens Backend",
             "healthy": False,
             "llm": llm,
             "decisions": decision_configuration(),
@@ -58,7 +58,7 @@ def get_status():
     neo4j_status = storage.health_status()
     embedding_status = neo4j_status.get("embedding", {})
     data = {
-        "service": "MiroFish-Offline Backend",
+        "service": "CrowdLens Backend",
         "healthy": bool(
             neo4j_status.get("healthy")
             and embedding_status.get("healthy")

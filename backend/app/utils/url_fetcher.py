@@ -21,7 +21,7 @@ import requests
 MAX_BYTES = 5 * 1024 * 1024  # 5 MB
 REQUEST_TIMEOUT = 20  # seconds
 MAX_REDIRECTS = 5
-USER_AGENT = "MiroFish-Offline/1.0 (+document ingestion)"
+USER_AGENT = "CrowdLens/1.0 (+document ingestion)"
 
 # Tags whose inner content is never readable page text. (Not "head": <title> lives
 # there and is captured separately; head's script/style/meta carry no body text.)

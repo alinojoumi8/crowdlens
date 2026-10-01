@@ -1,7 +1,7 @@
 [project]
-name = "mirofish-offline-backend"
+name = "crowdlens-backend"
 version = "0.2.0"
-description = "MiroFish-Offline - Offline-first fork running on Neo4j + Ollama"
+description = "CrowdLens - Local-first AI scenario simulation and evidence review"
 requires-python = ">=3.11"
 license = { text = "AGPL-3.0" }
 authors = [

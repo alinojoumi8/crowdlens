@@ -564,3 +564,36 @@
     margin-bottom: 20px;
   }
 }
+
+/* Home.vue uses inline styles; responsive rules must override those values. */
+.home-container .hero-desc { text-align: left !important; }
+.home-container .hero-left,
+.home-container .left-panel,
+.home-container .right-panel { min-width: 0; }
+.home-container textarea { box-sizing: border-box; }
+.home-container :is(a, button, textarea):focus-visible {
+  outline: 2px solid #ff4500;
+  outline-offset: 4px;
+}
+@media (max-width: 1024px) {
+  .home-container .hero-section,
+  .home-container .dashboard-section { flex-direction: column !important; }
+  .home-container .hero-left { padding-right: 0 !important; }
+  .home-container .hero-right { width: 100%; align-items: center !important; }
+  .home-container .logo-container { justify-content: center !important; padding-right: 0 !important; }
+  .home-container .logo-container img { max-width: 240px !important; }
+  .home-container .dashboard-section > :is(.left-panel, .right-panel) { width: 100%; }
+}
+@media (max-width: 600px) {
+  .home-container .navbar { height: auto !important; min-height: 60px; padding: 14px 20px !important; flex-wrap: wrap; gap: 14px; }
+  .home-container .nav-links { flex-wrap: wrap; gap: 20px !important; }
+  .home-container .main-content { padding: 36px 20px !important; }
+  .home-container .tag-row { flex-wrap: wrap; }
+  .home-container .hero-section { margin-bottom: 40px !important; }
+  .home-container .main-title { font-size: 2.5rem !important; letter-spacing: -1px !important; }
+  .home-container .slogan-text { font-size: 1rem !important; letter-spacing: 0 !important; }
+  .home-container .metrics-row { flex-wrap: wrap; }
+  .home-container .metric-card { flex: 1; min-width: 120px !important; padding: 16px !important; }
+  .home-container .dashboard-section { gap: 32px !important; padding-top: 32px !important; }
+  .home-container .console-header { flex-wrap: wrap; gap: 8px; }
+}

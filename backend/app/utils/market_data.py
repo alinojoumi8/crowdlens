@@ -27,7 +27,7 @@ logger = get_logger("mirofish.market_data")
 
 _YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 _FRED_OBS = "https://api.stlouisfed.org/fred/series/observations"
-_HEADERS = {"User-Agent": "MiroFish-Offline/1.0 (+macro forecasting)"}
+_HEADERS = {"User-Agent": "CrowdLens/1.0 (+macro forecasting)"}
 _TIMEOUT = 20
 
 

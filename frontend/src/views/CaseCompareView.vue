@@ -1,7 +1,7 @@
 <template>
   <div class="case-compare">
     <header class="app-header">
-      <div class="brand" @click="router.push('/')">MIROFISH OFFLINE</div>
+      <div class="brand" @click="router.push('/')">CrowdLens</div>
       <button class="link-btn" @click="back">← Case</button>
       <div class="header-title">Compare predictions</div>
     </header>

@@ -1,7 +1,7 @@
 {
-  "name": "mirofish-offline",
+  "name": "crowdlens",
   "version": "0.2.0",
-  "description": "MiroFish-Offline \u2014 local-first swarm intelligence engine (Neo4j + Ollama)",
+  "description": "CrowdLens — local-first AI scenario simulation and evidence review",
   "scripts": {
     "setup": "npm install && cd frontend && npm install",
     "setup:backend": "cd backend && uv sync",

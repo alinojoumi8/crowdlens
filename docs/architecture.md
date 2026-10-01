@@ -1,8 +1,10 @@
 # Architecture
 
-MiroFish-Offline is a local web application with three distinct persistence
+CrowdLens is a local web application with three distinct persistence
 responsibilities. Keeping those responsibilities separate prevents the graph
 database, workflow state, and large artifacts from becoming coupled.
+
+See [CrowdLens branding and compatibility](rebranding.md) for retained runtime identifiers.
 
 ## Runtime boundaries
 

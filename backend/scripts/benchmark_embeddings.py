@@ -17,7 +17,7 @@ from app.services.embedding_benchmark import load_queries, run_embedding_benchma
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Benchmark MiroFish embedding providers")
+    parser = argparse.ArgumentParser(description="Benchmark CrowdLens embedding providers")
     parser.add_argument("--queries", help="Text file with one query per line")
     parser.add_argument("--graph-id", help="Optional graph id for compatible graph search")
     parser.add_argument("--providers", nargs="+", default=["ollama"], choices=["ollama", "gemini"])

@@ -7,7 +7,8 @@ artifacts remain under `backend/uploads/`.
 
 ## First startup
 
-The default database is `backend/uploads/mirofish.db`. On first startup the app
+CrowdLens retains legacy storage and Docker identifiers for compatibility; see
+[the rebrand notes](rebranding.md). The default database is `backend/uploads/mirofish.db`. On first startup the app
 scans the existing `project.json`, `case.json`, and `run_state.json` records and
 imports them in one SQLite transaction. Existing database rows win, so a retry
 never overwrites newer durable state. After a successful import, a migration

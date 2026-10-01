@@ -1,4 +1,4 @@
-"""Deterministic economic kernel for MiroFish simulations.
+"""Deterministic economic kernel for CrowdLens simulations.
 
 The social simulators remain responsible for agent conversation and behaviour.
 This module owns the canonical economic identity map, validated state

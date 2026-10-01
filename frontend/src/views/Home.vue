@@ -2,13 +2,13 @@
   <div class="home-container">
     <!-- Top Navigation Bar -->
     <nav class="navbar" :style="s.navbar">
-      <div class="nav-brand" :style="s.navBrand">MIROFISH OFFLINE</div>
+      <div class="nav-brand" :style="s.navBrand">CrowdLens</div>
       <div class="nav-links" :style="s.navLinks">
-        <a class="cases-link" :style="s.githubLink" style="cursor: pointer;" @click="router.push('/cases')">
+        <a href="/cases" class="cases-link" :style="s.githubLink" style="cursor: pointer;" @click.prevent="router.push('/cases')">
           Cases
         </a>
-        <a href="https://github.com/nikmcfly/MiroFish-Offline" target="_blank" class="github-link" :style="s.githubLink">
-          Visit our Github <span>↗</span>
+        <a href="https://github.com/alinojoumi8/crowdlens" target="_blank" rel="noopener noreferrer" class="github-link" :style="s.githubLink">
+          Source on GitHub <span>↗</span>
         </a>
       </div>
     </nav>
@@ -18,21 +18,21 @@
       <section class="hero-section" :style="s.heroSection">
         <div class="hero-left" :style="s.heroLeft">
           <div class="tag-row" :style="s.tagRow">
-            <span class="orange-tag" :style="s.orangeTag">Offline Multi-Agent Simulation Engine</span>
-            <span class="version-text" :style="s.versionText">/ v0.1-preview</span>
+            <span class="orange-tag" :style="s.orangeTag">AI Scenario Simulation</span>
+            <span class="version-text" :style="s.versionText">/ v0.2.0</span>
           </div>
 
           <h1 class="main-title" :style="s.mainTitle">
-            Upload Any Document<br>
-            <span class="gradient-text" :style="s.gradientText">Predict What Happens Next</span>
+            Start With a Document<br>
+            <span class="gradient-text" :style="s.gradientText">Explore How People Respond</span>
           </h1>
 
           <div class="hero-desc" :style="s.heroDesc">
             <p :style="s.heroDescP">
-              From a single document, <span :style="s.highlightBold">MiroFish Offline</span> extracts reality seeds and builds a parallel world of <span :style="s.highlightOrange">autonomous AI agents</span> — running entirely on your machine. Inject variables, observe emergent behavior, and find <span :style="s.highlightCode">"local optima"</span> in complex social dynamics.
+              <span :style="s.highlightBold">CrowdLens</span> turns documents into a simulated world of <span :style="s.highlightOrange">autonomous AI agents</span>. Explore different perspectives, change scenario assumptions, and examine how conversations and reactions unfold.
             </p>
             <p class="slogan-text" :style="s.sloganText">
-              Your data never leaves your machine. The future is simulated locally<span :style="s.blinkingCursor">_</span>
+              Explore how people respond. Compare possibilities. Review the evidence.<span :style="s.blinkingCursor">_</span>
             </p>
           </div>
 
@@ -41,9 +41,9 @@
 
         <div class="hero-right" :style="s.heroRight">
           <div class="logo-container" :style="s.logoContainer">
-            <img src="../assets/logo/MiroFish_logo_left.jpeg" alt="MiroFish Logo" :style="s.heroLogo" />
+            <img src="/crowdlens-mark.svg" alt="CrowdLens: a lens framing a crowd" :style="s.heroLogo" />
           </div>
-          <button :style="s.scrollDownBtn" @click="scrollToBottom">↓</button>
+          <button aria-label="Scroll to simulation setup" :style="s.scrollDownBtn" @click="scrollToBottom">↓</button>
         </div>
       </section>
 
@@ -57,17 +57,17 @@
 
           <h2 class="section-title" :style="s.sectionTitle">Ready</h2>
           <p class="section-desc" :style="s.sectionDesc">
-            Local prediction engine on standby. Upload unstructured data to initialize a simulation.
+            Upload documents to start exploring a scenario. Simulated reactions help you examine possibilities; they are not verified forecasts.
           </p>
 
           <div class="metrics-row" :style="s.metricsRow">
             <div class="metric-card" :style="s.metricCard">
-              <div class="metric-value" :style="s.metricValue">Free</div>
+              <div class="metric-value" :style="s.metricValue">Local</div>
               <div class="metric-label" :style="s.metricLabel">Runs on your hardware</div>
             </div>
             <div class="metric-card" :style="s.metricCard">
-              <div class="metric-value" :style="s.metricValue">Private</div>
-              <div class="metric-label" :style="s.metricLabel">100% offline, no cloud</div>
+              <div class="metric-value" :style="s.metricValue">Flexible</div>
+              <div class="metric-label" :style="s.metricLabel">Choose local or hosted AI</div>
             </div>
           </div>
 
@@ -136,14 +136,14 @@
                 <span>>_ 02 / Simulation Prompt</span>
               </div>
               <div :style="s.inputWrapper">
-                <textarea v-model="formData.simulationRequirement" :style="s.codeInput" placeholder="// Describe your simulation or prediction goal in natural language" rows="6" :disabled="loading"></textarea>
-                <div :style="s.modelBadge">Engine: Ollama + Neo4j (local)</div>
+                <textarea v-model="formData.simulationRequirement" :style="s.codeInput" placeholder="Describe the scenario and reactions you want to explore" rows="6" :disabled="loading"></textarea>
+                <div :style="s.modelBadge">Local or hosted AI · Neo4j memory</div>
               </div>
             </div>
 
             <div :style="s.btnSection">
               <button :style="s.startEngineBtn" @click="startSimulation" :disabled="!canSubmit || loading">
-                <span v-if="!loading">Start Engine</span>
+                <span v-if="!loading">Explore Scenario</span>
                 <span v-else>Initializing...</span>
                 <span>→</span>
               </button>
@@ -168,7 +168,7 @@ const sans = 'Space Grotesk, Noto Sans SC, system-ui, sans-serif'
 const s = reactive({
   navbar: { height: '60px', background: '#000', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 40px' },
   navBrand: { fontFamily: mono, fontWeight: '800', letterSpacing: '1px', fontSize: '1.2rem' },
-  navLinks: { display: 'flex', alignItems: 'center' },
+  navLinks: { display: 'flex', alignItems: 'center', gap: '24px' },
   githubLink: { color: '#fff', textDecoration: 'none', fontFamily: mono, fontSize: '0.9rem', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '8px' },
   mainContent: { maxWidth: '1400px', margin: '0 auto', padding: '60px 40px' },
   heroSection: { display: 'flex', justifyContent: 'space-between', marginBottom: '80px', position: 'relative' },
@@ -176,9 +176,9 @@ const s = reactive({
   tagRow: { display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px', fontFamily: mono, fontSize: '0.8rem' },
   orangeTag: { background: '#FF4500', color: '#fff', padding: '4px 10px', fontWeight: '700', letterSpacing: '1px', fontSize: '0.75rem' },
   versionText: { color: '#999', fontWeight: '500', letterSpacing: '0.5px' },
-  mainTitle: { fontSize: '4.5rem', lineHeight: '1.2', fontWeight: '500', margin: '0 0 40px 0', letterSpacing: '-2px', color: '#000' },
+  mainTitle: { fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: '1.2', fontWeight: '500', margin: '0 0 40px 0', letterSpacing: '-2px', color: '#000' },
   gradientText: { background: 'linear-gradient(90deg, #000 0%, #444 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' },
-  heroDesc: { fontSize: '1.05rem', lineHeight: '1.8', color: '#666', maxWidth: '640px', marginBottom: '50px', fontWeight: '400', textAlign: 'justify' },
+  heroDesc: { fontSize: '1.05rem', lineHeight: '1.8', color: '#666', maxWidth: '640px', marginBottom: '50px', fontWeight: '400', textAlign: 'left' },
   heroDescP: { marginBottom: '1.5rem' },
   highlightBold: { color: '#000', fontWeight: '700' },
   highlightOrange: { color: '#FF4500', fontWeight: '700', fontFamily: mono },
@@ -234,10 +234,10 @@ const s = reactive({
 })
 
 const steps = [
-  { num: '01', title: 'Graph Build', desc: 'Extract reality seeds from your document, build knowledge graph with Neo4j + GraphRAG' },
-  { num: '02', title: 'Env Setup', desc: 'Generate agent personas, configure simulation parameters via local Ollama LLM' },
+  { num: '01', title: 'Graph Build', desc: 'Extract entities and relationships from your document, build knowledge graph with Neo4j + GraphRAG' },
+  { num: '02', title: 'Env Setup', desc: 'Generate agent personas, configure simulation parameters with your chosen AI provider' },
   { num: '03', title: 'Simulation', desc: 'Run multi-agent simulation locally with dynamic memory updates and emergent behavior' },
-  { num: '04', title: 'Report', desc: 'ReportAgent analyzes the simulation results and generates a detailed prediction report' },
+  { num: '04', title: 'Report', desc: 'ReportAgent analyzes the simulation results and generates a scenario analysis for review' },
   { num: '05', title: 'Interaction', desc: 'Chat with any agent from the simulated world or discuss findings with ReportAgent' },
 ]
 

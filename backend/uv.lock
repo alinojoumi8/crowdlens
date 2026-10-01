@@ -1238,7 +1238,7 @@ wheels = [
 ]
 
 [[package]]
-name = "mirofish-offline-backend"
+name = "crowdlens-backend"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [

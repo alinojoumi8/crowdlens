@@ -1,7 +1,9 @@
-# MiroFish-Offline Migration Progress
+# CrowdLens — Historical Migration Progress
 
-> Historical migration log. Some early file paths describe the initial fork
+> Historical migration log from the MiroFish-Offline fork. Some early file paths describe the initial fork
 > and have since moved. See `docs/architecture.md` for the current boundaries.
+
+See [the CrowdLens rebrand plan](rebranding.md) for the current product identity.
 
 ## Overview
 Migration from Zep Cloud + DashScope (Alibaba Qwen API) to local Neo4j CE + Ollama.

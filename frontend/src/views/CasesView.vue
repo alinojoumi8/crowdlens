@@ -1,7 +1,7 @@
 <template>
   <div class="cases-view">
     <header class="app-header">
-      <div class="brand" @click="router.push('/')">MIROFISH OFFLINE</div>
+      <div class="brand" @click="router.push('/')">CrowdLens</div>
       <div class="header-title">Cases</div>
       <button class="new-case-btn" @click="showCreate = true">+ New Case</button>
     </header>

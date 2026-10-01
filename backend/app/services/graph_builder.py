@@ -91,7 +91,7 @@ class GraphBuilderService:
         self,
         text: str,
         ontology: Dict[str, Any],
-        graph_name: str = "MiroFish Graph",
+        graph_name: str = "CrowdLens Graph",
         chunk_size: int = Config.DEFAULT_CHUNK_SIZE,
         chunk_overlap: int = Config.DEFAULT_CHUNK_OVERLAP,
         batch_size: int = Config.GRAPH_BUILD_BATCH_SIZE,
@@ -220,7 +220,7 @@ class GraphBuilderService:
         """Create graph"""
         return self.storage.create_graph(
             name=name,
-            description="MiroFish Social Simulation Graph"
+            description="CrowdLens Social Simulation Graph"
         )
 
     def set_ontology(self, graph_id: str, ontology: Dict[str, Any]):

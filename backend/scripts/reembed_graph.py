@@ -1,5 +1,5 @@
 """
-Backfill embeddings for an existing MiroFish graph.
+Backfill embeddings for an existing CrowdLens graph.
 
 Example:
   uv run python scripts/reembed_graph.py --graph-id 78860c01-3c78-4020-ab24-631dc78e85df

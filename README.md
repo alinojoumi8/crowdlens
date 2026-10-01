@@ -1,33 +1,36 @@
 <div align="center">
 
-<img src="./static/image/mirofish-offline-banner.png" alt="MiroFish Offline" width="100%"/>
+<img src="./static/image/crowdlens-banner.svg" alt="CrowdLens — Explore how people respond" width="100%"/>
 
-# MiroFish-Offline
+# CrowdLens
 
-**Fully local fork of [MiroFish](https://github.com/666ghj/MiroFish) — no cloud APIs required. English UI.**
+**Explore how people respond.**
 
-*A multi-agent swarm intelligence engine that simulates public opinion, market sentiment, and social dynamics. Entirely on your hardware.*
+AI scenario simulation with a local-first runtime, knowledge graphs, and evidence review.
 
-[![GitHub Stars](https://img.shields.io/github/stars/nikmcfly/MiroFish-Offline?style=flat-square&color=DAA520)](https://github.com/nikmcfly/MiroFish-Offline/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/nikmcfly/MiroFish-Offline?style=flat-square)](https://github.com/nikmcfly/MiroFish-Offline/network)
-[![Docker](https://img.shields.io/badge/Docker-Build-2496ED?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/)
-[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square)](./LICENSE)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue)](./LICENSE)
 
 </div>
 
-## What is this?
+## What is CrowdLens?
 
-MiroFish is a multi-agent simulation engine: upload any document (press release, policy draft, financial report), and it generates hundreds of AI agents with unique personalities that simulate the public reaction on social media. Posts, arguments, opinion shifts — hour by hour.
+CrowdLens turns documents into scenarios populated by AI agents with different
+perspectives. Explore public reactions, conversations, and shifts in simulated
+sentiment; compare assumptions and inspect the resulting analysis.
 
-The [original MiroFish](https://github.com/666ghj/MiroFish) was built for the Chinese market (Chinese UI, Zep Cloud for knowledge graphs, DashScope API). This fork makes it **fully local and fully English**:
+Simulation output is generated behavior, not a verified forecast of real people
+or markets. Review source attribution and factual claims before using a report
+to inform a decision.
 
-| Original MiroFish | MiroFish-Offline |
-|---|---|
-| Chinese UI | **English UI** (1,000+ strings translated) |
-| Zep Cloud (graph memory) | **Neo4j Community Edition 5.18** |
-| DashScope / OpenAI API (LLM) | **Ollama** (qwen2.5, llama3, etc.) |
-| Zep Cloud embeddings | **nomic-embed-text** via Ollama |
-| Cloud API keys required | **Zero cloud dependencies** |
+The default setup uses Ollama and Neo4j on your hardware. Hosted generation and
+embedding providers are optional; enabling them sends the corresponding inputs
+to the configured provider. Website ingestion and optional market lookups also
+require network access. Choose your configuration to match your data needs.
+
+CrowdLens builds on [MiroFish](https://github.com/666ghj/MiroFish) and
+[MiroFish-Offline](https://github.com/nikmcfly/MiroFish-Offline). The product name
+has changed; existing storage paths and Docker service names remain compatible.
+See [the rebrand plan and compatibility notes](docs/rebranding.md).
 
 ## Workflow
 
@@ -36,12 +39,6 @@ The [original MiroFish](https://github.com/666ghj/MiroFish) was built for the Ch
 3. **Simulation** — Agents interact on simulated social platforms: posting, replying, arguing, shifting opinions. The system tracks sentiment evolution, topic propagation, and influence dynamics in real time.
 4. **Report** — A ReportAgent analyzes the post-simulation environment, interviews a focus group of agents, searches the knowledge graph for evidence, and generates a structured analysis.
 5. **Interaction** — Chat with any agent from the simulated world. Ask them why they posted what they posted. Full memory and personality persists.
-
-## Screenshot
-
-<div align="center">
-<img src="./static/image/mirofish-offline-screenshot.jpg" alt="MiroFish Offline — English UI" width="100%"/>
-</div>
 
 ## Quick Start
 
@@ -53,8 +50,8 @@ The [original MiroFish](https://github.com/666ghj/MiroFish) was built for the Ch
 ### Option A: Docker (easiest)
 
 ```bash
-git clone https://github.com/nikmcfly/MiroFish-Offline.git
-cd MiroFish-Offline
+git clone https://github.com/alinojoumi8/crowdlens.git crowdlens
+cd crowdlens
 cp .env.example .env
 
 # Generate a password, then paste it into NEO4J_PASSWORD= in .env
@@ -199,7 +196,7 @@ uv run python scripts/benchmark_embeddings.py --providers ollama gemini --graph-
 
 ## Architecture
 
-This fork introduces a clean abstraction layer between the application and the graph database:
+CrowdLens uses an abstraction layer between the application and the graph database:
 
 ```
 ┌─────────────────────────────────────────┐
@@ -267,10 +264,20 @@ image build.
 
 ## Use Cases
 
-- **PR crisis testing** — simulate the public reaction to a press release before publishing
-- **Trading signal generation** — feed financial news and observe simulated market sentiment
-- **Policy impact analysis** — test draft regulations against simulated public response
-- **Creative experiments** — someone fed it a classical Chinese novel with a lost ending; the agents wrote a narratively consistent conclusion
+- **Communication planning** — explore possible responses to a draft announcement.
+- **Market scenario exploration** — examine simulated reactions to financial news.
+- **Policy scenario exploration** — compare possible responses to a policy proposal.
+- **Research and storytelling** — study agent interactions under different assumptions.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Storage migration, backup, and recovery](docs/control-plane-migration.md)
+- [Economic twin scenarios](docs/economic-twin-v1.md)
+- [Jev evaluation and promotion boundaries](docs/jev-evaluation.md)
+- [Roadmap](ROADMAP.md)
+- [CrowdLens brand and rebrand plan](docs/rebranding.md)
+- [Historical migration progress](docs/progress.md)
 
 ## License
 
@@ -278,10 +285,11 @@ AGPL-3.0 — same as the original MiroFish project. See [LICENSE](./LICENSE).
 
 ## Credits & Attribution
 
-This is a modified fork of [MiroFish](https://github.com/666ghj/MiroFish) by [666ghj](https://github.com/666ghj), originally supported by [Shanda Group](https://www.shanda.com/). The simulation engine is powered by [OASIS](https://github.com/camel-ai/oasis) from the CAMEL-AI team.
+CrowdLens is a modified fork derived through [MiroFish-Offline](https://github.com/nikmcfly/MiroFish-Offline) from [MiroFish](https://github.com/666ghj/MiroFish) by [666ghj](https://github.com/666ghj), originally supported by [Shanda Group](https://www.shanda.com/). The simulation engine is powered by [OASIS](https://github.com/camel-ai/oasis) from the CAMEL-AI team.
 
 **Modifications in this fork:**
-- Backend migrated from Zep Cloud to local Neo4j CE 5.15 + Ollama
+- Backend migrated from Zep Cloud to local Neo4j CE + Ollama
 - Entire frontend translated from Chinese to English (20 files, 1,000+ strings)
 - All Zep references replaced with Neo4j across the UI
-- Rebranded to MiroFish Offline
+- Rebranded the product to CrowdLens, with updated UI, visual assets, and documentation
+- Preserved MiroFish and MiroFish-Offline attribution and existing runtime identifiers

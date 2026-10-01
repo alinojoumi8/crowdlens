@@ -1,7 +1,7 @@
 <template>
   <div class="case-detail">
     <header class="app-header">
-      <div class="brand" @click="router.push('/')">MIROFISH OFFLINE</div>
+      <div class="brand" @click="router.push('/')">CrowdLens</div>
       <button class="link-btn" @click="router.push('/cases')">← Cases</button>
       <div class="spacer"></div>
       <button v-if="canCompare" class="btn-ghost" @click="goCompare">Compare versions</button>

@@ -630,7 +630,7 @@ def build_graph():
             project.error = None
 
         # Get configuration
-        graph_name = data.get('graph_name', project.name or 'MiroFish Graph')
+        graph_name = data.get('graph_name', project.name or 'CrowdLens Graph')
         request_settings = {**(project.graph_build_settings or {}), **data}
         build_settings = GraphBuilderService.resolve_build_settings(request_settings)
         chunk_size = build_settings["chunk_size"]

@@ -1,5 +1,5 @@
 """
-MiroFish Backend Entry Point
+CrowdLens Backend Entry Point
 """
 
 import os

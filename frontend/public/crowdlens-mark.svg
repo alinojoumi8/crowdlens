@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-labelledby="title desc">
+<title id="title">CrowdLens</title><desc id="desc">A lens frames three people, representing perspectives within a crowd.</desc>
+<rect width="400" height="400" rx="48" fill="#fff5ef"/>
+<circle cx="184" cy="178" r="112" fill="none" stroke="#171717" stroke-width="18"/>
+<path d="M264 258l72 72" stroke="#ff4500" stroke-width="28" stroke-linecap="round"/>
+<g fill="#ff4500"><circle cx="184" cy="146" r="24"/><path d="M146 219v-17a38 38 0 0176 0v17z"/></g>
+<g fill="#171717"><circle cx="119" cy="162" r="17"/><circle cx="249" cy="162" r="17"/><path d="M92 215v-13a27 27 0 0154 0v13zM222 215v-13a27 27 0 0154 0v13z"/></g>
+</svg>
