@@ -84,3 +84,11 @@ export const resumeReport = (reportId, data = {}) => {
 export const chatWithReport = (data) => {
   return requestWithRetry(() => service.post('/api/report/chat', data), 3, 1000)
 }
+
+// Explicit retries preserve the creation key and the displayed proposal digest.
+const proposalPath = (reportId, proposalId) => `/api/report/${encodeURIComponent(reportId)}/evidence-proposals${proposalId ? `/${encodeURIComponent(proposalId)}` : ''}`
+export const createEvidenceProposal = (reportId, data) => service.post(proposalPath(reportId), data)
+export const getEvidenceProposal = (reportId, proposalId) => service.get(proposalPath(reportId, proposalId))
+export const acceptEvidenceProposal = (reportId, proposalId, proposalDigest) => service.post(`${proposalPath(reportId, proposalId)}/accept`, { proposal_digest: proposalDigest })
+export const rejectEvidenceProposal = (reportId, proposalId) => service.post(`${proposalPath(reportId, proposalId)}/reject`, {})
+export const getReportRevisions = reportId => service.get(`/api/report/${encodeURIComponent(reportId)}/revisions`)

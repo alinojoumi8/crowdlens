@@ -271,6 +271,7 @@ image build.
 
 ## Documentation
 
+- [Evidence-first report proposals and revisions](docs/evidence-first-reports.md)
 - [Architecture](docs/architecture.md)
 - [Storage migration, backup, and recovery](docs/control-plane-migration.md)
 - [Economic twin scenarios](docs/economic-twin-v1.md)

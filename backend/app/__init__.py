@@ -76,6 +76,13 @@ def create_app(config_class=Config):
     if should_log_startup:
         logger.info("Simulation process cleanup function registered")
 
+    # Proposal artifacts own cross-process state; only abandoned work is reconciled.
+    from .services.proposal_store import ProposalStore
+    from .services.report_agent import ReportManager
+    proposal_store = ProposalStore(ReportManager._get_reports_dir())
+    app.extensions['evidence_proposal_store'] = proposal_store
+    proposal_store.reconcile()
+
     # Request logging middleware
     @app.before_request
     def log_request():
