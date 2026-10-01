@@ -1,6 +1,6 @@
 # CrowdLens — Historical Migration Progress
 
-> Historical migration log from the MiroFish-Offline fork. Some early file paths describe the initial fork
+> Historical migration log from the CrowdLens fork. Some early file paths describe the initial fork
 > and have since moved. See `docs/architecture.md` for the current boundaries.
 
 See [the CrowdLens rebrand plan](rebranding.md) for the current product identity.
@@ -42,7 +42,7 @@ Migration from Zep Cloud + DashScope (Alibaba Qwen API) to local Neo4j CE + Olla
 - **TASK-018**: Deleted 4 dead `zep_*.py` files, deprecated `generate_python_code()` in ontology_generator, fixed Zep docstrings in graph.py, added `requests` to requirements.txt
 
 ## PHASE 7 — Publish (TODO)
-- **TASK-019**: Rename to MiroFish-Offline, add AGPL-3.0 license, publish to GitHub
+- **TASK-019**: Rename to CrowdLens, add AGPL-3.0 license, publish to GitHub
 
 ## Files Created (New)
 | File | Replaces | Status |

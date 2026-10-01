@@ -43,10 +43,9 @@ This pass completes steps 1–4. Verification results are recorded below.
 
 This is a product rebrand, with no storage migration required. Retain:
 
-- `backend/uploads/mirofish.db`, existing uploads, and generated run artifacts.
-- Compose service `mirofish`, container names `mirofish-offline`,
-  `mirofish-neo4j`, `mirofish-ollama`, and existing volumes.
-- Logger namespaces beginning with `mirofish`, existing configuration keys,
+- Existing SQLite database filenames, uploads, and generated run artifacts.
+- Existing Compose service names, container names, and volumes.
+- Existing logger namespaces and configuration keys,
   persisted IDs, and any legacy browser settings.
 - The existing `origin` remote remains available for the original checkout.
   The `crowdlens` remote points to the new CrowdLens repository.
@@ -54,9 +53,10 @@ This is a product rebrand, with no storage migration required. Retain:
   Existing deployed images and runtime service names are unaffected.
 
 The AGPL license, original author metadata, and credits remain intact. Old
-MiroFish artwork remains in the repository as legacy material and is no longer
-referenced by the active landing page or README. Historical specs, plans, and
-audits retain their original names, paths, and measurements.
+Legacy artwork remains in the repository as legacy material and is no longer
+referenced by the active landing page or README. Historical specs and plans use CrowdLens terminology in this documentation
+revision; their dates and recorded measurements remain unchanged. Historical
+checkout paths in audit metadata are expressed relative to the repository root.
 
 ## Release follow-up
 
@@ -73,7 +73,7 @@ repository remains intact.
 - Browser review: CrowdLens title, loaded mark, desktop home page, and Cases
   navigation/header verified. At 390 × 844 the home page fits the viewport
   without horizontal overflow; navigation wraps and the dashboard stacks.
-- Current frontend source and generated bundle contain no active MiroFish
+- Current frontend source and generated bundle contain no active legacy
   display labels. Remaining references are repository links, attribution,
   historical records, or documented compatibility identifiers.
 - Relative links in updated documentation and SVG XML validated;

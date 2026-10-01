@@ -1,8 +1,11 @@
 # Provider Switching and Local Memory Implementation Plan
 
+> Documentation terminology and example names were normalized to CrowdLens on
+> 2026-10-01. This historical plan is not a guarantee of current runtime behavior.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Let MiroFish switch cleanly between MiniMax M2.7 token-plan API, Kimi K2.6 API, and the existing local Ollama default, while using self-hosted Neo4j + Graphiti for temporal graph memory instead of Zep Cloud.
+**Goal:** Let CrowdLens switch cleanly between MiniMax M2.7 token-plan API, Kimi K2.6 API, and the existing local Ollama default, while using self-hosted Neo4j + Graphiti for temporal graph memory instead of Zep Cloud.
 
 **Architecture:** Add a provider registry that resolves named LLM profiles from environment variables, then route all backend LLM calls and OASIS subprocess model creation through that registry. Kimi K2.6 uses its OpenAI-compatible coding endpoint; MiniMax M2.7 uses its Anthropic-compatible endpoint and needs an Anthropic Messages adapter rather than the current OpenAI SDK-only client. Provider selection should be saved with each graph build / simulation / report request so switching models does not require code edits or server restarts. Memory uses Graphiti as the temporal episode/entity/fact layer on top of local Neo4j; the existing Neo4j storage code becomes a compatibility adapter until callers are migrated.
 
@@ -625,13 +628,13 @@ export function getLlmProviders() {
 
 - [ ] **Step 2: Add provider selection state**
 
-Use `localStorage` key `mirofish.llmProvider`.
+Use `localStorage` key `crowdlens.llmProvider`.
 
 ```javascript
-const selectedProvider = ref(localStorage.getItem('mirofish.llmProvider') || 'ollama')
+const selectedProvider = ref(localStorage.getItem('crowdlens.llmProvider') || 'ollama')
 
 watch(selectedProvider, value => {
-  localStorage.setItem('mirofish.llmProvider', value)
+  localStorage.setItem('crowdlens.llmProvider', value)
 })
 ```
 
@@ -902,7 +905,7 @@ await graphiti_memory.add_json_episode(
         "content": content,
         "timestamp": timestamp,
     },
-    source_description="MiroFish simulation activity",
+    source_description="CrowdLens simulation activity",
 )
 ```
 
@@ -994,7 +997,7 @@ Expected: `backend/uv.lock` no longer contains `zep-cloud` unless it is a transi
 Add a concise statement:
 
 ```markdown
-MiroFish memory is local by default. Entity memory, relationship memory, temporal episodes, search, and dynamic simulation updates use self-hosted Graphiti over Neo4j Community Edition. Zep Cloud is not required and no graph-memory content is sent to Zep.
+CrowdLens memory is local by default. Entity memory, relationship memory, temporal episodes, search, and dynamic simulation updates use self-hosted Graphiti over Neo4j Community Edition. Zep Cloud is not required and no graph-memory content is sent to Zep.
 ```
 
 - [ ] **Step 5: Verify Zep references are only historical**

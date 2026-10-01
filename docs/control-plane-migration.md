@@ -8,7 +8,8 @@ artifacts remain under `backend/uploads/`.
 ## First startup
 
 CrowdLens retains legacy storage and Docker identifiers for compatibility; see
-[the rebrand notes](rebranding.md). The default database is `backend/uploads/mirofish.db`. On first startup the app
+[the rebrand notes](rebranding.md). The default SQLite database lives under `backend/uploads/`; its exact path is
+reported by `GET /api/status` and may be overridden with `CONTROL_DB_PATH`. On first startup the app
 scans the existing `project.json`, `case.json`, and `run_state.json` records and
 imports them in one SQLite transaction. Existing database rows win, so a retry
 never overwrites newer durable state. After a successful import, a migration
@@ -25,13 +26,11 @@ Stop the application before copying the database so its WAL is fully
 checkpointed, then copy the database and artifacts together:
 
 ```bash
-cp backend/uploads/mirofish.db /path/to/backup/mirofish.db
-cp -a backend/uploads/projects /path/to/backup/
-cp -a backend/uploads/cases /path/to/backup/
-cp -a backend/uploads/simulations /path/to/backup/
+cp -a backend/uploads /path/to/backup/
+# If CONTROL_DB_PATH points outside uploads, copy that database as well.
 ```
 
-For Docker, stop the `mirofish` service first and back up the bind-mounted
+For Docker, stop the application with `docker compose stop` first and back up the bind-mounted
 `backend/uploads` directory. Neo4j data remains in its separate named volume and
 needs its own backup strategy.
 
@@ -54,5 +53,5 @@ Repair or restore the named JSON file and restart; the complete import will retr
 
 Do not delete legacy files immediately after migrating. They are a migration
 snapshot, but they do not receive later project/case/task updates and therefore
-are not a current rollback source. Back up `mirofish.db` regularly once the app
+are not a current rollback source. Back up the control database regularly once the app
 has accepted new work.

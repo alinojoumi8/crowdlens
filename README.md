@@ -27,8 +27,8 @@ embedding providers are optional; enabling them sends the corresponding inputs
 to the configured provider. Website ingestion and optional market lookups also
 require network access. Choose your configuration to match your data needs.
 
-CrowdLens builds on [MiroFish](https://github.com/666ghj/MiroFish) and
-[MiroFish-Offline](https://github.com/nikmcfly/MiroFish-Offline). The product name
+CrowdLens builds on the work of [666ghj](https://github.com/666ghj) and
+[nikmcfly](https://github.com/nikmcfly). The product name
 has changed; existing storage paths and Docker service names remain compatible.
 See [the rebrand plan and compatibility notes](docs/rebranding.md).
 
@@ -66,8 +66,8 @@ openssl rand -hex 24
 docker compose up -d
 
 # Pull the required models into Ollama
-docker exec mirofish-ollama ollama pull qwen2.5:32b
-docker exec mirofish-ollama ollama pull nomic-embed-text
+docker compose exec ollama ollama pull qwen2.5:32b
+docker compose exec ollama ollama pull nomic-embed-text
 ```
 
 Open `http://localhost:3000` — that's it.
@@ -167,7 +167,7 @@ Ollama embeddings still use container service names. With M3, pull only the
 embedding model in the Docker quick start.
 
 Restart the manual backend after editing `.env`. For Docker, recreate the app
-with `docker compose up -d --no-deps --force-recreate mirofish`; an image rebuild
+with `docker compose up -d --force-recreate`; an image rebuild
 is needed only when application code changes. Check `GET /api/status` for
 `data.llm.model == "MiniMax-M3"`. Saved simulations that explicitly specify an
 LLM model (including economy configuration) should be re-prepared before a new
@@ -183,7 +183,7 @@ SQLite control-plane, migration, and simulation-restart status. The lightweight
 container liveness endpoint is `GET /health`.
 
 Project, case, task, and simulation metadata is stored transactionally in
-`backend/uploads/mirofish.db`. Existing JSON metadata is imported once without
+the SQLite database under `backend/uploads/`. Existing JSON metadata is imported once without
 being deleted; uploaded documents and generated artifacts remain on disk. See
 [`docs/control-plane-migration.md`](docs/control-plane-migration.md) for backup,
 migration, and recovery details.
@@ -281,15 +281,15 @@ image build.
 
 ## License
 
-AGPL-3.0 — same as the original MiroFish project. See [LICENSE](./LICENSE).
+AGPL-3.0. See [LICENSE](./LICENSE).
 
 ## Credits & Attribution
 
-CrowdLens is a modified fork derived through [MiroFish-Offline](https://github.com/nikmcfly/MiroFish-Offline) from [MiroFish](https://github.com/666ghj/MiroFish) by [666ghj](https://github.com/666ghj), originally supported by [Shanda Group](https://www.shanda.com/). The simulation engine is powered by [OASIS](https://github.com/camel-ai/oasis) from the CAMEL-AI team.
+CrowdLens is a modified fork of the original work by [666ghj](https://github.com/666ghj), incorporating the local-runtime fork maintained by [nikmcfly](https://github.com/nikmcfly), originally supported by [Shanda Group](https://www.shanda.com/). The simulation engine is powered by [OASIS](https://github.com/camel-ai/oasis) from the CAMEL-AI team.
 
 **Modifications in this fork:**
 - Backend migrated from Zep Cloud to local Neo4j CE + Ollama
 - Entire frontend translated from Chinese to English (20 files, 1,000+ strings)
 - All Zep references replaced with Neo4j across the UI
 - Rebranded the product to CrowdLens, with updated UI, visual assets, and documentation
-- Preserved MiroFish and MiroFish-Offline attribution and existing runtime identifiers
+- Preserved original author and contributor attribution and existing runtime identifiers
