@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "corpus_version": "evidence-quality-v1",
+  "synthetic_only": true,
+  "human_labels_available": false,
+  "files_sha256": {
+    "development/cases.json": "a5f4922b0690cd3aa91eb9e963fe76cb1f371e647cf6faba59210b255b66b2ab",
+    "holdout/cases.json": "d14206429ed472478b4f80ae0663ac55aa318be113df1032935c35725f107208"
+  },
+  "split_policy": "Development is for harness mechanics only. Holdout cases are frozen before baseline; no prompt tuning. Synthetic author knows the cases; this is not a blinded model benchmark.",
+  "hard_invariants": [
+    "scope and explicit origin isolation",
+    "known validated source references",
+    "missing or invalid source evidence blocks proposals",
+    "schema and audit coverage are validated",
+    "one immutable needs_review child on acceptance retries",
+    "parent and unselected artifacts unchanged",
+    "stale publication rejected and interrupted publication recoverable",
+    "same root request does not admit duplicate generation",
+    "proposal deadline and zero transport retries preserved"
+  ],
+  "quality_thresholds": null,
+  "performance_thresholds": null,
+  "fault_contracts": {
+    "root_response_loss": "At most one durable task and dispatch for identical request_key and parameters while in flight.",
+    "root_concurrent": "At most one durable task and dispatch for concurrent identical request_key and parameters.",
+    "aggregate_retry": "Characterize five transport attempts and 30 seconds of backoff at defaults; do not infer a root aggregate deadline."
+  }
+}

@@ -1,0 +1,867 @@
+{
+  "schema_version": 1,
+  "corpus_version": "evidence-quality-v1",
+  "cases": [
+    {
+      "id": "direct_support",
+      "category": "directly_supported",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_direct_support",
+        "case_id": "eq_case_direct_support",
+        "case_version_id": "eq_v1_direct_support"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_direct_support",
+          "case_id": "eq_case_direct_support",
+          "case_version_id": "eq_v1_direct_support",
+          "uuid": "src_direct_support",
+          "document_id": "doc_direct_support",
+          "filename": "direct_support.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_direct_support"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "ready",
+        "finding_codes": [],
+        "selected_source_ids": [
+          "episode:src_direct_support"
+        ],
+        "stub_calls": 3
+      },
+      "human_review_packet": true
+    },
+    {
+      "id": "unknown_reference",
+      "category": "unsupported_claim",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_unknown_reference",
+        "case_id": "eq_case_unknown_reference",
+        "case_version_id": "eq_v1_unknown_reference"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_unknown_reference",
+          "case_id": "eq_case_unknown_reference",
+          "case_version_id": "eq_v1_unknown_reference",
+          "uuid": "src_unknown_reference",
+          "document_id": "doc_unknown_reference",
+          "filename": "unknown_reference.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:nonexistent"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "unknown_citation"
+        ],
+        "selected_source_ids": [
+          "episode:src_unknown_reference"
+        ],
+        "stub_calls": 1
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "conflict",
+      "category": "conflicting_sources",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_conflict",
+        "case_id": "eq_case_conflict",
+        "case_version_id": "eq_v1_conflict"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_conflict",
+          "case_id": "eq_case_conflict",
+          "case_version_id": "eq_v1_conflict",
+          "uuid": "src_conflict",
+          "document_id": "doc_conflict",
+          "filename": "conflict.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        },
+        {
+          "graph_id": "eq_graph_conflict",
+          "case_id": "eq_case_conflict",
+          "case_version_id": "eq_v1_conflict",
+          "uuid": "src_conflict_second",
+          "document_id": "doc_conflict_second",
+          "filename": "second-log.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The second parcel log records delivery on Wednesday at 11:00. Receipt 17 is signed by Morgan.",
+          "fixture_text_sha256": "7c014995a37daa7abc61f0446e9852f2afc96498eb5f6cf5b9e35c8f0b0cef80"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_conflict"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        },
+        {
+          "claim_id": "claim_02",
+          "kind": "source_statement",
+          "text": "The second parcel log records delivery on Wednesday at 11:00.",
+          "citation_ids": [
+            "episode:src_conflict_second"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "ready",
+        "finding_codes": [],
+        "selected_source_ids": [
+          "episode:src_conflict",
+          "episode:src_conflict_second"
+        ],
+        "stub_calls": 3
+      },
+      "human_review_packet": true
+    },
+    {
+      "id": "absent",
+      "category": "missing_evidence",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_absent",
+        "case_id": "eq_case_absent",
+        "case_version_id": "eq_v1_absent"
+      },
+      "sources": [],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_absent"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "foreign_case",
+      "category": "foreign_case",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_foreign_case",
+        "case_id": "eq_case_foreign_case",
+        "case_version_id": "eq_v1_foreign_case"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_foreign_case",
+          "case_id": "eq_case_other",
+          "case_version_id": "eq_v1_foreign_case",
+          "uuid": "src_foreign_case",
+          "document_id": "doc_foreign_case",
+          "filename": "foreign_case.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_foreign_case"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "foreign_graph",
+      "category": "foreign_graph",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_foreign_graph",
+        "case_id": "eq_case_foreign_graph",
+        "case_version_id": "eq_v1_foreign_graph"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_other",
+          "case_id": "eq_case_foreign_graph",
+          "case_version_id": "eq_v1_foreign_graph",
+          "uuid": "src_foreign_graph",
+          "document_id": "doc_foreign_graph",
+          "filename": "foreign_graph.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_foreign_graph"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "wrong_version",
+      "category": "wrong_version",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_wrong_version",
+        "case_id": "eq_case_wrong_version",
+        "case_version_id": "eq_v1_wrong_version"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_wrong_version",
+          "case_id": "eq_case_wrong_version",
+          "case_version_id": "eq_old_version",
+          "uuid": "src_wrong_version",
+          "document_id": "doc_wrong_version",
+          "filename": "wrong_version.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_wrong_version"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "generated_simulation",
+      "category": "generated_origin",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_generated_simulation",
+        "case_id": "eq_case_generated_simulation",
+        "case_version_id": "eq_v1_generated_simulation"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_generated_simulation",
+          "case_id": "eq_case_generated_simulation",
+          "case_version_id": "eq_v1_generated_simulation",
+          "uuid": "src_generated_simulation",
+          "document_id": "doc_generated_simulation",
+          "filename": "generated_simulation.txt",
+          "origin": "simulation",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_generated_simulation"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "generated_report",
+      "category": "generated_origin",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_generated_report",
+        "case_id": "eq_case_generated_report",
+        "case_version_id": "eq_v1_generated_report"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_generated_report",
+          "case_id": "eq_case_generated_report",
+          "case_version_id": "eq_v1_generated_report",
+          "uuid": "src_generated_report",
+          "document_id": "doc_generated_report",
+          "filename": "generated_report.txt",
+          "origin": "generated_report",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_generated_report"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "generated_memory",
+      "category": "generated_origin",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_generated_memory",
+        "case_id": "eq_case_generated_memory",
+        "case_version_id": "eq_v1_generated_memory"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_generated_memory",
+          "case_id": "eq_case_generated_memory",
+          "case_version_id": "eq_v1_generated_memory",
+          "uuid": "src_generated_memory",
+          "document_id": "doc_generated_memory",
+          "filename": "generated_memory.txt",
+          "origin": "agent_memory",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_generated_memory"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "no_original_evidence"
+        ],
+        "selected_source_ids": [],
+        "stub_calls": 0
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "semantic_gap",
+      "category": "unsupported_semantic_claim",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_semantic_gap",
+        "case_id": "eq_case_semantic_gap",
+        "case_version_id": "eq_v1_semantic_gap"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_semantic_gap",
+          "case_id": "eq_case_semantic_gap",
+          "case_version_id": "eq_v1_semantic_gap",
+          "uuid": "src_semantic_gap",
+          "document_id": "doc_semantic_gap",
+          "filename": "semantic_gap.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel contained twelve blue clocks worth 900 dollars.",
+          "citation_ids": [
+            "episode:src_semantic_gap"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "ready",
+        "finding_codes": [],
+        "selected_source_ids": [
+          "episode:src_semantic_gap"
+        ],
+        "stub_calls": 3,
+        "limitation": "Valid source IDs and an empty substitute audit cannot detect semantic invention; ready is not factual support."
+      },
+      "human_review_packet": true
+    },
+    {
+      "id": "attribution",
+      "category": "attributed_claim",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_attribution",
+        "case_id": "eq_case_attribution",
+        "case_version_id": "eq_v1_attribution"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_attribution",
+          "case_id": "eq_case_attribution",
+          "case_version_id": "eq_v1_attribution",
+          "uuid": "src_attribution",
+          "document_id": "doc_attribution",
+          "filename": "attribution.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Morgan states that the parcel delivery occurred on Tuesday. Casey disputes Morgan's account and has not signed the receipt.",
+          "fixture_text_sha256": "26230a8d8eb46c2bc27fa748cd80827e982f425af00a4ce24b512da451a5c501"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "attributed_allegation",
+          "text": "Morgan states that the parcel delivery occurred on Tuesday.",
+          "citation_ids": [
+            "episode:src_attribution"
+          ],
+          "premise_claim_ids": [],
+          "quote": "",
+          "attribution": "Morgan"
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "ready",
+        "finding_codes": [],
+        "selected_source_ids": [
+          "episode:src_attribution"
+        ],
+        "stub_calls": 3
+      },
+      "human_review_packet": true
+    },
+    {
+      "id": "attribution_absent",
+      "category": "invalid_attribution",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_attribution_absent",
+        "case_id": "eq_case_attribution_absent",
+        "case_version_id": "eq_v1_attribution_absent"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_attribution_absent",
+          "case_id": "eq_case_attribution_absent",
+          "case_version_id": "eq_v1_attribution_absent",
+          "uuid": "src_attribution_absent",
+          "document_id": "doc_attribution_absent",
+          "filename": "attribution_absent.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "attributed_allegation",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_attribution_absent"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "missing_attribution"
+        ],
+        "selected_source_ids": [
+          "episode:src_attribution_absent"
+        ],
+        "stub_calls": 1
+      },
+      "human_review_packet": false
+    },
+    {
+      "id": "invalid_schema",
+      "category": "invalid_schema",
+      "split": "holdout",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_invalid_schema",
+        "case_id": "eq_case_invalid_schema",
+        "case_version_id": "eq_v1_invalid_schema"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_invalid_schema",
+          "case_id": "eq_case_invalid_schema",
+          "case_version_id": "eq_v1_invalid_schema",
+          "uuid": "src_invalid_schema",
+          "document_id": "doc_invalid_schema",
+          "filename": "invalid_schema.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+          "fixture_text_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [],
+      "stub_gaps": [],
+      "expected": {
+        "state": "blocked",
+        "finding_codes": [
+          "invalid_ledger"
+        ],
+        "selected_source_ids": [
+          "episode:src_invalid_schema"
+        ],
+        "stub_calls": 1
+      },
+      "human_review_packet": false
+    }
+  ]
+}
