@@ -912,7 +912,7 @@ onUnmounted(() => {
 .file-tag.doc { background: #e6eff5; color: #5a7ea6; }
 .file-tag.xls { background: #e6f2e8; color: #5aa668; }
 .file-tag.ppt { background: #f5efe6; color: #a6815a; }
-.file-tag.txt { background: #f0f0f0; color: #757575; }
+.file-tag.txt { background: #f0f0f0; color: #555555; }
 .file-tag.code { background: #eae6f2; color: #815aa6; }
 .file-tag.img { background: #e6f2f2; color: #5aa6a6; }
 .file-tag.zip { background: #f2f0e6; color: #a69b5a; }
@@ -1336,7 +1336,7 @@ onUnmounted(() => {
 .divider-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 2px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1383,7 +1383,7 @@ onUnmounted(() => {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6rem;
   font-weight: 500;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }

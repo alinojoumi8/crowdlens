@@ -2,9 +2,10 @@
 // ECC_BROWSER_TOOLS points to separately installed, pinned playwright-core/axe-core.
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile, readFile } from 'node:fs/promises'
 const require = createRequire(`${process.env.ECC_BROWSER_TOOLS || '/tmp/crowdlens-ecc-browser-tools'}/package.json`)
 const { chromium } = require('playwright-core')
+const axe = await readFile(require.resolve('axe-core/axe.min.js'), 'utf8')
 const base = process.env.ECC_BROWSER_URL || 'http://127.0.0.1:18742'
 assert(['127.0.0.1', 'localhost'].includes(new URL(base).hostname), 'Disposable loopback preview required')
 const output = process.env.ECC_BROWSER_OUTPUT || '/tmp/crowdlens-ecc-browser-regressions'
@@ -23,7 +24,7 @@ const page = await browser.newPage({ viewport: { width: 375, height: 1000 } })
 // No nonlocal page requests. Fonts are fulfilled empty to keep failure receipts specific to application APIs.
 await page.route('**/*', route => new URL(route.request().url()).origin === base
   ? route.continue() : route.fulfill({ body: '', contentType: 'text/css' }))
-const checks = []
+const checks = [], modalA11y = []
 const consoleMessages = [], networkErrors = [], pageErrors = []
 page.on('console', message => { if (['warning', 'error'].includes(message.type())) consoleMessages.push({ type: message.type(), text: message.text() }) })
 page.on('response', response => { if (response.status() >= 400) networkErrors.push({ url: response.url(), status: response.status() }) })
@@ -56,6 +57,18 @@ await check('history dialog traps focus, closes with Escape and restores trigger
     await page.keyboard.press('Tab')
     assert(await dialog.evaluate(el => el.contains(document.activeElement)))
   }
+  await page.addScriptTag({ content: axe })
+  for (const width of [375, 768, 1440]) {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.waitForTimeout(300)
+    await page.screenshot({ path: `${output}/history-dialog-${width}.png` })
+    const violations = await page.evaluate(async () => (await axe.run(document, {
+      runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] }
+    })).violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) })))
+    modalA11y.push({ width, violations })
+    assert.deepEqual(violations, [], `History dialog accessibility findings at ${width}px`)
+  }
+  await page.setViewportSize({ width: 375, height: 1000 })
   await page.keyboard.press('Escape')
   await dialog.waitFor({ state: 'detached', timeout: 1500 })
   assert.equal(await dialog.count(), 0)
@@ -138,7 +151,7 @@ await check('recovered failure is visible and has a permitted manual retry', asy
 })
 await page.screenshot({ path: output + '/recovery-result-375.png', fullPage: true })
 await check('recovery has no uncaught browser errors', async () => assert.deepEqual(pageErrors, []))
-await writeFile(output + '/results.json', JSON.stringify({ browser: browser.version(), browserLaunch, checks, abandoned, task, consoleMessages, networkErrors, pageErrors, substitutes: ['Harness synthetic adapters', 'Interrupted report presentation intercepted; graph recovery uses actual exited owner and durable task APIs'] }, null, 2))
+await writeFile(output + '/results.json', JSON.stringify({ browser: browser.version(), browserLaunch, modalA11y, checks, abandoned, task, consoleMessages, networkErrors, pageErrors, substitutes: ['Harness synthetic adapters', 'Interrupted report presentation intercepted; graph recovery uses actual exited owner and durable task APIs'] }, null, 2))
 await browser.close()
 console.log(JSON.stringify(checks, null, 2))
 if (checks.some(check => !check.passed)) process.exitCode = 1
