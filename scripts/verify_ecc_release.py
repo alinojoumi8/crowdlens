@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 import tempfile
@@ -66,10 +67,17 @@ def main():
         start = time.monotonic()
         with log.open("w") as stream:
             try:
-                result = subprocess.run(command, cwd=cwd, env=env, stdout=stream,
-                                        stderr=subprocess.STDOUT, timeout=timeout, check=False)
-                code = result.returncode
+                process = subprocess.Popen(command, cwd=cwd, env=env, stdout=stream,
+                                           stderr=subprocess.STDOUT, start_new_session=True)
+                code = process.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
+                # npm/uv may have descendants: stop the isolated command group.
+                os.killpg(process.pid, signal.SIGTERM)
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    os.killpg(process.pid, signal.SIGKILL)
+                    process.wait()
                 code = 124
                 stream.write("\nVerification command timed out.\n")
             except OSError as exc:
@@ -122,7 +130,10 @@ def main():
                                "--output-dir", str(output / "backup")])
         evaluation = checkout / "backend/scripts/evaluate_evidence_quality.py"
         if evaluation.is_file():
-            run("evaluations", [python, str(evaluation), "--output-dir", str(output / "evaluations"), "--repeats", "3"])
+            # The evaluator deliberately requires a fresh direct /tmp child.
+            evaluation_output = temporary / ("crowdlens-ecc-eval-" + args.candidate[:12] + "-" + output.name)
+            receipt["evaluation_output"] = str(evaluation_output)
+            run("evaluations", [python, str(evaluation), "--output-dir", str(evaluation_output), "--repeats", "3"])
         else:
             receipt["gaps"].append("Milestone 3 evaluator absent from candidate")
         compose_env = checkout / ".env"
