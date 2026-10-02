@@ -1,0 +1,40 @@
+{
+  "candidate_section": "The parcel log records delivery on Tuesday at 10:00. [1]",
+  "candidate_summary": "The parcel delivery record needs review.",
+  "claims": [
+    {
+      "attribution": null,
+      "citation_ids": [
+        "S01"
+      ],
+      "claim_id": "claim_01",
+      "kind": "source_statement",
+      "premise_claim_ids": [],
+      "text": "The parcel log records delivery on Tuesday at 10:00."
+    }
+  ],
+  "notice": "Fictional synthetic packet. Candidate origin and expected assertions are withheld. Review only against these sources.",
+  "packet_id": "packet_33f6cce12291",
+  "schema_version": 1,
+  "sources": [
+    {
+      "case_id": "case-A",
+      "case_version_id": "version-current",
+      "document_id": "D01",
+      "excerpt": "The parcel log records delivery on Tuesday at 10:00. Receipt 17 is unsigned.",
+      "graph_id": "graph-A",
+      "locator": {
+        "char_end": 76,
+        "char_start": 0,
+        "chunk_index": 0,
+        "offset_basis": "stored_chunk",
+        "page": 1,
+        "paragraph": 1
+      },
+      "origin": "source_document",
+      "source_id": "S01",
+      "source_sha256": "75845ae4788e4edb84b23760ad4e1f0c1bc4d10f5d11a2197818ceb09a4da292"
+    }
+  ],
+  "task": "Review parcel delivery timing and receipt attribution."
+}

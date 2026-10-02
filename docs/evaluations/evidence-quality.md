@@ -71,8 +71,11 @@ commit `86f5882c2ae369a0828113abbf640b814bb0574a`: all three runs collected 164 
 with 162 passing and the same two root-admission failures each time. The workflow
 corpus had five ready proposals (one development) and ten blocked proposals per
 run, all matching the frozen structural contracts. No application behavior was
-changed by this evaluation work. The coordinator owns the duplicate-admission fix
-and combined-candidate verification; the before evidence remains unchanged.
+changed by this evaluation work. The coordinator repaired duplicate admission and
+ran a [comparable after baseline](2026-10-02-evidence-quality-after-root.md) on clean
+`e5108ca62c63e91980183d658fd706fb48f1f21d`: all 164 tests passed in each of three
+runs. Fixture and prompt hashes match; the before evidence remains unchanged.
+The final combined candidate still requires the release owner's fresh verification.
 
 Model quality is **BLOCKED** by absent generation-model execution. Human labels
 and measured effort are **PENDING**; four blinded packets and their blank forms
