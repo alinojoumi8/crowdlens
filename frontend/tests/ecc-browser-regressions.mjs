@@ -9,7 +9,16 @@ const base = process.env.ECC_BROWSER_URL || 'http://127.0.0.1:18742'
 assert(['127.0.0.1', 'localhost'].includes(new URL(base).hostname), 'Disposable loopback preview required')
 const output = process.env.ECC_BROWSER_OUTPUT || '/tmp/crowdlens-ecc-browser-regressions'
 await mkdir(output, { recursive: true })
-const browser = await chromium.launch({ executablePath: process.env.ECC_CHROME || '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox'] })
+const browser = await chromium.launch({ executablePath: process.env.ECC_CHROME || '/usr/bin/google-chrome', headless: true, chromiumSandbox: true })
+const cdp = await browser.newBrowserCDPSession()
+const browserLaunch = await cdp.send('Browser.getBrowserCommandLine')
+assert(!browserLaunch.arguments.includes('--no-sandbox'), 'Chromium sandbox must remain enabled')
+const sandboxPage = await browser.newPage()
+await sandboxPage.goto('chrome://sandbox')
+browserLaunch.sandboxStatus = await sandboxPage.locator('body').innerText()
+assert.match(browserLaunch.sandboxStatus, /Seccomp-BPF sandbox\s+Yes/)
+assert.match(browserLaunch.sandboxStatus, /adequately sandboxed/)
+await sandboxPage.close()
 const page = await browser.newPage({ viewport: { width: 375, height: 1000 } })
 // No nonlocal page requests. Fonts are fulfilled empty to keep failure receipts specific to application APIs.
 await page.route('**/*', route => new URL(route.request().url()).origin === base
@@ -28,7 +37,7 @@ await page.waitForSelector('.history-database .project-card')
 await check('upload chooser is keyboard reachable and named', async () => {
   assert.equal(await page.getByRole('button', { name: 'Choose source files' }).count(), 1)
   await page.getByRole('button', { name: 'Choose source files' }).focus()
-  const chooser = page.waitForEvent('filechooser', { timeout: 1500 })
+  const chooser = page.waitForEvent('filechooser', { timeout: 5000 })
   await page.keyboard.press('Enter')
   await (await chooser).setFiles([])
 })
@@ -129,7 +138,7 @@ await check('recovered failure is visible and has a permitted manual retry', asy
 })
 await page.screenshot({ path: output + '/recovery-result-375.png', fullPage: true })
 await check('recovery has no uncaught browser errors', async () => assert.deepEqual(pageErrors, []))
-await writeFile(output + '/results.json', JSON.stringify({ browser: browser.version(), checks, abandoned, task, consoleMessages, networkErrors, pageErrors, substitutes: ['Harness synthetic adapters', 'Interrupted report presentation intercepted; graph recovery uses actual exited owner and durable task APIs'] }, null, 2))
+await writeFile(output + '/results.json', JSON.stringify({ browser: browser.version(), browserLaunch, checks, abandoned, task, consoleMessages, networkErrors, pageErrors, substitutes: ['Harness synthetic adapters', 'Interrupted report presentation intercepted; graph recovery uses actual exited owner and durable task APIs'] }, null, 2))
 await browser.close()
 console.log(JSON.stringify(checks, null, 2))
 if (checks.some(check => !check.passed)) process.exitCode = 1

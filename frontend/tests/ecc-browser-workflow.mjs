@@ -9,9 +9,18 @@ const base = process.env.ECC_BROWSER_URL || 'http://127.0.0.1:18742'
 assert(['127.0.0.1', 'localhost'].includes(new URL(base).hostname))
 const output = process.env.ECC_BROWSER_OUTPUT || '/tmp/crowdlens-ecc-browser-workflow'
 await mkdir(output, { recursive: true })
-const browser = await chromium.launch({ executablePath: process.env.ECC_CHROME || '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox'] })
+const browser = await chromium.launch({ executablePath: process.env.ECC_CHROME || '/usr/bin/google-chrome', headless: true, chromiumSandbox: true })
+const cdp = await browser.newBrowserCDPSession()
+const browserLaunch = await cdp.send('Browser.getBrowserCommandLine')
+assert(!browserLaunch.arguments.includes('--no-sandbox'), 'Chromium sandbox must remain enabled')
+const sandboxPage = await browser.newPage()
+await sandboxPage.goto('chrome://sandbox')
+browserLaunch.sandboxStatus = await sandboxPage.locator('body').innerText()
+assert.match(browserLaunch.sandboxStatus, /Seccomp-BPF sandbox\s+Yes/)
+assert.match(browserLaunch.sandboxStatus, /adequately sandboxed/)
+await sandboxPage.close()
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
-const receipt = { browser: browser.version(), checks: [], snapshots: [], console: [], pageErrors: [], network: [],
+const receipt = { browser: browser.version(), browserLaunch, checks: [], snapshots: [], console: [], pageErrors: [], network: [],
   substitutes: ['Harness ontology, graph builder/storage, simulation endpoints, drafting model; no provider calls',
     'Root generation response intercepted to open an explicitly seeded report',
     'One acceptance response deliberately lost after its real HTTP publication',
