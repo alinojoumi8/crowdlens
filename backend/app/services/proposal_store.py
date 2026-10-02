@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
 import json
+from .task_execution import fenced
 import os
 from pathlib import Path
 import re
@@ -209,6 +210,7 @@ class ProposalStore:
                 operation.close()
                 raise
 
+    @fenced
     def update(self, proposal_id, expected_states, changes):
         with self.lock('record-' + self.identifier(proposal_id), 'state_busy'):
             record = self.read(proposal_id)
@@ -226,6 +228,7 @@ class ProposalStore:
             atomic_json(self._file(proposal_id), record)
             return record
 
+    @fenced
     def save_snapshot(self, proposal_id, name, value):
         path = self._file(proposal_id, name)
         atomic_json(path, value)

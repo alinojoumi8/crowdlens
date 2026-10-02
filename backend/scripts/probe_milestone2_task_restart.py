@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 
 BACKEND = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND))
@@ -31,10 +32,22 @@ def main():
         subprocess.run([sys.executable, __file__, '--writer', str(database)], check=True)
         TaskManager.configure_repository(ControlDatabase(database))
         identifier = database.with_suffix('.id').read_text()
-        task = TaskManager().get_task(identifier)
-        unresolved = task.status == TaskStatus.PROCESSING
+        from app.services.task_execution import LEASE_SECONDS, RECOVERY_INTERVAL_SECONDS
+        runtime = TaskManager().runtime
+        runtime.start_monitor()
+        started = time.monotonic()
+        deadline = started + LEASE_SECONDS + RECOVERY_INTERVAL_SECONDS + 3
+        # Read the repository directly: the background monitor must recover it.
+        task = runtime.get(identifier)
+        while task['status'] in {'pending', 'processing'} and time.monotonic() < deadline:
+            time.sleep(.1)
+            task = runtime.get(identifier)
+        runtime.close()
+        unresolved = task['status'] in {'pending', 'processing'}
         print(json.dumps({'task_id': identifier, 'writer_process_exited': True,
-                          'restored_status': task.status.value, 'unresolved': unresolved}))
+                          'restored_status': task['status'], 'reason':task.get('error'),
+                          'elapsed_seconds':round(time.monotonic()-started,2),
+                          'unresolved': unresolved}))
         return 1 if unresolved else 0
 
 

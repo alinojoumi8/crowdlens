@@ -16,6 +16,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from ..config import Config
+from .task_execution import fenced
+from contextvars import copy_context
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
@@ -1046,6 +1048,7 @@ Important:
         lock = Lock()
 
         # Helper function for real-time file writing
+        @fenced
         def save_profiles_realtime():
             """Real-time save generated profiles to file"""
             if not realtime_output_path:
@@ -1130,7 +1133,7 @@ Important:
         with concurrent.futures.ThreadPoolExecutor(max_workers=parallel_count) as executor:
             # Submit all tasks
             future_to_entity = {
-                executor.submit(generate_single_profile, idx, entity): (idx, entity)
+                executor.submit(copy_context().run, generate_single_profile, idx, entity): (idx, entity)
                 for idx, entity in enumerate(entities)
             }
 
@@ -1230,6 +1233,7 @@ Important:
         # Only output to console (avoid duplication, logger no longer outputs complete content)
         print(output)
     
+    @fenced
     def save_profiles(
         self,
         profiles: List[OasisAgentProfile],

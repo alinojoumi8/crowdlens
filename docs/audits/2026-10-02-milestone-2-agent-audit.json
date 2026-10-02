@@ -317,5 +317,15 @@
     "pushed": false,
     "merged": false,
     "later_milestone_started": false
-  }
+  },
+  "addenda": [
+    {
+      "date": "2026-10-02",
+      "finding": "H1",
+      "report": "2026-10-02-h1-task-recovery.md",
+      "receipt": "2026-10-02-h1-task-recovery.json",
+      "status": "fixed_and_verified_locally",
+      "historical_findings_preserved": true
+    }
+  ]
 }

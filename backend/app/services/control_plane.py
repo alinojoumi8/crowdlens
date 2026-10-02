@@ -29,6 +29,8 @@ def initialize_control_plane(app, logger, *, log_startup: bool) -> None:
         app.extensions["control_db"] = control_db
         app.extensions["control_db_migration"] = migration_counts
         _configure_repositories(control_db)
+        app.extensions["task_reconciliation"] = TaskManager().reconcile()
+        TaskManager().runtime.start_monitor()
         if log_startup:
             logger.info(
                 "Control database ready: path=%s imported=%s",

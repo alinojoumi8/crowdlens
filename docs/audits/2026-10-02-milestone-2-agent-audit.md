@@ -287,3 +287,11 @@ quality and full OASIS behavior are not. Local temporary logs/results are under
 The existing deployment remains unchanged. Fixes are local and unmerged. Audit
 completion, remediation completion, deployment verification and report-quality
 verification are separate verdicts; only the first is complete here.
+
+## Subsequent H1 remediation — 2026-10-02
+
+The [dated H1 addendum](2026-10-02-h1-task-recovery.md) records owned attempts,
+periodic recovery, related-state repair and stale-publication fences, with real
+two-process and API regressions. H1 is fixed and verified locally. The findings
+and results above describe the original audit snapshot and remain unchanged;
+deployment reconciliation and full model workflow evidence are still pending.

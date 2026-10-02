@@ -10,6 +10,7 @@ from flask import request, jsonify, send_file, current_app
 
 from . import report_bp
 from ..config import Config
+from ..services.task_execution import TaskBusy
 from ..services.report_agent import ReportAgent, ReportManager, ReportStatus, normalize_report_mode, normalize_report_depth
 from ..services.forecasting import (
     infer_report_mode_from_forecast,
@@ -150,18 +151,6 @@ def generate_report():
         import uuid
         report_id = f"report_{uuid.uuid4().hex[:12]}"
 
-        task_manager = TaskManager()
-        task_id = task_manager.create_task(
-            task_type="report_generate",
-            metadata={
-                "simulation_id": simulation_id,
-                "graph_id": graph_id,
-                "report_id": report_id,
-                "report_mode": report_mode,
-                "report_depth": report_depth,
-            }
-        )
-
         # Initialize graph_tools in Flask context BEFORE spawning thread
         # (current_app is not available inside background threads)
         storage = current_app.extensions.get('neo4j_storage')
@@ -182,6 +171,19 @@ def generate_report():
             }), 409
 
         graph_tools = GraphToolsService(storage=storage)
+
+        task_manager = TaskManager()
+        task_id = task_manager.create_task(
+            task_type="report_generate",
+            metadata={
+                "simulation_id": simulation_id,
+                "graph_id": graph_id,
+                "report_id": report_id,
+                "report_mode": report_mode,
+                "report_depth": report_depth,
+            },
+            resources=[{"key":"report:"+report_id, "root":ReportManager._get_reports_dir()}]
+        )
 
         def run_generate():
             try:
@@ -215,8 +217,7 @@ def generate_report():
                 logger.error(f"Report generation failed: {str(e)}")
                 task_manager.fail_task(task_id, str(e))
 
-        thread = threading.Thread(target=run_generate, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, run_generate)
 
         return jsonify({"success": True, "data": {
             "simulation_id": simulation_id,
@@ -229,6 +230,8 @@ def generate_report():
             "already_generated": False
         }})
 
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to start report generation task: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -518,7 +521,8 @@ def resume_report(report_id: str):
         task_manager = TaskManager()
         task_id = task_manager.create_task(
             task_type="report_resume",
-            metadata={"simulation_id": report.simulation_id, "graph_id": report.graph_id, "report_id": report_id}
+            metadata={"simulation_id": report.simulation_id, "graph_id": report.graph_id, "report_id": report_id},
+            resources=[{"key":"report:"+report_id, "root":ReportManager._get_reports_dir()}]
         )
 
         def run_resume():
@@ -552,8 +556,7 @@ def resume_report(report_id: str):
                 logger.error(f"Report resume failed: {str(e)}")
                 task_manager.fail_task(task_id, str(e))
 
-        thread = threading.Thread(target=run_resume, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, run_resume)
 
         return jsonify({"success": True, "data": {
             "simulation_id": report.simulation_id,
@@ -564,6 +567,8 @@ def resume_report(report_id: str):
         }})
     except ProposalError as e:
         return jsonify({'success': False, 'error': e.code}), e.status
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to resume report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

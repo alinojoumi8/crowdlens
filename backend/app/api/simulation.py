@@ -10,6 +10,7 @@ from flask import request, jsonify, send_file, current_app
 
 from . import simulation_bp
 from ..config import Config
+from ..services.task_execution import TaskBusy
 from ..services.entity_reader import EntityReader
 from ..services.oasis_profile_generator import OasisProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
@@ -544,12 +545,14 @@ def prepare_simulation():
             metadata={
                 "simulation_id": simulation_id,
                 "project_id": state.project_id
-            }
+            },
+            resources=[{"key":"simulation:"+simulation_id, "root":manager.SIMULATION_DATA_DIR}]
         )
         
         # Update simulation status（Include pre-fetched entity count）
         state.status = SimulationStatus.PREPARING
-        manager._save_simulation_state(state)
+        with task_manager.attempt(task_id).bind():
+            manager._save_simulation_state(state)
         
         # Define background task
         def run_prepare():
@@ -658,8 +661,7 @@ def prepare_simulation():
                     manager._save_simulation_state(state)
         
         # Start background thread
-        thread = threading.Thread(target=run_prepare, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, run_prepare)
         
         return jsonify({
             "success": True,
@@ -682,6 +684,8 @@ def prepare_simulation():
             "error": str(e)
         }), 404
         
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to start preparation task: {str(e)}")
         return jsonify({
@@ -843,7 +847,8 @@ def run_ensemble():
             storage = current_app.extensions.get('neo4j_storage')
 
         task_manager = TaskManager()
-        task_id = task_manager.create_task('ensemble_run', metadata={'simulation_id': simulation_id})
+        task_id = task_manager.create_task('ensemble_run', metadata={'simulation_id': simulation_id},
+            resources=[{'key':'ensemble:'+simulation_id}])
 
         def run_ensemble_task():
             from ..models.task import TaskStatus
@@ -868,7 +873,7 @@ def run_ensemble():
                 logger.error(f"Ensemble run failed: {exc}")
                 task_manager.fail_task(task_id, str(exc))
 
-        threading.Thread(target=run_ensemble_task, daemon=True).start()
+        task_manager.start_task(task_id, run_ensemble_task)
 
         return jsonify({
             "success": True,
@@ -879,6 +884,8 @@ def run_ensemble():
                 "message": "Ensemble started. Poll progress via /api/simulation/run-ensemble/status",
             }
         })
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to start ensemble: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

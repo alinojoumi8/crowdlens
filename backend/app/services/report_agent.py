@@ -12,6 +12,7 @@ Features:
 import os
 import json
 import time
+from .task_execution import report_write
 import re
 from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field
@@ -3032,6 +3033,7 @@ class ReportManager:
         return result["logs"]
     
     @classmethod
+    @report_write
     def save_outline(cls, report_id: str, outline: ReportOutline) -> None:
         """
         saveReportoutline
@@ -3046,6 +3048,7 @@ class ReportManager:
         logger.info(f"outlinesaved: {report_id}")
     
     @classmethod
+    @report_write
     def save_section(
         cls,
         report_id: str,
@@ -3156,6 +3159,7 @@ class ReportManager:
         return '\n'.join(cleaned_lines)
     
     @classmethod
+    @report_write
     def update_progress(
         cls, 
         report_id: str, 
@@ -3265,6 +3269,7 @@ class ReportManager:
         return sections
     
     @classmethod
+    @report_write
     def assemble_full_report(cls, report_id: str, outline: ReportOutline) -> str:
         """
         assembleComplete report
@@ -3421,6 +3426,7 @@ class ReportManager:
         return '\n'.join(result_lines)
     
     @classmethod
+    @report_write
     def save_report(cls, report: Report) -> None:
         """SavereportmetainformationandcompleteReport"""
         existing = cls.get_report(report.report_id)

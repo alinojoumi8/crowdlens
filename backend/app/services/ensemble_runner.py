@@ -17,10 +17,12 @@ import math
 import os
 import statistics
 import time
+from contextlib import nullcontext
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 
 from ..config import Config
+from .task_execution import fenced, current_attempt, publication_guard
 from ..utils.logger import get_logger
 from .forecasting import (
     DEFAULT_OUTCOMES,
@@ -68,6 +70,8 @@ class EnsembleRunner:
         per_run_signals: List[Optional[Dict[str, Any]]] = []
 
         for i in range(runs):
+            with publication_guard():
+                pass
             seed = 1000 + i * 97
             cls._reset(simulation_id)
             try:
@@ -89,7 +93,12 @@ class EnsembleRunner:
                     progress_callback(i + 1, runs, None)
                 continue
 
-            completed = cls._wait_for_completion(simulation_id, per_run_timeout)
+            attempt = current_attempt()
+            child = SimulationRunner._processes.get(simulation_id)
+            watch = (attempt.runtime.watch_child(attempt, child)
+                     if attempt and child else nullcontext())
+            with watch:
+                completed = cls._wait_for_completion(simulation_id, per_run_timeout)
             signal = (
                 ForecastSynthesizer(simulation_id, config).build_simulation_signal()
                 if completed else None
@@ -161,6 +170,8 @@ class EnsembleRunner:
     def _wait_for_completion(simulation_id: str, timeout: float) -> bool:
         start = time.time()
         while time.time() - start < timeout:
+            with publication_guard():
+                pass
             state = SimulationRunner.get_run_state(simulation_id)
             if state and state.runner_status in (RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED):
                 return state.runner_status == RunnerStatus.COMPLETED
@@ -218,6 +229,7 @@ class EnsembleRunner:
         }
 
     @staticmethod
+    @fenced
     def _persist(simulation_id: str, aggregate: Dict[str, Any]) -> None:
         path = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id, "ensemble_signal.json")
         try:

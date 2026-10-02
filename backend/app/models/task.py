@@ -3,6 +3,7 @@ Task Status Management
 Tracks long-running tasks (like graph building)
 """
 
+import os
 import uuid
 import threading
 from datetime import datetime
@@ -38,6 +39,8 @@ class Task:
     error: Optional[str] = None    # Error message
     metadata: Dict = field(default_factory=dict)  # Additional metadata
     progress_detail: Dict = field(default_factory=dict)  # Detailed progress information
+    execution: Optional[Dict] = None
+    recovery: Optional[Dict] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""
@@ -53,6 +56,8 @@ class Task:
             "result": self.result,
             "error": self.error,
             "metadata": self.metadata,
+            "execution": self.execution,
+            "recovery": self.recovery,
         }
 
     @classmethod
@@ -69,6 +74,7 @@ class Task:
             error=data.get('error'),
             metadata=data.get('metadata') or {},
             progress_detail=data.get('progress_detail') or {},
+            execution=data.get('execution'), recovery=data.get('recovery'),
         )
 
 
@@ -81,10 +87,16 @@ class TaskManager:
     _instance = None
     _lock = threading.Lock()
     _repository = None
+    _runtime = None
 
     @classmethod
     def configure_repository(cls, repository) -> None:
+        if cls._runtime:
+            cls._runtime.close()
+        cls._runtime = None
         cls._repository = repository
+        if cls._instance:
+            cls._instance._tasks.clear()
 
     def __new__(cls):
         """Singleton pattern"""
@@ -96,7 +108,34 @@ class TaskManager:
                     cls._instance._task_lock = threading.Lock()
         return cls._instance
 
-    def create_task(self, task_type: str, metadata: Optional[Dict] = None) -> str:
+    @property
+    def runtime(self):
+        from ..services.task_execution import TaskRuntime
+        if (type(self)._runtime is None or type(self)._runtime.repository is not self._repository
+                or type(self)._runtime.owner['pid'] != os.getpid()):
+            if type(self)._runtime:
+                type(self)._runtime.close()
+            type(self)._runtime = TaskRuntime(self._repository)
+        return type(self)._runtime
+
+    def attempt(self, task_id):
+        from ..services.task_execution import current_attempt, OwnershipLost
+        current = current_attempt()
+        if current and current.task_id == task_id:
+            return current
+        handle = self.runtime.handles.get(task_id)
+        if handle is None:
+            raise OwnershipLost('task_not_owned_by_this_worker')
+        return handle
+
+    def start_task(self, task_id, target, args=(), *, name=None):
+        attempt = self.attempt(task_id)
+        return attempt.runtime.start(attempt, target, args, name=name)
+
+    def reconcile(self):
+        return self.runtime.reconcile(raise_on_error=False)
+
+    def create_task(self, task_type: str, metadata: Optional[Dict] = None, *, resources=()) -> str:
         """
         Create new task
 
@@ -121,8 +160,7 @@ class TaskManager:
 
         with self._task_lock:
             self._tasks[task_id] = task
-        if self._repository is not None:
-            self._repository.put_task(task.to_dict())
+        self.runtime.admit(task.to_dict(), resources)
 
         metadata_keys = ",".join(sorted((metadata or {}).keys())) or "-"
         logger.info(
@@ -135,79 +173,37 @@ class TaskManager:
         return task_id
 
     def get_task(self, task_id: str) -> Optional[Task]:
-        """Get task"""
-        with self._task_lock:
-            task = self._tasks.get(task_id)
-        if task is None and self._repository is not None:
-            payload = self._repository.get_task(task_id)
-            if payload:
-                task = Task.from_dict(payload)
-                with self._task_lock:
-                    self._tasks[task_id] = task
-        return task
+        """Read current durable state; another worker may have recovered it."""
+        self.runtime.reconcile(raise_on_error=False)
+        payload = self.runtime.get(task_id)
+        return Task.from_dict(payload) if payload else None
 
     def update_task(
-        self,
-        task_id: str,
-        status: Optional[TaskStatus] = None,
-        progress: Optional[int] = None,
-        message: Optional[str] = None,
-        result: Optional[Dict] = None,
-        error: Optional[str] = None,
-        progress_detail: Optional[Dict] = None
+        self, task_id: str, status: Optional[TaskStatus] = None,
+        progress: Optional[int] = None, message: Optional[str] = None,
+        result: Optional[Dict] = None, error: Optional[str] = None,
+        progress_detail: Optional[Dict] = None,
     ):
-        """
-        Update task status
-
-        Args:
-            task_id: Task ID
-            status: New status
-            progress: Progress
-            message: Message
-            result: Result
-            error: Error message
-            progress_detail: Detailed progress information
-        """
+        from ..services.task_execution import current_attempt
+        bound = current_attempt()
+        runtime = bound.runtime if bound and bound.task_id == task_id else self.runtime
+        current = runtime.get(task_id)
+        if current is None and task_id not in runtime.handles:
+            logger.warning("Task update skipped: task_id=%s not found requested_status=%s progress=%s error=%s",
+                           task_id, getattr(status, 'value', status), progress, error)
+            return
+        attempt = self.attempt(task_id)
+        changes = {key:value for key,value in dict(
+            status=status.value if isinstance(status, TaskStatus) else status,
+            progress=progress, message=message, result=result, error=error,
+            progress_detail=progress_detail).items() if value is not None}
+        payload = attempt.runtime.update(attempt, changes)
+        if current and payload['status'] != current['status']:
+            logger.info("Task status changed: task_id=%s %s -> %s progress=%s message=%s",
+                        task_id, current['status'], payload['status'], payload.get('progress',0),
+                        payload.get('message') or '-')
         with self._task_lock:
-            task = self._tasks.get(task_id)
-            if not task:
-                logger.warning(
-                    "Task update skipped: task_id=%s not found requested_status=%s progress=%s error=%s",
-                    task_id,
-                    status.value if isinstance(status, TaskStatus) else status,
-                    progress,
-                    error,
-                )
-                return
-
-            previous_status = task.status
-            task.updated_at = datetime.now()
-            if status is not None:
-                task.status = status
-            if progress is not None:
-                task.progress = progress
-            if message is not None:
-                task.message = message
-            if result is not None:
-                task.result = result
-            if error is not None:
-                task.error = error
-            if progress_detail is not None:
-                task.progress_detail = progress_detail
-
-            if status is not None and status != previous_status:
-                logger.info(
-                    "Task status changed: task_id=%s %s -> %s progress=%s message=%s",
-                    task_id,
-                    previous_status.value,
-                    status.value,
-                    task.progress,
-                    task.message or "-",
-                )
-            payload = task.to_dict()
-
-        if self._repository is not None:
-            self._repository.put_task(payload)
+            self._tasks[task_id] = Task.from_dict(payload)
 
     def complete_task(self, task_id: str, result: Dict):
         """Mark task as completed"""
@@ -232,18 +228,10 @@ class TaskManager:
         logger.error("Task failed: task_id=%s error=%s", task_id, error)
 
     def list_tasks(self, task_type: Optional[str] = None) -> list:
-        """List tasks"""
-        if self._repository is not None:
-            for payload in self._repository.list_tasks():
-                task = Task.from_dict(payload)
-                with self._task_lock:
-                    self._tasks[task.task_id] = task
-
-        with self._task_lock:
-            tasks = list(self._tasks.values())
-            if task_type:
-                tasks = [t for t in tasks if t.task_type == task_type]
-            return [t.to_dict() for t in sorted(tasks, key=lambda x: x.created_at, reverse=True)]
+        self.runtime.reconcile(raise_on_error=False)
+        tasks = self.runtime.records()
+        return sorted((task for task in tasks if not task_type or task['task_type'] == task_type),
+                      key=lambda task:task['created_at'], reverse=True)
 
     def cleanup_old_tasks(self, max_age_hours: int = 24):
         """Clean up old tasks"""

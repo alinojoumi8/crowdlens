@@ -12,6 +12,7 @@ from typing import Dict, Any, List, Optional
 from enum import Enum
 from dataclasses import dataclass, field, asdict
 from ..config import Config
+from ..services.task_execution import project_write
 
 
 class ProjectStatus(str, Enum):
@@ -198,6 +199,7 @@ class ProjectManager:
         return project
 
     @classmethod
+    @project_write
     def save_project(cls, project: Project) -> None:
         """Save project metadata"""
         project.updated_at = datetime.now().isoformat()

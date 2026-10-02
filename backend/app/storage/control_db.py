@@ -19,7 +19,7 @@ from typing import Any, Callable, Dict, Optional
 
 logger = logging.getLogger("mirofish.control_db")
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 _TABLE_IDS = {
     "projects": "project_id",
     "cases": "case_id",
@@ -84,6 +84,8 @@ class ControlDatabase:
                 connection.execute(
                     f"CREATE INDEX IF NOT EXISTS idx_{table}_updated_at ON {table}(updated_at DESC)"
                 )
+            connection.execute('CREATE TABLE IF NOT EXISTS task_resources ('
+                               'resource_key TEXT PRIMARY KEY, task_id TEXT NOT NULL, attempt_id TEXT NOT NULL)')
             connection.execute(
                 """
                 INSERT INTO schema_migrations(name, version, applied_at, details_json)

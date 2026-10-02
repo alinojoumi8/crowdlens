@@ -13,6 +13,7 @@ from datetime import datetime
 from enum import Enum
 
 from ..config import Config
+from .task_execution import simulation_write, publication_guard
 from ..utils.logger import get_logger
 from ..utils.timing import PhaseTimer
 from .entity_reader import EntityReader, FilteredEntities
@@ -176,6 +177,7 @@ class SimulationManager:
         os.makedirs(sim_dir, exist_ok=True)
         return sim_dir
     
+    @simulation_write
     def _save_simulation_state(self, state: SimulationState):
         """Save simulation state to file"""
         sim_dir = self._get_simulation_dir(state.simulation_id)
@@ -190,8 +192,7 @@ class SimulationManager:
     
     def _load_simulation_state(self, simulation_id: str) -> Optional[SimulationState]:
         """Load simulation state from file"""
-        if simulation_id in self._simulations:
-            return self._simulations[simulation_id]
+        # Filesystem state may have been repaired by another backend.
         
         sim_dir = self._get_simulation_dir(simulation_id)
         state_file = os.path.join(sim_dir, "state.json")
@@ -512,7 +513,7 @@ class SimulationManager:
 
             # Save config files
             config_path = os.path.join(sim_dir, "simulation_config.json")
-            with timing.time("save_config", label="Persist simulation config"):
+            with publication_guard(), timing.time("save_config", label="Persist simulation config"):
                 with open(config_path, 'w', encoding='utf-8') as f:
                     f.write(sim_params.to_json())
             

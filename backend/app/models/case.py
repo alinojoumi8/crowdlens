@@ -19,6 +19,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from ..config import Config
+from ..services.task_execution import publication_guard
 from ..utils.logger import get_logger
 
 logger = get_logger("mirofish.case")
@@ -28,7 +29,7 @@ _CASE_MUTATION_LOCK = threading.RLock()
 def _serialized_case_mutation(function):
     @wraps(function)
     def wrapped(*args, **kwargs):
-        with _CASE_MUTATION_LOCK:
+        with publication_guard(), _CASE_MUTATION_LOCK:
             return function(*args, **kwargs)
     return wrapped
 

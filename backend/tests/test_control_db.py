@@ -95,7 +95,7 @@ def test_control_database_health_reports_schema_and_wal_mode(tmp_path):
     health = database.health_status()
 
     assert health["healthy"] is True
-    assert health["schema_version"] == 1
+    assert health["schema_version"] == 2
     assert health["journal_mode"] == "wal"
     assert Path(health["path"]) == tmp_path / "control.db"
 
