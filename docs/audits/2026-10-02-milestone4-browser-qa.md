@@ -137,4 +137,17 @@ Frontend validation: **12 Node tests and 20 Vitest component tests passed**, bui
 - Real local generation/extraction/simulation/report output was unavailable and was not downloaded or replaced with hosted inference. No model-output quality conclusion follows from these deterministic scripts.
 - Real Neo4j, network/provider failures, auth, multi-user deployment, screen-reader behavior, graph canvas keyboard access and exhaustive navigation beyond the requested review workflow remain outside this browser receipt.
 - A new screenshot baseline exists; historical visual-regression success cannot be claimed.
-- The earlier combined candidate `3d8ba0e` was superseded by the modal corrections. Final replacement freeze: **`242b8999044e33c8c3217df857c06401f3efbba3`**, tree `39753400064fe764b98152c2c0204005f874a9c1`. Specialist C owns the independent clean-environment rerun of both sandboxed suites on that exact candidate. Its [Milestone 5 release-verification report](2026-10-02-milestone5-release-verification.md) provides the combined-SHA result/evidence. Standalone `dfc1fb` results above do not substitute for that rerun; this report does not assert the combined result before receipt.
+- The earlier combined candidate `3d8ba0e` was superseded by the modal corrections. Final replacement freeze: **`242b8999044e33c8c3217df857c06401f3efbba3`**, tree `39753400064fe764b98152c2c0204005f874a9c1`. Specialist C completed the independent clean-environment rerun of both sandboxed suites on that exact candidate. The separate result below and its [Milestone 5 release-verification report](2026-10-02-milestone5-release-verification.md) provide the combined-SHA evidence. Standalone `dfc1fb` results above are retained as distinct evidence.
+
+
+## Final combined-candidate browser rerun
+
+Specialist C ran both suites from its clean checkout of **`242b8999044e33c8c3217df857c06401f3efbba3`**, after the final modal correction and independent review. I read both result/identity receipts and inspected the combined-build screenshots independently. Both identity files agree on the exact commit and runtime source fingerprint **`a807c651b35560c12a91ec6f0b79b2d32df7bad60ebf3322d121c643d9e835fb`**.
+
+- Workflow: **10/10 passed**, 18 stage/width snapshots, zero detected axe violations, zero uncaught page errors.
+- Recovery: **10/10 passed**, including exited-owner failure, visible manual retry and new task completion. All three modal widths have zero detected axe violations and 23 passing supplementary text-contrast measurements each; axe incomplete entries remain preserved.
+- Both runs attest the Chromium sandbox. Expected stale-source 409, deliberately lost save response, history 503, absent synthetic diagnostics 404 and axe preload warnings retain the same classifications described above; this is not a zero-console-error claim.
+
+C's evidence root is `/tmp/crowdlens-ecc-release-final-242b8999`: `browser-workflow-ui/results.json`, `browser-regressions-ui/results.json`, `browser-receipt.json`, and `browser-{workflow,regressions}-data/identity.json`. Durable release evidence and clean-environment commands belong to the [Milestone 5 report](2026-10-02-milestone5-release-verification.md); they are not duplicated here.
+
+I opened the combined-build `browser-workflow-ui/source-inspection-375.png`, `saved-revision-768.png`, `proposal-review-1440.png`, and all three `browser-regressions-ui/history-dialog-{375,768,1440}.png` images. Controls, source warnings and provenance remained readable; no new overlap or clipping was observed. This confirms the bounded browser result on the combined candidate while retaining the real-model, historical visual-baseline and accessibility limits above.
