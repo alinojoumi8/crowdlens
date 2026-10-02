@@ -1,86 +1,98 @@
 # CrowdLens Roadmap
 
-## Current State (v0.2.0)
+Reconciled 2026-10-02 against `main` at `34275b7`, routes, persistence, tests,
+and bounded runtime checks. This is a prioritized capability backlog, not a set
+of committed release dates. See [the capability manifest](docs/product-capabilities.md)
+for contracts and verification evidence.
 
-Fully local fork running on Neo4j CE + Ollama. All Zep Cloud dependencies removed. Core pipeline works: upload text → build knowledge graph → entity extraction → simulation → report generation.
+## Current state
 
----
+The source implements upload → graph → scenario → simulation → report → proposal
+review, using Neo4j, SQLite, and filesystem artifacts. Ollama can keep generation
+and embeddings local; hosted providers, website ingestion, and enabled market
+lookups use the network. The observed local deployment uses hosted generation
+and appears to predate the current source; deployed/source equivalence is unverified.
 
-## Near Term
+| Capability | Current status | Remaining boundary |
+| --- | --- | --- |
+| Document/URL ingestion and case versions | Implemented | Fresh full-pipeline run and extraction/source fidelity checks. |
+| Neo4j graph build, provenance and embedding readiness | Implemented | Live build, retrieval-quality and failure-recovery verification. |
+| Scenario profiles/settings, simulation and ensembles | Implemented | Real subprocess lifecycle and scenario-quality evidence. |
+| Root reports, progress, resume and section regeneration | Implemented | Independent factual/omission review and live generation evidence. |
+| Source-scoped proposals and immutable revisions | Implemented; synthetic HTTP lifecycle verified | Current browser checks and real-source quality evaluation. |
+| `/api/status` readiness endpoint | Implemented | Disk usage and actual generation-provider readiness are not reported/probed. |
+| Agent memory persistence | Partial | File-backed short memory/summaries and optional graph memories exist; lossless restart continuity is unverified. |
+| Automated checks | Implemented | 347 backend + 28 frontend tests and build passed in this milestone; complete E2E/quality coverage is unverified. |
+| Provider selection | Partial | Local/OpenAI-compatible/Anthropic adapters and Ollama/Gemini embeddings exist; per-task routing and broader backend compatibility remain future work. |
+| Graph visualization and comparison | Partial | Visualization and case-version comparison exist; whole-graph snapshots, temporal views, and simulation graph diffs remain future work. |
 
-### v0.3.0 — Stability & Python Compatibility
-- [ ] Fix `camel-oasis` / `camel-ai` compatibility with Python 3.12+ (currently requires <3.12)
-- [ ] Add Docker Compose GPU auto-detection (fallback to CPU-only Ollama)
-- [ ] Connection resilience: auto-reconnect to Neo4j on transient failures
-- [ ] Add `/api/status` endpoint showing Neo4j connection state, Ollama model availability, and disk usage
-- [ ] Structured logging with JSON output option
+## Next: verify the existing product
 
-### v0.4.0 — Search & Retrieval Improvements
-- [ ] Tune hybrid search weights (currently 0.7 vector / 0.3 BM25) — make configurable per graph
-- [ ] Add graph-aware reranking: boost results connected to the query entity
-- [ ] Support multiple embedding models (e.g., mxbai-embed-large, bge-m3 for multilingual)
-- [ ] Implement edge-weight decay for temporal relevance in simulations
+### P1 — deployment, full workflow, and evidence quality
 
----
+- [ ] Establish the deployed commit/build identity and reconcile it with the intended source revision under a separate deployment task.
+- [ ] Run a bounded synthetic document through all six stages with real local services or explicitly authorized hosted inference; record source scope, IDs, timings, retries, and original/revision hashes.
+- [ ] Measure source attribution, unsupported claims, omissions, and reviewer effort on approved held-out packets with independent labels. Synthetic model output and unreviewed fixtures are not quality evidence.
 
-## Mid Term
+### P2 — recovery and user experience
 
-### v0.5.0 — Multi-Model Support
-- [ ] Model router: assign different Ollama models to different tasks (fast model for NER, large model for reports)
-- [ ] Support vLLM and llama.cpp as alternative backends alongside Ollama
-- [ ] Add model benchmarking tool: compare NER/RE quality across models on the same seed text
-- [ ] Quantization-aware config: auto-select context window based on available VRAM
+- [ ] Audit agent/tool/retry/source-scope boundaries with ECC `agent-architecture-audit`; fix demonstrated failures with regression tests.
+- [ ] Verify subprocess restart, failed writes, optional graph memory, and forced-run cleanup. Define the memory retention and continuation promise before strengthening it.
+- [ ] Verify report/proposal workflows in the built UI at desktop/mobile widths, including keyboard navigation, blocked/stale proposals, and interrupted acceptance recovery.
+- [ ] Define retention and deletion ownership across SQLite, artifacts, and Neo4j; rehearse a consistent backup/restore on synthetic data.
+- [ ] Repeat clean-environment installation, current CI, both dependency audits, Compose validation, and image build for the next release candidate.
 
-### v0.6.0 — Enhanced Simulation
-- [ ] Real-time simulation dashboard with WebSocket updates
-- [ ] Agent memory persistence across simulation rounds (currently in-memory)
-- [ ] Custom agent archetypes: define personality templates beyond OASIS defaults
-- [ ] Multi-language simulation support (agents can interact in different languages)
-- [ ] Export simulation transcripts as structured JSON for external analysis
+## Stability and performance backlog
 
-### v0.7.0 — Graph Intelligence
-- [ ] Community detection (Louvain/Leiden) to auto-identify entity clusters
-- [ ] Graph visualization improvements: force-directed layout, filtering by entity type
-- [ ] Temporal graph: track how entity relationships evolve across simulation rounds
-- [ ] Graph diff: compare two simulation runs side-by-side
+- [ ] Verify Python 3.12+ compatibility for the pinned CAMEL/OASIS dependency set; retain Python 3.11 as the verified baseline until then.
+- [ ] Add GPU auto-detection if needed; current Compose uses an explicit GPU override with CPU-compatible defaults.
+- [ ] Verify transient Neo4j reconnect behavior before adding or promising resilience changes.
+- [ ] Extend status with disk capacity and a separately defined generation-provider readiness check.
+- [ ] Add optional JSON structured logging; request IDs and timing logs already exist.
+- [ ] Measure throughput, memory use, latency, and model calls per workload/hardware tier before setting performance targets.
 
----
+## Retrieval and model improvements
 
-## Long Term
+- [ ] Evaluate configurable hybrid-search weights per graph against a fixed retrieval baseline.
+- [ ] Evaluate graph-aware reranking; existing advisory reranking is not evidence of a quality gain.
+- [ ] Verify additional embedding models/providers, dimensions, migration and re-embedding behavior. Existing provider selection does not prove every model works.
+- [ ] Evaluate temporal edge weighting/decay with source-versus-simulation provenance intact.
+- [ ] Add per-task model routing if measured latency/quality justifies it.
+- [ ] Verify vLLM/llama.cpp compatibility before listing them as supported backends.
+- [ ] Benchmark entity/relation extraction across models on held-out source text.
+- [ ] Add hardware-aware context/quantization configuration after measuring actual constraints.
 
-### v1.0.0 — Production Ready
-- [ ] Authentication & multi-user support
-- [ ] Graph versioning: snapshot and restore graph states
-- [ ] Plugin system for custom NER extractors, search strategies, and report templates
-- [ ] Comprehensive test suite (unit + integration + E2E)
-- [ ] Performance benchmarks: document throughput (texts/min) and latency per hardware tier
-- [ ] Helm chart for Kubernetes deployment
+## Simulation and graph exploration
 
-### Beyond v1.0
-- [ ] Federation: connect multiple CrowdLens instances to share entity knowledge
-- [ ] Fine-tuned local models specifically trained for NER/RE on social simulation data
-- [ ] Voice-driven interaction: talk to simulation agents via local Whisper + TTS
-- [ ] Mobile companion app for monitoring running simulations
+- [ ] Add WebSocket progress if existing polling is insufficient; current dashboards already expose progress via polling.
+- [ ] Define custom agent-archetype and multilingual simulation contracts, including quality evaluations.
+- [ ] Provide a documented consolidated transcript-export format; action/log APIs and artifact files already exist.
+- [ ] Evaluate community detection and visualization/filtering improvements against current graph UI behavior.
+- [ ] Define temporal relationship views and side-by-side simulation graph diffs.
+- [ ] Define whole-graph snapshot/restore independently from existing case-document versions.
 
----
+## Optional product expansion
 
-## Hardware Tiers
+These items require a separate capability contract and product decision. They are
+not prerequisites for the current single-operator local workflow.
 
-| Tier | RAM | GPU VRAM | Recommended Model | Expected Performance |
-|------|-----|----------|-------------------|---------------------|
-| Minimal | 8 GB | — (CPU only) | qwen2.5:3b | Slow, basic NER quality |
-| Light | 16 GB | 6-8 GB | qwen2.5:7b | Usable for small graphs |
-| Standard | 32 GB | 12-16 GB | qwen2.5:14b | Good for most use cases |
-| Power | 64 GB | 24+ GB | qwen2.5:32b | Full quality, fast |
+- [ ] Authentication, tenant isolation, and multi-user deployment.
+- [ ] Plugin interfaces for extraction, retrieval, and report templates.
+- [ ] Kubernetes/Helm packaging for an explicitly chosen hosted deployment.
+- [ ] Federation between instances with explicit sharing and provenance rules.
+- [ ] Fine-tuned local extraction models, justified by independent quality evidence.
+- [ ] Voice interaction and a mobile companion application.
 
----
+## Hardware guidance
+
+Hardware/model combinations are sizing starting points, not benchmarked quality
+or speed tiers. Context size, quantization, workload and model concurrency affect
+memory use and latency. Use the [README hardware guidance](README.md) to plan a
+local setup, then measure a fixed workload before promising performance.
 
 ## Contributing
 
-This project is AGPL-3.0 licensed. Contributions welcome — especially around:
-- Python 3.12+ compatibility for CAMEL-AI / OASIS
-- Additional embedding model support
-- Simulation quality improvements
-- Documentation and tutorials in English
-
-See [GitHub Issues](https://github.com/alinojoumi8/crowdlens/issues) for current tasks.
+The project is AGPL-3.0 licensed. Useful contributions include verified runtime
+compatibility, recovery tests, source-quality evaluations, retrieval measurements,
+and documentation. See [GitHub Issues](https://github.com/alinojoumi8/crowdlens/issues)
+for tracked work and [the ECC workflow](docs/ECC-WORKFLOW-PLAN.md) for delivery steps.

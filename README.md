@@ -34,18 +34,24 @@ See [the rebrand plan and compatibility notes](docs/rebranding.md).
 
 ## Workflow
 
-1. **Graph Build** — Extracts entities (people, companies, events) and relationships from your document. Builds a knowledge graph with individual and group memory via Neo4j.
-2. **Env Setup** — Generates hundreds of agent personas, each with unique personality, opinion bias, reaction speed, influence level, and memory of past events.
-3. **Simulation** — Agents interact on simulated social platforms: posting, replying, arguing, shifting opinions. The system tracks sentiment evolution, topic propagation, and influence dynamics in real time.
-4. **Report** — A ReportAgent analyzes the post-simulation environment, interviews a focus group of agents, searches the knowledge graph for evidence, and generates a structured analysis.
-5. **Interaction** — Chat with any agent from the simulated world. Ask them why they posted what they posted. Full memory and personality persists.
+1. **Upload** — Provide PDF, Markdown, or text files and/or website URLs with a scenario requirement. CrowdLens stores source documents, creates project/case-version metadata, and generates an ontology.
+2. **Graph** — Build entities, relationships, and source-linked chunks in Neo4j. Inspect graph progress and embedding readiness before continuing.
+3. **Scenario** — Select entities and settings, generate agent profiles, and prepare the simulation configuration. Agent count and behavior depend on the sources and settings.
+4. **Simulation** — Run agents on simulated social platforms and inspect actions and progress. Run metadata and artifacts persist; file-backed agent memory and optional Neo4j memory updates do not guarantee complete history or lossless restart continuity.
+5. **Report** — Generate a structured analysis using graph retrieval and, when available, agent interviews. Inspect source evidence and review warnings; report completion does not certify factual correctness.
+6. **Proposal review** — On an eligible saved report, use **Draft with sources** to review a proposed section, summary changes, claim ledger, and original excerpts. **Save as new revision** preserves the parent and creates a separate immutable report that remains `needs_review`.
+
+Report chat and agent interviews are optional follow-up tools. Agent interviews
+require an available simulation environment. See the
+[capability manifest](docs/product-capabilities.md) for API contracts, persistence
+boundaries, current verification evidence, and remaining gaps.
 
 ## Quick Start
 
 ### Prerequisites
 
 - Docker & Docker Compose (recommended), **or**
-- Python 3.11+, Node.js 20.19+ or 22.13+ (supported LTS), Neo4j 5.18+, Ollama
+- Python **3.11** (verified dependency-lock baseline), Node.js **22.13+ in the 22.x series** (CI uses Node 22), Neo4j 5.18+, Ollama. Other declared Node ranges are in `package.json`; broader Python support remains unverified.
 
 ### Option A: Docker (easiest)
 
@@ -253,14 +259,17 @@ CPU-only mode works but is significantly slower for LLM inference. For lighter s
 ## Development checks
 
 ```bash
-npm test          # backend + frontend test suites
+UV_PYTHON=3.11 npm test # backend + frontend unit/component suites
 npm run build     # production frontend bundle
-npm run check     # both of the above
+UV_PYTHON=3.11 npm run check # tests + build
+npm audit --audit-level=moderate
+npm audit --prefix frontend --audit-level=moderate
 ```
 
 Pull requests also run backend tests, frontend unit/component tests, the
-frontend build, a production dependency audit, Compose validation, and a Docker
-image build.
+frontend build, root and frontend dependency audits, Compose validation, and a
+Docker image build. Unit/component checks and synthetic report checks do not
+establish a complete live-provider pipeline or independently measured report quality.
 
 ## Use Cases
 
@@ -271,6 +280,8 @@ image build.
 
 ## Documentation
 
+- [Product capabilities, contracts, and verification gaps](docs/product-capabilities.md)
+- [ECC workflow and adoption plan](docs/ECC-WORKFLOW-PLAN.md)
 - [Evidence-first report proposals and revisions](docs/evidence-first-reports.md)
 - [Architecture](docs/architecture.md)
 - [Storage migration, backup, and recovery](docs/control-plane-migration.md)

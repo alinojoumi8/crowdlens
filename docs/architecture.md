@@ -61,8 +61,9 @@ HTML.
 - Running simulations are reconciled on startup. Persisted processes that no
   longer exist are marked stopped with an interruption reason rather than
   remaining permanently "running."
-- SQLite initialization failure is visible in logs and `GET /api/status`; the
-  legacy filesystem managers remain available for that process.
+- A configured SQLite initialization or migration failure is logged and stops
+  startup. Filesystem managers are selected only when the control database is
+  explicitly disabled, not as an automatic fallback after initialization fails.
 - Internal exceptions are logged with a request ID. Default 5xx responses omit
   tracebacks and return the same request ID for correlation.
 
@@ -72,3 +73,7 @@ The default backend and every published Compose port bind to loopback. CORS is
 restricted to the two local frontend origins. Raw model/user HTML is escaped,
 URL fetching validates every redirect target, debug mode is off, and market
 network calls are disabled until `MARKET_DATA_PROVIDER=auto` is explicitly set.
+
+Generic tasks now use persisted attempt ownership and periodic recovery. See
+[the H1 recovery contract](control-plane-migration.md#generic-task-ownership-and-recovery-schema-2)
+and [verification evidence](audits/2026-10-02-h1-task-recovery.md).
