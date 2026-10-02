@@ -1,0 +1,1463 @@
+{
+  "browser": "154.0.8037.92",
+  "browserLaunch": {
+    "arguments": [
+      "/usr/bin/google-chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--enable-automation",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--user-data-dir=/tmp/playwright_chromiumdev_profile-AybAyM",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--noerrdialogs",
+      "--ozone-platform=headless",
+      "--ozone-override-screen-size=800,600",
+      "--use-angle=swiftshader-webgl",
+      "--flag-switches-begin",
+      "--flag-switches-end"
+    ],
+    "sandboxStatus": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tYes\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed."
+  },
+  "modalA11y": [
+    {
+      "width": 375,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                ".gradient-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "button[aria-label=\"Scroll to simulation setup\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".panel-header > span"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".steps-header > span"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".upload-zone > div > div:nth-child(1)"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "textarea[aria-label=\"Website links\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                ".section-header > .section-title"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "span[title=\"Graph Construction\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "span[title=\"Environment Setup\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "span[title=\"Analysis Report\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".file-name"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".card-progress > .status-dot"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".modal-progress"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".modal-progress > .status-dot"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".modal-create-time"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".btn-project > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-project > .btn-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".btn-simulation > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-simulation > .btn-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".btn-run > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-run > .btn-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".btn-report > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-report > .btn-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".hint-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            }
+          ]
+        }
+      ],
+      "textContrast": [
+        {
+          "text": "SIM_SYNTHE",
+          "selector": "modal-id",
+          "foreground": "rgb(17, 24, 39)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "16px",
+          "ratio": 17.73971700407407,
+          "minimum": 4.5
+        },
+        {
+          "text": "2/2 rounds",
+          "selector": "modal-progress completed",
+          "foreground": "rgb(0, 119, 79)",
+          "background": [
+            231.1,
+            248,
+            242.4
+          ],
+          "fontSize": "12px",
+          "ratio": 5.095127546490597,
+          "minimum": 4.5
+        },
+        {
+          "text": "2026-10-02 12:00",
+          "selector": "modal-create-time",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "×",
+          "selector": "modal-close",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "24px",
+          "ratio": 5.379869750937995,
+          "minimum": 3
+        },
+        {
+          "text": "Simulation Requirement",
+          "selector": "modal-label",
+          "foreground": "rgb(107, 114, 128)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 4.834490081424352,
+          "minimum": 4.5
+        },
+        {
+          "text": "Review the synthetic hearing record.",
+          "selector": "modal-requirement",
+          "foreground": "rgb(55, 65, 81)",
+          "background": [
+            249,
+            250,
+            251
+          ],
+          "fontSize": "15.2px",
+          "ratio": 9.863254791756054,
+          "minimum": 4.5
+        },
+        {
+          "text": "Associated Files",
+          "selector": "modal-label",
+          "foreground": "rgb(107, 114, 128)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 4.834490081424352,
+          "minimum": 4.5
+        },
+        {
+          "text": "TXT",
+          "selector": "file-tag txt",
+          "foreground": "rgb(85, 85, 85)",
+          "background": [
+            240,
+            240,
+            240
+          ],
+          "fontSize": "8.8px",
+          "ratio": 6.541862573644603,
+          "minimum": 4.5
+        },
+        {
+          "text": "synthetic-record.txt",
+          "selector": "modal-file-name",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "13.6px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation Playback",
+          "selector": "divider-text",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "11.2px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Graph: Ready",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Setup: Ready",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation: Complete",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Report: Needs review",
+          "selector": "phase-status phase-warn",
+          "foreground": "rgb(180, 83, 9)",
+          "background": [
+            255,
+            251,
+            235
+          ],
+          "fontSize": "9.92px",
+          "ratio": 4.842409024801452,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step1",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Graph Construction",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step2",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Environment Setup",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step3",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation Run",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step4",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Analysis Report",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Open the report to continue analysis, retry failed sections, or enter deep interaction.",
+          "selector": "hint-text",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "11.2px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                ".gradient-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "button[aria-label=\"Scroll to simulation setup\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".panel-header > span"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".steps-header > span"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".upload-zone > div > div:nth-child(1)"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "textarea[aria-label=\"Website links\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                ".section-header > .section-title"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "span[title=\"Graph Construction\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "span[title=\"Environment Setup\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "span[title=\"Analysis Report\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".file-name"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".card-progress > .status-dot"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".modal-progress > .status-dot"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-project > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-simulation > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-simulation > .btn-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".btn-run > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-report > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".hint-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            }
+          ]
+        }
+      ],
+      "textContrast": [
+        {
+          "text": "SIM_SYNTHE",
+          "selector": "modal-id",
+          "foreground": "rgb(17, 24, 39)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "16px",
+          "ratio": 17.73971700407407,
+          "minimum": 4.5
+        },
+        {
+          "text": "2/2 rounds",
+          "selector": "modal-progress completed",
+          "foreground": "rgb(0, 119, 79)",
+          "background": [
+            231.1,
+            248,
+            242.4
+          ],
+          "fontSize": "12px",
+          "ratio": 5.095127546490597,
+          "minimum": 4.5
+        },
+        {
+          "text": "2026-10-02 12:00",
+          "selector": "modal-create-time",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "×",
+          "selector": "modal-close",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "24px",
+          "ratio": 5.379869750937995,
+          "minimum": 3
+        },
+        {
+          "text": "Simulation Requirement",
+          "selector": "modal-label",
+          "foreground": "rgb(107, 114, 128)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 4.834490081424352,
+          "minimum": 4.5
+        },
+        {
+          "text": "Review the synthetic hearing record.",
+          "selector": "modal-requirement",
+          "foreground": "rgb(55, 65, 81)",
+          "background": [
+            249,
+            250,
+            251
+          ],
+          "fontSize": "15.2px",
+          "ratio": 9.863254791756054,
+          "minimum": 4.5
+        },
+        {
+          "text": "Associated Files",
+          "selector": "modal-label",
+          "foreground": "rgb(107, 114, 128)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 4.834490081424352,
+          "minimum": 4.5
+        },
+        {
+          "text": "TXT",
+          "selector": "file-tag txt",
+          "foreground": "rgb(85, 85, 85)",
+          "background": [
+            240,
+            240,
+            240
+          ],
+          "fontSize": "8.8px",
+          "ratio": 6.541862573644603,
+          "minimum": 4.5
+        },
+        {
+          "text": "synthetic-record.txt",
+          "selector": "modal-file-name",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "13.6px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation Playback",
+          "selector": "divider-text",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "11.2px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Graph: Ready",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Setup: Ready",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation: Complete",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Report: Needs review",
+          "selector": "phase-status phase-warn",
+          "foreground": "rgb(180, 83, 9)",
+          "background": [
+            255,
+            251,
+            235
+          ],
+          "fontSize": "9.92px",
+          "ratio": 4.842409024801452,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step1",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Graph Construction",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step2",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Environment Setup",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step3",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation Run",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step4",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Analysis Report",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Open the report to continue analysis, retry failed sections, or enter deep interaction.",
+          "selector": "hint-text",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "11.2px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": [
+            {
+              "target": [
+                ".gradient-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "button[aria-label=\"Scroll to simulation setup\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".panel-header > span"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".steps-header > span"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".upload-zone > div > div:nth-child(1)"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "textarea[aria-label=\"Website links\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+            },
+            {
+              "target": [
+                ".section-header > .section-title"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                "span[title=\"Graph Construction\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "span[title=\"Environment Setup\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                "span[title=\"Analysis Report\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".file-name"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+            },
+            {
+              "target": [
+                ".card-progress > .status-dot"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".modal-progress > .status-dot"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-project > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-simulation > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-simulation > .btn-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            },
+            {
+              "target": [
+                ".btn-run > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".btn-report > .btn-icon"
+              ],
+              "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+            },
+            {
+              "target": [
+                ".hint-text"
+              ],
+              "summary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
+            }
+          ]
+        }
+      ],
+      "textContrast": [
+        {
+          "text": "SIM_SYNTHE",
+          "selector": "modal-id",
+          "foreground": "rgb(17, 24, 39)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "16px",
+          "ratio": 17.73971700407407,
+          "minimum": 4.5
+        },
+        {
+          "text": "2/2 rounds",
+          "selector": "modal-progress completed",
+          "foreground": "rgb(0, 119, 79)",
+          "background": [
+            231.1,
+            248,
+            242.4
+          ],
+          "fontSize": "12px",
+          "ratio": 5.095127546490597,
+          "minimum": 4.5
+        },
+        {
+          "text": "2026-10-02 12:00",
+          "selector": "modal-create-time",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "×",
+          "selector": "modal-close",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "24px",
+          "ratio": 5.379869750937995,
+          "minimum": 3
+        },
+        {
+          "text": "Simulation Requirement",
+          "selector": "modal-label",
+          "foreground": "rgb(107, 114, 128)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 4.834490081424352,
+          "minimum": 4.5
+        },
+        {
+          "text": "Review the synthetic hearing record.",
+          "selector": "modal-requirement",
+          "foreground": "rgb(55, 65, 81)",
+          "background": [
+            249,
+            250,
+            251
+          ],
+          "fontSize": "15.2px",
+          "ratio": 9.863254791756054,
+          "minimum": 4.5
+        },
+        {
+          "text": "Associated Files",
+          "selector": "modal-label",
+          "foreground": "rgb(107, 114, 128)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 4.834490081424352,
+          "minimum": 4.5
+        },
+        {
+          "text": "TXT",
+          "selector": "file-tag txt",
+          "foreground": "rgb(85, 85, 85)",
+          "background": [
+            240,
+            240,
+            240
+          ],
+          "fontSize": "8.8px",
+          "ratio": 6.541862573644603,
+          "minimum": 4.5
+        },
+        {
+          "text": "synthetic-record.txt",
+          "selector": "modal-file-name",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "13.6px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation Playback",
+          "selector": "divider-text",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "11.2px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Graph: Ready",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Setup: Ready",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation: Complete",
+          "selector": "phase-status phase-ok",
+          "foreground": "rgb(4, 120, 87)",
+          "background": [
+            236,
+            253,
+            245
+          ],
+          "fontSize": "9.92px",
+          "ratio": 5.205862916797388,
+          "minimum": 4.5
+        },
+        {
+          "text": "Report: Needs review",
+          "selector": "phase-status phase-warn",
+          "foreground": "rgb(180, 83, 9)",
+          "background": [
+            255,
+            251,
+            235
+          ],
+          "fontSize": "9.92px",
+          "ratio": 4.842409024801452,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step1",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Graph Construction",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step2",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Environment Setup",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step3",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Simulation Run",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Step4",
+          "selector": "btn-step",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "9.6px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        },
+        {
+          "text": "Analysis Report",
+          "selector": "btn-text",
+          "foreground": "rgb(75, 85, 99)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "12px",
+          "ratio": 7.557378129674007,
+          "minimum": 4.5
+        },
+        {
+          "text": "Open the report to continue analysis, retry failed sections, or enter deep interaction.",
+          "selector": "hint-text",
+          "foreground": "rgb(98, 107, 122)",
+          "background": [
+            255,
+            255,
+            255
+          ],
+          "fontSize": "11.2px",
+          "ratio": 5.379869750937995,
+          "minimum": 4.5
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "upload chooser is keyboard reachable and named",
+      "passed": true
+    },
+    {
+      "name": "simulation prompt and website fields have explicit names",
+      "passed": true
+    },
+    {
+      "name": "history dialog traps focus, closes with Escape and restores trigger",
+      "passed": true
+    },
+    {
+      "name": "375px report panels and header controls fit the viewport",
+      "passed": true
+    },
+    {
+      "name": "hidden graph panel cannot receive keyboard focus",
+      "passed": true
+    },
+    {
+      "name": "missing report and graph metrics explicitly remain unknown",
+      "passed": true
+    },
+    {
+      "name": "interrupted root report exposes manual resume controls",
+      "passed": true
+    },
+    {
+      "name": "actual abandoned owner recovers in durable API state",
+      "passed": true
+    },
+    {
+      "name": "recovered failure is visible and has a permitted manual retry",
+      "passed": true
+    },
+    {
+      "name": "recovery has no uncaught browser errors",
+      "passed": true
+    }
+  ],
+  "abandoned": {
+    "project_id": "proj_6cf69b8c45f3",
+    "task_id": "df07f637-7571-480a-9292-65440f6fae66"
+  },
+  "task": {
+    "created_at": "2026-10-02T16:16:43.683307",
+    "error": "ownership_lease_expired",
+    "execution": {
+      "attempt_id": "bbd8023b426c44c0a2ed45e889ecd7ad",
+      "heartbeat_at": 1790972203.6840444,
+      "lease_until": 1790972233.6840446,
+      "owner": {
+        "pid": 1469870,
+        "worker_id": "87193b5fca324162bfff90772ce2122c"
+      },
+      "resources": [
+        {
+          "key": "project:proj_6cf69b8c45f3",
+          "root": "/tmp/crowdlens-ecc-browser-reviewed-recovery/projects"
+        }
+      ]
+    },
+    "message": "Execution ownership expired; manual retry required.",
+    "metadata": {
+      "project_id": "proj_6cf69b8c45f3"
+    },
+    "progress": 25,
+    "progress_detail": {},
+    "recovery": {
+      "pending": false,
+      "reason": "ownership_lease_expired"
+    },
+    "result": null,
+    "status": "failed",
+    "task_id": "df07f637-7571-480a-9292-65440f6fae66",
+    "task_type": "graph_build",
+    "updated_at": "2026-10-02T20:17:14.118724+00:00"
+  },
+  "consoleMessages": [
+    {
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    }
+  ],
+  "networkErrors": [],
+  "pageErrors": [],
+  "substitutes": [
+    "Harness synthetic adapters",
+    "Interrupted report presentation intercepted; graph recovery uses actual exited owner and durable task APIs"
+  ]
+}

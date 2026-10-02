@@ -1,0 +1,50 @@
+[
+  {
+    "width": 375,
+    "violations": []
+  },
+  {
+    "width": 768,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "target": [
+              ".modal-progress"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.3 (foreground color: #10b981, background color: #e7f8f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".modal-create-time"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "target": [
+              ".modal-progress"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.3 (foreground color: #10b981, background color: #e7f8f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".modal-create-time"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ]
+  }
+]

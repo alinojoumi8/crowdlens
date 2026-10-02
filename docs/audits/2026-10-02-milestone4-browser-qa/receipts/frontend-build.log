@@ -1,0 +1,40 @@
+npm notice run crowdlens-frontend@0.1.0 build
+npm notice run vite build
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 699 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                      1.04 kB │ gzip:  0.53 kB
+dist/assets/CaseCompareView-COpOAnvG.css             1.91 kB │ gzip:  0.74 kB
+dist/assets/SimulationView-v4ajHxY3.css              2.14 kB │ gzip:  0.83 kB
+dist/assets/CasesView-CwHzJCV_.css                   3.20 kB │ gzip:  1.11 kB
+dist/assets/CaseDetailView-snTT7t4x.css              4.00 kB │ gzip:  1.16 kB
+dist/assets/GraphPanel-Bx73uTCP.css                  9.14 kB │ gzip:  2.28 kB
+dist/assets/MainView-BU36wCcT.css                   10.48 kB │ gzip:  2.55 kB
+dist/assets/index-ibF_rNad.css                      11.31 kB │ gzip:  3.04 kB
+dist/assets/Home-BwkCD-fp.css                       14.02 kB │ gzip:  3.07 kB
+dist/assets/SimulationRunView-Cj0SbMbq.css          15.06 kB │ gzip:  3.31 kB
+dist/assets/InteractionView-ByVH7bwX.css            27.02 kB │ gzip:  4.86 kB
+dist/assets/Step2EnvSetup-0zt_Ufc0.css              27.15 kB │ gzip:  5.10 kB
+dist/assets/ReportView-B-Sk-v6K.css                 61.44 kB │ gzip:  9.38 kB
+dist/assets/pendingUpload-nUeJwzLD.js                0.52 kB │ gzip:  0.27 kB
+dist/assets/report-BhwVWeSg.js                       0.94 kB │ gzip:  0.46 kB
+dist/assets/graph-Cma-AEcX.js                        1.13 kB │ gzip:  0.40 kB
+dist/assets/economySettings-M8O0gDiO.js              1.32 kB │ gzip:  0.54 kB
+dist/assets/simulation-ChRDXt9s.js                   1.33 kB │ gzip:  0.50 kB
+dist/assets/SafeMarkdown-C3VDtGVW.js                 2.26 kB │ gzip:  0.91 kB
+dist/assets/CasesView-CmvOFE9V.js                    3.44 kB │ gzip:  1.59 kB
+dist/assets/CaseCompareView-CC_tu_9X.js              4.20 kB │ gzip:  1.79 kB
+dist/assets/SimulationView-TGxypbQX.js               4.97 kB │ gzip:  2.16 kB
+dist/assets/CaseDetailView-DlHFt-t9.js               5.50 kB │ gzip:  2.36 kB
+dist/assets/MainView-BVuBVHjE.js                    20.75 kB │ gzip:  6.87 kB
+dist/assets/InteractionView-CJ2JtZ3h.js             24.54 kB │ gzip:  7.91 kB
+dist/assets/Home-BgdbTM1l.js                        26.00 kB │ gzip:  8.74 kB
+dist/assets/SimulationRunView-BlQ903bY.js           36.59 kB │ gzip: 10.93 kB
+dist/assets/Step2EnvSetup-Ctyzo2Ix.js               45.72 kB │ gzip: 13.33 kB
+dist/assets/_plugin-vue_export-helper-CUmsg1Cw.js   52.49 kB │ gzip: 19.90 kB
+dist/assets/ReportView-Ca3PJj6l.js                  76.76 kB │ gzip: 21.89 kB
+dist/assets/GraphPanel-Dfbsk6V4.js                  80.14 kB │ gzip: 26.96 kB
+dist/assets/index-B1YDJrya.js                      105.79 kB │ gzip: 41.23 kB
+✓ built in 3.10s

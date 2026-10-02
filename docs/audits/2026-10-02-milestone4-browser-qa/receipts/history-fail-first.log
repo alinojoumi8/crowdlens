@@ -1,0 +1,73 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/HistoryDatabase.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend
+
+stderr | src/components/HistoryDatabase.component.test.js > history states > shows a failed request and retries without relabelling it as empty
+Failed to load history projects: Error: synthetic unavailable
+    at /home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/src/components/HistoryDatabase.component.test.js:20:48
+    at file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)
+    at file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10)
+    at file:///home/ali/.codex/worktrees/crowdlens-ecc-browser/mirofish-local/frontend/node_modules/@vitest/runner/dist/chunk-artifact.js:2956:64
+
+ ❯ src/components/HistoryDatabase.component.test.js (2 tests | 2 failed) 72ms
+     × makes an empty successful response explicit 51ms
+     × shows a failed request and retries without relabelling it as empty 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/HistoryDatabase.component.test.js > history states > makes an empty successful response explicit
+AssertionError: expected 'Simulation Records' to contain 'No simulation records yet'
+
+Expected: "No simulation records yet"
+Received: "Simulation Records"
+
+ ❯ src/components/HistoryDatabase.component.test.js:16:28
+     14|     const wrapper = mount(HistoryDatabase)
+     15|     await flushPromises()
+     16|     expect(wrapper.text()).toContain('No simulation records yet')
+       |                            ^
+     17|     wrapper.unmount()
+     18|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/HistoryDatabase.component.test.js > history states > shows a failed request and retries without relabelling it as empty
+Error: Unable to get [role="alert"] within: <div data-v-e8f07539="" class="history-database no-projects">
+  <!-- Background decoration: technical grid lines (only shown when there are projects) -->
+  <!--v-if-->
+  <!-- Title section -->
+  <div data-v-e8f07539="" class="section-header">
+    <div data-v-e8f07539="" class="section-line"></div><span data-v-e8f07539="" class="section-title">Simulation Records</span>
+    <div data-v-e8f07539="" class="section-line"></div>
+  </div><!-- Card container (only shown when there are projects) -->
+  <!--v-if-->
+  <!-- Loading state -->
+  <!--v-if-->
+  <!-- Simulation playback details modal -->
+  <!--teleport start-->
+  <!--teleport end-->
+</div>
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7182:15
+ ❯ src/components/HistoryDatabase.component.test.js:24:20
+     22|     const wrapper = mount(HistoryDatabase)
+     23|     await flushPromises()
+     24|     expect(wrapper.get('[role="alert"]').text()).toContain('Unable to …
+       |                    ^
+     25|     expect(wrapper.text()).not.toContain('No simulation records yet')
+     26|     await wrapper.get('button').trigger('click')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  15:34:20
+   Duration  1.22s (transform 240ms, setup 0ms, import 324ms, tests 72ms, environment 680ms)
+

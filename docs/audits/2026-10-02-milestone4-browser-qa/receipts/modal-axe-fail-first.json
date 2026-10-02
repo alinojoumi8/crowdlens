@@ -1,0 +1,235 @@
+{
+  "source_commit": "5ca4390",
+  "browser": "154.0.8037.92",
+  "chromium_sandbox": true,
+  "viewport": {
+    "width": 375,
+    "height": 1000
+  },
+  "tool": "axe-core@4.10.3",
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=axeAPI",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#757575",
+                "bgColor": "#f0f0f0",
+                "contrastRatio": 4.04,
+                "fontSize": "6.6pt (8.8px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<span data-v-31b40c08=\"\" class=\"file-tag txt\">TXT</span>",
+                  "target": [
+                    ".modal-file-item > .file-tag.txt"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.04 (foreground color: #757575, background color: #f0f0f0, font size: 6.6pt (8.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span data-v-31b40c08=\"\" class=\"file-tag txt\">TXT</span>",
+          "target": [
+            ".modal-file-item > .file-tag.txt"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.04 (foreground color: #757575, background color: #f0f0f0, font size: 6.6pt (8.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#9ca3af",
+                "bgColor": "#ffffff",
+                "contrastRatio": 2.53,
+                "fontSize": "8.4pt (11.2px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div data-v-31b40c08=\"\" class=\"modal-divider\"><span data-v-31b40c08=\"\" class=\"divider-line\"></span><span data-v-31b40c08=\"\" class=\"divider-text\">Simulation Playback</span><span data-v-31b40c08=\"\" class=\"divider-line\"></span></div>",
+                  "target": [
+                    ".modal-divider"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 8.4pt (11.2px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span data-v-31b40c08=\"\" class=\"divider-text\">Simulation Playback</span>",
+          "target": [
+            ".divider-text"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 8.4pt (11.2px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#9ca3af",
+                "bgColor": "#ffffff",
+                "contrastRatio": 2.53,
+                "fontSize": "7.2pt (9.6px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button data-v-31b40c08=\"\" class=\"modal-btn btn-project\"><span data-v-31b40c08=\"\" class=\"btn-step\">Step1</span><span data-v-31b40c08=\"\" class=\"btn-icon\">\u25c7</span><span data-v-31b40c08=\"\" class=\"btn-text\">Graph Construction</span></button>",
+                  "target": [
+                    ".btn-project"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span data-v-31b40c08=\"\" class=\"btn-step\">Step1</span>",
+          "target": [
+            ".btn-project > .btn-step"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#9ca3af",
+                "bgColor": "#ffffff",
+                "contrastRatio": 2.53,
+                "fontSize": "7.2pt (9.6px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button data-v-31b40c08=\"\" class=\"modal-btn btn-simulation\"><span data-v-31b40c08=\"\" class=\"btn-step\">Step2</span><span data-v-31b40c08=\"\" class=\"btn-icon\">\u25c8</span><span data-v-31b40c08=\"\" class=\"btn-text\">Environment Setup</span></button>",
+                  "target": [
+                    ".btn-simulation"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span data-v-31b40c08=\"\" class=\"btn-step\">Step2</span>",
+          "target": [
+            ".btn-simulation > .btn-step"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#9ca3af",
+                "bgColor": "#ffffff",
+                "contrastRatio": 2.53,
+                "fontSize": "7.2pt (9.6px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button data-v-31b40c08=\"\" class=\"modal-btn btn-run\"><span data-v-31b40c08=\"\" class=\"btn-step\">Step3</span><span data-v-31b40c08=\"\" class=\"btn-icon\">\u25c7</span><span data-v-31b40c08=\"\" class=\"btn-text\">Simulation Run</span></button>",
+                  "target": [
+                    ".btn-run"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span data-v-31b40c08=\"\" class=\"btn-step\">Step3</span>",
+          "target": [
+            ".btn-run > .btn-step"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#9ca3af",
+                "bgColor": "#ffffff",
+                "contrastRatio": 2.53,
+                "fontSize": "7.2pt (9.6px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button data-v-31b40c08=\"\" class=\"modal-btn btn-report\"><span data-v-31b40c08=\"\" class=\"btn-step\">Step4</span><span data-v-31b40c08=\"\" class=\"btn-icon\">\u25c6</span><span data-v-31b40c08=\"\" class=\"btn-text\">Analysis Report</span></button>",
+                  "target": [
+                    ".btn-report"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span data-v-31b40c08=\"\" class=\"btn-step\">Step4</span>",
+          "target": [
+            ".btn-report > .btn-step"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 7.2pt (9.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ]
+}

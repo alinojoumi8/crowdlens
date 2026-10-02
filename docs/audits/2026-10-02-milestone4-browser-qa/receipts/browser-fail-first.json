@@ -1,0 +1,82 @@
+{
+  "browser": "154.0.8037.92",
+  "checks": [
+    {
+      "name": "upload chooser is keyboard reachable and named",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "name": "simulation prompt and website fields have explicit names",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "name": "history dialog traps focus, closes with Escape and restores trigger",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "name": "375px report panels and header controls fit the viewport",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   'Keep original',\n+   'Repair embeddings',\n+   'Regenerate',\n+   'No interviews',\n+   'Strict anti-repeat',\n+   'Legal mode',\n+   'Benchmark embeddings',\n+   'Enter Deep Interaction'\n+ ]\n- []\n"
+    },
+    {
+      "name": "hidden graph panel cannot receive keyboard focus",
+      "passed": false,
+      "error": "The expression evaluated to a falsy value:\n\n  assert(await page.locator('.panel-wrapper.left').evaluate(el => el.inert || getComputedStyle(el).display === 'none'))\n"
+    },
+    {
+      "name": "missing report and graph metrics explicitly remain unknown",
+      "passed": false,
+      "error": "The input did not match the regular expression /Quality Unknown/. Input:\n\n'SOURCE ANALYSIS REPORT\\n' +\n  'ID: report_synthetic\\n' +\n  'Synthetic hearing report\\n' +\n  '\\n' +\n  'The hearing is Thursday. Other issues remain open.\\n' +\n  '\\n' +\n  'Synthetic source-only example; no simulation has run.\\n' +\n  '\\n' +\n  '01\\n' +\n  'Hearing\\n' +\n  'Rerun\\n' +\n  'No interviews\\n' +\n  'Review source-based draft\\n' +\n  'Ready for your review\\n' +\n  '\\n' +\n  'Compare the wording and inspect its sources. Saving creates a separate report that remains Needs review. Model checks can miss errors.\\n' +\n  '\\n' +\n  'ORIGINAL SECTION\\n' +\n  '\\n' +\n  'The hearing is Thursday.\\n' +\n  '\\n' +\n  'PROPOSED SECTION\\n' +\n  '\\n' +\n  'Alex states that the hearing was postponed until Friday. [1]\\n' +\n  '\\n' +\n  'Summary changes\\n' +\n  'ORIGINAL SUMMARY\\n' +\n  '\\n' +\n  'The hearing is Thursday. Other issues remain open.\\n' +\n  '\\n' +\n  'PROPOSED SUMMARY\\n' +\n  '\\n' +\n  'Alex states that the hearing was postponed until Friday. Other issues remain open.\\n' +\n  '\\n' +\n  'Claim ledger · 1 statements\\n' +\n  'attributed allegation — Alex states that the hearing was postponed until Friday.\\n' +\n  'Original source excerpts · 1\\n' +\n  'Source 1 · synthetic-record.txt · page 1 · chunk 0\\n' +\n  'Alex states that the hearing was postponed until Friday.\\n' +\n  'Source provenance\\n' +\n  'Search and review limits\\n' +\n  'semantic retrieval unavailable\\n' +\n  'model audit is not factual certification\\n' +\n  'Save as new revision\\n' +\n  'Keep original\\n' +\n  'New proposal\\n' +\n  '\\n' +\n  'The hearing is Thursday.\\n' +\n  '\\n' +\n  '02\\n' +\n  'Unrelated contracts\\n' +\n  'Rerun\\n' +\n  'No interviews\\n' +\n  'Draft with sources\\n' +\n  '\\n' +\n  'Unrelated contracts remain unresolved.\\n' +\n  '\\n' +\n  'SECTIONS\\n' +\n  '2/2\\n' +\n  'PROGRESS\\n' +\n  '100%\\n' +\n  'ELAPSED\\n' +\n  '0s\\n' +\n  'TOOLS\\n' +\n  '0\\n' +\n  'NEEDS REVIEW\\n' +\n  'Quality /100\\n' +\n  'Graph /100\\n' +\n  'Graph structure is usable, but embeddings may still need repair\\n' +\n  'Mode Legal\\n' +\n  'Repair embeddings\\n' +\n  'Regenerate\\n' +\n  'No interviews\\n' +\n  'Strict anti-repeat\\n' +\n  'Legal mode\\n' +\n  'Benchmark embeddings\\n' +\n  'PL\\n' +\n  'Planning / Outline\\n' +\n  '01\\n' +\n  'Hearing\\n' +\n  '02\\n' +\n  'Unrelated contracts\\n' +\n  'OK\\n' +\n  'Complete\\n' +\n  'Enter Deep Interaction\\n' +\n  'CONSOLE OUTPUT\\n' +\n  'report_synthetic'\n"
+    },
+    {
+      "name": "actual abandoned owner recovers in durable API state",
+      "passed": true
+    },
+    {
+      "name": "recovered failure is visible and has a permitted manual retry",
+      "passed": false,
+      "error": "locator.innerText: Timeout 1000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('alert')\u001b[22m\n"
+    }
+  ],
+  "abandoned": {
+    "project_id": "proj_737d0c3a9fe9",
+    "task_id": "c2fabec8-7d6f-4860-8fe8-8848bc23eb53"
+  },
+  "task": {
+    "created_at": "2026-10-02T15:22:02.566314",
+    "error": "ownership_lease_expired",
+    "execution": {
+      "attempt_id": "bd5925c6c7264e02989f64106a42848e",
+      "heartbeat_at": 1790968922.567044,
+      "lease_until": 1790968952.567044,
+      "owner": {
+        "pid": 1302444,
+        "worker_id": "3adfa7aad787471cbe1e18b892019e83"
+      },
+      "resources": [
+        {
+          "key": "project:proj_737d0c3a9fe9",
+          "root": "/tmp/crowdlens-ecc-browser-run1/projects"
+        }
+      ]
+    },
+    "message": "Execution ownership expired; manual retry required.",
+    "metadata": {
+      "project_id": "proj_737d0c3a9fe9"
+    },
+    "progress": 25,
+    "progress_detail": {},
+    "recovery": {
+      "pending": false,
+      "reason": "ownership_lease_expired"
+    },
+    "result": null,
+    "status": "failed",
+    "task_id": "c2fabec8-7d6f-4860-8fe8-8848bc23eb53",
+    "task_type": "graph_build",
+    "updated_at": "2026-10-02T19:22:32.957761+00:00"
+  }
+}
