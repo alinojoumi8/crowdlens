@@ -76,3 +76,64 @@ def test_manual_retry_after_expiry_requires_new_key(root_admission):
         assert len(db.list_tasks()) == len(dispatched) == 2
     finally:
         runtime.clock = clock
+
+
+def test_separate_backend_processes_share_request_admission(root_admission):
+    """Actual process-local managers coordinate through the shared DB/lock."""
+    import json
+    from pathlib import Path
+    import subprocess
+    import sys
+    import time
+
+    _, db, _ = root_admission
+    script = r'''
+import json,sys,time
+from pathlib import Path
+from types import SimpleNamespace
+from flask import Flask
+from app.api import report, report_bp
+from app.models.task import TaskManager
+from app.storage.control_db import ControlDatabase
+root=Path(sys.argv[1]); identity=sys.argv[2]
+TaskManager.configure_repository(ControlDatabase(root/'root-admission.db'))
+report.ReportManager.REPORTS_DIR=str(root/'reports')
+report.ProjectManager.get_project=lambda _: SimpleNamespace(project_id='eq_project',graph_id='eq_graph',simulation_requirement='Synthetic parcel record.')
+report.SimulationManager.get_simulation=lambda *_: SimpleNamespace(project_id='eq_project',graph_id='eq_graph')
+report.load_simulation_config=lambda _: {}
+report.GraphToolsService=lambda **kw: object()
+dispatched=[]
+TaskManager.start_task=lambda self, identifier, *a, **kw: dispatched.append(identifier)
+app=Flask(__name__); app.register_blueprint(report_bp,url_prefix='/api/report')
+app.extensions['neo4j_storage']=SimpleNamespace(get_embedding_status=lambda _: {'safe_to_report': True})
+(root/(identity+'.ready')).touch()
+end=time.monotonic()+15
+while not (root/'go').exists():
+    if time.monotonic()>end: raise RuntimeError('start barrier timed out')
+    time.sleep(.01)
+response=app.test_client().post('/api/report/generate',json={'simulation_id':'eq_sim','report_mode':'legal_case','request_key':'process-retry'})
+print(json.dumps({'http':response.status_code,'body':response.json,'dispatched':dispatched}))
+'''
+    root = Path(db.path).parent
+    children = [subprocess.Popen([sys.executable, '-c', script, str(root), str(i)],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) for i in range(2)]
+    try:
+        deadline = time.monotonic() + 15
+        while not all((root/f'{i}.ready').exists() for i in range(2)):
+            assert time.monotonic() < deadline, 'two process startup timed out'
+            time.sleep(.01)
+        (root/'go').touch()
+        rows = []
+        for child in children:
+            stdout, stderr = child.communicate(timeout=15)
+            assert child.returncode == 0, stderr
+            rows.append(json.loads(stdout.splitlines()[-1]))
+        assert [row['http'] for row in rows] == [200, 200]
+        assert sum(len(row['dispatched']) for row in rows) == 1
+        assert len({row['body']['data']['task_id'] for row in rows}) == 1
+        assert len(db.list_tasks()) == 1
+    finally:
+        for child in children:
+            if child.poll() is None:
+                child.kill()
+            child.communicate()
