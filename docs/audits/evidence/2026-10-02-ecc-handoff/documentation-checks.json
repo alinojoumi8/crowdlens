@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-02T20:46:44.879120+00:00",
+  "tested_code_candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "reporting_parent": "e0fe50b7f3852b383e6c3ff49fa997ebf121e26c",
+  "scope": "staged documentation-only handoff; no application test rerun claim for later reporting HEAD",
+  "reporting_changed_paths_count": 215,
+  "runtime_test_dependency_build_changes": [],
+  "markdown_file_sha256": {
+    "README.md": "4903fce0a001ff8cd4473ff6c00f5fcc5dce28708a7ac07bf004f2533463cb31",
+    "ROADMAP.md": "132e0365054ec6e8ddfc3ff57c5fbadd82a082ad87710a214ef8bed66fedb21c",
+    "docs/ECC-WORKFLOW-PLAN.md": "86211b8617c256fce85aa7727ee0c54a3ccafe81a33e519277e0806e05719307",
+    "docs/architecture.md": "cde14199c9cacdb5145e924e06f73769285080c5c5b86eae46c4f8bb36282e73",
+    "docs/audits/2026-10-02-ecc-execution-ledger.md": "6257742c42f489fd7ec27035bf62a9548883bbe3d7e1ddad0929c94f03d08df8",
+    "docs/audits/2026-10-02-ecc-milestones-3-5.md": "eeb3669b43e392188c1d3e8c35796e7dd111c850c37b719a628a88c687a3ac9d",
+    "docs/audits/2026-10-02-h1-integration-review.md": "04dd153d7ac009f853753244919a1b1172ee8ba2f658bc9366b4175223f9d65a",
+    "docs/audits/2026-10-02-milestone4-browser-qa.md": "d5ce98bf82e159ddd2ce18ed70ea2c330bf17404b6799f8a5062f8539137abcd",
+    "docs/audits/2026-10-02-milestone5-release-verification.md": "43ebc4b8fdac41adb66b08d3745f2f78417ebc9428585e02034284640cab41eb",
+    "docs/control-plane-migration.md": "1d25ba945e662c337d905e1ab2c637953c0a8dcd040246d1dfbc49a632dff2a6",
+    "docs/product-capabilities.md": "e5f7ba7d6da983f501c242a9f82d78efcbcd8000c5b0387bf09dc2ce305b1bc9"
+  },
+  "local_markdown_targets_checked": 150,
+  "json_files_parsed": 46,
+  "xml_files_parsed": 4,
+  "evidence_manifests": {
+    "docs/audits/2026-10-02-milestone4-browser-qa/sha256.json": {
+      "entries": 54,
+      "mismatches": []
+    },
+    "docs/audits/evidence/2026-10-02-h1-integration-review/sha256.json": {
+      "entries": 9,
+      "mismatches": []
+    },
+    "docs/audits/evidence/2026-10-02-release-verification/242b8999/preserved-files.json": {
+      "entries": 141,
+      "mismatches": []
+    },
+    "docs/evaluations/results/2026-10-02-before/receipt-sha256.json": {
+      "entries": 15,
+      "mismatches": []
+    },
+    "docs/evaluations/results/2026-10-02-after-root/receipt-sha256.json": {
+      "entries": 15,
+      "mismatches": []
+    }
+  },
+  "original_main": "34275b75223dee82087ff6ac937c4fc6e4af9323",
+  "original_overlay_sha256": {
+    "README.md": "0d61daeda861e8d3eeb7876bd4d50b24a10f633b86f28075e1419d6b4499b191",
+    "ROADMAP.md": "921a711b1f5def202957d5861bf069bf1d1a0fc71618bfc3788c5e955abc7f8e",
+    "docs/architecture.md": "7d8692aa5feeed0b13c7f7935d43e983cd4961c13a025fe4e373da90e001fea4",
+    "docs/ECC-WORKFLOW-PLAN.md": "f2ba4d3a249fde184e4dd567734661a79c6e22c7f1f2479351d8a56760d1808d",
+    "docs/product-capabilities.md": "841a5be76d90943c52dd8bf85614a82246c0cf932715390b22c6278485b58299"
+  },
+  "original_overlays_unchanged": {
+    "README.md": true,
+    "ROADMAP.md": true,
+    "docs/architecture.md": true,
+    "docs/ECC-WORKFLOW-PLAN.md": true,
+    "docs/product-capabilities.md": true
+  },
+  "maintained_source_docs_whitespace": {
+    "argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "main",
+      "--",
+      ".",
+      ":(exclude)docs/audits/evidence/**",
+      ":(exclude)docs/evaluations/results/**",
+      ":(exclude)docs/audits/2026-10-02-milestone4-browser-qa/receipts/**"
+    ],
+    "exit_code": 0
+  },
+  "full_branch_raw_receipt_whitespace": {
+    "exit_code": 2,
+    "warning_count": 181,
+    "files": [
+      "docs/audits/2026-10-02-milestone4-browser-qa/receipts/frontend-tests.log",
+      "docs/audits/2026-10-02-milestone4-browser-qa/receipts/history-fail-first.log",
+      "docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml",
+      "docs/audits/evidence/2026-10-02-h1-integration-review/preparation-before.xml",
+      "docs/audits/evidence/2026-10-02-release-verification/242b8999/prior-preparation/neo4j-small-tmpfs.txt",
+      "docs/audits/evidence/2026-10-02-release-verification/242b8999/raw/branch-diff-check.txt",
+      "docs/audits/evidence/2026-10-02-release-verification/242b8999/raw/browser-regressions.txt",
+      "docs/audits/evidence/2026-10-02-release-verification/242b8999/raw/browser-workflow.txt",
+      "docs/audits/evidence/2026-10-02-release-verification/242b8999/raw/crowdlens-ecc-release-final-242b8999-2737e1-app-logs.txt",
+      "docs/audits/evidence/2026-10-02-release-verification/242b8999/raw/image-build.txt",
+      "docs/evaluations/results/2026-10-02-before/run-1.txt",
+      "docs/evaluations/results/2026-10-02-before/run-1.xml",
+      "docs/evaluations/results/2026-10-02-before/run-2.txt",
+      "docs/evaluations/results/2026-10-02-before/run-2.xml",
+      "docs/evaluations/results/2026-10-02-before/run-3.txt",
+      "docs/evaluations/results/2026-10-02-before/run-3.xml"
+    ],
+    "disposition": "original raw bytes retained; not a full-branch whitespace pass"
+  },
+  "owned_resource_cleanup": {
+    "containers": {
+      "exit_code": 0,
+      "remaining": []
+    },
+    "networks": {
+      "exit_code": 0,
+      "remaining": []
+    },
+    "volumes": {
+      "exit_code": 0,
+      "remaining": []
+    }
+  },
+  "errors": [],
+  "passed": true,
+  "checker_correction": "Initial parser also matched +/++ source excerpts printed inside raw receipts. Corrected to count only git warning header lines; no application file, original receipt or whitespace assertion changed. Initial metadata is retained in documentation-checks-initial.json."
+}

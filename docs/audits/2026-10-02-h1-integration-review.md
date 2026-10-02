@@ -15,9 +15,10 @@ Both defects were reproduced by the coordinator before changing application code
 
 The before runs added only their new regression test files to the named application
 commits. Those unchanged assertions are committed in the repair commits. The after
-focused runs used the same assertions with the repairs. The complete backend run
+focused runs used the same assertions with the repairs. The complete backend `tests/` run
 on clean combined commit `bc1bf6c` passed **448 tests** in 9.89 seconds. Its 18
-warnings concern pytest JUnit property formatting; the dedicated evaluator uses
+warnings concern pytest JUnit property formatting; backend-wide discovery also
+includes `scripts/test_profile_format.py`, which the final release command covers; the dedicated evaluator uses
 the compatible legacy JUnit format. No application assertion was skipped or weakened.
 
 Commands from `backend/`:
@@ -31,7 +32,11 @@ Commands from `backend/`:
 ```
 
 [Preserved receipts and hashes](evidence/2026-10-02-h1-integration-review/sha256.json)
-include both reviewer reproductions and all five JUnit receipts. The ensemble
+include both reviewer reproductions and all five coordinator JUnit receipts.
+The independent reviewer repeated both original reproductions at `bc1bf6c`: failed
+preparation remained failed, and stale cleanup raised `OwnershipLost` with the
+replacement file/database row preserved. Its separate 82-case guarded suite also
+passed; the result and JUnit receipt are preserved alongside the earlier evidence. The ensemble
 handoff tests use a controlled lease clock and substituted process-control calls;
 cleanup, filesystem and SQLite are real. They make no claim that an OASIS child
 or generation model ran. Earlier real-process H1 checks remain separate evidence.

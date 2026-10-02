@@ -1,11 +1,17 @@
 # ECC workflow plan for CrowdLens
 
 Status: Milestone 1 documentation preserved. Milestone 2 H1 recovery is fixed
-and locally verified at `33d87c8`; operational/model/deployment gaps remain.
-Milestones 3–5 are now in local execution; completion requires their fresh evidence.
+and locally verified at `33d87c8`, with subsequent call-site repairs recorded in
+[the integration review](audits/2026-10-02-h1-integration-review.md). Operational,
+model and deployment gaps remain.
+Milestones 3–5 have local implementation and evidence recorded in the
+[consolidated handoff](audits/2026-10-02-ecc-milestones-3-5.md). Use its separate
+status table: deterministic checks do not complete model/human quality, remote CI,
+or existing deployment verification.
 Prepared: 2026-10-02. Source baseline: `main` at `34275b7`.
-Skill reference: the locally installed ECC 2.2.2 `ecc-guide` and the skill
-instructions named below. Recheck installed instructions when starting a milestone.
+Skill reference: the original plan used ECC 2.2.2 `ecc-guide`; this execution
+read the installed ECC 2.2.3 instructions for each assigned milestone. Recheck
+installed instructions when starting another task.
 
 ## Recommendation
 
@@ -160,7 +166,9 @@ changes have measurable regression evidence, recovery and review boundaries are
 verified, and each delivered change includes current checks and updated docs.
 The number of installed skills or generated planning files is not a success metric.
 
-## Milestone 2 evidence — 2026-10-02
+## Historical Milestone 2 audit snapshot — 2026-10-02
+
+The following paragraph describes the original audit before H1 and later work.
 
 See the [agent architecture audit](audits/2026-10-02-milestone-2-agent-audit.md).
 Five high boundary failures have isolated fixes and regression evidence. Generic
@@ -171,7 +179,7 @@ passed with a deterministic drafting substitute; actual local upload/ontology is
 blocked by the missing generation model. Full workflow and report quality remain
 unverified. No push, merge, deployment change or later milestone was performed.
 
-## H1 follow-up — 2026-10-02
+## Initial H1 follow-up — 2026-10-02
 
 The [H1 remediation addendum](audits/2026-10-02-h1-task-recovery.md) supersedes
 the earlier unresolved H1 status for the isolated source. New generic tasks have
@@ -181,3 +189,19 @@ ownerless tasks remain explicitly uncertain. The fresh full check passed 419
 tests and the production frontend build. Existing deployment reconciliation,
 full provider workflow and measured report quality remain open. This follow-up
 does not declare later milestones or release readiness complete.
+
+## Milestones 3–5 execution handoff — 2026-10-02
+
+The [task ledger](audits/2026-10-02-ecc-execution-ledger.md) records isolated
+specialist ownership and local integration commits. The [consolidated report](audits/2026-10-02-ecc-milestones-3-5.md)
+identifies the final tested candidate and the subsequent documentation-only commit.
+It links the frozen structural before/after baseline, blind human-review materials,
+first visual baseline, real storage/cold-restore evidence, fresh dependency/build
+checks, and independent AI review findings and repairs.
+
+Remaining actions are bounded: arrange a suitable generation model with explicit
+runtime/input constraints; obtain independent human labels; authorize and run
+exact-candidate remote CI; separately reconcile the existing deployment. Define
+whole-root cost/deadline and retention/backup policies before expanding those
+promises. No prompt tuning, model-quality improvement, main merge, deployment,
+or human approval is implied by successful synthetic verification.

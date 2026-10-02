@@ -100,3 +100,19 @@ losing ownership; their later publications are rejected.
 
 See the [H1 remediation evidence](audits/2026-10-02-h1-task-recovery.md) for the
 verified timing, subprocess tests, publication races and remaining limitations.
+
+## Cold restore verification and limits
+
+The [local release rehearsal](audits/2026-10-02-milestone5-release-verification.md)
+copies a quiesced synthetic SQLite database and complete artifact roots, including
+hidden proposal/lock files. Fresh processes reopen immutable revisions; restoring
+at the same absolute roots also recovers expired tasks while preserving a newer
+valid lease. Resource bindings store absolute paths, so moving active-task artifacts
+to different roots is not supported by this evidence. A separate stopped Neo4j
+dump/load rehearsal verifies synthetic nodes, relationships and properties in new
+volumes. These are cold restores, not a coordinated online cross-store snapshot
+or a power-loss durability test. No operator data or existing volume was modified.
+
+[Integration review](audits/2026-10-02-h1-integration-review.md) also covers stale
+preparation readiness and ensemble cleanup races. Serialized process-control calls
+can delay heartbeat/recovery; the existing close IPC timeout is 20 seconds.

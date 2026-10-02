@@ -1,9 +1,11 @@
 # CrowdLens product capabilities
 
-Evidence date: 2026-10-02. Source baseline: `main` at `34275b7`.
-Method: ECC `product-capability`, using its capability-contract template.
-Milestone 1 changes documentation only; the isolated Milestone 2 follow-up is
-recorded below and does not describe a deployed change.
+Evidence date: 2026-10-02. Original Milestone 1 baseline: `main` at `34275b7`.
+Method: ECC `product-capability`, followed by the installed ECC 2.2.3 audit,
+evaluation, browser and verification workflows. Current local source/evidence
+identities and separate completion statuses are in the [execution handoff](audits/2026-10-02-ecc-milestones-3-5.md).
+Milestone 1 was documentation-only; subsequent scoped implementation remains local.
+Existing deployment equivalence has not been established.
 
 ## Capability
 
@@ -32,6 +34,12 @@ Implementation status and live verification are separate dimensions.
   another simulation or issue a fresh prediction.
 - Proposal creation retries reuse `request_key`; acceptance retries reuse the
   displayed `proposal_digest`. Reads never schedule drafting.
+- Root generation retries reuse one logical `request_key` and return the existing
+  task/report while the task record is retained. Changed parameters conflict;
+  a new manual attempt uses a new key. Whole-root cost/deadline policy remains open.
+- Owned background attempts must retain their worker token, lease and resource
+  binding before publication or destructive ensemble operations. Recovery preserves
+  newer active owners and requires explicit manual retry of abandoned work.
 - Existing persisted identifiers and storage compatibility remain intact.
   Original authorship and AGPL licensing remain in place.
 - The supported verification baseline is Python 3.11 and Node 22. The declared
@@ -81,7 +89,10 @@ UI routes are defined in [routes.js](../frontend/src/router/routes.js): `/`,
   failures use `failed`. Force rebuilding explicitly resets graph-build metadata.
   See [ProjectStatus](../backend/app/models/project.py).
 - Scenario preparation: `created → preparing → ready`; failures use `failed`.
-  A completed preparation may be reused unless regeneration is requested.
+  A completed preparation may be reused unless regeneration is requested. Active
+  or failed preparation ownership takes precedence over old files; polling never
+  promotes a preparing state to ready. [API regressions](../backend/tests/test_prepare_recovery_api.py)
+  verify honest failure and manual retry.
 - Runner: `idle → starting → running → completed`, or
   `running → stopping → stopped`, with `failed` on failure. `paused` exists in
   the enums, but that alone does not establish a user-facing pause/resume API.
@@ -138,7 +149,28 @@ than guaranteeing permanent availability for every saved report.
 
 ## Verification evidence and priority gaps
 
-### Fresh evidence in this milestone
+### Current local execution evidence
+
+- Versioned synthetic development/holdout fixtures, deterministic source/revision/
+  lifecycle checks, three-repeat measurements, and blinded blank human forms are
+  available in [the evaluation guide](evaluations/evidence-quality.md). The frozen
+  before/after baseline preserves two reproduced root-duplication failures and
+  their unchanged passing assertions after repair. Real-model metrics remain
+  unmeasured; absent human labels are pending, never zero-error results.
+- [Built-UI QA](audits/2026-10-02-milestone4-browser-qa.md) covers responsive, keyboard,
+  source/proposal/revision and recovery states with explicit seeded/substituted
+  generation stages. It establishes a first visual baseline, not a historical
+  regression comparison or a full model-backed workflow.
+- [Release evidence](audits/2026-10-02-milestone5-release-verification.md) records
+  exact-candidate clean installs, applicable checks, dependency audits, real
+  storage probes, cold restore and isolated image identity/readiness. Its status
+  does not transfer to another commit or the existing deployment.
+- [H1 integration review](audits/2026-10-02-h1-integration-review.md) records two
+  additional reproduced readiness/ensemble races, scoped repairs, and retained
+  fail-first tests. Worker ownership evidence remains separate from OASIS
+  exact-round continuation and memory completeness.
+
+### Historical Milestone 1 evidence
 
 - `UV_PYTHON=3.11 npm run check`: 347 backend tests, 12 frontend unit tests,
   16 component tests, and Vite production build passed. Most backend tests use
@@ -165,36 +197,36 @@ than guaranteeing permanent availability for every saved report.
 | P1 | No fresh upload-to-reviewed-revision run across all real services. | One bounded synthetic document through upload, Neo4j graph build, scenario preparation, simulation, root report, proposal and revision; record IDs, source scope, timings and failure/retry outcomes. Choose local or explicitly authorized hosted inference first. |
 | P1 | Report/evidence quality is not independently established. | Approved held-out source packets, independent claim/omission labels, measured reviewer time, and baseline/proposed evaluation. Committed synthetic unreviewed fixtures prove metric mechanics only. |
 | P2 | Memory continuity and recovery across processes remain partial. | Exercise actual subprocess restart/forced restart, corrupted or failed memory writes, source separation and graph write failure; demonstrate retained/lost data explicitly. |
-| P2 | Proposal review browser usability and accessibility need current evidence. | Real built UI at desktop/mobile widths; keyboard flow, focus/error states, reload after interrupted save, stale proposal and blocked retrieval. |
-| P2 | Deletion/retention and multi-store restoration are incomplete product contracts. | Define ownership and retention decisions, then rehearse a consistent restore and scoped deletion with synthetic data across SQLite, artifacts and Neo4j. |
+| P2 | Full browser flow still requires actual generation/OASIS prerequisites. | Repeat the bounded built-UI checks with real extraction, scenario generation, simulation and root report; current seeded-stage QA and automated accessibility checks cannot certify the complete live pipeline. |
+| P2 | Deletion/retention and coordinated multi-store recovery are incomplete product contracts. | Cold SQLite/artifact and separate Neo4j restores are rehearsed. Define retention/deletion ownership, coordinated backup points, and any relocation contract before promising online atomic restore or active-task path changes. |
+| P2 | Whole-root generation has no aggregate call/cost/deadline policy. | Define the policy before setting acceptance thresholds, then add fault/budget checks. The 1,530-second simulated transport retry observation is characterization, not a measured model duration or budget pass. |
+| P2 | Exact-candidate remote CI is pending. | Obtain authorization to push the reviewed local branch and open/update its PR, then collect checks with the actual checkout SHA/tree; feature-branch push alone does not trigger this workflow, and an older main run is not candidate evidence. |
 | P3 | Hardware, latency, coverage and supported Python ranges need measurements. | Repeatable workload/model/hardware benchmarks; documented coverage gaps; clean installs and checks before claiming additional Python versions. |
 
-## Non-goals
+## Non-goals and remaining decisions
 
-This milestone does not change application logic, deploy/rebuild containers,
-enable new providers, run paid inference, introduce authentication/multi-user
-hosting, certify predictions, or establish automatic publication of model output.
-It does not replace [architecture](architecture.md), detailed recovery docs, or
-the [ECC workflow plan](ECC-WORKFLOW-PLAN.md).
+The current work does not deploy the application, enable a provider, execute paid
+inference, download a generation model, activate advisory policies, introduce
+multi-user hosting, certify predictions, or automatically publish model output.
+Milestone 1 changed only documentation; later milestones contain bounded repairs
+and synthetic verification described in the dated reports.
 
-## Open questions
-
-No unresolved product decision blocks this documentation milestone. Before new
-implementation, settle the relevant decision: which source revision should run
-locally; whether the full-pipeline check uses local or hosted inference and its
-budget; who independently labels report quality; what retention/deletion promises
-are intended; and whether public/multi-user deployment is actually desired.
+Next owners must establish a suitable local generation model or explicitly
+permitted hosted provider/input/budget, obtain independent human labels for the
+blinded packets, authorize exact-candidate remote CI, and separately plan deployment
+reconciliation. Retention/deletion and whole-root budget policies need explicit
+contracts. These decisions do not invalidate completed independent checks, and
+those checks do not satisfy the missing decisions.
 
 ## Handoff
 
-The capability inventory and documentation reconciliation are complete. The next
-bounded lane is `ecc:agent-architecture-audit` for the P1/P2 agent, source-scope,
-retry and recovery boundaries, followed by targeted `ecc:verification-loop`
-checks. Deployment reconciliation needs its own operational task; evaluation
-quality needs independent labels before making improvement claims. New features
-should use this manifest to define their states, interfaces and acceptance evidence.
+The capability inventory is maintained alongside the [ECC workflow](ECC-WORKFLOW-PLAN.md)
+and [consolidated execution report](audits/2026-10-02-ecc-milestones-3-5.md).
+Use their exact source identities and separate status table when selecting the
+next bounded task. New features must define their states, interfaces and acceptance
+evidence; generated report quality still requires independent assessment.
 
-## Milestone 2 evidence — 2026-10-02
+## Historical Milestone 2 audit — 2026-10-02
 
 The [dated audit](audits/2026-10-02-milestone-2-agent-audit.md) records isolated
 source fixes for generated-origin evidence, graph selection, chat roles/context
@@ -203,19 +235,21 @@ SQLite and HTTP proposal acceptance preserve the parent and unselected section,
 produce one child on retry and retain Needs review. Drafting uses a deterministic
 model substitute; factual quality remains unverified.
 
-**Highest priority: generic task restart recovery is incomplete.** A two-process
-probe restores an abandoned graph-build task as processing. Worker ownership and
-coordinated project/task recovery require remediation. Existing runner
-reconciliation does not establish generic task recovery or exact continuation.
+**Historical H1 finding, superseded by the follow-ups below:** a two-process
+probe originally restored an abandoned graph-build task as processing. Owned
+task recovery and the later readiness/ensemble call-site repairs address that
+source defect. Simulation runner reconciliation still does not establish exact
+continuation.
 
 Runtime identity is unverified against the desired source: the running image
 contains older source, and the new fingerprint instrumentation is not deployed.
 Provider-backed upload/ontology failed because the local generation model was
 unavailable; graph → scenario → simulation → report remains unverified as a full
 current-source workflow. Broader browser and independent quality evaluations
-remain later milestones. These limits do not strengthen implementation promises.
+were later milestones at that audit snapshot. Current evidence is linked above;
+these historical limits are not silently relabeled as passes.
 
-## H1 follow-up — 2026-10-02
+## Initial H1 follow-up — 2026-10-02
 
 The [H1 remediation addendum](audits/2026-10-02-h1-task-recovery.md) supersedes
 the earlier unresolved H1 status for the isolated source. New generic tasks have
@@ -225,3 +259,7 @@ ownerless tasks remain explicitly uncertain. The fresh full check passed 419
 tests and the production frontend build. Existing deployment reconciliation,
 full provider workflow and measured report quality remain open. This follow-up
 does not declare later milestones or release readiness complete.
+
+The [integration-review addendum](audits/2026-10-02-h1-integration-review.md)
+records the subsequent preparation-readiness and stale-ensemble fixes. Final
+combined checks and any remaining gaps are in the current execution handoff.

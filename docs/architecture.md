@@ -29,7 +29,8 @@ memories, vectors     simulation run state        text, caches, run files
 opens the SQLite control database, performs the one-time legacy import, wires
 repositories into the managers, reconciles persisted simulation processes, and
 then registers API blueprints. Runtime dependencies are exposed through
-`app.extensions`.
+`app.extensions`. Existing manager singletons are process-local; shared SQLite
+resource bindings and an adjacent file lock coordinate task attempts across backends.
 
 ## Backend modules
 
@@ -66,6 +67,14 @@ HTML.
   explicitly disabled, not as an automatic fallback after initialization fails.
 - Internal exceptions are logged with a request ID. Default 5xx responses omit
   tracebacks and return the same request ID for correlation.
+
+- Generic owned tasks use worker/attempt tokens and renewable leases. Periodic
+  reconciliation fails abandoned work and repairs only resources still bound to
+  that attempt. Preparation polling cannot promote leftover files to ready;
+  ensemble cleanup and process control validate ownership at the operation.
+- Root report retries with the same request key return the existing task/report
+  while that task record is retained. One active root request owns each simulation
+  generation resource; a whole-report cost/deadline budget remains undefined.
 
 ## Trust boundary
 

@@ -111,7 +111,7 @@ cp .env.example .env
 # Set NEO4J_PASSWORD and edit endpoints if services use non-default ports
 
 cd backend
-uv sync --dev
+uv sync --frozen --dev
 uv run python run.py
 ```
 
@@ -119,7 +119,7 @@ uv run python run.py
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
@@ -189,10 +189,17 @@ SQLite control-plane, migration, and simulation-restart status. The lightweight
 container liveness endpoint is `GET /health`.
 
 Project, case, task, and simulation metadata is stored transactionally in
-the SQLite database under `backend/uploads/`. Existing JSON metadata is imported once without
+the SQLite database under `backend/uploads/`. New background tasks retain
+worker/attempt ownership; expired attempts fail honestly and require manual retry.
+Existing JSON metadata is imported once without
 being deleted; uploaded documents and generated artifacts remain on disk. See
 [`docs/control-plane-migration.md`](docs/control-plane-migration.md) for backup,
 migration, and recovery details.
+
+Root report generation assigns one `request_key` per logical browser request.
+Network retries reuse its task/report identity while the task record is retained;
+a new manual invocation receives a new key. This prevents duplicate admission
+without claiming a whole-report cost or deadline limit.
 
 Run the embedding benchmark from `backend/`:
 
@@ -238,7 +245,7 @@ CrowdLens uses an abstraction layer between the application and the graph databa
 **Key design decisions:**
 
 - `GraphStorage` is an abstract interface — swap Neo4j for any other graph DB by implementing one class
-- Dependency injection via Flask `app.extensions` — no global singletons
+- Flask `app.extensions` provides runtime dependencies; existing manager singletons remain process-local and coordinate durable task ownership through SQLite
 - SQLite WAL transactions for restart-safe project, case, task, and run metadata
 - Uploaded files and large generated artifacts remain on the filesystem
 - Hybrid search: 0.7 × vector similarity + 0.3 × BM25 keyword search
@@ -282,6 +289,10 @@ establish a complete live-provider pipeline or independently measured report qua
 
 - [Product capabilities, contracts, and verification gaps](docs/product-capabilities.md)
 - [ECC workflow and adoption plan](docs/ECC-WORKFLOW-PLAN.md)
+- [Local ECC execution handoff and exact-candidate verification](docs/audits/2026-10-02-ecc-milestones-3-5.md)
+- [Synthetic evidence evaluations and pending human review](docs/evaluations/evidence-quality.md)
+- [Browser QA, screenshots, and test substitutions](docs/audits/2026-10-02-milestone4-browser-qa.md)
+- [Local release verification and operational gaps](docs/audits/2026-10-02-milestone5-release-verification.md)
 - [Evidence-first report proposals and revisions](docs/evidence-first-reports.md)
 - [Architecture](docs/architecture.md)
 - [Storage migration, backup, and recovery](docs/control-plane-migration.md)

@@ -1,7 +1,9 @@
 # CrowdLens Roadmap
 
-Reconciled 2026-10-02 against `main` at `34275b7`, routes, persistence, tests,
-and bounded runtime checks. This is a prioritized capability backlog, not a set
+Reconciled 2026-10-02 against local integration candidate `242b899`, routes,
+persistence, tests, and bounded runtime checks. The [ECC handoff](docs/audits/2026-10-02-ecc-milestones-3-5.md)
+identifies exact verification results and the separate reporting commit. This is
+a prioritized capability backlog, not a set
 of committed release dates. See [the capability manifest](docs/product-capabilities.md)
 for contracts and verification evidence.
 
@@ -16,13 +18,13 @@ and appears to predate the current source; deployed/source equivalence is unveri
 | Capability | Current status | Remaining boundary |
 | --- | --- | --- |
 | Document/URL ingestion and case versions | Implemented | Fresh full-pipeline run and extraction/source fidelity checks. |
-| Neo4j graph build, provenance and embedding readiness | Implemented | Live build, retrieval-quality and failure-recovery verification. |
+| Neo4j graph build, provenance and embedding readiness | Implemented | Full model-backed build and retrieval-quality verification; owned-task recovery is verified separately. |
 | Scenario profiles/settings, simulation and ensembles | Implemented | Real subprocess lifecycle and scenario-quality evidence. |
 | Root reports, progress, resume and section regeneration | Implemented | Independent factual/omission review and live generation evidence. |
-| Source-scoped proposals and immutable revisions | Implemented; synthetic HTTP lifecycle verified | Current browser checks and real-source quality evaluation. |
+| Source-scoped proposals and immutable revisions | Implemented; synthetic HTTP and built-UI lifecycle verified | Real-model and independent human quality evaluation. |
 | `/api/status` readiness endpoint | Implemented | Disk usage and actual generation-provider readiness are not reported/probed. |
 | Agent memory persistence | Partial | File-backed short memory/summaries and optional graph memories exist; lossless restart continuity is unverified. |
-| Automated checks | Implemented | 347 backend + 28 frontend tests and build passed in this milestone; complete E2E/quality coverage is unverified. |
+| Automated checks | Implemented | Frozen-candidate results are in the ECC handoff; deterministic checks do not establish full model E2E or factual quality. |
 | Provider selection | Partial | Local/OpenAI-compatible/Anthropic adapters and Ollama/Gemini embeddings exist; per-task routing and broader backend compatibility remain future work. |
 | Graph visualization and comparison | Partial | Visualization and case-version comparison exist; whole-graph snapshots, temporal views, and simulation graph diffs remain future work. |
 
@@ -36,11 +38,14 @@ and appears to predate the current source; deployed/source equivalence is unveri
 
 ### P2 — recovery and user experience
 
-- [ ] Audit agent/tool/retry/source-scope boundaries with ECC `agent-architecture-audit`; fix demonstrated failures with regression tests.
+- [x] Audit agent/tool/source-scope boundaries and repair reproduced high-priority failures, including owned-task recovery, duplicate root admission, preparation readiness, and stale ensemble cleanup. See [audit follow-ups](docs/audits/2026-10-02-h1-integration-review.md).
+- [ ] Define and enforce a whole-root generation call/cost/deadline policy; transport retry characterization and proposal budgets do not establish this contract.
 - [ ] Verify subprocess restart, failed writes, optional graph memory, and forced-run cleanup. Define the memory retention and continuation promise before strengthening it.
-- [ ] Verify report/proposal workflows in the built UI at desktop/mobile widths, including keyboard navigation, blocked/stale proposals, and interrupted acceptance recovery.
-- [ ] Define retention and deletion ownership across SQLite, artifacts, and Neo4j; rehearse a consistent backup/restore on synthetic data.
-- [ ] Repeat clean-environment installation, current CI, both dependency audits, Compose validation, and image build for the next release candidate.
+- [x] Verify supported report/proposal states in the built UI at 375/768/1440px: keyboard/focus, blocked/stale proposals, lost acceptance response/retry, reopen, unknown metrics, and real owned-task failure/manual retry. [QA evidence](docs/audits/2026-10-02-milestone4-browser-qa.md) identifies all seeded and substituted stages.
+- [ ] Repeat the browser workflow with actual generation and OASIS processes once model prerequisites exist.
+- [x] Rehearse cold synthetic SQLite/artifact restore, same-root expired-task recovery, and separate Neo4j dump/load into new volumes.
+- [ ] Define retention/deletion ownership and coordinated cross-store backup procedures; online atomic backup and active-task relocation remain unverified.
+- [ ] Promote only after exact-candidate remote CI and explicitly authorized deployment verification. Local clean-install, audit, build, recovery, and image results are recorded in the [release evidence](docs/audits/2026-10-02-milestone5-release-verification.md).
 
 ## Stability and performance backlog
 

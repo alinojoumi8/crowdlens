@@ -1,0 +1,14 @@
+{
+  "candidate": "bc1bf6cc9c4062625396e8a090308c77e655e078",
+  "preparation_status": "failed",
+  "already_prepared": false,
+  "stale_ensemble_cleanup_rejected": true,
+  "replacement_file_preserved": true,
+  "replacement_database_row_preserved": true,
+  "substitutes": [
+    "controlled lease clock",
+    "ensemble close callback installs replacement; no actual child"
+  ],
+  "real_model_calls": 0,
+  "artifact_dir": "/tmp/crowdlens-ecc-review-fixed-repros-fskdqwod"
+}
