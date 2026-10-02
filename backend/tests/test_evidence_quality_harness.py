@@ -80,3 +80,34 @@ def test_disagreement_is_preserved_instead_of_voted_away(review_material):
     assert result['real_model_quality'] is None
     with pytest.raises(ValueError, match='duplicate_reviewer'):
         import_reviews(path, [first, first])
+
+
+def test_identity_without_any_labels_is_not_a_reviewed_packet(review_material):
+    path, row = review_material
+    row.update(reviewer_id='synthetic-test-A', reviewer_kind='human', reviewed_at='2026-10-02T00:00:00Z')
+    result = import_reviews(path, [row])
+    assert result['status'] == 'PENDING'
+    assert result['reviewed_packets'] == 0
+    assert result['review_rows'] == 0 and result['pending_forms'] == 1
+    assert result['unsupported_claims_per_review']['rate'] is None
+
+
+def test_import_rejects_missing_claim_schema_fields(review_material):
+    path, row = review_material
+    row = filled(row)
+    del row['claims'][0]['citation_support_correct']
+    with pytest.raises(ValueError, match='missing_claim_fields'):
+        import_reviews(path, [row])
+
+
+def test_partial_labels_remain_partial_until_all_claim_dimensions_are_assessed(review_material):
+    path, row = review_material
+    row = filled(row)
+    partial = import_reviews(path, [row])
+    assert partial['status'] == 'PARTIAL'
+    assert partial['reviewed_packets'] == 0
+    assert partial['review_rows'] == 1
+    row['claims'][0].update(attribution_correct=True, citation_support_correct=True)
+    assessed = import_reviews(path, [row])
+    assert assessed['status'] == 'LABELS_IMPORTED'
+    assert assessed['reviewed_packets'] == 1

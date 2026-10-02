@@ -84,6 +84,9 @@ def import_reviews(packet_directory, forms):
         identifiers = [claim.get('claim_id') for claim in row['claims'] if isinstance(claim, dict)]
         if len(identifiers) != len(row['claims']) or len(identifiers) != len(set(identifiers)) or set(identifiers) != expected:
             raise ValueError('claim_coverage_mismatch')
+        if any(not {'claim_id', 'support', 'attribution_correct', 'citation_support_correct', 'rationale'} <= set(claim)
+               for claim in row['claims']):
+            raise ValueError('missing_claim_fields')
         any_label = any(claim.get(key) is not None for claim in row['claims']
                         for key in ('support', 'attribution_correct', 'citation_support_correct'))
         any_label = any_label or any(row.get(key) is not None for key in
@@ -133,6 +136,11 @@ def import_reviews(packet_directory, forms):
                 raise ValueError('invalid_reference_facts')
             if any(not isinstance(identifier, str) or identifier not in facts for identifier in omissions) or len(omissions) != len(set(omissions)):
                 raise ValueError('invalid_omission_ids')
+        meaningful = any(claim.get(field) is not None for claim in row['claims']
+                         for field in ('support', 'attribution_correct', 'citation_support_correct'))
+        if not meaningful and reference is None and row.get('conflicts_handled') is None:
+            pending.append(row)
+            continue
         accepted.append(row)
     claims = [claim for row in accepted for claim in row['claims']]
     judged = [claim for claim in claims if claim['support'] in {'supported', 'unsupported'}]
@@ -140,6 +148,9 @@ def import_reviews(packet_directory, forms):
     citations = [claim['citation_support_correct'] for claim in claims if type(claim.get('citation_support_correct')) is bool]
     reference_rows = [row for row in accepted if row.get('reference_facts') is not None]
     seconds = [row['review_seconds'] for row in accepted if row.get('review_seconds') is not None]
+    labeled_packets = {row['packet_id'] for row in accepted if row['claims'] and all(
+        claim.get(field) is not None for claim in row['claims']
+        for field in ('support', 'attribution_correct', 'citation_support_correct'))}
     disagreements = []
     for packet_id in packets:
         for claim_id in {claim['claim_id'] for claim in packets[packet_id][0]['claims']}:
@@ -150,9 +161,9 @@ def import_reviews(packet_directory, forms):
                 if len({json.dumps(item['value']) for item in judgments}) > 1:
                     disagreements.append({'packet_id': packet_id, 'claim_id': claim_id, 'field': field,
                                           'judgments': judgments})
-    return {'schema_version': 1, 'reviewed_packets': len({row['packet_id'] for row in accepted}),
+    return {'schema_version': 1, 'reviewed_packets': len(labeled_packets),
             'review_rows': len(accepted), 'pending_forms': len(pending), 'packet_count': len(packets),
-            'status': 'PENDING' if not accepted else 'PARTIAL' if len({row['packet_id'] for row in accepted}) < len(packets) else 'REVIEWED',
+            'status': 'PENDING' if not accepted else 'PARTIAL' if len(labeled_packets) < len(packets) else 'LABELS_IMPORTED',
             'unsupported_claims_per_review': rate(sum(claim['support'] == 'unsupported' for claim in judged), len(judged)),
             'attribution_correct_per_review': rate(sum(attribution), len(attribution)),
             'citation_support_correct_per_review': rate(sum(citations), len(citations)),
@@ -165,5 +176,6 @@ def import_reviews(packet_directory, forms):
             'real_model_quality': None,
             'limitations': ['These packets contain deterministic substitutes, not real model outputs.',
                             'Rates pool individual reviewer judgments, not adjudicated ground truth.',
+                            'Imported labels do not imply completed adjudication or human sign-off.',
                             'Ambiguous and conflicting support is preserved and excluded from binary support denominator.',
                             'Provenance fields cannot establish reviewer authenticity; collector verification remains required.']}

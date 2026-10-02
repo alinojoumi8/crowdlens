@@ -51,7 +51,11 @@ backend/.venv/bin/python backend/scripts/score_evidence_quality_reviews.py \
 
 Using the untouched blank form produces `PENDING`, zero completed reviews and
 null rates/time, which is a validation of missing-data handling rather than human
-review. All differing non-null claim ratings remain in `disagreements`. A third
+review. Identity/timestamp-only forms also stay pending. Partial ratings are
+preserved as partial; a packet counts reviewed only after one human supplies
+support, attribution and citation judgments for every claim. `LABELS_IMPORTED`
+does not imply adjudication or sign-off. All differing non-null claim ratings
+remain in `disagreements`. A third
 human adjudicator can resolve disagreements in a separately versioned review
 record; do not replace the original judgments or relabel an AI opinion as human.
 

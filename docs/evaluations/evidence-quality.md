@@ -66,9 +66,18 @@ test or actual latency. A root-wide call/cost/deadline policy remains unresolved
 
 ## Evidence status
 
-The frozen fault run found two duplicate-admission failures and one passing
-transport characterization at `d815c6d`. The full deterministic before baseline
-and preserved receipts are being recorded before integration of the coordinator's
-application fix. Model quality is **BLOCKED** by absent generation-model execution;
-human labels and measured effort are **PENDING**. Exact-candidate CI, real-service
-workflow and existing deployment verification belong to separate workstreams.
+The [preserved before baseline](2026-10-02-evidence-quality-baseline.md) tested clean
+commit `86f5882c2ae369a0828113abbf640b814bb0574a`: all three runs collected 164 tests,
+with 162 passing and the same two root-admission failures each time. The workflow
+corpus had five ready proposals (one development) and ten blocked proposals per
+run, all matching the frozen structural contracts. No application behavior was
+changed by this evaluation work. The coordinator owns the duplicate-admission fix
+and combined-candidate verification; the before evidence remains unchanged.
+
+Model quality is **BLOCKED** by absent generation-model execution. Human labels
+and measured effort are **PENDING**; four blinded packets and their blank forms
+are [preserved here](results/2026-10-02-before/human-review/reviewer/blank-review-forms.jsonl).
+Exact-candidate CI, real-service workflow and existing deployment verification
+belong to separate workstreams. The importer subsequently received three schema/
+partial-review regression tests; these additions do not alter the original
+164-test receipt or its frozen corpus.
