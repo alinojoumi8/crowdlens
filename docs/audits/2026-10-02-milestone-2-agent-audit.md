@@ -295,3 +295,9 @@ periodic recovery, related-state repair and stale-publication fences, with real
 two-process and API regressions. H1 is fixed and verified locally. The findings
 and results above describe the original audit snapshot and remain unchanged;
 deployment reconciliation and full model workflow evidence are still pending.
+
+## Subsequent root retry verification — 2026-10-02
+
+The [root request addendum](2026-10-02-root-request-recovery.md) records the
+subsequent duplicate-admission reproduction and local repair. The aggregate
+transport observation and missing whole-root budget remain separately documented.
