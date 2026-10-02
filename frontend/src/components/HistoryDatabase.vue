@@ -1191,14 +1191,14 @@ onUnmounted(() => {
   background: #F9FAFB;
 }
 
-.modal-progress.completed { color: #10B981; background: rgba(16, 185, 129, 0.1); }
+.modal-progress.completed { color: #00774F; background: rgba(16, 185, 129, 0.1); }
 .modal-progress.in-progress { color: #F59E0B; background: rgba(245, 158, 11, 0.1); }
 .modal-progress.not-started { color: #9CA3AF; background: #F3F4F6; }
 
 .modal-create-time {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 0.3px;
 }
 

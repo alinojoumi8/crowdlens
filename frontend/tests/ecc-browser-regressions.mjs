@@ -66,8 +66,8 @@ await check('history dialog traps focus, closes with Escape and restores trigger
       runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] }
     })).violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) })))
     modalA11y.push({ width, violations })
-    assert.deepEqual(violations, [], `History dialog accessibility findings at ${width}px`)
   }
+  for (const item of modalA11y) assert.deepEqual(item.violations, [], `History dialog accessibility findings at ${item.width}px`)
   await page.setViewportSize({ width: 375, height: 1000 })
   await page.keyboard.press('Escape')
   await dialog.waitFor({ state: 'detached', timeout: 1500 })
