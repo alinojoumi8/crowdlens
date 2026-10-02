@@ -244,6 +244,20 @@ def create_simulation():
         }), 500
 
 
+def _preparation_task(simulation_id: str):
+    """Read the current preparation owner before interpreting leftover files."""
+    from ..models.task import TaskManager
+
+    runtime = TaskManager().runtime
+    with runtime.gate():
+        runtime.reconcile(raise_on_error=False)
+        binding = runtime.binding('simulation:' + simulation_id)
+        task = runtime.get(binding['task_id']) if binding else None
+        if task and task.get('task_type') == 'simulation_prepare':
+            return task
+    return None
+
+
 def _check_simulation_prepared(simulation_id: str) -> tuple:
     """
     Check if simulation is ready
@@ -262,6 +276,11 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
     """
     import os
     from ..config import Config
+
+    task = _preparation_task(simulation_id)
+    if task and task['status'] != 'completed':
+        return False, {"reason": task.get('error') or 'Preparation attempt has not completed',
+                       "status": task['status'], "task_id": task['task_id']}
     
     simulation_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
     
@@ -307,15 +326,9 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
         # Detailed logs
         logger.debug(f"Detect simulation preparation status: {simulation_id}, status={status}, config_generated={config_generated}")
         
-        # If config_generated=True and files exist, consider preparation complete
-        # The following statuses indicate preparation is complete：
-        # - ready: Preparation complete, can run
-        # - preparing: If config_generated=True, description shows completed
-        # - running: Running, preparation already completed
-        # - completed: Execution complete, preparation already completed
-        # - stopped: Stopped, preparation already completed
-        # - failed: Execution failed (but preparation is not completed)
-        prepared_statuses = ["ready", "preparing", "running", "completed", "stopped", "failed"]
+        # Files may belong to an earlier preparation. Only a published usable
+        # state establishes readiness; status inspection never promotes it.
+        prepared_statuses = ["ready", "running", "completed", "stopped"]
         if status in prepared_statuses and config_generated:
             # Get file statistics
             profiles_file = os.path.join(simulation_dir, "reddit_profiles.json")
@@ -326,19 +339,6 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
                 with open(profiles_file, 'r', encoding='utf-8') as f:
                     profiles_data = json.load(f)
                     profiles_count = len(profiles_data) if isinstance(profiles_data, list) else 0
-            
-            # If status is "preparing" but files are completed, update status to "ready"
-            if status == "preparing":
-                try:
-                    state_data["status"] = "ready"
-                    from datetime import datetime
-                    state_data["updated_at"] = datetime.now().isoformat()
-                    with open(state_file, 'w', encoding='utf-8') as f:
-                        json.dump(state_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"Auto update simulation status: {simulation_id} preparing -> ready")
-                    status = "ready"
-                except Exception as e:
-                    logger.warning(f"Failed to auto update status: {e}")
             
             logger.info(f"Simulation {simulation_id} Detection result: HasPreparation complete (status={status}, config_generated={config_generated})")
             return True, {
@@ -551,6 +551,8 @@ def prepare_simulation():
         
         # Update simulation status（Include pre-fetched entity count）
         state.status = SimulationStatus.PREPARING
+        state.config_generated = False
+        state.error = None
         with task_manager.attempt(task_id).bind():
             manager._save_simulation_state(state)
         
@@ -730,6 +732,19 @@ def get_prepare_status():
         
         task_id = data.get('task_id')
         simulation_id = data.get('simulation_id')
+
+        # Explicit task polling must report that attempt, even when artifacts
+        # from an earlier preparation remain. Simulation-only polling also
+        # surfaces its current active/failed owner so reloads retain recovery.
+        task_manager = TaskManager()
+        task = task_manager.get_task(task_id) if task_id else None
+        task_data = task.to_dict() if task else None
+        if not task_id and simulation_id:
+            owned = _preparation_task(simulation_id)
+            if owned and owned['status'] != 'completed':
+                task_data = owned
+        if task_data:
+            return jsonify(success=True, data={**task_data, "already_prepared": False})
         
         # If simulation_id is provided, check if preparation is complete
         if simulation_id:
@@ -765,9 +780,6 @@ def get_prepare_status():
                 "success": False,
                 "error": "Please provide task_id Or simulation_id"
             }), 400
-        
-        task_manager = TaskManager()
-        task = task_manager.get_task(task_id)
         
         if not task:
             # Task does not exist, but if simulation_id is provided, check if preparation is complete
