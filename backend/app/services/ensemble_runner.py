@@ -22,7 +22,7 @@ from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 
 from ..config import Config
-from .task_execution import fenced, current_attempt, publication_guard
+from .task_execution import fenced, current_attempt, publication_guard, OwnershipLost
 from ..utils.logger import get_logger
 from .forecasting import (
     DEFAULT_OUTCOMES,
@@ -70,23 +70,24 @@ class EnsembleRunner:
         per_run_signals: List[Optional[Dict[str, Any]]] = []
 
         for i in range(runs):
-            with publication_guard():
-                pass
             seed = 1000 + i * 97
             cls._reset(simulation_id)
             try:
-                SimulationRunner.start_simulation(
-                    simulation_id=simulation_id,
-                    platform=platform,
-                    max_rounds=max_rounds,
-                    enable_graph_memory_update=bool(storage),
-                    graph_id=graph_id,
-                    storage=storage,
-                    scenario_id="baseline",
-                    seed=seed,
-                    memory_mode=memory_mode,
-                    economy=economy,
-                )
+                with publication_guard():
+                    SimulationRunner.start_simulation(
+                        simulation_id=simulation_id,
+                        platform=platform,
+                        max_rounds=max_rounds,
+                        enable_graph_memory_update=bool(storage),
+                        graph_id=graph_id,
+                        storage=storage,
+                        scenario_id="baseline",
+                        seed=seed,
+                        memory_mode=memory_mode,
+                        economy=economy,
+                    )
+            except OwnershipLost:
+                raise
             except Exception as exc:  # pragma: no cover - defensive
                 logger.error("Ensemble run %s/%s failed to start: %s", i + 1, runs, exc)
                 if progress_callback:
@@ -148,7 +149,10 @@ class EnsembleRunner:
         """Best-effort: gracefully close any live env, stop a running process, and
         clear runtime logs so the next seeded run starts clean."""
         cls._shutdown(simulation_id)
-        result = SimulationRunner.cleanup_simulation_logs(simulation_id)
+        # Shutdown may wait long enough for ownership to expire. Validate at the
+        # destructive operation and serialize it with replacement admission.
+        with publication_guard():
+            result = SimulationRunner.cleanup_simulation_logs(simulation_id)
         if result and not result.get("success", False):
             raise RuntimeError(f"Cannot isolate ensemble sample: {result.get('errors')}")
 
@@ -156,13 +160,19 @@ class EnsembleRunner:
     def _shutdown(cls, simulation_id: str) -> None:
         """Close runtime processes while preserving the final sample evidence."""
         try:
-            SimulationRunner.close_simulation_env(simulation_id, timeout=20)
+            with publication_guard():
+                SimulationRunner.close_simulation_env(simulation_id, timeout=20)
+        except OwnershipLost:
+            raise
         except Exception as exc:
             logger.debug("close_simulation_env during reset: %s", exc)
         try:
-            state = SimulationRunner.get_run_state(simulation_id)
-            if state and state.runner_status in (RunnerStatus.RUNNING, RunnerStatus.STARTING):
-                SimulationRunner.stop_simulation(simulation_id)
+            with publication_guard():
+                state = SimulationRunner.get_run_state(simulation_id)
+                if state and state.runner_status in (RunnerStatus.RUNNING, RunnerStatus.STARTING):
+                    SimulationRunner.stop_simulation(simulation_id)
+        except OwnershipLost:
+            raise
         except Exception as exc:
             logger.debug("stop_simulation during reset: %s", exc)
 
