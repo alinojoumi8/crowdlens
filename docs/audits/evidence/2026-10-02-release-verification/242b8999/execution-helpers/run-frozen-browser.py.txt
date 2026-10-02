@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""External execution receipt helper; repository suites remain unchanged."""
+import hashlib,json,os,signal,subprocess,sys,time
+from pathlib import Path
+root=Path(sys.argv[1]).resolve()
+source=root/'source'
+candidate=subprocess.check_output(['git','rev-parse','HEAD'],cwd=source,text=True).strip()
+node='/tmp/crowdlens-ecc-release-tools/node-v22.23.3-linux-x64/bin/node'
+env={k:os.environ[k] for k in ('HOME','USER','PATH','LANG','DISPLAY','XDG_RUNTIME_DIR') if k in os.environ}
+env.update(LLM_API_KEY='synthetic-local-only',LLM_DEFAULT_PROVIDER='ollama',LLM_BASE_URL='http://127.0.0.1:9/v1',LLM_MODEL_NAME='synthetic-no-generation',OPENAI_API_BASE_URL='http://127.0.0.1:9/v1',EMBEDDING_BASE_URL='http://127.0.0.1:9',EMBEDDING_AUTO_PULL='False',NEO4J_URI='bolt://127.0.0.1:9',NEO4J_PASSWORD='synthetic-release-only',JEV_EVIDENCE_MODE='off',JEV_INTERVIEW_MODE='off',JEV_RERANK_MODE='off',MARKET_DATA_PROVIDER='none',FLASK_DEBUG='False',CROWDLENS_BUILD_REVISION=candidate,ECC_BROWSER_TOOLS='/tmp/crowdlens-ecc-release-browser-tools',ECC_CHROME='/usr/bin/google-chrome',DEBUG='pw:browser')
+receipt={'candidate':candidate,'scope':'two independently seeded sandboxed browser suites','suites':[],'started_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
+def save():
+    (root/'browser-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+def stop(process):
+    if process.poll() is None:
+        os.killpg(process.pid,signal.SIGTERM)
+        try:process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid,signal.SIGKILL);process.wait()
+for name,script in [('workflow','ecc-browser-workflow.mjs'),('regressions','ecc-browser-regressions.mjs')]:
+    data=root/('browser-'+name+'-data'); output=root/('browser-'+name+'-ui')
+    assert not data.exists() and not output.exists(), 'Fresh browser output required'
+    harnesslog=root/'logs'/('browser-'+name+'-harness.log'); browserlog=root/'logs'/('browser-'+name+'.log')
+    cmd=[str(source/'backend/.venv/bin/python'),'backend/scripts/smoke_ecc_browser.py','--synthetic','--output-dir',str(data),'--port','0']
+    item={'suite':name,'harness_argv':cmd,'cwd':str(source),'data':str(data),'output':str(output),'harness_log':str(harnesslog),'browser_log':str(browserlog)}
+    start=time.monotonic(); proc=None; browser=None
+    try:
+        with harnesslog.open('w') as hs:
+            proc=subprocess.Popen(cmd,cwd=source,env=env,stdout=hs,stderr=subprocess.STDOUT,start_new_session=True)
+            url=None
+            for _ in range(240):
+                for line in harnesslog.read_text().splitlines():
+                    try:value=json.loads(line)
+                    except ValueError:continue
+                    if isinstance(value,dict) and 'url' in value:url=value['url']
+                if url:break
+                if proc.poll() is not None:raise RuntimeError('Harness exited before readiness')
+                time.sleep(.25)
+            if not url:raise RuntimeError('Harness readiness timed out')
+            item['url']=url
+            browserenv={**env,'ECC_BROWSER_URL':url,'ECC_BROWSER_OUTPUT':str(output)}
+            command=[node,'frontend/tests/'+script];item['browser_argv']=command
+            with browserlog.open('w') as bs:
+                browser=subprocess.Popen(command,cwd=source,env=browserenv,stdout=bs,stderr=subprocess.STDOUT,start_new_session=True)
+                try:item['exit_code']=browser.wait(timeout=480)
+                except subprocess.TimeoutExpired:
+                    stop(browser);item['exit_code']=124
+    except Exception as exc:
+        item['error']=str(exc);item['exit_code']=1
+    finally:
+        if browser:stop(browser)
+        if proc:stop(proc);item['harness_exit_after_cleanup']=proc.returncode
+        item['seconds']=round(time.monotonic()-start,3)
+        item['log_sha256']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in (harnesslog,browserlog) if p.exists()}
+        receipt['suites'].append(item);save();print(name,item.get('exit_code'),flush=True)
+receipt['finished_at']=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
+receipt['passed']=all(s.get('exit_code')==0 for s in receipt['suites'])
+save();sys.exit(0 if receipt['passed'] else 1)

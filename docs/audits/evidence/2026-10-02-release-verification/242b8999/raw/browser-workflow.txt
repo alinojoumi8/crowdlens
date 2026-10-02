@@ -1,0 +1,229 @@
+2026-10-02T20:21:11.098Z pw:browser <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --user-data-dir=/tmp/playwright_chromiumdev_profile-RRWkxw --remote-debugging-pipe --no-startup-window
+2026-10-02T20:21:11.104Z pw:browser <launched> pid=1483372
+2026-10-02T20:21:11.252Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.251156:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.253Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.252052:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.274Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.274Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:11.275Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.276Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:11.276Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.275800:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.276Z pw:browser [pid=1483372][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.276Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.276106:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.276Z pw:browser [pid=1483372][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.276216:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.276304:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.276400:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.276486:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.277262:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.277Z pw:browser [pid=1483372][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.278Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.277365:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.278Z pw:browser [pid=1483372][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.278Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.277436:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:11.278Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.277506:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:11.278Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.277567:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:11.278Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.277624:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:11.280Z pw:browser [pid=1483372][err] [1483430:1483430:1002/162111.280181:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:11.337Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.336712:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.351Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.350865:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.351Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.350922:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.351Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.350990:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.351Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.351031:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.353Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.353769:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.354Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.353869:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.357Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.356147:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.357Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.356185:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.357Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.356689:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.361Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.360826:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.361Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.361595:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.361Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.361673:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.365Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.364889:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.365Z pw:browser [pid=1483372][err] [1483372:1483416:1002/162111.364972:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.366154:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.366302:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.366381:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483372:1483372:1002/162111.366476:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.366436:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.366504:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:11.366Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.366576:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.367103:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.367185:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.367246:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.367302:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.367366:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:11.368Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.367422:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:11.369Z pw:browser [pid=1483372][err] [1483465:1483465:1002/162111.369148:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:11.385Z pw:browser [pid=1483372][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:11.385Z pw:browser [pid=1483372][err] 
+2026-10-02T20:21:18.177Z pw:browser [pid=1483372][err] [1483372:1483420:1002/162118.177131:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+2026-10-02T20:21:27.315Z pw:browser [pid=1483372][err] Created TensorFlow Lite XNNPACK delegate for CPU.
+2026-10-02T20:21:41.839Z pw:browser [pid=1483372] <gracefully close start>
+2026-10-02T20:21:41.945Z pw:browser [pid=1483372] <process did exit: exitCode=0, signal=null>
+2026-10-02T20:21:41.945Z pw:browser [pid=1483372] starting temporary directories cleanup
+2026-10-02T20:21:41.971Z pw:browser [pid=1483372] finished temporary directories cleanup
+2026-10-02T20:21:41.971Z pw:browser [pid=1483372] <gracefully close end>
+{
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": true
+    },
+    {
+      "name": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "passed": true
+    },
+    {
+      "name": "scenario configuration with seeded persona and simulation substitutes",
+      "passed": true
+    },
+    {
+      "name": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "passed": true
+    },
+    {
+      "name": "source review and keyboard provenance inspection",
+      "passed": true
+    },
+    {
+      "name": "changed source produces an honest 409 conflict and disables save",
+      "passed": true
+    },
+    {
+      "name": "unrelated unsupported proposal blocks saving",
+      "passed": true
+    },
+    {
+      "name": "duplicate clicks plus response-loss retry create one immutable child",
+      "passed": true
+    },
+    {
+      "name": "saved revision reload, inherited section and source ledger remain reviewable",
+      "passed": true
+    },
+    {
+      "name": "history loading, error, explicit retry and empty states",
+      "passed": true
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    }
+  ]
+}

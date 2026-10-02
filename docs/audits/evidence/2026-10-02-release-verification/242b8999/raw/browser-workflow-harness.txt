@@ -1,0 +1,214 @@
+[16:21:10] INFO: outlinesaved: report_synthetic
+[16:21:10] INFO: reportsaved: report_synthetic
+[16:21:10] INFO: Sectionsaved: report_synthetic/section_01.md
+[16:21:10] INFO: Sectionsaved: report_synthetic/section_02.md
+{"url": "http://127.0.0.1:33663", "output_dir": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-data"}
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /assets/Home-BgdbTM1l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /assets/Home-BwkCD-fp.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /crowdlens-mark.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:11] "GET /api/simulation/history?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:14] "GET /assets/pendingUpload-nUeJwzLD.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:14] "GET /assets/MainView-BVuBVHjE.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:14] "GET /assets/GraphPanel-Dfbsk6V4.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /assets/Step2EnvSetup-0zt_Ufc0.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /assets/MainView-BU36wCcT.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /assets/GraphPanel-Bx73uTCP.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /assets/Step2EnvSetup-Ctyzo2Ix.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /assets/economySettings-M8O0gDiO.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /assets/graph-Cma-AEcX.js HTTP/1.1" 200 -
+[16:21:15] INFO: === Starting ontology generation ===
+[16:21:15] INFO: Project created: proj_91746849e0a3
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+[16:21:15] INFO: Text extraction completed, total 87 characters
+[16:21:15] INFO: Calling LLM to generate ontology definition...
+[16:21:15] INFO: Ontology generation completed: 1 entity types, 0 relation types
+[16:21:15] INFO: === Ontology generation completed === Project ID: proj_91746849e0a3
+127.0.0.1 - - [02/Oct/2026 16:21:15] "POST /api/graph/ontology/generate HTTP/1.1" 200 -
+[16:21:15] INFO: === Starting graph build ===
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+[16:21:15] INFO: Task created: task_id=c80ba682-5edf-46c3-8266-c788ec8c60d9 task_type=Build graph: Unnamed Project metadata_keys=project_id
+[16:21:15] INFO: Graph build task created: task_id=c80ba682-5edf-46c3-8266-c788ec8c60d9, project_id=proj_91746849e0a3
+127.0.0.1 - - [02/Oct/2026 16:21:15] "POST /api/graph/build HTTP/1.1" 200 -
+[16:21:15] INFO: [c80ba682-5edf-46c3-8266-c788ec8c60d9] Starting graph build...
+[16:21:15] INFO: Task status changed: task_id=c80ba682-5edf-46c3-8266-c788ec8c60d9 pending -> processing progress=0 message=Initializing graph build service...
+127.0.0.1 - - [02/Oct/2026 16:21:15] "GET /api/graph/task/c80ba682-5edf-46c3-8266-c788ec8c60d9 HTTP/1.1" 200 -
+[16:21:15] INFO: [c80ba682-5edf-46c3-8266-c788ec8c60d9] Graph build completed: graph_id=synthetic_graph, nodes=1, edges=0
+[16:21:15] INFO: Task status changed: task_id=c80ba682-5edf-46c3-8266-c788ec8c60d9 processing -> completed progress=100 message=Graph build completed
+127.0.0.1 - - [02/Oct/2026 16:21:17] "GET /api/graph/task/c80ba682-5edf-46c3-8266-c788ec8c60d9 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:17] "GET /api/graph/project/proj_91746849e0a3 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:17] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:17] "GET /api/graph/project/proj_91746849e0a3 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "POST /api/simulation/create HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /assets/SimulationView-v4ajHxY3.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /assets/SimulationView-TGxypbQX.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "POST /api/simulation/prepare/status HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "POST /api/simulation/env-status HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /api/graph/project/proj_e118693fb02f HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "POST /api/simulation/prepare HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /api/simulation/sim_synthetic/profiles/realtime?platform=reddit HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:20] "GET /api/simulation/sim_synthetic/config/realtime HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /assets/SimulationRunView-BlQ903bY.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /assets/SimulationRunView-Cj0SbMbq.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /assets/report-BhwVWeSg.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "POST /api/simulation/start HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /api/simulation/sim_synthetic/config HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /api/graph/project/proj_e118693fb02f HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:24] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:26] "GET /api/simulation/sim_synthetic/run-status HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:26] "GET /api/simulation/sim_synthetic/diagnostics HTTP/1.1" 404 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /assets/ReportView-Ca3PJj6l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /assets/ReportView-B-Sk-v6K.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /assets/SafeMarkdown-C3VDtGVW.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/graph/project/proj_e118693fb02f HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:29] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+[16:21:29] INFO: Task created: task_id=5689d2ca-ddf3-4033-844d-9ef3b4e8e73d task_type=evidence_proposal metadata_keys=proposal_id,report_id
+127.0.0.1 - - [02/Oct/2026 16:21:29] "POST /api/report/report_synthetic/evidence-proposals HTTP/1.1" 202 -
+[16:21:29] INFO: Task status changed: task_id=5689d2ca-ddf3-4033-844d-9ef3b4e8e73d pending -> processing progress=5 message=Drafting from original sources
+[16:21:30] INFO: Task status changed: task_id=5689d2ca-ddf3-4033-844d-9ef3b4e8e73d processing -> completed progress=100 message=Task completed
+[16:21:30] INFO: Task completed: task_id=5689d2ca-ddf3-4033-844d-9ef3b4e8e73d result_keys=proposal_id,state
+127.0.0.1 - - [02/Oct/2026 16:21:30] "GET /api/report/report_synthetic/evidence-proposals/proposal_d60786eb39ae43558bc20c3fc55feb2a HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:30] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:31] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:31] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:31] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:31] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:32] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:33] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:33] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:33] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:33] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:33] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:34] "POST /__synthetic/change-source HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:34] "POST /api/report/report_synthetic/evidence-proposals/proposal_d60786eb39ae43558bc20c3fc55feb2a/accept HTTP/1.1" 409 -
+127.0.0.1 - - [02/Oct/2026 16:21:34] "POST /api/report/report_synthetic/evidence-proposals/proposal_d60786eb39ae43558bc20c3fc55feb2a/reject HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:34] "POST /__synthetic/change-source HTTP/1.1" 200 -
+[16:21:34] INFO: Task created: task_id=b5dc226c-2e48-4574-92ec-0344a1462170 task_type=evidence_proposal metadata_keys=proposal_id,report_id
+127.0.0.1 - - [02/Oct/2026 16:21:34] "POST /api/report/report_synthetic/evidence-proposals HTTP/1.1" 202 -
+[16:21:34] INFO: Task status changed: task_id=b5dc226c-2e48-4574-92ec-0344a1462170 pending -> processing progress=5 message=Drafting from original sources
+[16:21:34] INFO: Task status changed: task_id=b5dc226c-2e48-4574-92ec-0344a1462170 processing -> completed progress=100 message=Task completed
+[16:21:34] INFO: Task completed: task_id=b5dc226c-2e48-4574-92ec-0344a1462170 result_keys=proposal_id,state
+127.0.0.1 - - [02/Oct/2026 16:21:35] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:35] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:35] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:35] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:35] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:35] "GET /api/report/report_synthetic/evidence-proposals/proposal_b05632f9e1814ae19d38d312495c9849 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:35] "POST /api/report/report_synthetic/evidence-proposals/proposal_b05632f9e1814ae19d38d312495c9849/reject HTTP/1.1" 200 -
+[16:21:36] INFO: Task created: task_id=373b211b-5ff5-45b6-be3d-3625ecddec2a task_type=evidence_proposal metadata_keys=proposal_id,report_id
+127.0.0.1 - - [02/Oct/2026 16:21:36] "POST /api/report/report_synthetic/evidence-proposals HTTP/1.1" 202 -
+[16:21:36] INFO: Task status changed: task_id=373b211b-5ff5-45b6-be3d-3625ecddec2a pending -> processing progress=5 message=Drafting from original sources
+[16:21:36] INFO: Task status changed: task_id=373b211b-5ff5-45b6-be3d-3625ecddec2a processing -> completed progress=100 message=Task completed
+[16:21:36] INFO: Task completed: task_id=373b211b-5ff5-45b6-be3d-3625ecddec2a result_keys=proposal_id,state
+127.0.0.1 - - [02/Oct/2026 16:21:36] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "POST /api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e/accept HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "POST /api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e/accept HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/graph/project/proj_e118693fb02f HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /__synthetic/evidence HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/ReportView-Ca3PJj6l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/report-BhwVWeSg.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/GraphPanel-Bx73uTCP.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/ReportView-B-Sk-v6K.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/GraphPanel-Dfbsk6V4.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/SafeMarkdown-C3VDtGVW.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/graph-Cma-AEcX.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:37] "GET /api/graph/project/proj_e118693fb02f HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:38] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:39] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:39] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:39] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:39] "GET /api/report/report_4c6601f491b64cab84bd5588371b9138/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:39] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/ReportView-Ca3PJj6l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/report-BhwVWeSg.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/GraphPanel-Dfbsk6V4.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/GraphPanel-Bx73uTCP.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/ReportView-B-Sk-v6K.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/graph-Cma-AEcX.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/SafeMarkdown-C3VDtGVW.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/graph/project/proj_e118693fb02f HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/report/report_synthetic/evidence-proposals/proposal_b05632f9e1814ae19d38d312495c9849 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/Home-BgdbTM1l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/Home-BwkCD-fp.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/simulation/history?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /crowdlens-mark.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/CasesView-CmvOFE9V.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /assets/CasesView-CwHzJCV_.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:40] "GET /api/graph/case/list?limit=100 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /assets/Home-BgdbTM1l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /assets/Home-BwkCD-fp.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:41] "GET /crowdlens-mark.svg HTTP/1.1" 200 -

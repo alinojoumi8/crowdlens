@@ -1,0 +1,79 @@
+[
+    {
+        "Id": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+        "RepoTags": [
+            "crowdlens-ecc-release:242b8999044e"
+        ],
+        "RepoDigests": [
+            "crowdlens-ecc-release@sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-02T16:23:29.099709058-04:00",
+        "Config": {
+            "ExposedPorts": {
+                "3000/tcp": {},
+                "5001/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+                "PYTHON_VERSION=3.11.17",
+                "PYTHON_SHA256=bfb74ad39efae27cda510f134ab408e00f9992c56851cfc0b1cdb5646da11599",
+                "UV_FROZEN=true",
+                "CROWDLENS_BUILD_REVISION=242b8999044e33c8c3217df857c06401f3efbba3"
+            ],
+            "Cmd": [
+                "npm",
+                "run",
+                "dev"
+            ],
+            "WorkingDir": "/app",
+            "Labels": {
+                "org.opencontainers.image.revision": "242b8999044e33c8c3217df857c06401f3efbba3"
+            },
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 13794839834,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:737d268d6aa353999a322965e8e9874052e8e73359ae648db6e84a9cf8c7d3a3",
+                "sha256:4d8c2ccf9393033def9eeba57fbe0134a871e39af44c68678192ffa39d60d046",
+                "sha256:a3c6ba7097931456badcfd4f54b267116c7195ebc3ab37e8150e3fcddecd178d",
+                "sha256:8e889e4fbbc14e8b9594834d1a5393d08b201edf84433726fbcc79de794008a1",
+                "sha256:651154b76f83eed939c194903f279e6584bd42a04b0f3adc45949d76a86658ec",
+                "sha256:d5d748f0cc934c8d7cf0b74e1e2ce399517de9e850fb1f4abba54af9e8caddac",
+                "sha256:1d2172f2d05194315fe5ae30555689651f3ad77c2fb693a9e1cc407d5ee2395e",
+                "sha256:03e7af44f7fd36dcce036c44e105008d9bc67fe77ddd40e2d6b219c7dcb3d5e0",
+                "sha256:71ad536913b4279e832a204da605e5ec1964295905a5458c96be1507fa09aad4",
+                "sha256:b44fe45ed7cbd3d90a4b66ed94d3e1d1a4ee74921c8500575c2ed46592237cfd",
+                "sha256:b67df636df8f9974f5298ed56c21479a0f7a75d76571b280a73285609f0116cb",
+                "sha256:953a64179b5953c3f7cef7cb7af9f107f208edb43b5211bda3f93f4b883bdf6d",
+                "sha256:2d248f7b3acaf5ddb63439a0c33854f48906a4bb48c6de91ad0b455e31478928",
+                "sha256:2cf48596287c4f14a64e780f41129def6e2062ba179d5bd07099101c80362103",
+                "sha256:6fcd761cf6342a14df748fcb01c72d63c6d75f6781381e422a1db38e7d84ce1e",
+                "sha256:257fcc5f610d7f0b1b8261569a349c9453762c924c370b8776c99caee0501fbe",
+                "sha256:a6a146155dceda6d77eaabcec45f612518cbafc19bdf47f235f51ffb8645346d"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-02T20:29:41.40444469Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "g4plhd01gfe50kzxodngz4zdt",
+                    "CreatedAt": "2026-10-02T16:30:31.489750266-04:00"
+                }
+            ]
+        }
+    }
+]

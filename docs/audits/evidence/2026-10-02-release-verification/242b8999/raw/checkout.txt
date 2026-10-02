@@ -1,0 +1,1 @@
+HEAD is now at 242b899 Correct modal hint and close contrast missed by automated scan

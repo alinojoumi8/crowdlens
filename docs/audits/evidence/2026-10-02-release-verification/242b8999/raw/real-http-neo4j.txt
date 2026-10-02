@@ -1,0 +1,47 @@
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: chunk_index)} {position: line: 1, column: 172, offset: 171} for query: 'MATCH (e:Episode {graph_id: $gid, case_id: $cid, case_version_id: $vid}) WHERE e.document_id IS NOT NULL RETURN properties(e) AS episode ORDER BY e.document_id, e.page, e.chunk_index, e.uuid LIMIT 2001'
+[16:33:01] INFO: outlinesaved: report_root
+[16:33:01] INFO: reportsaved: report_root
+[16:33:01] INFO: Task created: task_id=86893cab-d65f-4aea-b18f-18e2f325c9ac task_type=evidence_proposal metadata_keys=proposal_id,report_id
+127.0.0.1 - - [02/Oct/2026 16:33:01] "POST /api/report/report_root/evidence-proposals HTTP/1.1" 202 -
+127.0.0.1 - - [02/Oct/2026 16:33:01] "GET /api/report/report_root/evidence-proposals/proposal_6781ae1e676c4c739dc6964070b3bed0 HTTP/1.1" 200 -
+[16:33:01] INFO: Task status changed: task_id=86893cab-d65f-4aea-b18f-18e2f325c9ac pending -> processing progress=5 message=Drafting from original sources
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: chunk_index)} {position: line: 1, column: 172, offset: 171} for query: 'MATCH (e:Episode {graph_id: $gid, case_id: $cid, case_version_id: $vid}) WHERE e.document_id IS NOT NULL RETURN properties(e) AS episode ORDER BY e.document_id, e.page, e.chunk_index, e.uuid LIMIT 2001'
+[16:33:01] INFO: Task status changed: task_id=86893cab-d65f-4aea-b18f-18e2f325c9ac processing -> completed progress=100 message=Task completed
+[16:33:01] INFO: Task completed: task_id=86893cab-d65f-4aea-b18f-18e2f325c9ac result_keys=proposal_id,state
+127.0.0.1 - - [02/Oct/2026 16:33:01] "GET /api/report/report_root/evidence-proposals/proposal_6781ae1e676c4c739dc6964070b3bed0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:33:01] "POST /api/report/report_root/evidence-proposals/proposal_6781ae1e676c4c739dc6964070b3bed0/accept HTTP/1.1" 409 -
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.UnknownPropertyKeyWarning} {category: UNRECOGNIZED} {title: The provided property key is not in the database} {description: One of the property names in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing property name is: chunk_index)} {position: line: 1, column: 172, offset: 171} for query: 'MATCH (e:Episode {graph_id: $gid, case_id: $cid, case_version_id: $vid}) WHERE e.document_id IS NOT NULL RETURN properties(e) AS episode ORDER BY e.document_id, e.page, e.chunk_index, e.uuid LIMIT 2001'
+127.0.0.1 - - [02/Oct/2026 16:33:01] "POST /api/report/report_root/evidence-proposals/proposal_6781ae1e676c4c739dc6964070b3bed0/accept HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:33:01] "POST /api/report/report_root/evidence-proposals/proposal_6781ae1e676c4c739dc6964070b3bed0/accept HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:33:01] "POST /api/report/report_1cdd32a1ad634c32a32fb32b6e6b83ab/section/1/regenerate HTTP/1.1" 409 -
+127.0.0.1 - - [02/Oct/2026 16:33:01] "POST /api/report/report_1cdd32a1ad634c32a32fb32b6e6b83ab/resume HTTP/1.1" 409 -
+127.0.0.1 - - [02/Oct/2026 16:33:01] "GET /api/report/report_1cdd32a1ad634c32a32fb32b6e6b83ab HTTP/1.1" 200 -
+{
+  "status": "passed",
+  "source": {
+    "declared_revision": "242b8999044e33c8c3217df857c06401f3efbba3",
+    "source_sha256": "a807c651b35560c12a91ec6f0b79b2d32df7bad60ebf3322d121c643d9e835fb",
+    "scope": "runtime-source-v1"
+  },
+  "neo4j_uri": "bolt://127.0.0.1:32783",
+  "http_url": "http://127.0.0.1:42385",
+  "proposal_id": "proposal_6781ae1e676c4c739dc6964070b3bed0",
+  "revision_id": "report_1cdd32a1ad634c32a32fb32b6e6b83ab",
+  "scope_and_origin_isolation": true,
+  "stale_neo4j_write_rejected": true,
+  "neo4j_preserved_generation": 2,
+  "parent_hashes": {
+    "outline.json": "8e1ac74c0d55c2e31034b9cee4e6ab8718620b236f6508f1a83790ffe8a08e91",
+    "meta.json": "280eaaaf4cdec2d79d60e4061e9354d1137eb6ecff4ca581ed696c414df6c9ea"
+  },
+  "parent_unchanged": true,
+  "acceptance_retry_same_revision": true,
+  "reopened_status": "needs_review",
+  "scripted_model_calls": 3,
+  "real_model_calls": 0,
+  "substitutions": [
+    "scripted drafting model",
+    "semantic embeddings disabled"
+  ],
+  "full_upload_graph_simulation_workflow": "not run"
+}

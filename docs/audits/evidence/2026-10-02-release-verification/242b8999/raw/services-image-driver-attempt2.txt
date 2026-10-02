@@ -1,0 +1,1 @@
+{"status": "passed", "error": null, "receipt": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-receipt.json"}

@@ -1,0 +1,67 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "scope": "two independently seeded sandboxed browser suites",
+  "suites": [
+    {
+      "suite": "workflow",
+      "harness_argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "backend/scripts/smoke_ecc_browser.py",
+        "--synthetic",
+        "--output-dir",
+        "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-data",
+        "--port",
+        "0"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "data": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-data",
+      "output": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-ui",
+      "harness_log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-workflow-harness.log",
+      "browser_log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-workflow.log",
+      "url": "http://127.0.0.1:33663",
+      "browser_argv": [
+        "/tmp/crowdlens-ecc-release-tools/node-v22.23.3-linux-x64/bin/node",
+        "frontend/tests/ecc-browser-workflow.mjs"
+      ],
+      "exit_code": 0,
+      "harness_exit_after_cleanup": -15,
+      "seconds": 32.537,
+      "log_sha256": {
+        "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-workflow-harness.log": "474ddbe964c2014328ae971e0166815ccd1de680bbe949aaef4e0ecf6d242331",
+        "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-workflow.log": "a7325df6be106482601ea00df4e37060425ebf37f940bfaa9c5670d861b2f94d"
+      }
+    },
+    {
+      "suite": "regressions",
+      "harness_argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "backend/scripts/smoke_ecc_browser.py",
+        "--synthetic",
+        "--output-dir",
+        "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-data",
+        "--port",
+        "0"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "data": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-data",
+      "output": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-ui",
+      "harness_log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-regressions-harness.log",
+      "browser_log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-regressions.log",
+      "url": "http://127.0.0.1:44943",
+      "browser_argv": [
+        "/tmp/crowdlens-ecc-release-tools/node-v22.23.3-linux-x64/bin/node",
+        "frontend/tests/ecc-browser-regressions.mjs"
+      ],
+      "exit_code": 0,
+      "harness_exit_after_cleanup": -15,
+      "seconds": 44.274,
+      "log_sha256": {
+        "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-regressions-harness.log": "a151d1aa7a54c5f4dc2738ca44cf4436ccee0eee5c16e861311f796ed5ee9a1a",
+        "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-regressions.log": "221a1111bf66747b7a76c6874920fd976ca2dbbea504b59f3cfe9f2b044fec4a"
+      }
+    }
+  ],
+  "started_at": "2026-10-02T20:21:09Z",
+  "finished_at": "2026-10-02T20:22:26Z",
+  "passed": true
+}

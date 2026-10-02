@@ -1,0 +1,70 @@
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:23: trailing whitespace.
++tests/test_ensemble_ownership.py:66: 
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:24: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:47: trailing whitespace.
++    
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:56: trailing whitespace.
++    
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:60: trailing whitespace.
++    
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:84: trailing whitespace.
++    
+docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml:115: trailing whitespace.
++    
+docs/audits/evidence/2026-10-02-h1-integration-review/preparation-before.xml:20: trailing whitespace.
++E         
+docs/audits/evidence/2026-10-02-h1-integration-review/preparation-before.xml:43: trailing whitespace.
++E         
+docs/audits/evidence/2026-10-02-h1-integration-review/preparation-before.xml:66: trailing whitespace.
++E         
+docs/audits/evidence/2026-10-02-h1-integration-review/preparation-before.xml:89: trailing whitespace.
++E         
+docs/evaluations/results/2026-10-02-before/run-1.txt:18: trailing whitespace.
++tests/test_evidence_quality_faults.py:65: 
+docs/evaluations/results/2026-10-02-before/run-1.txt:19: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-1.txt:63: trailing whitespace.
++tests/test_evidence_quality_faults.py:77: 
+docs/evaluations/results/2026-10-02-before/run-1.txt:64: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-1.xml:12: trailing whitespace.
++tests/test_evidence_quality_faults.py:65: 
+docs/evaluations/results/2026-10-02-before/run-1.xml:13: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-1.xml:51: trailing whitespace.
++tests/test_evidence_quality_faults.py:77: 
+docs/evaluations/results/2026-10-02-before/run-1.xml:52: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-2.txt:18: trailing whitespace.
++tests/test_evidence_quality_faults.py:65: 
+docs/evaluations/results/2026-10-02-before/run-2.txt:19: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-2.txt:63: trailing whitespace.
++tests/test_evidence_quality_faults.py:77: 
+docs/evaluations/results/2026-10-02-before/run-2.txt:64: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-2.xml:12: trailing whitespace.
++tests/test_evidence_quality_faults.py:65: 
+docs/evaluations/results/2026-10-02-before/run-2.xml:13: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-2.xml:51: trailing whitespace.
++tests/test_evidence_quality_faults.py:77: 
+docs/evaluations/results/2026-10-02-before/run-2.xml:52: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-3.txt:18: trailing whitespace.
++tests/test_evidence_quality_faults.py:65: 
+docs/evaluations/results/2026-10-02-before/run-3.txt:19: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-3.txt:63: trailing whitespace.
++tests/test_evidence_quality_faults.py:77: 
+docs/evaluations/results/2026-10-02-before/run-3.txt:64: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-3.xml:12: trailing whitespace.
++tests/test_evidence_quality_faults.py:65: 
+docs/evaluations/results/2026-10-02-before/run-3.xml:13: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+docs/evaluations/results/2026-10-02-before/run-3.xml:51: trailing whitespace.
++tests/test_evidence_quality_faults.py:77: 
+docs/evaluations/results/2026-10-02-before/run-3.xml:52: trailing whitespace.
++_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 

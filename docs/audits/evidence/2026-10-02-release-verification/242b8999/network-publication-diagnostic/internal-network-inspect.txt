@@ -1,0 +1,49 @@
+[
+    {
+        "Name": "crowdlens-ecc-release-netprobe-54a3b8a4",
+        "Id": "aceaddd80865e01056d2e9d1880f02eb2b343536ca4da750605cf94a691e7235",
+        "Created": "2026-10-02T16:31:05.151790376-04:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.23.0.0/16",
+                    "Gateway": "172.23.0.1"
+                }
+            ]
+        },
+        "Internal": true,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {},
+        "Labels": {},
+        "Containers": {
+            "076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475": {
+                "Name": "crowdlens-ecc-release-netprobe-54a3b8a4-app",
+                "EndpointID": "3ced27be8500da65c4fcdb8bd0b7602588bf88810410e224d0ff81726aaa91b2",
+                "MacAddress": "26:48:95:51:4e:a3",
+                "IPv4Address": "172.23.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.23.0.0/16": {
+                        "IPsInUse": 4,
+                        "DynamicIPsAvailable": 65532
+                    }
+                }
+            }
+        }
+    }
+]

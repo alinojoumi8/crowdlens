@@ -1,0 +1,130 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "image": null,
+  "neo4j_image": "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e",
+  "network": "crowdlens-ecc-release-final-242b8999-0fa284-net",
+  "containers": [
+    "crowdlens-ecc-release-final-242b8999-0fa284-neo4j",
+    "crowdlens-ecc-release-final-242b8999-0fa284-app"
+  ],
+  "commands": [
+    {
+      "label": "network-create",
+      "argv": [
+        "docker",
+        "network",
+        "create",
+        "--internal",
+        "crowdlens-ecc-release-final-242b8999-0fa284-net"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-create.log",
+      "sha256": "a7123bd615767e99f74576aa978dd2efef3f4844973fa7a99c2e778110d6b23c"
+    },
+    {
+      "label": "neo4j-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-final-242b8999-0fa284-neo4j",
+        "--network",
+        "crowdlens-ecc-release-final-242b8999-0fa284-net",
+        "--network-alias",
+        "neo4j",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--publish",
+        "127.0.0.1::7687",
+        "--tmpfs",
+        "/data:rw,size=2g",
+        "--tmpfs",
+        "/logs:rw,size=128m",
+        "--env",
+        "NEO4J_AUTH=neo4j/crowdlens-synthetic-m2-password",
+        "--env",
+        "NEO4J_server_memory_heap_initial__size=256m",
+        "--env",
+        "NEO4J_server_memory_heap_max__size=512m",
+        "--env",
+        "NEO4J_server_memory_pagecache_size=256m",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.767,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/neo4j-start.log",
+      "sha256": "439c6efba4b0edcacb7c4800d2a9abecf23d4d4ee7568e2b64bc99db0b101687"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-final-242b8999-0fa284-neo4j",
+        "7687/tcp"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 1,
+      "seconds": 0.036,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687.log",
+      "sha256": "8a79388489544ada0b95a331142ecf65cb6cb1a9ef69ac60927d81bb43dcbc98"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-0fa284-neo4j-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-final-242b8999-0fa284-neo4j"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-logs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-0fa284-neo4j-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-final-242b8999-0fa284-neo4j"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.366,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-remove.log",
+      "sha256": "dca52c75fdee6fb2c23f130128b4215c80d7d55a6bdc37b0f70949ae688ab43b"
+    },
+    {
+      "label": "network-remove",
+      "argv": [
+        "docker",
+        "network",
+        "rm",
+        "crowdlens-ecc-release-final-242b8999-0fa284-net"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.215,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-remove.log",
+      "sha256": "5194de6d6de50a879c4a49d4b4d06a0d312d426fb162f0ab9f598f3d08326b19"
+    }
+  ],
+  "checks": {},
+  "started_at": "2026-10-02T20:26:55Z",
+  "real_model_calls": 0,
+  "startup_scope": "existing npm run dev command; synthetic isolated storage; provider endpoints disabled",
+  "status": "failed",
+  "error": "crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687 failed: 1",
+  "cleanup_passed": true,
+  "finished_at": "2026-10-02T20:26:56Z"
+}

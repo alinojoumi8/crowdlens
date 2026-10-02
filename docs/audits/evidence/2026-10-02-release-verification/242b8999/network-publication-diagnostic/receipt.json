@@ -1,0 +1,194 @@
+{
+  "purpose": "diagnose Docker internal-network publication independently of app and Neo4j",
+  "commands": [
+    {
+      "label": "internal-network",
+      "argv": [
+        "docker",
+        "network",
+        "create",
+        "--internal",
+        "crowdlens-ecc-release-netprobe-54a3b8a4"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-network.txt",
+      "sha256": "cfc30e20fec87e5cf518c288bbd4ab4940ddaabd15b2837cc953f3612c8b2552"
+    },
+    {
+      "label": "internal-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-netprobe-54a3b8a4-app",
+        "--network",
+        "crowdlens-ecc-release-netprobe-54a3b8a4",
+        "--publish",
+        "127.0.0.1::8080",
+        "python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca",
+        "python",
+        "-c",
+        "import time;time.sleep(30)"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-start.txt",
+      "sha256": "a8ab41973a097669b8cd4cb708d4d452dd17f04236de3bb9cc68a107dd95ffa3"
+    },
+    {
+      "label": "internal-port",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-netprobe-54a3b8a4-app",
+        "8080/tcp"
+      ],
+      "exit_code": 1,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-port.txt",
+      "sha256": "a93720c3509185e12fe78dced5f68d5aa2e682565db88cdf478854aebebc06c0"
+    },
+    {
+      "label": "internal-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "crowdlens-ecc-release-netprobe-54a3b8a4-app"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-inspect.txt",
+      "sha256": "a0564d56a5914adbcfd462987328d894af098e7e5f120171959cf34309c20ca0"
+    },
+    {
+      "label": "internal-network-inspect",
+      "argv": [
+        "docker",
+        "network",
+        "inspect",
+        "crowdlens-ecc-release-netprobe-54a3b8a4"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-network-inspect.txt",
+      "sha256": "30dd1a65c5ec182d3139fd0a21d6b4677f65da96891a037f771dd5dd0b8459a1"
+    },
+    {
+      "label": "internal-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-netprobe-54a3b8a4-app"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-remove.txt",
+      "sha256": "d4259cfb09aa5ef48b5bbbef3ee4ef128041325dddadd3b974e4749d831b6622"
+    },
+    {
+      "label": "internal-network-remove",
+      "argv": [
+        "docker",
+        "network",
+        "rm",
+        "crowdlens-ecc-release-netprobe-54a3b8a4"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-network-remove.txt",
+      "sha256": "f6be7da2c527f8c27863d6b4b29c2f1422c780bf0056f8a8b12670dd20c8a7bc"
+    },
+    {
+      "label": "bridge-network",
+      "argv": [
+        "docker",
+        "network",
+        "create",
+        "crowdlens-ecc-release-netprobe-cfc79191"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-network.txt",
+      "sha256": "04299a98e4bf749ae45deebaba1483e821e0e88f4e6071de3575f4979b4e1cb9"
+    },
+    {
+      "label": "bridge-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-netprobe-cfc79191-app",
+        "--network",
+        "crowdlens-ecc-release-netprobe-cfc79191",
+        "--publish",
+        "127.0.0.1::8080",
+        "python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca",
+        "python",
+        "-c",
+        "import time;time.sleep(30)"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-start.txt",
+      "sha256": "930bcd8b6f4a249f5976e5f937718ef59ac2daf792c36c4d3ac875632c1b0283"
+    },
+    {
+      "label": "bridge-port",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-netprobe-cfc79191-app",
+        "8080/tcp"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-port.txt",
+      "sha256": "15dd4819192f7c6e28759e6cefa298b1f3b11709e885d6b7915090dbd870218a"
+    },
+    {
+      "label": "bridge-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "crowdlens-ecc-release-netprobe-cfc79191-app"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-inspect.txt",
+      "sha256": "63d035367688e99f18a82cf53f79e1295f7c14bae81b39f7c4d79d3610dc812e"
+    },
+    {
+      "label": "bridge-network-inspect",
+      "argv": [
+        "docker",
+        "network",
+        "inspect",
+        "crowdlens-ecc-release-netprobe-cfc79191"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-network-inspect.txt",
+      "sha256": "9fb39835df3d72ce3695046527d29ab3953e081967c04bc7affabe8dbca3fbaf"
+    },
+    {
+      "label": "bridge-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-netprobe-cfc79191-app"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-remove.txt",
+      "sha256": "4735331ae3ac720964a2992ac24ddb8f9cb8c8a8436c0b47a29b0949de653632"
+    },
+    {
+      "label": "bridge-network-remove",
+      "argv": [
+        "docker",
+        "network",
+        "rm",
+        "crowdlens-ecc-release-netprobe-cfc79191"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-network-remove.txt",
+      "sha256": "ceea5135dbced91932e5dc71eae84b3902f5462b3d68b5d812e9b6421ee04d39"
+    }
+  ]
+}

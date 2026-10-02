@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-10-02T20:35:09Z",
+  "commands": [
+    {
+      "label": "post-runtime-source-state",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/post-runtime-source-state.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    },
+    {
+      "label": "post-runtime-source-diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/post-runtime-source-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    },
+    {
+      "label": "remaining-owned-containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-a",
+        "--filter",
+        "name=crowdlens-ecc-release",
+        "--format",
+        "{{.Names}}"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remaining-owned-containers.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    },
+    {
+      "label": "remaining-owned-networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "name=crowdlens-ecc-release",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remaining-owned-networks.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    },
+    {
+      "label": "remaining-owned-volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "name=crowdlens-ecc-release",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remaining-owned-volumes.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty": true
+    }
+  ]
+}

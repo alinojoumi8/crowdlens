@@ -1,0 +1,328 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.37kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca
+#2 ...
+
+#3 [internal] load metadata for ghcr.io/astral-sh/uv:0.9.26@sha256:9a23023be68b2ed09750ae636228e903a54a05ea56ed03a934d00fe9fbeded4b
+#3 DONE 0.5s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca
+#2 DONE 0.6s
+
+#4 [internal] load metadata for docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c
+#4 DONE 0.6s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 306B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 12.75MB 0.1s done
+#6 DONE 0.1s
+
+#7 FROM ghcr.io/astral-sh/uv:0.9.26@sha256:9a23023be68b2ed09750ae636228e903a54a05ea56ed03a934d00fe9fbeded4b
+#7 resolve ghcr.io/astral-sh/uv:0.9.26@sha256:9a23023be68b2ed09750ae636228e903a54a05ea56ed03a934d00fe9fbeded4b 0.1s done
+#7 DONE 0.1s
+
+#8 [node 1/1] FROM docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c
+#8 resolve docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c 0.1s done
+#8 DONE 0.1s
+
+#9 [stage-1  1/11] FROM docker.io/library/python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca
+#9 resolve docker.io/library/python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca 0.1s done
+#9 DONE 0.1s
+
+#10 [stage-1  6/11] WORKDIR /app
+#10 CACHED
+
+#11 [stage-1  7/11] COPY package.json package-lock.json ./
+#11 CACHED
+
+#12 [stage-1  8/11] COPY frontend/package.json frontend/package-lock.json ./frontend/
+#12 CACHED
+
+#13 [stage-1  2/11] COPY --from=node /usr/local/bin/node /usr/local/bin/node
+#13 CACHED
+
+#14 [stage-1  3/11] COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+#14 CACHED
+
+#15 [stage-1  4/11] RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm   && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+#15 CACHED
+
+#16 [stage-1  5/11] COPY --from=ghcr.io/astral-sh/uv:0.9.26@sha256:9a23023be68b2ed09750ae636228e903a54a05ea56ed03a934d00fe9fbeded4b /uv /uvx /bin/
+#16 CACHED
+
+#17 [stage-1  9/11] COPY backend/pyproject.toml backend/uv.lock ./backend/
+#17 CACHED
+
+#18 [stage-1 10/11] RUN npm ci   && npm ci --prefix frontend   && cd backend && uv sync --frozen
+#18 2.126 
+#18 2.126 added 25 packages, and audited 26 packages in 2s
+#18 2.126 
+#18 2.126 6 packages are looking for funding
+#18 2.126   run `npm fund` for details
+#18 2.127 
+#18 2.127 found 0 vulnerabilities
+#18 2.128 npm notice
+#18 2.128 npm notice New major version of npm available! 10.9.9 -> 12.2.0
+#18 2.128 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#18 2.128 npm notice To update run: npm install -g npm@12.2.0
+#18 2.128 npm notice
+#18 4.484 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+#18 5.042 
+#18 5.042 added 219 packages, and audited 220 packages in 3s
+#18 5.042 
+#18 5.042 43 packages are looking for funding
+#18 5.042   run `npm fund` for details
+#18 5.043 
+#18 5.043 found 0 vulnerabilities
+#18 5.284 Using CPython 3.11.17 interpreter at: /usr/local/bin/python3
+#18 5.284 Creating virtual environment at: .venv
+#18 5.313    Building crowdlens-backend @ file:///app/backend
+#18 5.558 Downloading hf-xet (3.2MiB)
+#18 5.558 Downloading virtualenv (5.7MiB)
+#18 5.559 Downloading nvidia-cuda-cupti-cu12 (9.8MiB)
+#18 5.559 Downloading cryptography (4.3MiB)
+#18 5.559 Downloading tiktoken (1.0MiB)
+#18 5.559 Downloading tokenizers (3.1MiB)
+#18 5.560 Downloading nvidia-cusolver-cu12 (255.1MiB)
+#18 5.560 Downloading networkx (2.0MiB)
+#18 5.561 Downloading igraph (3.0MiB)
+#18 5.575 Downloading rapidfuzz (3.0MiB)
+#18 5.575 Downloading camel-ai (1.4MiB)
+#18 5.576 Downloading sympy (6.0MiB)
+#18 5.576 Downloading numpy (16.1MiB)
+#18 5.576 Downloading lxml (5.0MiB)
+#18 5.577 Downloading pandas (12.4MiB)
+#18 5.577 Downloading nvidia-nvjitlink-cu12 (37.4MiB)
+#18 5.578 Downloading pymupdf (23.0MiB)
+#18 5.578 Downloading nvidia-cusparselt-cu12 (273.9MiB)
+#18 5.578 Downloading nvidia-cuda-nvrtc-cu12 (84.0MiB)
+#18 5.579 Downloading pydantic-core (2.0MiB)
+#18 5.579 Downloading nvidia-cudnn-cu12 (674.0MiB)
+#18 5.579 Downloading nltk (1.4MiB)
+#18 5.580 Downloading pillow (4.3MiB)
+#18 5.580 Downloading nvidia-curand-cu12 (60.7MiB)
+#18 5.581 Downloading unstructured (1.8MiB)
+#18 5.581 Downloading nvidia-cusparse-cu12 (274.9MiB)
+#18 5.582 Downloading nvidia-cufft-cu12 (184.2MiB)
+#18 5.582 Downloading nvidia-nvshmem-cu12 (118.9MiB)
+#18 5.582 Downloading scikit-learn (8.7MiB)
+#18 5.583 Downloading nvidia-cublas-cu12 (566.8MiB)
+#18 5.583 Downloading nvidia-cufile-cu12 (1.1MiB)
+#18 5.584 Downloading torch (858.1MiB)
+#18 5.584 Downloading nvidia-nccl-cu12 (307.4MiB)
+#18 5.585 Downloading triton (162.5MiB)
+#18 5.585 Downloading scipy (34.2MiB)
+#18 5.586 Downloading transformers (11.4MiB)
+#18 8.217  Downloaded tiktoken
+#18 9.086  Downloaded nvidia-cufile-cu12
+#18 9.485  Downloaded camel-ai
+#18 9.798  Downloaded nltk
+#18 10.61  Downloaded unstructured
+#18 10.82  Downloaded networkx
+#18 11.00  Downloaded pydantic-core
+#18 11.08       Built crowdlens-backend @ file:///app/backend
+#18 12.17    Building langdetect==1.0.9
+#18 12.59  Downloaded igraph
+#18 12.62  Downloaded tokenizers
+#18 12.62  Downloaded rapidfuzz
+#18 12.72  Downloaded hf-xet
+#18 14.16  Downloaded pillow
+#18 14.41  Downloaded cryptography
+#18 14.52       Built langdetect==1.0.9
+#18 15.06  Downloaded lxml
+#18 16.01  Downloaded virtualenv
+#18 16.43  Downloaded sympy
+#18 19.54  Downloaded scikit-learn
+#18 21.28  Downloaded nvidia-cuda-cupti-cu12
+#18 23.07  Downloaded transformers
+#18 23.99  Downloaded pandas
+#18 27.04  Downloaded numpy
+#18 34.23  Downloaded pymupdf
+#18 44.02  Downloaded scipy
+#18 45.76  Downloaded nvidia-nvjitlink-cu12
+#18 58.97  Downloaded nvidia-curand-cu12
+#18 71.83  Downloaded nvidia-cuda-nvrtc-cu12
+#18 88.07  Downloaded nvidia-nvshmem-cu12
+#18 109.4  Downloaded triton
+#18 116.5  Downloaded nvidia-cufft-cu12
+#18 138.3  Downloaded nvidia-cusolver-cu12
+#18 143.4  Downloaded nvidia-cusparse-cu12
+#18 143.5  Downloaded nvidia-cusparselt-cu12
+#18 149.1  Downloaded nvidia-nccl-cu12
+#18 181.5  Downloaded nvidia-cublas-cu12
+#18 192.8  Downloaded nvidia-cudnn-cu12
+#18 204.1  Downloaded torch
+#18 204.1 Prepared 146 packages in 3m 18s
+#18 204.6 Installed 146 packages in 523ms
+#18 204.6  + aiofiles==25.1.0
+#18 204.6  + annotated-types==0.7.0
+#18 204.6  + anyio==4.12.0
+#18 204.6  + astor==0.8.1
+#18 204.6  + attrs==25.4.0
+#18 204.6  + backoff==2.2.1
+#18 204.6  + beautifulsoup4==4.14.3
+#18 204.6  + blinker==1.9.0
+#18 204.6  + cairocffi==1.7.1
+#18 204.6  + camel-ai==0.2.78
+#18 204.6  + camel-oasis==0.2.5
+#18 204.6  + certifi==2025.11.12
+#18 204.6  + cffi==2.0.0
+#18 204.6  + cfgv==3.5.0
+#18 204.6  + chardet==5.2.0
+#18 204.6  + charset-normalizer==3.4.4
+#18 204.6  + click==8.3.1
+#18 204.6  + colorama==0.4.6
+#18 204.6  + crowdlens-backend==0.2.0 (from file:///app/backend)
+#18 204.6  + cryptography==46.0.3
+#18 204.6  + dataclasses-json==0.6.7
+#18 204.6  + distlib==0.4.0
+#18 204.6  + distro==1.9.0
+#18 204.6  + docstring-parser==0.17.0
+#18 204.6  + emoji==2.15.0
+#18 204.6  + filelock==3.20.1
+#18 204.6  + filetype==1.2.0
+#18 204.6  + flask==3.1.2
+#18 204.6  + flask-cors==6.0.2
+#18 204.6  + fsspec==2025.12.0
+#18 204.6  + h11==0.16.0
+#18 204.6  + hf-xet==1.2.0
+#18 204.6  + httpcore==1.0.9
+#18 204.6  + httpx==0.28.1
+#18 204.6  + httpx-sse==0.4.3
+#18 204.6  + huggingface-hub==0.36.0
+#18 204.6  + identify==2.6.15
+#18 204.6  + idna==3.11
+#18 204.6  + igraph==0.11.6
+#18 204.6  + iniconfig==2.3.0
+#18 204.6  + itsdangerous==2.2.0
+#18 204.6  + jinja2==3.1.6
+#18 204.6  + jiter==0.12.0
+#18 204.6  + joblib==1.5.3
+#18 204.6  + jsonschema==4.25.1
+#18 204.6  + jsonschema-path==0.3.4
+#18 204.6  + jsonschema-specifications==2025.9.1
+#18 204.6  + langdetect==1.0.9
+#18 204.6  + lazy-object-proxy==1.12.0
+#18 204.6  + lxml==6.0.2
+#18 204.6  + markupsafe==3.0.3
+#18 204.6  + marshmallow==3.26.1
+#18 204.6  + mcp==1.24.0
+#18 204.6  + mpmath==1.3.0
+#18 204.6  + mypy-extensions==1.1.0
+#18 204.6  + neo4j==5.23.0
+#18 204.6  + networkx==3.6.1
+#18 204.6  + nltk==3.9.2
+#18 204.6  + nodeenv==1.9.1
+#18 204.6  + numpy==2.3.5
+#18 204.6  + nvidia-cublas-cu12==12.8.4.1
+#18 204.6  + nvidia-cuda-cupti-cu12==12.8.90
+#18 204.6  + nvidia-cuda-nvrtc-cu12==12.8.93
+#18 204.6  + nvidia-cuda-runtime-cu12==12.8.90
+#18 204.6  + nvidia-cudnn-cu12==9.10.2.21
+#18 204.6  + nvidia-cufft-cu12==11.3.3.83
+#18 204.6  + nvidia-cufile-cu12==1.13.1.3
+#18 204.6  + nvidia-curand-cu12==10.3.9.90
+#18 204.6  + nvidia-cusolver-cu12==11.7.3.90
+#18 204.6  + nvidia-cusparse-cu12==12.5.8.93
+#18 204.6  + nvidia-cusparselt-cu12==0.7.1
+#18 204.6  + nvidia-nccl-cu12==2.27.5
+#18 204.6  + nvidia-nvjitlink-cu12==12.8.93
+#18 204.6  + nvidia-nvshmem-cu12==3.3.20
+#18 204.6  + nvidia-nvtx-cu12==12.8.90
+#18 204.6  + oauthlib==3.3.1
+#18 204.6  + openai==1.109.1
+#18 204.6  + openapi-schema-validator==0.6.3
+#18 204.6  + openapi-spec-validator==0.7.1
+#18 204.6  + packaging==25.0
+#18 204.6  + pandas==2.2.2
+#18 204.6  + pathable==0.4.4
+#18 204.6  + pillow==10.3.0
+#18 204.6  + platformdirs==4.5.1
+#18 204.6  + pluggy==1.6.0
+#18 204.6  + prance==23.6.21.0
+#18 204.6  + pre-commit==3.7.1
+#18 204.6  + psutil==5.9.8
+#18 204.6  + pycparser==2.23
+#18 204.6  + pydantic==2.12.5
+#18 204.6  + pydantic-core==2.41.5
+#18 204.6  + pydantic-settings==2.12.0
+#18 204.6  + pyjwt==2.10.1
+#18 204.6  + pymupdf==1.26.7
+#18 204.6  + pypdf==6.4.2
+#18 204.6  + pytest==8.2.0
+#18 204.6  + pytest-asyncio==0.23.6
+#18 204.6  + python-dateutil==2.9.0.post0
+#18 204.6  + python-dotenv==1.2.1
+#18 204.6  + python-iso639==2025.11.16
+#18 204.6  + python-magic==0.4.27
+#18 204.6  + python-multipart==0.0.21
+#18 204.6  + pytz==2025.2
+#18 204.6  + pyyaml==6.0.3
+#18 204.6  + rapidfuzz==3.14.3
+#18 204.6  + referencing==0.36.2
+#18 204.6  + regex==2025.11.3
+#18 204.6  + requests==2.32.5
+#18 204.6  + requests-oauthlib==2.0.0
+#18 204.6  + requests-toolbelt==1.0.0
+#18 204.6  + rfc3339-validator==0.1.4
+#18 204.6  + rpds-py==0.30.0
+#18 204.6  + ruamel-yaml==0.18.17
+#18 204.6  + ruamel-yaml-clib==0.2.15
+#18 204.6  + safetensors==0.7.0
+#18 204.6  + scikit-learn==1.8.0
+#18 204.6  + scipy==1.16.3
+#18 204.6  + sentence-transformers==3.0.0
+#18 204.6  + six==1.17.0
+#18 204.6  + slack-sdk==3.31.0
+#18 204.6  + sniffio==1.3.1
+#18 204.6  + soupsieve==2.8
+#18 204.6  + sse-starlette==3.0.4
+#18 204.6  + starlette==0.50.0
+#18 204.6  + sympy==1.14.0
+#18 204.6  + tabulate==0.9.0
+#18 204.6  + texttable==1.7.0
+#18 204.6  + threadpoolctl==3.6.0
+#18 204.6  + tiktoken==0.7.0
+#18 204.6  + tokenizers==0.22.1
+#18 204.6  + torch==2.9.1
+#18 204.6  + tqdm==4.67.1
+#18 204.6  + transformers==4.57.3
+#18 204.6  + triton==3.5.1
+#18 204.6  + typing-extensions==4.15.0
+#18 204.6  + typing-inspect==0.9.0
+#18 204.6  + typing-inspection==0.4.2
+#18 204.6  + tzdata==2025.3
+#18 204.6  + unstructured==0.13.7
+#18 204.6  + unstructured-client==0.42.6
+#18 204.6  + urllib3==2.6.2
+#18 204.6  + uvicorn==0.38.0
+#18 204.6  + virtualenv==20.35.4
+#18 204.6  + websockets==15.0.1
+#18 204.6  + werkzeug==3.1.4
+#18 204.6  + wrapt==2.0.1
+#18 DONE 205.9s
+
+#19 [stage-1 11/11] COPY . .
+#19 DONE 0.9s
+
+#20 exporting to image
+#20 exporting layers
+#20 exporting layers 372.1s done
+#20 exporting manifest sha256:7b608480745638e97fa832c09b1585655197e1f1dcad66af0d5ff5502bc5836e 0.0s done
+#20 exporting config sha256:03549587643477cf6ebe9b8d96e7ccc2880faa9118c28a932da7a39b502ed784 0.0s done
+#20 exporting attestation manifest sha256:401414138c3667b40f17b61e65c17a30838790f3bf63942dbe5cfafb8250afff
+#20 exporting attestation manifest sha256:401414138c3667b40f17b61e65c17a30838790f3bf63942dbe5cfafb8250afff 0.0s done
+#20 exporting manifest list sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253 0.0s done
+#20 naming to docker.io/library/crowdlens-ecc-release:242b8999044e done
+#20 unpacking to docker.io/library/crowdlens-ecc-release:242b8999044e
+#20 unpacking to docker.io/library/crowdlens-ecc-release:242b8999044e 50.1s done
+#20 DONE 422.4s
+
+View build details: docker-desktop://dashboard/build/default/default/g4plhd01gfe50kzxodngz4zdt

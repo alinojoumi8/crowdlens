@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "source": {
+    "declared_revision": "242b8999044e33c8c3217df857c06401f3efbba3",
+    "source_sha256": "a807c651b35560c12a91ec6f0b79b2d32df7bad60ebf3322d121c643d9e835fb",
+    "scope": "runtime-source-v1"
+  },
+  "neo4j_uri": "bolt://127.0.0.1:32783",
+  "http_url": "http://127.0.0.1:42385",
+  "proposal_id": "proposal_6781ae1e676c4c739dc6964070b3bed0",
+  "revision_id": "report_1cdd32a1ad634c32a32fb32b6e6b83ab",
+  "scope_and_origin_isolation": true,
+  "stale_neo4j_write_rejected": true,
+  "neo4j_preserved_generation": 2,
+  "parent_hashes": {
+    "outline.json": "8e1ac74c0d55c2e31034b9cee4e6ab8718620b236f6508f1a83790ffe8a08e91",
+    "meta.json": "280eaaaf4cdec2d79d60e4061e9354d1137eb6ecff4ca581ed696c414df6c9ea"
+  },
+  "parent_unchanged": true,
+  "acceptance_retry_same_revision": true,
+  "reopened_status": "needs_review",
+  "scripted_model_calls": 3,
+  "real_model_calls": 0,
+  "substitutions": [
+    "scripted drafting model",
+    "semantic embeddings disabled"
+  ],
+  "full_upload_graph_simulation_workflow": "not run"
+}

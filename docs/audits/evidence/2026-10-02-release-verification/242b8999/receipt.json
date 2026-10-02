@@ -1,0 +1,398 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "source_repository": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+  "checkout": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+  "commands": [
+    {
+      "label": "node-version",
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 0,
+      "seconds": 0.008,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/node-version.log",
+      "sha256": "33e26f35db6e57ce0c486ddc815fe966867e4f649e418eaf323f75f4720eb8e9"
+    },
+    {
+      "label": "npm-version",
+      "argv": [
+        "npm",
+        "--version"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/npm-version.log",
+      "sha256": "d49bd31f65cb736f4045946e1c8365657cfed300dc0e4f173af5e93ab4500e1a"
+    },
+    {
+      "label": "uv-version",
+      "argv": [
+        "uv",
+        "--version"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 0,
+      "seconds": 0.017,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/uv-version.log",
+      "sha256": "48703788344d7b88ae4c8d6700546005c597a1cecffb8f51088e795cdffebcb1"
+    },
+    {
+      "label": "clone",
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "--no-checkout",
+        "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+        "/tmp/crowdlens-ecc-release-final-242b8999/source"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/clone.log",
+      "sha256": "112e6c662f748d0a41f0b43174c72763d77e07a241519795da8fe198cbd9fee5"
+    },
+    {
+      "label": "checkout",
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "242b8999044e33c8c3217df857c06401f3efbba3"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/checkout.log",
+      "sha256": "7775b232723349096dab70ebc9534dbf2b09947d062d09eeb36bc07356f8c0a2"
+    },
+    {
+      "label": "initial-git-state",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/initial-git-state.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "install-root",
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 1.368,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/install-root.log",
+      "sha256": "ef38614fcf29801822388b1b9feebc7ba5137f4d3120bd914b2192f32029e5bd"
+    },
+    {
+      "label": "install-frontend",
+      "argv": [
+        "npm",
+        "ci",
+        "--prefix",
+        "frontend"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 1.969,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/install-frontend.log",
+      "sha256": "0f2eba83b6fab3ed8f46544a01a6371c5fd247aaf06b4093dea130308aeb23c5"
+    },
+    {
+      "label": "install-backend",
+      "argv": [
+        "uv",
+        "sync",
+        "--frozen",
+        "--dev"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source/backend",
+      "exit_code": 0,
+      "seconds": 2.671,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/install-backend.log",
+      "sha256": "31526777e7e8ba24571feadac006ff2fb221bbb51d3cdb2aed65b33854c2f63d"
+    },
+    {
+      "label": "python-version",
+      "argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "--version"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.008,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/python-version.log",
+      "sha256": "b1d173e941dbfa8bbabe0c832c75d9449f31942f882d76510e027fa02de2cae0"
+    },
+    {
+      "label": "installed-python",
+      "argv": [
+        "uv",
+        "pip",
+        "freeze",
+        "--python",
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/installed-python.log",
+      "sha256": "271350c93b3b5d00e5b9af9a0aa220da3db0d8d933db532ea2046b615fe96382"
+    },
+    {
+      "label": "python-dependency-check",
+      "argv": [
+        "uv",
+        "pip",
+        "check",
+        "--python",
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.032,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/python-dependency-check.log",
+      "sha256": "3c0f85b3e0bf85b3bd20d5c94b108cbd2683dd3bafafb1adfc49d2e5c2674056"
+    },
+    {
+      "label": "installed-root",
+      "argv": [
+        "npm",
+        "ls",
+        "--all",
+        "--json"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.315,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/installed-root.log",
+      "sha256": "d7c9c67a612262885a270b38bb95b4f08d0a32916b11125e38851b677ce87884"
+    },
+    {
+      "label": "installed-frontend",
+      "argv": [
+        "npm",
+        "ls",
+        "--prefix",
+        "frontend",
+        "--all",
+        "--json"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.415,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/installed-frontend.log",
+      "sha256": "9eedb1455f423372ae9280cb1e262841561f07225919d66a2a08e4bb8c6e3fec"
+    },
+    {
+      "label": "check",
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 19.849,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/check.log",
+      "sha256": "fa7733dd577ed8abe984c6219689b46d88a6f429fae233770e9ea39854f33c02"
+    },
+    {
+      "label": "audit-root",
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate",
+        "--json"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.516,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/audit-root.log",
+      "sha256": "d779408e46397a81b73737e06ea904cb9b8bb82ad1efff44f3e59f363fe8c5f3"
+    },
+    {
+      "label": "audit-frontend",
+      "argv": [
+        "npm",
+        "audit",
+        "--prefix",
+        "frontend",
+        "--audit-level=moderate",
+        "--json"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.616,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/audit-frontend.log",
+      "sha256": "6c03c18d38b8148d4d6723785372a6500a79087b06a83a026b315c3d4dcc72d8"
+    },
+    {
+      "label": "h1-process-recovery",
+      "argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "backend/scripts/probe_milestone2_task_restart.py"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 32.501,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/h1-process-recovery.log",
+      "sha256": "bc273e6215c77c68cabe154f8263a6275d4a4b5e7de2521fcd88da28e93ed177"
+    },
+    {
+      "label": "backup-restore",
+      "argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "backend/scripts/check_ecc_backup.py",
+        "--synthetic",
+        "--output-dir",
+        "/tmp/crowdlens-ecc-release-final-242b8999/backup"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 4.628,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/backup-restore.log",
+      "sha256": "27476e87ed8934ee8e27e5a715a655132785ee61726f5308b2e0d6a27c817746"
+    },
+    {
+      "label": "evaluations",
+      "argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/scripts/evaluate_evidence_quality.py",
+        "--output-dir",
+        "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999",
+        "--repeats",
+        "3"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 20.173,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/evaluations.log",
+      "sha256": "ff4327bd6efbab3f879d175e9aab104ea123bf122c0f8e1f2bb393b283d9a527"
+    },
+    {
+      "label": "compose-config",
+      "argv": [
+        "docker",
+        "compose",
+        "--env-file",
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/.env",
+        "config",
+        "--quiet"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/compose-config.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "compose-rendered",
+      "argv": [
+        "docker",
+        "compose",
+        "--env-file",
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/.env",
+        "config",
+        "--format",
+        "json"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/compose-rendered.log",
+      "sha256": "3e2df405f1acd15ccecaf53a897b7704def89701a40daa119b5189827bab3e2c"
+    },
+    {
+      "label": "runtime-identity",
+      "argv": [
+        "/tmp/crowdlens-ecc-release-final-242b8999/source/backend/.venv/bin/python",
+        "-c",
+        "import json,sys;sys.path.insert(0,'backend');from app.utils.build_identity import runtime_identity;print(json.dumps(runtime_identity()))"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 1.419,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/runtime-identity.log",
+      "sha256": "a1df338335ce1eb90fed91d7862e092f3a21f9725198b2714fa079671829c08c"
+    },
+    {
+      "label": "diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.009,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "final-git-state",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.008,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-git-state.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "ignored-runtime-inputs",
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--ignored"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/ignored-runtime-inputs.log",
+      "sha256": "791706dd680f6a773963f8e900426a68d928e493cf25a42e80ffddb9d52c4718"
+    }
+  ],
+  "gaps": [
+    "Browser suite, real HTTP/Neo4j and isolated exact-candidate image startup need separate receipts",
+    "No configured lint/type-check/coverage command; coverage percentage unmeasured",
+    "Exact-candidate remote CI pending authorized push/remote execution",
+    "Real generation workflow and independently human-reviewed quality not established by this runner"
+  ],
+  "environment_policy": "credential-neutral; local disabled provider endpoints; fresh installs",
+  "runner_sha256": "ff88f0ac30b6d076f13c5e2a2f816adb8dfc222fe9b5a50f1797132f41ad5fba",
+  "started_at": "2026-10-02T20:19:18Z",
+  "tree": "39753400064fe764b98152c2c0204005f874a9c1",
+  "locks_before": {
+    "package-lock.json": "5fdcf1a09ef8beb772ed5bf2c849daab5852183cacfd81a8187f3a7fcbae7fa2",
+    "frontend/package-lock.json": "bbbcf6412b694fe8bb25c56dd4c3e8b718ea1c01777efbc6131a0cdc146d8bf3",
+    "backend/uv.lock": "1d6b2f50ff5b7dc57a9be10b3852f919d93e82cd8f862856b7e8d2581f92d88a"
+  },
+  "evaluation_output": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999",
+  "synthetic_compose_env_sha256": "f18286935155c7a37e4dc1478fa2a6dfa5e8465be552111a16df3d3b34451a8e",
+  "locks_after": {
+    "package-lock.json": "5fdcf1a09ef8beb772ed5bf2c849daab5852183cacfd81a8187f3a7fcbae7fa2",
+    "frontend/package-lock.json": "bbbcf6412b694fe8bb25c56dd4c3e8b718ea1c01777efbc6131a0cdc146d8bf3",
+    "backend/uv.lock": "1d6b2f50ff5b7dc57a9be10b3852f919d93e82cd8f862856b7e8d2581f92d88a"
+  },
+  "frozen_inputs_unchanged": true,
+  "tracked_checkout_clean": true,
+  "finished_at": "2026-10-02T20:20:46Z",
+  "local_commands_passed": true
+}

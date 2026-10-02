@@ -1,0 +1,56 @@
+[
+    {
+        "Name": "crowdlens-ecc-release-final-242b8999-2737e1-net",
+        "Id": "bd86b6625a7dfc437a33d2aeaf76cc30e6b9ad9d6372ad49edb2b42611c7394b",
+        "Created": "2026-10-02T16:32:39.419834568-04:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.23.0.0/16",
+                    "Gateway": "172.23.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {},
+        "Labels": {},
+        "Containers": {
+            "196395a78d509c03c39172cdc69650bfc33d35870633547af1ad18e3acf42d49": {
+                "Name": "crowdlens-ecc-release-final-242b8999-2737e1-neo4j",
+                "EndpointID": "b649d9da6f9c656db39e26b73b83df503ade55fb5cb3e4b60db46873b0927cfc",
+                "MacAddress": "42:6d:58:a4:92:84",
+                "IPv4Address": "172.23.0.2/16",
+                "IPv6Address": ""
+            },
+            "b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396": {
+                "Name": "crowdlens-ecc-release-final-242b8999-2737e1-app",
+                "EndpointID": "9b3fb5617b3f2ebf100e6ef037fb36b089e3395c05261a4efc124f63bb098d03",
+                "MacAddress": "1a:69:dd:92:9a:d8",
+                "IPv4Address": "172.23.0.3/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.23.0.0/16": {
+                        "IPsInUse": 5,
+                        "DynamicIPsAvailable": 65531
+                    }
+                }
+            }
+        }
+    }
+]

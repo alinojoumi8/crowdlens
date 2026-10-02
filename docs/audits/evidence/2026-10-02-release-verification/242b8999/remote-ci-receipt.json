@@ -1,0 +1,54 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "queried_at": "2026-10-02T20:20:36Z",
+  "commands": [
+    {
+      "label": "commit",
+      "argv": [
+        "gh",
+        "api",
+        "repos/alinojoumi8/mirofish-local/commits/242b8999044e33c8c3217df857c06401f3efbba3"
+      ],
+      "exit_code": 1,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remote-ci-commit.log",
+      "sha256": "0b2b566182bc592ad4f9a4bae82bf36ffe8092622dc7df9f4a78ae1671ce383b"
+    },
+    {
+      "label": "check-runs",
+      "argv": [
+        "gh",
+        "api",
+        "repos/alinojoumi8/mirofish-local/commits/242b8999044e33c8c3217df857c06401f3efbba3/check-runs"
+      ],
+      "exit_code": 1,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remote-ci-check-runs.log",
+      "sha256": "0522eaa7292a204857431570ccee08d00f18fe104d00045519feca6e9f156cf6"
+    },
+    {
+      "label": "actions-runs",
+      "argv": [
+        "gh",
+        "api",
+        "repos/alinojoumi8/mirofish-local/actions/runs?head_sha=242b8999044e33c8c3217df857c06401f3efbba3"
+      ],
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remote-ci-actions-runs.log",
+      "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915"
+    }
+  ],
+  "commit": {
+    "status": "422",
+    "total_count": null,
+    "sha": null
+  },
+  "check-runs": {
+    "status": "422",
+    "total_count": null,
+    "sha": null
+  },
+  "actions-runs": {
+    "status": null,
+    "total_count": 0,
+    "sha": null
+  }
+}

@@ -1,0 +1,1 @@
+{"message":"No commit found for SHA: 242b8999044e33c8c3217df857c06401f3efbba3","documentation_url":"https://docs.github.com/rest/commits/commits#get-a-commit","status":"422"}gh: No commit found for SHA: 242b8999044e33c8c3217df857c06401f3efbba3 (HTTP 422)

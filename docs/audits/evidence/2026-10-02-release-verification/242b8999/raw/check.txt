@@ -1,0 +1,220 @@
+
+> crowdlens@0.2.0 check
+> npm test && npm run build
+
+
+> crowdlens@0.2.0 test
+> npm run test:backend && npm run test:frontend
+
+
+> crowdlens@0.2.0 test:backend
+> cd backend && uv run pytest -q
+
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+........................................................................ [ 48%]
+........................................................................ [ 64%]
+........................................................................ [ 80%]
+........................................................................ [ 96%]
+.................                                                        [100%]
+449 passed in 11.29s
+
+> crowdlens@0.2.0 test:frontend
+> npm --prefix frontend test
+
+
+> crowdlens-frontend@0.1.0 test
+> npm run test:unit && npm run test:components
+
+
+> crowdlens-frontend@0.1.0 test:unit
+> node --test src/api/*.test.js src/router/*.test.js src/utils/*.test.js tests/*.test.js
+
+TAP version 13
+# Subtest: resolveApiBaseUrl
+    # Subtest: uses the same origin by default so Vite can proxy API calls
+    ok 1 - uses the same origin by default so Vite can proxy API calls
+      ---
+      duration_ms: 0.798393
+      type: 'test'
+      ...
+    # Subtest: ignores VITE_API_BASE_URL in development so preview tunnels can proxy API calls
+    ok 2 - ignores VITE_API_BASE_URL in development so preview tunnels can proxy API calls
+      ---
+      duration_ms: 0.164253
+      type: 'test'
+      ...
+    # Subtest: keeps an explicit VITE_API_BASE_URL override in production
+    ok 3 - keeps an explicit VITE_API_BASE_URL override in production
+      ---
+      duration_ms: 0.209329
+      type: 'test'
+      ...
+    # Subtest: can opt into an absolute API base URL in development
+    ok 4 - can opt into an absolute API base URL in development
+      ---
+      duration_ms: 1.178978
+      type: 'test'
+      ...
+    1..4
+ok 1 - resolveApiBaseUrl
+  ---
+  duration_ms: 3.562435
+  type: 'suite'
+  ...
+# Subtest: application routes
+    # Subtest: lazy-loads every page component
+    ok 1 - lazy-loads every page component
+      ---
+      duration_ms: 0.742536
+      type: 'test'
+      ...
+    1..1
+ok 2 - application routes
+  ---
+  duration_ms: 1.713809
+  type: 'suite'
+  ...
+# Subtest: only ready proposals without structural blockers are acceptable
+ok 3 - only ready proposals without structural blockers are acceptable
+  ---
+  duration_ms: 0.957957
+  type: 'test'
+  ...
+# Subtest: renderSafeMarkdown
+    # Subtest: renders raw HTML and event handlers as inert text
+    ok 1 - renders raw HTML and event handlers as inert text
+      ---
+      duration_ms: 1.752703
+      type: 'test'
+      ...
+    # Subtest: escapes HTML inside code blocks while preserving Markdown formatting
+    ok 2 - escapes HTML inside code blocks while preserving Markdown formatting
+      ---
+      duration_ms: 0.363553
+      type: 'test'
+      ...
+    1..2
+ok 4 - renderSafeMarkdown
+  ---
+  duration_ms: 3.290726
+  type: 'suite'
+  ...
+# Subtest: createPoller
+    # Subtest: owns one interval and releases it on stop
+    ok 1 - owns one interval and releases it on stop
+      ---
+      duration_ms: 1.480183
+      type: 'test'
+      ...
+    # Subtest: does not overlap asynchronous polling calls
+    ok 2 - does not overlap asynchronous polling calls
+      ---
+      duration_ms: 0.354656
+      type: 'test'
+      ...
+    1..2
+ok 5 - createPoller
+  ---
+  duration_ms: 2.958232
+  type: 'suite'
+  ...
+# Subtest: economic twin defaults to disabled and round-trips through route query
+ok 6 - economic twin defaults to disabled and round-trips through route query
+  ---
+  duration_ms: 1.804833
+  type: 'test'
+  ...
+# Subtest: economic twin settings normalize currency and validate numeric limits
+ok 7 - economic twin settings normalize currency and validate numeric limits
+  ---
+  duration_ms: 0.553616
+  type: 'test'
+  ...
+1..7
+# tests 12
+# suites 4
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 101.423685
+
+> crowdlens-frontend@0.1.0 test:components
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/tmp/crowdlens-ecc-release-final-242b8999/source/frontend[39m
+
+ [32m✓[39m src/api/__tests__/report.component.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstderr[2m | src/components/HistoryDatabase.component.test.js[2m > [22m[2mhistory states[2m > [22m[2mshows a failed request and retries without relabelling it as empty
+[22m[39mFailed to load history projects: Error: synthetic unavailable
+    at [90m/tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39msrc/components/HistoryDatabase.component.test.js:20:48
+    at [90mfile:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:302:11
+    at [90mfile:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:1903:26
+    at [90mfile:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel [90m(file:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2323:10[90m)[39m
+    at [90mfile:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2272:10[90m)[39m
+    at [90mfile:///tmp/crowdlens-ecc-release-final-242b8999/source/frontend/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2956:64
+
+ [32m✓[39m src/components/ClaimEvidence.component.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m src/components/SafeMarkdown.component.test.js [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32m✓[39m src/components/HistoryDatabase.component.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m src/components/Step3Simulation.component.test.js [2m([22m[2m1 test[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m src/components/EvidenceDraftReview.component.test.js [2m([22m[2m12 tests[22m[2m)[22m[32m 215[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+[2m   Start at [22m 16:19:39
+[2m   Duration [22m 1.79s[2m (transform 1.79s, setup 0ms, import 2.91s, tests 492ms, environment 4.88s)[22m
+
+
+> crowdlens@0.2.0 build
+> cd frontend && npm run build
+
+
+> crowdlens-frontend@0.1.0 build
+> vite build
+
+[36mvite v7.3.6 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 699 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                                    [39m[1m[2m  1.04 kB[22m[1m[22m[2m │ gzip:  0.53 kB[22m
+[2mdist/[22m[2massets/[22m[35mCaseCompareView-COpOAnvG.css           [39m[1m[2m  1.91 kB[22m[1m[22m[2m │ gzip:  0.74 kB[22m
+[2mdist/[22m[2massets/[22m[35mSimulationView-v4ajHxY3.css            [39m[1m[2m  2.14 kB[22m[1m[22m[2m │ gzip:  0.83 kB[22m
+[2mdist/[22m[2massets/[22m[35mCasesView-CwHzJCV_.css                 [39m[1m[2m  3.20 kB[22m[1m[22m[2m │ gzip:  1.11 kB[22m
+[2mdist/[22m[2massets/[22m[35mCaseDetailView-snTT7t4x.css            [39m[1m[2m  4.00 kB[22m[1m[22m[2m │ gzip:  1.16 kB[22m
+[2mdist/[22m[2massets/[22m[35mGraphPanel-Bx73uTCP.css                [39m[1m[2m  9.14 kB[22m[1m[22m[2m │ gzip:  2.28 kB[22m
+[2mdist/[22m[2massets/[22m[35mMainView-BU36wCcT.css                  [39m[1m[2m 10.48 kB[22m[1m[22m[2m │ gzip:  2.55 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-ibF_rNad.css                     [39m[1m[2m 11.31 kB[22m[1m[22m[2m │ gzip:  3.04 kB[22m
+[2mdist/[22m[2massets/[22m[35mHome-BwkCD-fp.css                      [39m[1m[2m 14.02 kB[22m[1m[22m[2m │ gzip:  3.07 kB[22m
+[2mdist/[22m[2massets/[22m[35mSimulationRunView-Cj0SbMbq.css         [39m[1m[2m 15.06 kB[22m[1m[22m[2m │ gzip:  3.31 kB[22m
+[2mdist/[22m[2massets/[22m[35mInteractionView-ByVH7bwX.css           [39m[1m[2m 27.02 kB[22m[1m[22m[2m │ gzip:  4.86 kB[22m
+[2mdist/[22m[2massets/[22m[35mStep2EnvSetup-0zt_Ufc0.css             [39m[1m[2m 27.15 kB[22m[1m[22m[2m │ gzip:  5.10 kB[22m
+[2mdist/[22m[2massets/[22m[35mReportView-B-Sk-v6K.css                [39m[1m[2m 61.44 kB[22m[1m[22m[2m │ gzip:  9.38 kB[22m
+[2mdist/[22m[2massets/[22m[36mpendingUpload-nUeJwzLD.js              [39m[1m[2m  0.52 kB[22m[1m[22m[2m │ gzip:  0.27 kB[22m
+[2mdist/[22m[2massets/[22m[36mreport-BhwVWeSg.js                     [39m[1m[2m  0.94 kB[22m[1m[22m[2m │ gzip:  0.46 kB[22m
+[2mdist/[22m[2massets/[22m[36mgraph-Cma-AEcX.js                      [39m[1m[2m  1.13 kB[22m[1m[22m[2m │ gzip:  0.40 kB[22m
+[2mdist/[22m[2massets/[22m[36meconomySettings-M8O0gDiO.js            [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:  0.54 kB[22m
+[2mdist/[22m[2massets/[22m[36msimulation-ChRDXt9s.js                 [39m[1m[2m  1.33 kB[22m[1m[22m[2m │ gzip:  0.50 kB[22m
+[2mdist/[22m[2massets/[22m[36mSafeMarkdown-C3VDtGVW.js               [39m[1m[2m  2.26 kB[22m[1m[22m[2m │ gzip:  0.91 kB[22m
+[2mdist/[22m[2massets/[22m[36mCasesView-CmvOFE9V.js                  [39m[1m[2m  3.44 kB[22m[1m[22m[2m │ gzip:  1.59 kB[22m
+[2mdist/[22m[2massets/[22m[36mCaseCompareView-CC_tu_9X.js            [39m[1m[2m  4.20 kB[22m[1m[22m[2m │ gzip:  1.79 kB[22m
+[2mdist/[22m[2massets/[22m[36mSimulationView-TGxypbQX.js             [39m[1m[2m  4.97 kB[22m[1m[22m[2m │ gzip:  2.16 kB[22m
+[2mdist/[22m[2massets/[22m[36mCaseDetailView-DlHFt-t9.js             [39m[1m[2m  5.50 kB[22m[1m[22m[2m │ gzip:  2.36 kB[22m
+[2mdist/[22m[2massets/[22m[36mMainView-BVuBVHjE.js                   [39m[1m[2m 20.75 kB[22m[1m[22m[2m │ gzip:  6.87 kB[22m
+[2mdist/[22m[2massets/[22m[36mInteractionView-CJ2JtZ3h.js            [39m[1m[2m 24.54 kB[22m[1m[22m[2m │ gzip:  7.91 kB[22m
+[2mdist/[22m[2massets/[22m[36mHome-BgdbTM1l.js                       [39m[1m[2m 26.00 kB[22m[1m[22m[2m │ gzip:  8.74 kB[22m
+[2mdist/[22m[2massets/[22m[36mSimulationRunView-BlQ903bY.js          [39m[1m[2m 36.59 kB[22m[1m[22m[2m │ gzip: 10.93 kB[22m
+[2mdist/[22m[2massets/[22m[36mStep2EnvSetup-Ctyzo2Ix.js              [39m[1m[2m 45.72 kB[22m[1m[22m[2m │ gzip: 13.33 kB[22m
+[2mdist/[22m[2massets/[22m[36m_plugin-vue_export-helper-CUmsg1Cw.js  [39m[1m[2m 52.49 kB[22m[1m[22m[2m │ gzip: 19.90 kB[22m
+[2mdist/[22m[2massets/[22m[36mReportView-Ca3PJj6l.js                 [39m[1m[2m 76.76 kB[22m[1m[22m[2m │ gzip: 21.89 kB[22m
+[2mdist/[22m[2massets/[22m[36mGraphPanel-Dfbsk6V4.js                 [39m[1m[2m 80.14 kB[22m[1m[22m[2m │ gzip: 26.96 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-B1YDJrya.js                      [39m[1m[2m105.79 kB[22m[1m[22m[2m │ gzip: 41.23 kB[22m
+[32m✓ built in 3.42s[39m

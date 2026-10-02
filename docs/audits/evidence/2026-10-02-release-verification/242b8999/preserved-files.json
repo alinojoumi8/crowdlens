@@ -1,0 +1,566 @@
+{
+  "receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/receipt.json",
+    "sha256": "536f3ce82da8933dba560926caf53bc3af7e994ea71ce2e450346066aac052e2"
+  },
+  "browser-receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-receipt.json",
+    "sha256": "cacd4ffff9201d9616623b5321bc3f463498fa529827775df4c7a34a5a85cc23"
+  },
+  "remote-ci-receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/remote-ci-receipt.json",
+    "sha256": "a3566f4c93f50ae681658716665cc2709a61d82bdb676b345cff92d42756ad4f"
+  },
+  "model-availability.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/model-availability.json",
+    "sha256": "ffe35d74dd322555a78d945a6fe77fd0f113b14631431462c48032253f795165"
+  },
+  "source-state-receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/source-state-receipt.json",
+    "sha256": "fa9bb7657a570bc6aa9e146dd86823562e615c4f956b4936536a6dbd4ecabf9b"
+  },
+  "backup-result.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/backup/result.json",
+    "sha256": "5b967b70532bd01cc5ac723b4c34c9c73a7816552d8bc2ec8ae2d49d1f9ee29e"
+  },
+  "neo4j-backup-result.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/result.json",
+    "sha256": "5a44dd4a237268de32c95093143a3271f570fce05a2e403e94e1f8f16d0bd99f"
+  },
+  "browser-workflow-results.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-ui/results.json",
+    "sha256": "f9c3cda52df8b7ed4962d822c21808b7c8a8b2688495d21192f4cfd879d9eabd"
+  },
+  "browser-regressions-results.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-ui/results.json",
+    "sha256": "701889e9c12913da237b63dad3e3eafa818d0cd7ea826419ce729edbfcc79458"
+  },
+  "browser-workflow-identity.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-data/identity.json",
+    "sha256": "ee3774bd5a1e80e5e6ed200e3c8f3c43d8fe22a8b06f708ff8c1010bc8ffdb9a"
+  },
+  "browser-regressions-identity.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-data/identity.json",
+    "sha256": "ee3774bd5a1e80e5e6ed200e3c8f3c43d8fe22a8b06f708ff8c1010bc8ffdb9a"
+  },
+  "evaluations/results.json": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/results.json",
+    "sha256": "f21d76c6e34fd85641e1550e55c1c091ccc36f04de7adbc8279a365d9e284d19"
+  },
+  "evaluations/identity-before.json": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/identity-before.json",
+    "sha256": "997e0fcd53630045a5f774cce594e48f98c39c62c8ffda2cf76f04fb5b9f452f"
+  },
+  "evaluations/run-1.xml": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/run-1.xml",
+    "sha256": "8e8029ef59056d9ae265fba4779af74b931e6745be4d76f5c06b9308e1541fb5"
+  },
+  "evaluations/run-2.xml": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/run-2.xml",
+    "sha256": "ac51c59b241afa050e69af66a9ceda89285410969fe4b3c006de82741d4f8049"
+  },
+  "evaluations/run-3.xml": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/run-3.xml",
+    "sha256": "cd2a8211911622eda22f8ade9610800b34e95ddfdb851410be125dcdb323c8ed"
+  },
+  "evaluations/run-1.txt": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/run-1.txt",
+    "sha256": "33593c5339590efcacd24e02f1fd92797305b3dd4f598cc8b9b862c25db33982"
+  },
+  "evaluations/run-2.txt": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/run-2.txt",
+    "sha256": "1bc976e76860df92565863402344279789cefef4f526beb89ad7cb2612b98cf7"
+  },
+  "evaluations/run-3.txt": {
+    "original": "/tmp/crowdlens-ecc-eval-242b8999044e-crowdlens-ecc-release-final-242b8999/run-3.txt",
+    "sha256": "17dda4276e5e0d780bc4ff864f070da5f5474600f7731730d2494a0c78977b15"
+  },
+  "raw/node-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/node-version.log",
+    "sha256": "33e26f35db6e57ce0c486ddc815fe966867e4f649e418eaf323f75f4720eb8e9"
+  },
+  "raw/npm-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/npm-version.log",
+    "sha256": "d49bd31f65cb736f4045946e1c8365657cfed300dc0e4f173af5e93ab4500e1a"
+  },
+  "raw/uv-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/uv-version.log",
+    "sha256": "48703788344d7b88ae4c8d6700546005c597a1cecffb8f51088e795cdffebcb1"
+  },
+  "raw/python-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/python-version.log",
+    "sha256": "b1d173e941dbfa8bbabe0c832c75d9449f31942f882d76510e027fa02de2cae0"
+  },
+  "raw/check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/check.log",
+    "sha256": "fa7733dd577ed8abe984c6219689b46d88a6f429fae233770e9ea39854f33c02"
+  },
+  "raw/audit-root.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/audit-root.log",
+    "sha256": "d779408e46397a81b73737e06ea904cb9b8bb82ad1efff44f3e59f363fe8c5f3"
+  },
+  "raw/audit-frontend.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/audit-frontend.log",
+    "sha256": "6c03c18d38b8148d4d6723785372a6500a79087b06a83a026b315c3d4dcc72d8"
+  },
+  "raw/python-dependency-check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/python-dependency-check.log",
+    "sha256": "3c0f85b3e0bf85b3bd20d5c94b108cbd2683dd3bafafb1adfc49d2e5c2674056"
+  },
+  "raw/h1-process-recovery.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/h1-process-recovery.log",
+    "sha256": "bc273e6215c77c68cabe154f8263a6275d4a4b5e7de2521fcd88da28e93ed177"
+  },
+  "raw/runtime-identity.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/runtime-identity.log",
+    "sha256": "a1df338335ce1eb90fed91d7862e092f3a21f9725198b2714fa079671829c08c"
+  },
+  "raw/compose-rendered.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/compose-rendered.log",
+    "sha256": "3e2df405f1acd15ccecaf53a897b7704def89701a40daa119b5189827bab3e2c"
+  },
+  "raw/initial-git-state.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/initial-git-state.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/final-git-state.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-git-state.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/ignored-runtime-inputs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/ignored-runtime-inputs.log",
+    "sha256": "791706dd680f6a773963f8e900426a68d928e493cf25a42e80ffddb9d52c4718"
+  },
+  "raw/branch-base.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/branch-base.log",
+    "sha256": "5f9c24cdba8c28c7fb6192677f2349d1a3a115a89fa02fe9b1df0eb4f0a88393"
+  },
+  "raw/branch-diff-check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/branch-diff-check.log",
+    "sha256": "cc1fe3532aa9c4df090c79759e9d3398a0ff835802d3e35be8330c36278df4a4"
+  },
+  "raw/final-source-working-diff-check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-source-working-diff-check.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/final-source-state.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-source-state.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/final-source-ignored.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-source-ignored.log",
+    "sha256": "791706dd680f6a773963f8e900426a68d928e493cf25a42e80ffddb9d52c4718"
+  },
+  "raw/remote-ci-commit.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remote-ci-commit.log",
+    "sha256": "0b2b566182bc592ad4f9a4bae82bf36ffe8092622dc7df9f4a78ae1671ce383b"
+  },
+  "raw/remote-ci-check-runs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remote-ci-check-runs.log",
+    "sha256": "0522eaa7292a204857431570ccee08d00f18fe104d00045519feca6e9f156cf6"
+  },
+  "raw/remote-ci-actions-runs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remote-ci-actions-runs.log",
+    "sha256": "a2790a384d7d281e7395679000c35d27768d89dbd7052f725b8f4688beb59915"
+  },
+  "screenshots/home-375.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-ui/home-375.png",
+    "sha256": "f86c49e1436c7b83e12981425dc149fe3b2f6995207aab745b3c735ba68324be"
+  },
+  "screenshots/source-inspection-768.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-ui/source-inspection-768.png",
+    "sha256": "5fec32a388ff4b80ca2b651f917d5ea6c599a19eb77fc419e10b7db3a261e707"
+  },
+  "screenshots/saved-revision-1440.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-workflow-ui/saved-revision-1440.png",
+    "sha256": "4f5797fb5f9aa67723ea8ee6818eeb25e1d680c20c9a810e38784b0fa9253c0e"
+  },
+  "screenshots/history-dialog-375.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-ui/history-dialog-375.png",
+    "sha256": "be145cb7253d980fa7c9381e7d553ffb1495363d8228c2180da33a8c2b8ef6d5"
+  },
+  "screenshots/history-dialog-768.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-ui/history-dialog-768.png",
+    "sha256": "2906c17f6b05c74f7a9be766e4c4a4bc5f1e3924c7b7fda3ca51cdcc27e2b0bb"
+  },
+  "screenshots/history-dialog-1440.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-ui/history-dialog-1440.png",
+    "sha256": "2c88a31cc450642749b69d3f88c2a227bcd266a18e4820ee316d2f7753c134a2"
+  },
+  "screenshots/recovery-result-375.png": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-ui/recovery-result-375.png",
+    "sha256": "ffedf78a0ef9ba63b5bdb65e5f31e083159a1c640fbb3860e69a54e459edfdf0"
+  },
+  "image-build-receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/image-build-receipt.json",
+    "sha256": "00e9e5f9f91eaa513e7b1de47ceeaa4a6b361ddfe1a5d926b4cacaa0dcf40c60"
+  },
+  "services-image-receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-receipt.json",
+    "sha256": "52ace966a77346a6c3c7ee99e743d3fb499cc44d5f5e2c439c1a11fcdd45a83b"
+  },
+  "post-runtime-state.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/post-runtime-state.json",
+    "sha256": "80cbd8710baa22500f968254e45c26fa29a27a82a70fc3cd0ebb0181fb4ae6db"
+  },
+  "services-result.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services/result.json",
+    "sha256": "5d4ae526502b135c185dd9987643a91327ea84745c5e0dd539e10c73a17ac8f2"
+  },
+  "raw/remaining-owned-volumes.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remaining-owned-volumes.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/remaining-owned-networks.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remaining-owned-networks.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/remaining-owned-containers.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/remaining-owned-containers.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/post-runtime-source-diff-check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/post-runtime-source-diff-check.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/post-runtime-source-state.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/post-runtime-source-state.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-remove.log",
+    "sha256": "7f397bea6970d77cf235dee91c935d75eda237e9fc7114a37fdddc66482df5b0"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-logs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-logs.log",
+    "sha256": "7c329a1a273dfbfc9a982e9afcbbc124232e9cdc4f9759eb385372b4e171bb19"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-app-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-remove.log",
+    "sha256": "4c02333a52758eb81798d562f90a370d2a488146e30f24ad7928ddf2a8449914"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-app-logs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-logs.log",
+    "sha256": "9cd5e613772b7fa914a646d64ee1801ec5da56c6a3fb95a44ac93612b583b271"
+  },
+  "raw/network-runtime-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-runtime-inspect.log",
+    "sha256": "86b99d6df57274ba8ca5db81b20b01c3dbec1842e82e957c56a0be03866e9b30"
+  },
+  "raw/neo4j-runtime-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/neo4j-runtime-inspect.log",
+    "sha256": "7fe029c72a80796399ad28eb2f137e1ddbbfe6cb6cb38496de7cbde45b91381e"
+  },
+  "raw/image-runtime-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-runtime-inspect.log",
+    "sha256": "0e77b6c26bb9349ca71fe29cbdb641e47c07638f3552ef60e793f7ea41433ffc"
+  },
+  "raw/image-runtime-diff.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-runtime-diff.log",
+    "sha256": "c6c76eb9e643d49de9516cb3f7f0a5802d334162d06d20f42c6e5ebe5f08264a"
+  },
+  "raw/image-python-dependency-check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-python-dependency-check.log",
+    "sha256": "092c5fec807e5dad39ee0ea9f660b91b79e79d46ca0fcd5d6775410fab8fdf39"
+  },
+  "raw/image-uv-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-uv-version.log",
+    "sha256": "48703788344d7b88ae4c8d6700546005c597a1cecffb8f51088e795cdffebcb1"
+  },
+  "raw/image-node-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-node-version.log",
+    "sha256": "33e26f35db6e57ce0c486ddc815fe966867e4f649e418eaf323f75f4720eb8e9"
+  },
+  "raw/image-python-version.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-python-version.log",
+    "sha256": "686560bcd94a5a3fe8187b7c4fc49beaff41c87eccb79908cd3da863ec30e52e"
+  },
+  "raw/frontend-status-proxy.response": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/frontend-status-proxy.response",
+    "sha256": "72b4529be60866b5920ebec745b2f5ec5d36fe6052c5b4643b4d9ed20ac0b19d"
+  },
+  "raw/frontend-index.response": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/frontend-index.response",
+    "sha256": "2143de6d18900a4e9f9dc064de11459fb376b68c81c38af524641669278dd2f9"
+  },
+  "raw/backend-status.response": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/backend-status.response",
+    "sha256": "72b4529be60866b5920ebec745b2f5ec5d36fe6052c5b4643b4d9ed20ac0b19d"
+  },
+  "raw/backend-health.response": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/backend-health.response",
+    "sha256": "572c608c6ea23a7225632af7b9a28f7e71110099fce88b8910b4c791ac468954"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-app-port-3000.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-port-3000.log",
+    "sha256": "4819bd5eb26f6384aa8d5b79f0e98f1528d92b1074e95f1cb3bd7fdb1644bea6"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-app-port-5001.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-port-5001.log",
+    "sha256": "cf51dbc09f8da549cf1a7eb381e61fa7c6d2d39325dc7742a3fffeb66a14d9cd"
+  },
+  "raw/image-start.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-start.log",
+    "sha256": "40c39436c462cd592e45d1f0b41585fe904cb333542e07a8f5d14281c4e44d40"
+  },
+  "raw/image-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-inspect.log",
+    "sha256": "609831158d03ce5b4e9fd1558810886906157de4070552429c8b29e5bb9a32e5"
+  },
+  "raw/real-http-neo4j.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/real-http-neo4j.log",
+    "sha256": "a678bcfb8bf2685ddaefb72b4fe443d27770f8e80e342738c0d6195d78961856"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-port-7687.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-port-7687.log",
+    "sha256": "791a5d804b55e76a176534a8542973195f430768c3d9ae5825be171c141ee1bc"
+  },
+  "raw/services-image-driver-attempt2.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/services-image-driver-attempt2.log",
+    "sha256": "9978ba702d16f86de67512d496059622b51cc52b695702295128b53e7c86d2c9"
+  },
+  "raw/image-context-state-after.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-context-state-after.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/image-built-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-built-inspect.log",
+    "sha256": "609831158d03ce5b4e9fd1558810886906157de4070552429c8b29e5bb9a32e5"
+  },
+  "raw/network-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-remove.log",
+    "sha256": "872e6dc6387ab83d4fba4f2de0fd485e99d5b09d371d3d0e082242781db4a4ad"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-remove.log",
+    "sha256": "dca52c75fdee6fb2c23f130128b4215c80d7d55a6bdc37b0f70949ae688ab43b"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-logs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-logs.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687.log",
+    "sha256": "8a79388489544ada0b95a331142ecf65cb6cb1a9ef69ac60927d81bb43dcbc98"
+  },
+  "raw/neo4j-start.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/neo4j-start.log",
+    "sha256": "6da99094546b97d0cb9a0057dc6df8ea7b7e33af03a79901f375cb7912c823d9"
+  },
+  "raw/network-create.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-create.log",
+    "sha256": "37c2904b05c378a7013466fb00d602e20886fbe0741ca572858648158c820589"
+  },
+  "raw/services-image-driver.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/services-image-driver.log",
+    "sha256": "0796ccc6087c4d3821a3586fbe671799651277ad341f9d0302a370f52aff75c8"
+  },
+  "raw/browser-regressions.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-regressions.log",
+    "sha256": "221a1111bf66747b7a76c6874920fd976ca2dbbea504b59f3cfe9f2b044fec4a"
+  },
+  "raw/browser-regressions-harness.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-regressions-harness.log",
+    "sha256": "a151d1aa7a54c5f4dc2738ca44cf4436ccee0eee5c16e861311f796ed5ee9a1a"
+  },
+  "raw/browser-workflow.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-workflow.log",
+    "sha256": "a7325df6be106482601ea00df4e37060425ebf37f940bfaa9c5670d861b2f94d"
+  },
+  "raw/browser-workflow-harness.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-workflow-harness.log",
+    "sha256": "474ddbe964c2014328ae971e0166815ccd1de680bbe949aaef4e0ecf6d242331"
+  },
+  "raw/browser-driver.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/browser-driver.log",
+    "sha256": "77541bf6e7f4065c92aff7f14a07da1b5bb4801ad93f97b543addba7e7544d38"
+  },
+  "raw/neo4j-backup.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/neo4j-backup.log",
+    "sha256": "9dbc42581ea35fd92af92aee28b5b89b1d27b528de430be4758175cf43f5b185"
+  },
+  "raw/diff-check.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/diff-check.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/compose-config.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/compose-config.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/local-model-inventory.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/local-model-inventory.json",
+    "sha256": "3ad36dc62ad1ad69b7884aef145cd40f89a836d3fdfc649badf538e271ca90b3"
+  },
+  "raw/evaluations.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/evaluations.log",
+    "sha256": "ff4327bd6efbab3f879d175e9aab104ea123bf122c0f8e1f2bb393b283d9a527"
+  },
+  "raw/backup-restore.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/backup-restore.log",
+    "sha256": "27476e87ed8934ee8e27e5a715a655132785ee61726f5308b2e0d6a27c817746"
+  },
+  "raw/image-build.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-build.log",
+    "sha256": "9ce32b9ac0056e6864e98a9bde4aa4cbaa0dc9e3ff3321899d9e45d4659fdda3"
+  },
+  "raw/image-context-tree.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-context-tree.log",
+    "sha256": "07621b603e87167d9e141dd8b368179f6dbe149a99bad433e7f9018c63fbec73"
+  },
+  "raw/image-context-state-before.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-context-state-before.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw/image-source-checkout.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-source-checkout.log",
+    "sha256": "7775b232723349096dab70ebc9534dbf2b09947d062d09eeb36bc07356f8c0a2"
+  },
+  "raw/image-source-clone.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-source-clone.log",
+    "sha256": "41fca289fd63c8e0f705ab8f04365b1da761c0fcb6350c1b47b6d72e4a47f2c7"
+  },
+  "raw/installed-frontend.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/installed-frontend.log",
+    "sha256": "9eedb1455f423372ae9280cb1e262841561f07225919d66a2a08e4bb8c6e3fec"
+  },
+  "raw/installed-root.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/installed-root.log",
+    "sha256": "d7c9c67a612262885a270b38bb95b4f08d0a32916b11125e38851b677ce87884"
+  },
+  "raw/installed-python.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/installed-python.log",
+    "sha256": "271350c93b3b5d00e5b9af9a0aa220da3db0d8d933db532ea2046b615fe96382"
+  },
+  "raw/install-backend.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/install-backend.log",
+    "sha256": "31526777e7e8ba24571feadac006ff2fb221bbb51d3cdb2aed65b33854c2f63d"
+  },
+  "raw/install-frontend.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/install-frontend.log",
+    "sha256": "0f2eba83b6fab3ed8f46544a01a6371c5fd247aaf06b4093dea130308aeb23c5"
+  },
+  "raw/install-root.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/install-root.log",
+    "sha256": "ef38614fcf29801822388b1b9feebc7ba5137f4d3120bd914b2192f32029e5bd"
+  },
+  "raw/checkout.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/checkout.log",
+    "sha256": "7775b232723349096dab70ebc9534dbf2b09947d062d09eeb36bc07356f8c0a2"
+  },
+  "raw/clone.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/logs/clone.log",
+    "sha256": "112e6c662f748d0a41f0b43174c72763d77e07a241519795da8fe198cbd9fee5"
+  },
+  "services-image-attempt1/network-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/network-remove.log",
+    "sha256": "5194de6d6de50a879c4a49d4b4d06a0d312d426fb162f0ab9f598f3d08326b19"
+  },
+  "services-image-attempt1/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-remove.log",
+    "sha256": "dca52c75fdee6fb2c23f130128b4215c80d7d55a6bdc37b0f70949ae688ab43b"
+  },
+  "services-image-attempt1/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-logs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-logs.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "services-image-attempt1/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687.log",
+    "sha256": "8a79388489544ada0b95a331142ecf65cb6cb1a9ef69ac60927d81bb43dcbc98"
+  },
+  "services-image-attempt1/neo4j-start.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/neo4j-start.log",
+    "sha256": "439c6efba4b0edcacb7c4800d2a9abecf23d4d4ee7568e2b64bc99db0b101687"
+  },
+  "services-image-attempt1/network-create.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/network-create.log",
+    "sha256": "a7123bd615767e99f74576aa978dd2efef3f4844973fa7a99c2e778110d6b23c"
+  },
+  "services-image-attempt1/receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-attempt1/receipt.json",
+    "sha256": "3421be1d41126d819bedc69f96f2f9f71e4e3e5890139244631496f7ad0e29ae"
+  },
+  "network-publication-diagnostic/receipt.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/receipt.json",
+    "sha256": "df4805312c35f58670503425feaab7835a70c20420456311ac2c4289cc15af7e"
+  },
+  "network-publication-diagnostic/bridge-network-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-network-remove.txt",
+    "sha256": "ceea5135dbced91932e5dc71eae84b3902f5462b3d68b5d812e9b6421ee04d39"
+  },
+  "network-publication-diagnostic/bridge-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-remove.txt",
+    "sha256": "4735331ae3ac720964a2992ac24ddb8f9cb8c8a8436c0b47a29b0949de653632"
+  },
+  "network-publication-diagnostic/bridge-network-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-network-inspect.txt",
+    "sha256": "9fb39835df3d72ce3695046527d29ab3953e081967c04bc7affabe8dbca3fbaf"
+  },
+  "network-publication-diagnostic/bridge-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-inspect.txt",
+    "sha256": "63d035367688e99f18a82cf53f79e1295f7c14bae81b39f7c4d79d3610dc812e"
+  },
+  "network-publication-diagnostic/bridge-port.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-port.txt",
+    "sha256": "15dd4819192f7c6e28759e6cefa298b1f3b11709e885d6b7915090dbd870218a"
+  },
+  "network-publication-diagnostic/bridge-start.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-start.txt",
+    "sha256": "930bcd8b6f4a249f5976e5f937718ef59ac2daf792c36c4d3ac875632c1b0283"
+  },
+  "network-publication-diagnostic/bridge-network.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/bridge-network.txt",
+    "sha256": "04299a98e4bf749ae45deebaba1483e821e0e88f4e6071de3575f4979b4e1cb9"
+  },
+  "network-publication-diagnostic/internal-network-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-network-remove.txt",
+    "sha256": "f6be7da2c527f8c27863d6b4b29c2f1422c780bf0056f8a8b12670dd20c8a7bc"
+  },
+  "network-publication-diagnostic/internal-remove.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-remove.txt",
+    "sha256": "d4259cfb09aa5ef48b5bbbef3ee4ef128041325dddadd3b974e4749d831b6622"
+  },
+  "network-publication-diagnostic/internal-network-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-network-inspect.txt",
+    "sha256": "30dd1a65c5ec182d3139fd0a21d6b4677f65da96891a037f771dd5dd0b8459a1"
+  },
+  "network-publication-diagnostic/internal-inspect.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-inspect.txt",
+    "sha256": "a0564d56a5914adbcfd462987328d894af098e7e5f120171959cf34309c20ca0"
+  },
+  "network-publication-diagnostic/internal-port.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-port.txt",
+    "sha256": "a93720c3509185e12fe78dced5f68d5aa2e682565db88cdf478854aebebc06c0"
+  },
+  "network-publication-diagnostic/internal-start.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-start.txt",
+    "sha256": "a8ab41973a097669b8cd4cb708d4d452dd17f04236de3bb9cc68a107dd95ffa3"
+  },
+  "network-publication-diagnostic/internal-network.txt": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/network-publication-diagnostic/internal-network.txt",
+    "sha256": "cfc30e20fec87e5cf518c288bbd4ab4940ddaabd15b2837cc953f3612c8b2552"
+  },
+  "execution-helpers/run-frozen-browser.py.txt": {
+    "original": "/tmp/crowdlens-ecc-release-tools/run-frozen-browser.py",
+    "sha256": "488d17cc430dbdf75d24ba822bdb3e244a5cb3fa908bce841f6c29f73a03e4bc"
+  },
+  "execution-helpers/build-frozen-image.py.txt": {
+    "original": "/tmp/crowdlens-ecc-release-tools/build-frozen-image.py",
+    "sha256": "26532add1629a1751f426057ad21acada065df1f666323cd542501e4f5e38043"
+  },
+  "execution-helpers/run-frozen-services-image.py.txt": {
+    "original": "/tmp/crowdlens-ecc-release-tools/run-frozen-services-image.py",
+    "sha256": "d57b56634efdf3479979d81aa0927b4a0318f2fb9223c2dd23ee7ef71fe2817a"
+  },
+  "tool-provisioning/node-provision.json": {
+    "original": "/tmp/crowdlens-ecc-release-tools/node-provision.json",
+    "sha256": "9be1c653ceeacadd33a4c8dc26058d35290d8a2bd250c75789575718287e89f9"
+  },
+  "prior-preparation/neo4j-small-tmpfs.txt": {
+    "original": "/tmp/crowdlens-ecc-release-prep/logs/neo4j-small-tmpfs.log",
+    "sha256": "e2872d01f581c8a0e040b85763e1455a83fd6d6619533811ac1c67a0e30c4f06"
+  },
+  "release-summary.json": {
+    "original": "/tmp/crowdlens-ecc-release-final-242b8999/release-summary.json",
+    "sha256": "d9994de33ae7e12c5cfb1436e86f550e61a715d276620a8bdf7c538f73f90d40"
+  }
+}

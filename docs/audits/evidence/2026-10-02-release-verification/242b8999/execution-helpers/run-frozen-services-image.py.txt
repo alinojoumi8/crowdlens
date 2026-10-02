@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""External execution receipt helper for synthetic real services and image startup."""
+import hashlib,json,os,signal,subprocess,sys,time,urllib.request,uuid
+from pathlib import Path
+from neo4j import GraphDatabase
+root=Path(sys.argv[1]).resolve(); source=root/'source'
+candidate=subprocess.check_output(['git','rev-parse','HEAD'],cwd=source,text=True).strip()
+image=None
+neoimage='sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e'
+prefix='crowdlens-ecc-release-final-'+candidate[:8]+'-'+uuid.uuid4().hex[:6]
+network=prefix+'-net';neo=prefix+'-neo4j';app=prefix+'-app'
+logs=root/'logs'; created=[];netcreated=False
+baseenv={k:os.environ[k] for k in ('HOME','USER','PATH','LANG') if k in os.environ}
+appenv={'LLM_API_KEY':'synthetic-local-only','LLM_DEFAULT_PROVIDER':'ollama','LLM_BASE_URL':'http://127.0.0.1:9/v1','LLM_MODEL_NAME':'synthetic-no-generation','OPENAI_API_BASE_URL':'http://127.0.0.1:9/v1','EMBEDDING_BASE_URL':'http://127.0.0.1:9','EMBEDDING_AUTO_PULL':'False','NEO4J_URI':'bolt://neo4j:7687','NEO4J_USER':'neo4j','NEO4J_PASSWORD':'crowdlens-synthetic-m2-password','JEV_EVIDENCE_MODE':'off','JEV_INTERVIEW_MODE':'off','JEV_RERANK_MODE':'off','MARKET_DATA_PROVIDER':'none','FLASK_DEBUG':'False','FLASK_HOST':'0.0.0.0','FLASK_PORT':'5001','CROWDLENS_BUILD_REVISION':candidate}
+receipt={'candidate':candidate,'image':image,'neo4j_image':neoimage,'network':network,'containers':[neo,app],'commands':[],'checks':{},'started_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'real_model_calls':0,'startup_scope':'existing npm run dev command; synthetic isolated storage; provider endpoints disabled'}
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def save():(root/'services-image-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+def run(label,cmd,check=True,env=baseenv,cwd=source,timeout=180):
+    log=logs/(label+'.log');start=time.monotonic()
+    with log.open('w') as stream:
+        p=subprocess.Popen(cmd,cwd=cwd,env=env,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+        try:code=p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            os.killpg(p.pid,signal.SIGTERM)
+            try:p.wait(timeout=5)
+            except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait()
+            code=124
+    receipt['commands'].append({'label':label,'argv':cmd,'cwd':str(cwd),'exit_code':code,'seconds':round(time.monotonic()-start,3),'log':str(log),'sha256':sha(log)});save()
+    if check and code:raise RuntimeError(label+' failed: '+str(code))
+    return log.read_text()
+def http(label,url):
+    with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(url,timeout=10) as response:
+        content=response.read();status=response.status
+    p=logs/(label+'.response');p.write_bytes(content)
+    receipt['checks'][label]={'url':url,'status':status,'path':str(p),'sha256':sha(p)};save()
+    assert status==200
+    try:return json.loads(content)
+    except ValueError:return content.decode()
+def port(name,target):
+    value=run(name+'-port-'+str(target),['docker','port',name,str(target)+'/tcp']).strip()
+    assert value.startswith('127.0.0.1:')
+    return int(value.rsplit(':',1)[1])
+try:
+    run('network-create',['docker','network','create',network]);netcreated=True
+    run('neo4j-start',['docker','run','--detach','--pull','never','--name',neo,'--network',network,'--network-alias','neo4j','--memory','2g','--cpus','2','--publish','127.0.0.1::7687','--tmpfs','/data:rw,size=2g','--tmpfs','/logs:rw,size=128m','--env','NEO4J_AUTH=neo4j/crowdlens-synthetic-m2-password','--env','NEO4J_server_memory_heap_initial__size=256m','--env','NEO4J_server_memory_heap_max__size=512m','--env','NEO4J_server_memory_pagecache_size=256m',neoimage]);created.append(neo)
+    bolt=port(neo,7687);driver=GraphDatabase.driver('bolt://127.0.0.1:'+str(bolt),auth=('neo4j',appenv['NEO4J_PASSWORD']),connection_timeout=3)
+    error=None
+    for _ in range(90):
+        try:
+            with driver.session() as s:count=s.run('MATCH (n) RETURN count(n) AS n').single()['n']
+            assert count==0;error=None;break
+        except Exception as exc:error=str(exc);time.sleep(1)
+    driver.close()
+    if error:raise RuntimeError('Neo4j actual query readiness failed: '+error)
+    receipt['checks']['neo4j-empty-ready']={'passed':True,'bolt_port':bolt};save()
+    run('real-http-neo4j',['./backend/.venv/bin/python','backend/scripts/check_ecc_services.py','--synthetic','--neo4j-uri','bolt://127.0.0.1:'+str(bolt),'--output-dir',str(root/'services')],env={**baseenv,**appenv,'NEO4J_URI':'bolt://127.0.0.1:'+str(bolt)},timeout=120)
+    receipt['phase']='real HTTP/Neo4j passed; waiting for exact image build';save()
+    for _ in range(3600):
+        build=json.loads((root/'image-build-receipt.json').read_text())
+        if build.get('status')=='failed':raise RuntimeError('Exact image build failed')
+        if build.get('status')=='passed':break
+        time.sleep(.25)
+    else:raise RuntimeError('Image build wait timed out')
+    image=(root/'image-id.txt').read_text().strip();receipt['image']=image;save()
+    run('image-inspect',['docker','image','inspect',image])
+    command=['docker','run','--detach','--pull','never','--name',app,'--network',network,'--memory','4g','--cpus','2','--publish','127.0.0.1::5001','--publish','127.0.0.1::3000','--tmpfs','/app/backend/uploads:rw,size=256m']
+    for key,value in appenv.items():command.extend(['--env',key+'='+value])
+    command.append(image);run('image-start',command);created.append(app)
+    bp=port(app,5001);fp=port(app,3000)
+    error=None
+    for _ in range(90):
+        try:
+            health=http('backend-health','http://127.0.0.1:'+str(bp)+'/health');error=None;break
+        except Exception as exc:error=str(exc);time.sleep(1)
+    if error:raise RuntimeError('Image backend readiness failed: '+error)
+    status=http('backend-status','http://127.0.0.1:'+str(bp)+'/api/status')['data']
+    expected=json.loads((logs/'runtime-identity.log').read_text())
+    assert status['build']==expected,(status['build'],expected)
+    assert status['control_db']['healthy'] and status['neo4j']['healthy'],status
+    assert not status['embedding']['healthy'] and not status['healthy'] and not status['vector_search_usable'],status
+    frontend=http('frontend-index','http://127.0.0.1:'+str(fp)+'/')
+    assert '<html' in frontend.lower()
+    proxy=http('frontend-status-proxy','http://127.0.0.1:'+str(fp)+'/api/status')['data']
+    assert proxy['build']==expected
+    receipt['checks']['source-identity-match']={'passed':True,'identity':expected}
+    receipt['checks']['readiness-boundary']={'control_db_healthy':True,'neo4j_healthy':True,'embedding_healthy':False,'full_healthy':False,'vector_search_usable':False,'llm_configured_is_not_inference':True}
+    for name,cmd in [('image-python-version',['/app/backend/.venv/bin/python','--version']),('image-node-version',['node','--version']),('image-uv-version',['uv','--version']),('image-python-dependency-check',['uv','pip','check','--python','/app/backend/.venv/bin/python'])]:run(name,['docker','exec',app]+cmd)
+    run('image-runtime-diff',['docker','diff',app]);run('image-runtime-inspect',['docker','inspect',app]);run('neo4j-runtime-inspect',['docker','inspect',neo]);run('network-runtime-inspect',['docker','network','inspect',network])
+    receipt['status']='passed'
+except Exception as exc:
+    receipt['status']='failed';receipt['error']=str(exc)
+finally:
+    for name in reversed(created):
+        run(name+'-logs',['docker','logs',name],check=False)
+        run(name+'-remove',['docker','rm','--force',name],check=False)
+    if netcreated:run('network-remove',['docker','network','rm',network],check=False)
+    receipt['cleanup_passed']=all(c['exit_code']==0 for c in receipt['commands'] if c['label'].endswith('-remove'))
+    receipt['finished_at']=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime());save()
+print(json.dumps({'status':receipt['status'],'error':receipt.get('error'),'receipt':str(root/'services-image-receipt.json')}))
+sys.exit(0 if receipt['status']=='passed' and receipt['cleanup_passed'] else 1)
