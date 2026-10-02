@@ -85,12 +85,14 @@ await check('interrupted root report exposes manual resume controls', async () =
     const response = await route.fetch()
     const body = await response.json()
     body.data.status = 'interrupted'
+    body.data.effective_status = 'interrupted'
     await route.fulfill({ json: body })
   })
   await page.route('**/api/report/report_synthetic/progress', async route => {
     const response = await route.fetch()
     const body = await response.json()
     body.data.status = 'interrupted'
+    body.data.effective_status = 'interrupted'
     await route.fulfill({ json: body })
   })
   await page.reload()
