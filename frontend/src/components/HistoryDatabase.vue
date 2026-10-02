@@ -23,11 +23,16 @@
         v-for="(project, index) in projects" 
         :key="project.simulation_id"
         class="project-card"
+        role="button"
+        tabindex="0"
+        :aria-label="`Open simulation ${getSimulationTitle(project.simulation_requirement)}`"
         :class="{ expanded: isExpanded, hovering: hoveringCard === index }"
         :style="getCardStyle(index)"
         @mouseenter="hoveringCard = index"
         @mouseleave="hoveringCard = null"
         @click="navigateToProject(project)"
+        @keydown.enter.prevent="navigateToProject(project)"
+        @keydown.space.prevent="navigateToProject(project)"
       >
         <!-- Card header: simulation_id and feature availability status -->
         <div class="card-header">
@@ -104,12 +109,17 @@
       <span class="loading-spinner"></span>
       <span class="loading-text">Loading...</span>
     </div>
+    <div v-else-if="historyError" class="history-message" role="alert">
+      <p>Unable to load simulation records.</p>
+      <button @click="loadHistory">Retry history</button>
+    </div>
+    <p v-else-if="projects.length === 0" class="history-message" role="status">No simulation records yet. Upload a document to start a scenario.</p>
 
     <!-- Simulation playback details modal -->
     <Teleport to="body">
       <Transition name="modal">
         <div v-if="selectedProject" class="modal-overlay" @click.self="closeModal">
-          <div class="modal-content">
+          <div class="modal-content" ref="dialog" role="dialog" aria-modal="true" aria-label="Simulation details" @keydown="handleDialogKey">
             <!-- Modal header -->
             <div class="modal-header">
               <div class="modal-title-section">
@@ -119,7 +129,7 @@
                 </span>
                 <span class="modal-create-time">{{ formatDate(selectedProject.created_at) }} {{ formatTime(selectedProject.created_at) }}</span>
               </div>
-              <button class="modal-close" @click="closeModal">×</button>
+              <button class="modal-close" aria-label="Close simulation details" @click="closeModal">×</button>
             </div>
 
             <!-- Modal content -->
@@ -216,10 +226,13 @@ const route = useRoute()
 // State
 const projects = ref([])
 const loading = ref(true)
+const historyError = ref(false)
 const isExpanded = ref(false)
 const hoveringCard = ref(null)
 const historyContainer = ref(null)
 const selectedProject = ref(null)  // Currently selected project (for modal)
+const dialog = ref(null)
+let dialogTrigger = null
 let observer = null
 let isAnimating = false  // Animation lock to prevent flickering
 let expandDebounceTimer = null  // Debounce timer
@@ -408,12 +421,25 @@ const truncateFilename = (filename, maxLength) => {
 
 // Open project details modal
 const navigateToProject = (simulation) => {
+  dialogTrigger = document.activeElement
   selectedProject.value = simulation
+  nextTick(() => dialog.value?.querySelector('button')?.focus())
 }
 
 // Close modal
 const closeModal = () => {
   selectedProject.value = null
+  nextTick(() => dialogTrigger?.focus())
+}
+
+const handleDialogKey = (event) => {
+  if (event.key === 'Escape') { event.preventDefault(); closeModal(); return }
+  if (event.key !== 'Tab') return
+  const controls = [...dialog.value.querySelectorAll('button:not(:disabled), a[href], input, select, textarea, [tabindex="0"]')]
+    .filter(element => element.getClientRects().length)
+  const first = controls[0], last = controls.at(-1)
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
 }
 
 // Navigate to Graph Construction page (Project)
@@ -497,13 +523,17 @@ const phaseStatusClass = (phase) => {
 const loadHistory = async () => {
   try {
     loading.value = true
+    historyError.value = false
     const response = await getSimulationHistory(20)
     if (response.success) {
       projects.value = response.data || []
+    } else {
+      historyError.value = true
     }
   } catch (error) {
     console.error('Failed to load history projects:', error)
     projects.value = []
+    historyError.value = true
   } finally {
     loading.value = false
   }

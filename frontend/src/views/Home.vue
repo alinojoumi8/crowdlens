@@ -96,6 +96,7 @@
                 <span>Supported: PDF, MD, TXT</span>
               </div>
               <div
+                class="upload-zone"
                 :style="s.uploadZone"
                 @dragover.prevent="handleDragOver"
                 @dragleave.prevent="handleDragLeave"
@@ -112,14 +113,16 @@
                   <div v-for="(file, index) in files" :key="index" :style="s.fileItem">
                     <span>📄</span>
                     <span :style="s.fileName">{{ file.name }}</span>
-                    <button @click.stop="removeFile(index)" :style="s.removeBtn">×</button>
+                    <button @click.stop="removeFile(index)" @keydown.stop :aria-label="`Remove ${file.name}`" :style="s.removeBtn">×</button>
                   </div>
                 </div>
               </div>
+              <button class="source-picker" aria-label="Choose source files" :disabled="loading" @click="triggerFileInput">Choose source files</button>
 
               <div :style="{ marginTop: '12px' }">
                 <div :style="s.urlLabel">or paste website link(s) — one per line</div>
                 <textarea
+                  aria-label="Website links"
                   v-model="urlText"
                   :style="s.urlInput"
                   placeholder="https://example.com/article"
@@ -136,7 +139,7 @@
                 <span>>_ 02 / Simulation Prompt</span>
               </div>
               <div :style="s.inputWrapper">
-                <textarea v-model="formData.simulationRequirement" :style="s.codeInput" placeholder="Describe the scenario and reactions you want to explore" rows="6" :disabled="loading"></textarea>
+                <textarea aria-label="Simulation prompt" v-model="formData.simulationRequirement" :style="s.codeInput" placeholder="Describe the scenario and reactions you want to explore" rows="6" :disabled="loading"></textarea>
                 <div :style="s.modelBadge">Local or hosted AI · Neo4j memory</div>
               </div>
             </div>
@@ -174,14 +177,14 @@ const s = reactive({
   heroSection: { display: 'flex', justifyContent: 'space-between', marginBottom: '80px', position: 'relative' },
   heroLeft: { flex: '1', paddingRight: '60px' },
   tagRow: { display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px', fontFamily: mono, fontSize: '0.8rem' },
-  orangeTag: { background: '#FF4500', color: '#fff', padding: '4px 10px', fontWeight: '700', letterSpacing: '1px', fontSize: '0.75rem' },
-  versionText: { color: '#999', fontWeight: '500', letterSpacing: '0.5px' },
+  orangeTag: { background: '#C73500', color: '#fff', padding: '4px 10px', fontWeight: '700', letterSpacing: '1px', fontSize: '0.75rem' },
+  versionText: { color: '#656565', fontWeight: '500', letterSpacing: '0.5px' },
   mainTitle: { fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: '1.2', fontWeight: '500', margin: '0 0 40px 0', letterSpacing: '-2px', color: '#000' },
   gradientText: { background: 'linear-gradient(90deg, #000 0%, #444 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' },
   heroDesc: { fontSize: '1.05rem', lineHeight: '1.8', color: '#666', maxWidth: '640px', marginBottom: '50px', fontWeight: '400', textAlign: 'left' },
   heroDescP: { marginBottom: '1.5rem' },
   highlightBold: { color: '#000', fontWeight: '700' },
-  highlightOrange: { color: '#FF4500', fontWeight: '700', fontFamily: mono },
+  highlightOrange: { color: '#C73500', fontWeight: '700', fontFamily: mono },
   highlightCode: { background: 'rgba(0,0,0,0.05)', padding: '2px 6px', borderRadius: '2px', fontFamily: mono, fontSize: '0.9em', color: '#000', fontWeight: '600' },
   sloganText: { fontSize: '1.2rem', fontWeight: '520', color: '#000', letterSpacing: '1px', borderLeft: '3px solid #FF4500', paddingLeft: '15px', marginTop: '20px' },
   blinkingCursor: { color: '#FF4500', fontWeight: '700' },
@@ -192,20 +195,20 @@ const s = reactive({
   scrollDownBtn: { width: '40px', height: '40px', border: '1px solid #E5E5E5', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#FF4500', fontSize: '1.2rem' },
   dashboardSection: { display: 'flex', gap: '60px', borderTop: '1px solid #E5E5E5', paddingTop: '60px', alignItems: 'flex-start' },
   leftPanel: { flex: '0.8', display: 'flex', flexDirection: 'column' },
-  panelHeader: { fontFamily: mono, fontSize: '0.8rem', color: '#999', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' },
+  panelHeader: { fontFamily: mono, fontSize: '0.8rem', color: '#656565', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' },
   statusDot: { color: '#FF4500', fontSize: '0.8rem' },
   sectionTitle: { fontSize: '2rem', fontWeight: '520', margin: '0 0 15px 0' },
   sectionDesc: { color: '#666', marginBottom: '25px', lineHeight: '1.6' },
   metricsRow: { display: 'flex', gap: '20px', marginBottom: '15px' },
   metricCard: { border: '1px solid #E5E5E5', padding: '20px 30px', minWidth: '150px' },
   metricValue: { fontFamily: mono, fontSize: '1.8rem', fontWeight: '520', marginBottom: '5px' },
-  metricLabel: { fontSize: '0.85rem', color: '#999' },
+  metricLabel: { fontSize: '0.85rem', color: '#656565' },
   stepsContainer: { border: '1px solid #E5E5E5', padding: '30px', position: 'relative' },
-  stepsHeader: { fontFamily: mono, fontSize: '0.8rem', color: '#999', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '8px' },
+  stepsHeader: { fontFamily: mono, fontSize: '0.8rem', color: '#656565', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '8px' },
   diamondIcon: { fontSize: '1.2rem', lineHeight: '1' },
   workflowList: { display: 'flex', flexDirection: 'column', gap: '20px' },
   workflowItem: { display: 'flex', alignItems: 'flex-start', gap: '20px' },
-  stepNum: { fontFamily: mono, fontWeight: '700', color: '#000', opacity: '0.3' },
+  stepNum: { fontFamily: mono, fontWeight: '700', color: '#000', opacity: '0.65' },
   stepInfo: { flex: '1' },
   stepTitle: { fontWeight: '520', fontSize: '1rem', marginBottom: '4px' },
   stepDesc: { fontSize: '0.85rem', color: '#666' },
@@ -215,20 +218,20 @@ const s = reactive({
   consoleHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '15px', fontFamily: mono, fontSize: '0.75rem', color: '#666' },
   uploadZone: { border: '1px dashed #CCC', height: '200px', overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#FAFAFA' },
   uploadPlaceholder: { textAlign: 'center' },
-  uploadIcon: { width: '40px', height: '40px', border: '1px solid #DDD', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 15px', color: '#999' },
+  uploadIcon: { width: '40px', height: '40px', border: '1px solid #DDD', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 15px', color: '#656565' },
   uploadTitle: { fontWeight: '500', fontSize: '0.9rem', marginBottom: '5px' },
-  uploadHint: { fontFamily: mono, fontSize: '0.75rem', color: '#999' },
+  uploadHint: { fontFamily: mono, fontSize: '0.75rem', color: '#656565' },
   fileList: { width: '100%', padding: '15px', display: 'flex', flexDirection: 'column', gap: '10px' },
   fileItem: { display: 'flex', alignItems: 'center', background: '#fff', padding: '8px 12px', border: '1px solid #EEE', fontFamily: mono, fontSize: '0.85rem' },
   fileName: { flex: '1', margin: '0 10px' },
-  removeBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#999' },
-  urlLabel: { fontFamily: mono, fontSize: '0.72rem', color: '#999', marginBottom: '6px' },
+  removeBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#656565' },
+  urlLabel: { fontFamily: mono, fontSize: '0.72rem', color: '#656565', marginBottom: '6px' },
   urlInput: { width: '100%', border: '1px solid #DDD', background: '#FAFAFA', padding: '10px 12px', fontFamily: mono, fontSize: '0.82rem', lineHeight: '1.5', resize: 'vertical', outline: 'none', boxSizing: 'border-box' },
   consoleDivider: { display: 'flex', alignItems: 'center', margin: '10px 0', borderTop: '1px solid #EEE' },
-  consoleDividerText: { padding: '0 15px', fontFamily: mono, fontSize: '0.7rem', color: '#BBB', letterSpacing: '1px' },
+  consoleDividerText: { padding: '0 15px', fontFamily: mono, fontSize: '0.7rem', color: '#656565', letterSpacing: '1px' },
   inputWrapper: { position: 'relative', border: '1px solid #DDD', background: '#FAFAFA' },
   codeInput: { width: '100%', border: 'none', background: 'transparent', padding: '20px', fontFamily: mono, fontSize: '0.9rem', lineHeight: '1.6', resize: 'vertical', outline: 'none', minHeight: '150px' },
-  modelBadge: { position: 'absolute', bottom: '10px', right: '15px', fontFamily: mono, fontSize: '0.7rem', color: '#AAA' },
+  modelBadge: { position: 'absolute', bottom: '10px', right: '15px', fontFamily: mono, fontSize: '0.7rem', color: '#656565' },
   btnSection: { padding: '0 20px 20px' },
   startEngineBtn: { width: '100%', background: '#000', color: '#fff', border: 'none', padding: '20px', fontFamily: mono, fontWeight: '700', fontSize: '1.1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', letterSpacing: '1px' },
 })

@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">CrowdLens</div>
+        <a class="brand" href="/" @click.prevent="router.push('/')">CrowdLens</a>
       </div>
       
       <div class="header-center">
@@ -36,7 +36,7 @@
     <!-- Main Content Area -->
     <main class="content-area">
       <!-- Left Panel: Graph -->
-      <div class="panel-wrapper left" :style="leftPanelStyle">
+      <div class="panel-wrapper left" :style="leftPanelStyle" :inert="viewMode === 'workbench'">
         <GraphPanel 
           :graphData="graphData"
           :loading="graphLoading"
@@ -47,7 +47,12 @@
       </div>
 
       <!-- Right Panel: Step Components -->
-      <div class="panel-wrapper right" :style="rightPanelStyle">
+      <div class="panel-wrapper right" :style="rightPanelStyle" :inert="viewMode === 'graph'">
+        <div v-if="error" class="workflow-error" role="alert">
+          <p>{{ error }}</p>
+          <button v-if="canRetryGraph" :disabled="startingGraph" @click="startBuildGraph">Retry graph build</button>
+          <button v-else-if="currentProjectId === 'new'" :disabled="loading" @click="handleNewProject">Retry upload</button>
+        </div>
         <!-- Step 1: Graph Build -->
         <Step1GraphBuild 
           v-if="currentStep === 1"
@@ -97,8 +102,10 @@ const stepNames = ['Graph Build', 'Env Setup', 'Simulation', 'Report', 'Interact
 // Data State
 const currentProjectId = ref(route.params.projectId)
 const loading = ref(false)
+const startingGraph = ref(false)
 const graphLoading = ref(false)
 const error = ref('')
+const canRetryGraph = computed(() => projectData.value?.status === 'failed' && !!projectData.value?.ontology)
 const projectData = ref(null)
 const graphData = ref(null)
 const currentPhase = ref(-1) // -1: Upload, 0: Ontology, 1: Build, 2: Complete
@@ -205,6 +212,7 @@ const handleNewProject = async () => {
 
   try {
     loading.value = true
+    error.value = ''
     currentPhase.value = 0
     ontologyProgress.value = { message: 'Uploading and analyzing docs...' }
     const sourceSummary = [
@@ -280,11 +288,14 @@ const updatePhaseByStatus = (status) => {
     case 'ontology_generated': currentPhase.value = 0; break;
     case 'graph_building': currentPhase.value = 1; break;
     case 'graph_completed': currentPhase.value = 2; break;
-    case 'failed': error.value = 'Project failed'; break;
+    case 'failed': error.value = projectData.value?.error || 'Project failed'; currentPhase.value = 0; break;
   }
 }
 
 const startBuildGraph = async () => {
+  if (startingGraph.value) return
+  startingGraph.value = true
+  error.value = ''
   try {
     currentPhase.value = 1
     buildProgress.value = { progress: 0, message: 'Starting build...', detail: {} }
@@ -305,6 +316,8 @@ const startBuildGraph = async () => {
   } catch (err) {
     error.value = err.message
     addLog(`Exception in startBuildGraph: ${err.message}`)
+  } finally {
+    startingGraph.value = false
   }
 }
 
@@ -374,7 +387,11 @@ const pollTaskStatus = async (taskId) => {
         }
       } else if (task.status === 'failed') {
         stopPolling()
-        error.value = task.error
+        stopGraphPolling()
+        error.value = task.message || task.error || 'Graph build failed'
+        currentPhase.value = 0
+        const project = await getProject(currentProjectId.value)
+        if (project.success) projectData.value = project.data
         addLog(`Graph build task failed: ${task.error}`)
       }
     }

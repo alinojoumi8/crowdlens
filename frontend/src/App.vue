@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+import './workflow.css'
 // Use Vue Router to manage pages
 </script>
 

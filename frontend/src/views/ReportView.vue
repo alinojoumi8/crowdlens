@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">CrowdLens</div>
+        <a class="brand" href="/" @click.prevent="router.push('/')">CrowdLens</a>
       </div>
       
       <div class="header-center">
@@ -36,7 +36,7 @@
     <!-- Main Content Area -->
     <main class="content-area">
       <!-- Left Panel: Graph -->
-      <div class="panel-wrapper left" :style="leftPanelStyle">
+      <div class="panel-wrapper left" :style="leftPanelStyle" :inert="viewMode === 'workbench'">
         <GraphPanel 
           :graphData="graphData"
           :loading="graphLoading"
@@ -48,7 +48,7 @@
       </div>
 
       <!-- Right Panel: Step4 Report -->
-      <div class="panel-wrapper right" :style="rightPanelStyle">
+      <div class="panel-wrapper right" :style="rightPanelStyle" :inert="viewMode === 'graph'">
         <Step4Report
           :reportId="currentReportId"
           :simulationId="simulationId"

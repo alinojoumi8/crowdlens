@@ -2,10 +2,12 @@ import service, { requestWithRetry } from './index'
 
 /**
  * Start report generation
- * @param {Object} data - { simulation_id, force_regenerate? }
+ * @param {Object} data - { simulation_id, force_regenerate?, request_key? }
  */
 export const generateReport = (data) => {
-  return requestWithRetry(() => service.post('/api/report/generate', data), 3, 1000)
+  // One logical request survives transport retries. A new manual invocation gets a new key.
+  const payload = { ...data, request_key: data.request_key ?? crypto.randomUUID() }
+  return requestWithRetry(() => service.post('/api/report/generate', payload), 3, 1000)
 }
 
 /**

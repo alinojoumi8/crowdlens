@@ -227,7 +227,7 @@
     <!-- Show Edge Labels Toggle -->
     <div v-if="graphData" class="edge-labels-toggle">
       <label class="toggle-switch">
-        <input type="checkbox" v-model="showEdgeLabels" />
+        <input type="checkbox" v-model="showEdgeLabels" aria-label="Show edge labels" />
         <span class="slider"></span>
       </label>
       <span class="toggle-label">Show Edge Labels</span>

@@ -245,13 +245,13 @@
           </div>
 
           <div v-if="reportQuality || reportProgress?.is_stale" class="quality-strip" :class="`quality-strip--${statusClass}`">
-            <span v-if="reportQuality" class="quality-score mono">Quality {{ reportQuality.score }}/100</span>
+            <span v-if="reportQuality" class="quality-score mono">Quality {{ displayScore(reportQuality.score) }}</span>
             <span v-if="reportQuality?.deductions?.length" class="quality-note">{{ reportQuality.deductions[0].message }}</span>
             <span v-if="reportProgress?.is_stale" class="quality-note">No heartbeat for {{ reportProgress.seconds_since_update }}s</span>
           </div>
 
           <div v-if="graphQuality" class="quality-strip" :class="`quality-strip--${graphQualityStatusClass}`">
-            <span class="quality-score mono">Graph {{ graphQuality.score }}/100</span>
+            <span class="quality-score mono">Graph {{ displayScore(graphQuality.score) }}</span>
             <span class="quality-note">{{ graphQualitySummary }}</span>
           </div>
 
@@ -576,7 +576,7 @@
         <span class="log-title">CONSOLE OUTPUT</span>
         <span class="log-id">{{ reportId || 'NO_REPORT' }}</span>
       </div>
-      <div class="log-content" ref="logContent">
+      <div class="log-content" ref="logContent" tabindex="0" role="region" aria-label="System log">
         <div class="log-line" v-for="(log, idx) in consoleLogs" :key="idx">
           <span class="log-msg" :class="getLogLevelClass(log)">{{ log }}</span>
         </div>
@@ -1939,11 +1939,13 @@ const statusText = computed(() => {
 })
 
 const canResumeReport = computed(() => {
-  return !reportRevision.value.immutable && !!props.reportId && (reportStatus.value === 'failed' || reportProgress.value?.is_stale)
+  return !reportRevision.value.immutable && !!props.reportId && (['failed', 'interrupted'].includes(reportStatus.value) || reportProgress.value?.is_stale)
 })
 
+const displayScore = value => typeof value === 'number' && Number.isFinite(value) ? `${value}/100` : 'Unknown'
+
 const graphQualityStatusClass = computed(() => {
-  if (!graphQuality.value) return 'pending'
+  if (!graphQuality.value || !['pass', 'warn', 'fail'].includes(graphQuality.value.status)) return 'pending'
   if (graphQuality.value.status === 'fail') return 'error'
   if (graphQuality.value.status === 'warn') return 'needs-review'
   return 'completed'
@@ -1952,6 +1954,7 @@ const graphQualityStatusClass = computed(() => {
 const graphQualitySummary = computed(() => {
   const deductions = graphQuality.value?.deductions || []
   if (deductions.length > 0) return deductions[0].message
+  if (!['pass', 'warn', 'fail'].includes(graphQuality.value?.status)) return 'Graph readiness has not been established'
   if (graphQuality.value?.safe_to_report) return 'Graph structure is ready for synthesis'
   return 'Graph structure is usable, but embeddings may still need repair'
 })
@@ -2079,7 +2082,7 @@ const activeReportTimingPhase = computed(() => {
 const formatElapsedTime = computed(() => {
   const persistedDuration = formatDuration(reportTiming.value?.total_seconds)
   if (persistedDuration) return persistedDuration
-  if (!startTime.value) return '0s'
+  if (!startTime.value) return 'Unknown'
   const lastLog = agentLogs.value[agentLogs.value.length - 1]
   const elapsed = lastLog?.elapsed_seconds || 0
   if (elapsed < 60) return `${Math.round(elapsed)}s`
