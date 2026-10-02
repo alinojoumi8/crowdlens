@@ -1208,7 +1208,7 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   font-size: 1.5rem;
-  color: #9CA3AF;
+  color: #626B7A;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1423,7 +1423,7 @@ onUnmounted(() => {
 .hint-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 0.3px;
   text-align: center;
   line-height: 1.5;

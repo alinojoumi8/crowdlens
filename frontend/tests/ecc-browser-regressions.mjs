@@ -1,6 +1,7 @@
 // Current-source loopback preview only. See the Milestone 4 audit for substitutes.
 // ECC_BROWSER_TOOLS points to separately installed, pinned playwright-core/axe-core.
 import assert from 'node:assert/strict'
+import { inspectModalContrast } from './ecc-browser-modal-contrast.mjs'
 import { createRequire } from 'node:module'
 import { mkdir, writeFile, readFile } from 'node:fs/promises'
 const require = createRequire(`${process.env.ECC_BROWSER_TOOLS || '/tmp/crowdlens-ecc-browser-tools'}/package.json`)
@@ -62,12 +63,18 @@ await check('history dialog traps focus, closes with Escape and restores trigger
     await page.setViewportSize({ width, height: 1000 })
     await page.waitForTimeout(300)
     await page.screenshot({ path: `${output}/history-dialog-${width}.png` })
-    const violations = await page.evaluate(async () => (await axe.run(document, {
-      runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] }
-    })).violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) })))
-    modalA11y.push({ width, violations })
+    const scan = await page.evaluate(async () => {
+      const result = await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] } })
+      const summarize = items => items.map(item => ({ id: item.id, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) }))
+      return { violations: summarize(result.violations), incomplete: summarize(result.incomplete) }
+    })
+    const textContrast = await page.evaluate(inspectModalContrast)
+    modalA11y.push({ width, ...scan, textContrast })
   }
-  for (const item of modalA11y) assert.deepEqual(item.violations, [], `History dialog accessibility findings at ${item.width}px`)
+  for (const item of modalA11y) {
+    assert.deepEqual(item.violations, [], `History dialog accessibility findings at ${item.width}px`)
+    assert.deepEqual(item.textContrast.filter(text => text.ratio < text.minimum), [], `History dialog text contrast at ${item.width}px`)
+  }
   await page.setViewportSize({ width: 375, height: 1000 })
   await page.keyboard.press('Escape')
   await dialog.waitFor({ state: 'detached', timeout: 1500 })
