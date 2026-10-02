@@ -120,6 +120,7 @@ def main():
         python = str(checkout / "backend/.venv/bin/python")
         run("python-version", [python, "--version"])
         run("installed-python", ["uv", "pip", "freeze", "--python", python])
+        run("python-dependency-check", ["uv", "pip", "check", "--python", python])
         run("installed-root", ["npm", "ls", "--all", "--json"])
         run("installed-frontend", ["npm", "ls", "--prefix", "frontend", "--all", "--json"])
         run("check", ["npm", "run", "check"], timeout=1200)
