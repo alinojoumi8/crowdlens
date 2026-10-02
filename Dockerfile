@@ -8,6 +8,10 @@ RUN apt-get update \
 # 从 uv 官方镜像复制 uv
 COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /uvx /bin/
 
+ARG CROWDLENS_BUILD_REVISION
+LABEL org.opencontainers.image.revision=$CROWDLENS_BUILD_REVISION
+ENV CROWDLENS_BUILD_REVISION=$CROWDLENS_BUILD_REVISION
+
 WORKDIR /app
 
 # 先复制依赖描述文件以利用缓存

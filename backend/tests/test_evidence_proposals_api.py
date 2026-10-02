@@ -178,3 +178,53 @@ def test_accept_endpoint_recovers_interrupted_publication(app, monkeypatch, comm
     response = client.post(url + f'/{identifier}/accept', json=body)
     assert response.status_code == 200
     assert response.json['data']['report_id'] == proposal['revision_report_id']
+
+
+def test_milestone2_digest_concurrency_and_parent_integrity(app):
+    from concurrent.futures import ThreadPoolExecutor
+    from pathlib import Path
+    store = app.extensions['evidence_proposal_store']
+    before = {p.name: p.read_bytes() for p in Path(store.root, 'report_root').iterdir()}
+    client = app.test_client(); url = '/api/report/report_root/evidence-proposals'
+    identifier = client.post(url, json={'section_index': 1, 'request_key': 'm2-concurrent'}).json['data']['proposal_id']
+    proposal = terminal(client, identifier)
+    import threading
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal': worker.join(10)
+    assert client.post(url + f'/{identifier}/accept', json={'proposal_digest': 'stale'}).status_code == 409
+    body = {'proposal_digest': proposal['proposal_digest']}
+    def accept():
+        with app.test_client() as other:
+            return other.post(url + f'/{identifier}/accept', json=body).status_code
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        statuses = list(pool.map(lambda _: accept(), range(2)))
+    assert all(status in {200, 409} for status in statuses) and 200 in statuses
+    revision = client.post(url + f'/{identifier}/accept', json=body).json['data']
+    assert revision['status'] == 'needs_review'
+    assert revision['outline']['sections'][1] == sample_report().to_dict()['outline']['sections'][1]
+    assert len(client.get('/api/report/report_root/revisions').json['data']) == 2
+    assert {p.name:p.read_bytes() for p in Path(store.root, 'report_root').iterdir()} == before
+
+
+def test_milestone2_new_store_recovers_published_revision_without_sources(app, monkeypatch):
+    from app.services.report_revisions import ReportRevisionService
+    client = app.test_client(); url = '/api/report/report_root/evidence-proposals'
+    identifier = client.post(url, json={'section_index':1,'request_key':'m2-restart'}).json['data']['proposal_id']
+    proposal = terminal(client, identifier)
+    import threading
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal': worker.join(10)
+    original = ReportRevisionService._publish
+    def crash(self, *args):
+        original(self, *args)
+        raise OSError('synthetic post-publication interruption')
+    monkeypatch.setattr(ReportRevisionService, '_publish', crash)
+    body = {'proposal_digest':proposal['proposal_digest']}
+    assert client.post(url+f'/{identifier}/accept',json=body).status_code == 503
+    monkeypatch.setattr(ReportRevisionService, '_publish', original)
+    app.extensions['evidence_proposal_store'] = ProposalStore(app.extensions['evidence_proposal_store'].root)
+    app.extensions['neo4j_storage'] = None
+    recovered = client.post(url+f'/{identifier}/accept',json=body)
+    assert recovered.status_code == 200
+    assert recovered.json['data']['report_id'] == proposal['revision_report_id']
+    assert recovered.json['data']['status'] == 'needs_review'

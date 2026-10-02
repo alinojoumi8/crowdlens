@@ -210,6 +210,9 @@ def create_simulation():
                 "error": "Project has not built knowledge graph yet, please call /api/graph/build first"
             }), 400
         
+        if graph_id != project.graph_id:
+            return jsonify(success=False, error='graph_scope_mismatch'), 409
+
         manager = SimulationManager()
         prediction_settings = normalize_prediction_settings(
             {

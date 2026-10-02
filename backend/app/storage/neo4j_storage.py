@@ -1410,7 +1410,7 @@ class Neo4jStorage(GraphStorage):
                     excerpt = episode["data"]
                     sources.append({
                         "evidence_id": f"episode:{eid}", "episode_id": eid,
-                        "origin": "source_document" if episode.get("document_id") else "unknown",
+                        "origin": episode.get("origin", "source_document" if episode.get("document_id") else "unknown"),
                         "excerpt": excerpt, "source_hash": hashlib.sha256(excerpt.encode()).hexdigest(),
                         "graph_id": graph_id, "case_id": episode.get("case_id"),
                         "case_version_id": episode.get("case_version_id"),

@@ -5,6 +5,7 @@ Application status endpoints.
 from flask import current_app, jsonify
 
 from ..config import Config
+from ..utils.build_identity import runtime_identity
 from ..services.jev_policy import decision_configuration
 from . import status_bp
 
@@ -35,6 +36,7 @@ def get_status():
     if storage is None:
         data = {
             "service": "CrowdLens Backend",
+            "build": runtime_identity(),
             "healthy": False,
             "llm": llm,
             "decisions": decision_configuration(),
@@ -59,6 +61,7 @@ def get_status():
     embedding_status = neo4j_status.get("embedding", {})
     data = {
         "service": "CrowdLens Backend",
+            "build": runtime_identity(),
         "healthy": bool(
             neo4j_status.get("healthy")
             and embedding_status.get("healthy")

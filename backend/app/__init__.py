@@ -144,7 +144,8 @@ def create_app(config_class=Config):
     # Health check
     @app.route('/health')
     def health():
-        return {'status': 'ok', 'service': 'CrowdLens Backend'}
+        from .utils.build_identity import runtime_identity
+        return {'status': 'ok', 'service': 'CrowdLens Backend', 'build': runtime_identity()}
 
     if should_log_startup:
         logger.info("CrowdLens Backend startup complete")

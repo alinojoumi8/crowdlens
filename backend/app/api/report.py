@@ -138,6 +138,8 @@ def generate_report():
             return jsonify({"success": False, "error": f"Project does not exist: {state.project_id}"}), 404
 
         graph_id = state.graph_id or project.graph_id
+        if graph_id != project.graph_id:
+            return jsonify(success=False, error='graph_scope_mismatch'), 409
         if not graph_id:
             return jsonify({"success": False, "error": "Missing graph ID, please ensure graph is built"}), 400
 
@@ -350,6 +352,14 @@ def chat_with_report_agent():
         message = data.get('message')
         chat_history = data.get('chat_history', [])
 
+        if (not isinstance(chat_history, list) or len(chat_history) > 100
+                or any(not isinstance(item, dict)
+                       or set(item) != {'role', 'content'}
+                       or item['role'] not in {'user', 'assistant'}
+                       or not isinstance(item['content'], str)
+                       or len(item['content']) > 15000 for item in chat_history)):
+            return jsonify(success=False, error='invalid_chat_history'), 400
+
         if not simulation_id:
             return jsonify({"success": False, "error": "Please provide simulation_id"}), 400
         if not message:
@@ -365,6 +375,8 @@ def chat_with_report_agent():
             return jsonify({"success": False, "error": f"Project does not exist: {state.project_id}"}), 404
 
         graph_id = state.graph_id or project.graph_id
+        if graph_id != project.graph_id:
+            return jsonify(success=False, error='graph_scope_mismatch'), 409
         if not graph_id:
             return jsonify({"success": False, "error": "Missing graph ID"}), 400
 

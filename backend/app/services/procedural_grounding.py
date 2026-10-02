@@ -8,7 +8,8 @@ def build_grounding(episodes, graph_id, case_id, case_version_id):
     total_chars = 0
     incomplete = False
     for episode in episodes:
-        if (not case_id or not case_version_id or episode.get('graph_id') != graph_id
+        if (episode.get('origin', 'source_document') != 'source_document'
+                or not case_id or not case_version_id or episode.get('graph_id') != graph_id
                 or episode.get('case_id') != case_id or episode.get('case_version_id') != case_version_id
                 or not episode.get('document_id') or episode.get('page') != 1):
             continue
