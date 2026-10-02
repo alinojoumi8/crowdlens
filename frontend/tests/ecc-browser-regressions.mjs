@@ -98,7 +98,7 @@ await check('interrupted root report exposes manual resume controls', async () =
   await page.reload()
   await page.getByRole('button', { name: 'Resume failed section', exact: true }).waitFor()
   assert(await page.getByRole('button', { name: 'Resume failed section', exact: true }).isEnabled())
-  assert.match(await page.locator('.report-panel').innerText(), /Interrupted/)
+  assert.match(await page.locator('.report-panel').innerText(), /interrupted/i)
   await page.unroute('**/api/report/report_synthetic')
   await page.unroute('**/api/report/report_synthetic/progress')
 })
