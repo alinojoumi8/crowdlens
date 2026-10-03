@@ -135,7 +135,7 @@ const statusText = computed(() => {
   return 'Running'
 })
 
-const isSimulating = computed(() => currentStatus.value === 'processing')
+const isSimulating = computed(() => ['running', 'processing'].includes(currentStatus.value))
 
 // --- Helpers ---
 const addLog = (msg) => {

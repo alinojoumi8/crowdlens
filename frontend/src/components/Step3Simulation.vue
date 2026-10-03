@@ -668,7 +668,7 @@ const doStartSimulation = async () => {
   isStarting.value = true
   startError.value = null
   addLog(`Starting ${selectedPlatforms.value.join(' + ')} simulation...`)
-  emit('update-status', 'processing')
+  emit('update-status', 'starting')
 
   try {
     const realistic = props.runtimeMode !== 'fast'
@@ -714,6 +714,7 @@ const doStartSimulation = async () => {
 
       phase.value = 1
       runStatus.value = res.data
+      emit('update-status', res.data.runner_status || 'starting')
 
       startStatusPolling()
       startDetailPolling()

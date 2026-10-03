@@ -90,6 +90,29 @@ it('the simulation page header reflects the stopped child state',async()=>{
   expect(wrapper.get('.status-indicator').text()).toBe('Stopped')
 })
 
+it('restoring a running simulation also restores the graph running state', async () => {
+  wrapper = mount(SimulationRunView, { global: { stubs: {
+    GraphPanel: true,
+    Step3Simulation: { template: '<div />', mounted() { this.$emit('update-status', 'running') } },
+  } } })
+  await flushPromises()
+  expect(wrapper.get('.status-indicator').text()).toBe('Running')
+  expect(wrapper.getComponent({ name: 'GraphPanel' }).props('isSimulating')).toBe(true)
+})
+
+it('keeps a pending Start distinct from an admitted running worker', async () => {
+  let resolveStart
+  startSimulation.mockImplementationOnce(() => new Promise(resolve => { resolveStart = resolve }))
+  wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test' } })
+  await flushPromises()
+  await wrapper.get('button.start').trigger('click')
+  await flushPromises()
+  expect(wrapper.emitted('update-status').flat().at(-1)).toBe('starting')
+  resolveStart({ success: true, data: { runner_status: 'running' } })
+  await flushPromises()
+  expect(wrapper.emitted('update-status').flat()).toContain('running')
+})
+
 it('shows a usable Stop control and preserves the stopped state', async () => {
   getRunStatus.mockResolvedValueOnce({ success: true, data: { runner_status: 'running' } })
   wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test' } })
