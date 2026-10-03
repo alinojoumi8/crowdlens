@@ -219,6 +219,8 @@ def normalize_graph_build_settings(raw: Optional[Dict[str, Any]] = None) -> Dict
 
 def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     raw = raw or {}
+    if not isinstance(raw, dict):
+        raise ValueError('prediction_settings_must_be_object')
     preset_name = str(raw.get("preset") or raw.get("prediction_preset") or "standard_litigation_prediction")
     preset_name = preset_name.strip().lower().replace("-", "_").replace(" ", "_")
     preset_aliases = {
@@ -228,9 +230,10 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
     }
     preset_name = preset_aliases.get(preset_name, preset_name)
     if preset_name not in PREDICTION_PRESETS:
-        preset_name = "standard_litigation_prediction"
+        raise ValueError('unsupported_prediction_preset')
 
     settings = dict(PREDICTION_PRESETS[preset_name])
+    settings['platform'] = 'parallel'
     for key, value in raw.items():
         if key in settings or key in {
             "agent_count",
@@ -249,6 +252,7 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
             "max_rounds",
             "seed",
             "prediction_target",
+            "platform",
         }:
             settings[key] = value
 
@@ -266,7 +270,9 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
         value = settings.get(key)
         if value in ("", None):
             continue
-        settings[key] = max(1, int(value))
+        if isinstance(value, bool) or int(value) < 1 or (isinstance(value, float) and value != int(value)):
+            raise ValueError('invalid_' + key)
+        settings[key] = int(value)
     for key in ("entity_types_include", "entity_types_exclude"):
         value = settings.get(key)
         if isinstance(value, str):
@@ -275,9 +281,16 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
             settings[key] = []
     settings["memory_mode"] = str(settings.get("memory_mode") or "practical").strip().lower()
     if settings["memory_mode"] not in {"off", "practical", "full"}:
-        settings["memory_mode"] = "practical"
+        raise ValueError('unsupported_memory_mode')
     settings["report_mode"] = str(settings.get("report_mode") or "litigation_case").strip().lower().replace("-", "_")
     settings["report_depth"] = str(settings.get("report_depth") or "standard").strip().lower()
+    if settings['report_mode'] not in {'prediction', 'legal_case', 'market_prediction', 'product_risk',
+            'litigation_case', 'motion_only', 'settlement_risk', 'evidence_gap'}:
+        raise ValueError('unsupported_report_mode')
+    if settings['report_depth'] not in {'fast', 'standard', 'deep'}:
+        raise ValueError('unsupported_report_depth')
+    if settings['platform'] not in {'parallel', 'twitter', 'reddit'}:
+        raise ValueError('unsupported_platform')
     return settings
 
 

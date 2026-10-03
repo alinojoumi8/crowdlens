@@ -148,19 +148,21 @@ class TaskManager:
         """
         task_id = str(uuid.uuid4())
         now = datetime.now()
-
-        task = Task(
-            task_id=task_id,
-            task_type=task_type,
-            status=TaskStatus.PENDING,
-            created_at=now,
-            updated_at=now,
-            metadata=metadata or {}
-        )
-
-        with self._task_lock:
-            self._tasks[task_id] = task
-        self.runtime.admit(task.to_dict(), resources)
+        from ..services.workflow_execution import current_scope
+        scope = current_scope()
+        metadata = dict(metadata or {})
+        with self.runtime.gate():
+            if scope and scope.workflow_id:
+                scope.checkpoint()
+                scope.ledger.require_scheduling(scope.workflow_id, scope.epoch)
+                metadata.update(workflow_id=scope.workflow_id, workflow_epoch=scope.epoch)
+                for resource in resources:
+                    scope.ledger.bind(scope.workflow_id, resource['key'])
+            task = Task(task_id=task_id, task_type=task_type, status=TaskStatus.PENDING,
+                        created_at=now, updated_at=now, metadata=metadata)
+            self.runtime.admit(task.to_dict(), resources)
+            with self._task_lock:
+                self._tasks[task_id] = task
 
         metadata_keys = ",".join(sorted((metadata or {}).keys())) or "-"
         logger.info(

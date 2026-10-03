@@ -284,7 +284,7 @@ class SimulationManager:
         defined_entity_types: Optional[List[str]] = None,
         use_llm_for_profiles: bool = True,
         progress_callback: Optional[callable] = None,
-        parallel_profile_count: int = 3,
+        parallel_profile_count: int = None,
         storage: 'GraphStorage' = None,
         forecast_settings: Optional[ForecastSettings] = None,
         prediction_settings: Optional[Dict[str, Any]] = None,
@@ -435,7 +435,7 @@ class SimulationManager:
                     use_llm=use_llm_for_profiles,
                     progress_callback=profile_progress,
                     graph_id=state.graph_id,  # Pass graph_id for graph retrieval
-                    parallel_count=parallel_profile_count,  # Parallel generation count
+                    parallel_count=parallel_profile_count or state.prediction_settings.get('profile_parallelism', 3),
                     realtime_output_path=realtime_output_path,  # Real-time save path
                     output_platform=realtime_platform  # Output format
                 )
@@ -502,6 +502,7 @@ class SimulationManager:
                     enable_twitter=state.enable_twitter,
                     enable_reddit=state.enable_reddit,
                     forecast_settings=forecast_settings.to_dict(),
+                    prediction_settings=state.prediction_settings,
                 )
 
             emit_progress(

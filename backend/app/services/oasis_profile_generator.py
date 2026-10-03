@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from ..config import Config
+from .workflow_execution import workflow_stage
 from .task_execution import fenced
 from contextvars import copy_context
 from ..utils.llm_client import LLMClient
@@ -496,6 +497,7 @@ class OasisProfileGenerator:
         """Determine if entity is a group/institutional type"""
         return entity_type.lower() in self.GROUP_ENTITY_TYPES
     
+    @workflow_stage('profiles')
     def _generate_profile_with_llm(
         self,
         entity_name: str,
@@ -1398,4 +1400,3 @@ Important:
         """[Deprecated] Please use save_profiles() method"""
         logger.warning("save_profiles_to_json is deprecated, please use save_profiles method")
         self.save_profiles(profiles, file_path, platform)
-

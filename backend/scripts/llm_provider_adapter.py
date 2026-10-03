@@ -25,6 +25,7 @@ from openai.types.chat.chat_completion import Choice
 from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from openai import AsyncStream, Stream
 from pydantic import BaseModel
+from app.services.workflow_execution import current_scope, transport_attempt, WorkflowHalt
 
 
 ANTHROPIC_COMPATIBLE_PROVIDERS = {"anthropic", "minimax", "kimi"}
@@ -147,6 +148,13 @@ def create_oasis_model(config: OasisLLMConfig):
             max_retries=config.max_retries,
         )
 
+    from app.services import workflow_execution
+    if not current_scope() and not workflow_execution._ALLOW_UNSCOPED:
+        raise WorkflowHalt('authorization_required')
+    if current_scope():
+        return CountedOpenAIModel(model_type=config.model, api_key=config.api_key,
+            url=config.base_url, timeout=config.timeout, max_retries=config.max_retries)
+
     print(
         f"[{config.provider}] model={config.model}, "
         f"transport=openai_compatible, base_url={config.base_url[:40]}..."
@@ -264,25 +272,31 @@ class AnthropicMessagesModel(BaseModelBackend):
         return body
 
     def _post_messages(self, body: Dict[str, Any]) -> Dict[str, Any]:
-        url = f"{self._url.rstrip('/')}/v1/messages"
+        base = self._url.rstrip('/')
+        openai_transport = isinstance(self, CountedOpenAIModel)
+        url = (base + ('/chat/completions' if base.endswith('/v1') else '/v1/chat/completions')) if openai_transport else base + '/v1/messages'
         headers = {
             "x-api-key": str(self._api_key),
             "anthropic-version": "2023-06-01",
             "content-type": "application/json",
         }
+        if openai_transport:
+            headers = {'Authorization': 'Bearer ' + str(self._api_key), 'content-type': 'application/json'}
 
         last_error: Optional[Exception] = None
         for attempt in range(self._max_retries + 1):
             try:
-                response = requests.post(
-                    url,
-                    headers=headers,
-                    json=body,
-                    timeout=self._timeout,
-                )
-                response.raise_for_status()
-                return response.json()
+                with transport_attempt(str(self.model_type), self._url, attempt + 1) as receipt:
+                    response = requests.post(url, headers=headers, json=body, timeout=self._timeout)
+                    receipt['http_status'] = getattr(response, 'status_code', 200)
+                    response.raise_for_status()
+                    data = response.json()
+                    receipt['usage'] = data.get('usage')
+                return data
             except requests.RequestException as exc:
+                status = exc.response.status_code if exc.response is not None else None
+                if status and status < 500 and status != 429:
+                    raise
                 last_error = exc
                 if attempt >= self._max_retries:
                     break
@@ -412,3 +426,19 @@ class AnthropicMessagesModel(BaseModelBackend):
                 "total_tokens": prompt_tokens + completion_tokens,
             },
         )
+
+
+class CountedOpenAIModel(AnthropicMessagesModel):
+    """OpenAI-compatible CAMEL backend with no hidden SDK transport attempts."""
+    def _build_request_body(self, messages, response_format, tools):
+        body = dict(self.model_config_dict, model=str(self.model_type), messages=messages)
+        body.pop('stream', None)
+        if tools:
+            body['tools'] = tools
+        if response_format:
+            body['response_format'] = {'type': 'json_schema', 'json_schema': {
+                'name': response_format.__name__, 'schema': response_format.model_json_schema()}}
+        return body
+
+    def _to_chat_completion(self, data):
+        return ChatCompletion.model_validate(data)

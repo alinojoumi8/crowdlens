@@ -3226,15 +3226,20 @@ class ReportManager:
         if heartbeat:
             try:
                 heartbeat_dt = datetime.fromisoformat(heartbeat)
-                seconds_since_update = max(0, int((datetime.now() - heartbeat_dt).total_seconds()))
+                now = datetime.now(heartbeat_dt.tzinfo) if heartbeat_dt.tzinfo else datetime.now()
+                seconds_since_update = max(0, int((now - heartbeat_dt).total_seconds()))
                 is_stale = status in {"pending", "planning", "generating"} and seconds_since_update > stale_after
-            except ValueError:
+            except (ValueError, TypeError):
                 seconds_since_update = None
 
         enriched["heartbeat_at"] = heartbeat
         enriched["seconds_since_update"] = seconds_since_update
         enriched["is_stale"] = is_stale
         enriched["effective_status"] = "stale" if is_stale else status
+        enriched["terminal"] = status in {"completed", "needs_review", "failed", "interrupted", "cancelled"}
+        if status in {"failed", "interrupted", "cancelled"}:
+            enriched["reason"] = enriched.get("reason") or enriched.get("error") or "generation_interrupted"
+            enriched["recovery_requires_action"] = True
         return enriched
     
     @classmethod

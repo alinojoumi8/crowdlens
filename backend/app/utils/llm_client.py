@@ -10,10 +10,12 @@ import re
 import time
 from typing import Optional, Dict, Any, List
 from openai import OpenAI
+from openai import APIConnectionError, APITimeoutError, APIStatusError
 import requests
 
 from ..config import Config
 from ..utils.logger import get_logger
+from ..services.workflow_execution import transport_attempt
 
 
 logger = get_logger('mirofish.llm_client')
@@ -41,6 +43,7 @@ class LLMClient:
             api_key=self.api_key,
             base_url=self.base_url,
             timeout=timeout,
+            max_retries=0,
         )
 
         # Ollama context window size — prevents prompt truncation.
@@ -123,13 +126,17 @@ class LLMClient:
 
         for attempt in range(max_retries + 1):
             try:
-                response = requests.post(
-                    url,
-                    headers=headers,
-                    json=body,
-                    timeout=self.timeout if request_timeout is None else request_timeout,
-                )
-                response.raise_for_status()
+                with transport_attempt(self.model, self.base_url, attempt + 1) as receipt:
+                    response = requests.post(
+                        url, headers=headers, json=body,
+                        timeout=self.timeout if request_timeout is None else request_timeout,
+                    )
+                    receipt['http_status'] = getattr(response, 'status_code', 200)
+                    try:
+                        receipt['usage'] = response.json().get('usage')
+                    except ValueError:
+                        pass
+                    response.raise_for_status()
                 return response
             except (
                 requests.exceptions.ConnectionError,
@@ -202,13 +209,24 @@ class LLMClient:
         overrides = {}
         if request_timeout is not None:
             overrides['timeout'] = request_timeout
-        if request_max_retries is not None:
-            overrides['max_retries'] = request_max_retries
+        overrides['max_retries'] = 0
         if overrides:
             client = client.with_options(**overrides)
         started = time.monotonic()
         try:
-            response = client.chat.completions.create(**kwargs)
+            retries = request_max_retries if request_max_retries is not None else 2
+            for attempt in range(retries + 1):
+                try:
+                    with transport_attempt(self.model, self.base_url, attempt + 1) as receipt:
+                        response = client.chat.completions.create(**kwargs)
+                        receipt['usage'] = response.usage.model_dump() if getattr(response, 'usage', None) else None
+                        receipt['http_status'] = 200
+                    break
+                except (APIConnectionError, APITimeoutError, APIStatusError) as exc:
+                    status = getattr(exc, 'status_code', None)
+                    if attempt >= retries or (status and status < 500 and status != 429):
+                        raise
+                    time.sleep(min(30, 2 ** (attempt + 1)))
         except Exception:
             if usage_callback:
                 usage_callback('openai_compatible', self.model, {}, (time.monotonic() - started) * 1000)
@@ -252,20 +270,19 @@ class LLMClient:
             if self._num_ctx:
                 options["num_ctx"] = self._num_ctx
             started = time.monotonic()
-            native_response = requests.post(
-                f"{base_url}/api/chat",
-                json={
-                    "model": self.model,
-                    "messages": messages,
-                    "stream": False,
-                    "think": False,
-                    "format": "json",
-                    "options": options,
-                },
-                timeout=self.timeout if request_timeout is None else request_timeout,
-            )
-            native_response.raise_for_status()
-            body = native_response.json()
+            with transport_attempt(self.model, self.base_url) as receipt:
+                native_response = requests.post(
+                    f"{base_url}/api/chat",
+                    json={"model": self.model, "messages": messages, "stream": False,
+                          "think": False, "format": "json", "options": options},
+                    timeout=self.timeout if request_timeout is None else request_timeout,
+                )
+                receipt['http_status'] = getattr(native_response, 'status_code', 200)
+                native_response.raise_for_status()
+                body = native_response.json()
+                receipt['usage'] = {key: value for key, value in {
+                    'input_tokens': body.get('prompt_eval_count'), 'output_tokens': body.get('eval_count')
+                }.items() if value is not None}
             if usage_callback:
                 usage_callback('ollama', body.get('model', self.model),
                     {'input_tokens': body.get('prompt_eval_count'), 'output_tokens': body.get('eval_count')},

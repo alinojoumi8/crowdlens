@@ -7,6 +7,7 @@ Replaces zep_graph_memory_updater.py — Zep client replaced by GraphStorage.
 import os
 import time
 import threading
+from contextvars import copy_context
 import json
 from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ from queue import Queue, Empty
 from ..config import Config
 from ..utils.logger import get_logger
 from ..storage import GraphStorage
+from .workflow_execution import WorkflowHalt, current_scope, execution_scope, workflow_stage
 
 logger = get_logger('mirofish.graph_memory_updater')
 
@@ -241,6 +243,7 @@ class GraphMemoryUpdater:
         self._buffer_lock = threading.Lock()
 
         self._running = False
+        self._stopping = False
         self._worker_thread: Optional[threading.Thread] = None
 
         self._total_activities = 0
@@ -260,22 +263,38 @@ class GraphMemoryUpdater:
             return
 
         self._running = True
+        self._stopping = False
+        context = copy_context()
+        scope = current_scope()
+        def work():
+            try:
+                if scope and scope.workflow_id:
+                    with execution_scope(scope.ledger, scope.workflow_id, 'graph_memory', epoch=scope.epoch):
+                        self._worker_loop()
+                else:
+                    self._worker_loop()
+            except WorkflowHalt as exc:
+                self._running = False
+                self._stopping = True
+                logger.info('Graph memory halted: %s; action logs retained', exc.reason)
         self._worker_thread = threading.Thread(
-            target=self._worker_loop,
+            target=lambda: context.run(work),
             daemon=True,
             name=f"GraphMemoryUpdater-{self.graph_id[:8]}"
         )
         self._worker_thread.start()
         logger.info(f"GraphMemoryUpdater started: graph_id={self.graph_id}")
 
-    def stop(self):
+    def stop(self, *, drain=False):
         """Stop background worker thread"""
-        self._running = False
-
-        self._flush_remaining()
-
-        if self._worker_thread and self._worker_thread.is_alive():
-            self._worker_thread.join(timeout=10)
+        try:
+            if drain:
+                self._flush_remaining()
+        finally:
+            self._stopping = True
+            self._running = False
+            if self._worker_thread and self._worker_thread.is_alive():
+                self._worker_thread.join(timeout=10)
 
         logger.info(f"GraphMemoryUpdater stopped: graph_id={self.graph_id}, "
                      f"total_activities={self._total_activities}, "
@@ -313,7 +332,7 @@ class GraphMemoryUpdater:
 
     def _worker_loop(self):
         """Background worker loop - batch send activities to graph by platform"""
-        while self._running or not self._activity_queue.empty():
+        while self._running:
             try:
                 try:
                     activity = self._activity_queue.get(timeout=1)
@@ -348,6 +367,8 @@ class GraphMemoryUpdater:
         combined_text = "\n".join(episode_texts)
 
         for attempt in range(self.MAX_RETRIES):
+            if self._stopping:
+                return
             try:
                 if hasattr(self.storage, "add_agent_memories"):
                     self.storage.add_agent_memories(
@@ -371,6 +392,7 @@ class GraphMemoryUpdater:
                     logger.error(f"Batch send to graph failed after {self.MAX_RETRIES} retries: {e}")
                     self._failed_count += 1
 
+    @workflow_stage('graph_memory')
     def _flush_remaining(self):
         """Send remaining activities in queue and buffers"""
         while not self._activity_queue.empty():
@@ -452,12 +474,12 @@ class GraphMemoryManager:
         return cls._updaters.get(simulation_id)
 
     @classmethod
-    def stop_updater(cls, simulation_id: str):
+    def stop_updater(cls, simulation_id: str, *, drain=False):
         """Stop and remove updater for simulation"""
         with cls._lock:
             if simulation_id in cls._updaters:
-                cls._updaters[simulation_id].stop()
-                del cls._updaters[simulation_id]
+                updater = cls._updaters.pop(simulation_id)
+                updater.stop(drain=drain)
                 logger.info(f"Stopped graph memory updater: simulation_id={simulation_id}")
 
     _stop_all_done = False

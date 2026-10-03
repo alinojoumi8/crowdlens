@@ -135,7 +135,9 @@ def generate_report():
                 simulation_requirement=simulation_config.get("simulation_requirement", ""),
             )
             report_mode = normalize_report_mode(
-                infer_report_mode_from_forecast(forecast_settings.forecast_mode)
+                simulation_config.get("report_mode")
+                or (simulation_config.get("prediction_settings") or {}).get("report_mode")
+                or infer_report_mode_from_forecast(forecast_settings.forecast_mode)
             )
 
         request_key = data.get('request_key')
@@ -469,6 +471,19 @@ def chat_with_report_agent():
 def get_report_progress(report_id: str):
     try:
         progress = ReportManager.get_progress(report_id)
+        if not progress or progress.get('status') not in {'completed', 'needs_review'}:
+            tasks = TaskManager()
+            binding = tasks.runtime.binding('report:' + report_id)
+            task = tasks.get_task(binding['task_id']) if binding else None
+            if task and task.status == TaskStatus.FAILED:
+                progress = dict(progress or {}, status='interrupted', effective_status='interrupted', terminal=True,
+                    progress=(progress or {}).get('progress', task.progress), reason=task.error, recovery_requires_action=True,
+                    message='Partial generation interrupted; explicit recovery required')
+            elif task and task.status in {TaskStatus.PENDING, TaskStatus.PROCESSING} and (
+                    not progress or progress.get('status') in {'interrupted', 'failed', 'cancelled'}):
+                progress = dict(progress or {}, effective_status='queued', terminal=False,
+                    reason=None, recovery_requires_action=False, task_id=task.task_id,
+                    message='Explicit recovery admitted; waiting for its worker snapshot')
         if not progress:
             return jsonify({"success": False, "error": f"Report does not exist or progress info unavailable: {report_id}"}), 404
         return jsonify({"success": True, "data": progress})
@@ -523,7 +538,7 @@ def regenerate_report_section(report_id: str, section_index: int):
         if not storage:
             raise ValueError("GraphStorage not initialized - check Neo4j connection")
 
-        disable_interviews = _json_bool(data.get("disable_interviews"), False)
+        disable_interviews = report.report_depth == 'fast' or _json_bool(data.get("disable_interviews"), False)
         strict_antirepetition = _json_bool(data.get("strict_antirepetition"), True)
 
         agent = ReportAgent(
@@ -534,6 +549,7 @@ def regenerate_report_section(report_id: str, section_index: int):
             disable_interviews=disable_interviews,
             strict_antirepetition=strict_antirepetition,
             report_mode=report.report_mode,
+            report_depth=report.report_depth,
         )
         updated_report = agent.regenerate_section(
             report=report,
@@ -592,6 +608,7 @@ def resume_report(report_id: str):
                     disable_interviews=_json_bool(data.get("disable_interviews"), False),
                     strict_antirepetition=_json_bool(data.get("strict_antirepetition"), True),
                     report_mode=report.report_mode,
+                    report_depth=report.report_depth,
                 )
 
                 def progress_callback(stage, progress, message):

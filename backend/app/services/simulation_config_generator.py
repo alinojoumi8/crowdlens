@@ -17,6 +17,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 
 from ..config import Config
+from .workflow_execution import workflow_stage
 from .jev_policy import decision_configuration
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
@@ -349,6 +350,8 @@ class SimulationConfigGenerator:
         time_config_result = self._generate_time_config(context, num_entities, forecast_dict)
         time_config = self._parse_time_config(time_config_result, num_entities, forecast_dict)
         time_config = self._apply_prediction_time_controls(time_config, prediction)
+        time_config.agents_per_hour_min = min(time_config.agents_per_hour_min, num_entities)
+        time_config.agents_per_hour_max = min(time_config.agents_per_hour_max, num_entities)
         reasoning_parts.append(f"Time config: {time_config_result.get('reasoning', 'Success')}")
 
         # ========== Step 2: Generate event configuration ==========
@@ -587,6 +590,7 @@ class SimulationConfigGenerator:
 
         return None
     
+    @workflow_stage('time_configuration')
     def _generate_time_config(
         self,
         context: str,
@@ -734,6 +738,7 @@ Field description:
             time_config.agents_per_hour_max = max(time_config.agents_per_hour_min, active)
         return time_config
     
+    @workflow_stage('event_configuration')
     def _generate_event_config(
         self,
         context: str,
@@ -970,6 +975,7 @@ Return JSON format (no markdown):
         event_config.scheduled_events = assign_posts(event_config.scheduled_events)
         return event_config
     
+    @workflow_stage('agent_configuration')
     def _generate_agent_configs_batch(
         self,
         context: str,

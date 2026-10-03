@@ -135,6 +135,11 @@ class SimulationIPCClient:
         Raises:
             TimeoutError: Timeout waiting for response
         """
+        from .workflow_execution import ipc_authorization
+        if command_type in {CommandType.INTERVIEW, CommandType.BATCH_INTERVIEW}:
+            authorization = ipc_authorization(os.path.basename(self.simulation_dir))
+            if authorization:
+                args = dict(args, workflow_execution=authorization)
         command_id = str(uuid.uuid4())
         command = IPCCommand(
             command_id=command_id,

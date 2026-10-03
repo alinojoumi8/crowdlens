@@ -96,6 +96,8 @@ def test_anthropic_retry_budget_observation_is_per_attempt(monkeypatch, record_p
     monkeypatch.setenv('LLM_HTTP_RETRY_MAX_SECONDS', '30')
     client = LLMClient.__new__(LLMClient)
     client.timeout = 300.0
+    client.model = 'synthetic'
+    client.base_url = 'https://synthetic.invalid'
     with pytest.raises(requests.exceptions.Timeout):
         client._post_anthropic_with_retry('https://synthetic.invalid/v1/messages', {}, {})
     observation = {'transport_attempts': len(timeouts), 'timeout_each_seconds': timeouts,

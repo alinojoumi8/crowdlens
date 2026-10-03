@@ -2228,6 +2228,7 @@ const resumeFailedReport = async (options = {}) => {
       reportStatus.value = 'generating'
       emit('update-status', 'generating')
       await refreshReportState()
+      startPolling()
     }
   } catch (err) {
     addLog(`Report resume failed: ${err.message}`)
@@ -2507,6 +2508,11 @@ const fetchReportSnapshot = async () => {
       if (reportProgress.value.is_stale) {
         emit('update-status', 'stale')
       }
+    }
+    if (reportProgress.value?.terminal || ['completed', 'needs_review', 'failed', 'interrupted', 'cancelled'].includes(reportStatus.value)) {
+      currentSectionIndex.value = null
+      stopPolling()
+      if (['failed', 'interrupted', 'cancelled'].includes(reportStatus.value)) emit('update-status', reportStatus.value)
     }
   } catch (err) {
     console.warn('Failed to fetch report snapshot:', err)

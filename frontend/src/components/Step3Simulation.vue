@@ -132,10 +132,12 @@
       </div>
 
       <div class="action-controls">
+        <button v-if="phase === 0" class="action-btn primary start" :disabled="isStarting" @click="doStartSimulation">Start simulation</button>
+        <button v-if="phase === 1 || isStarting" class="action-btn stop" :disabled="isStopping" @click="handleStopSimulation">{{ isStopping ? 'Stopping…' : 'Stop workflow' }}</button>
         <button
           v-if="canRunEnsemble"
           class="action-btn ensemble"
-          :disabled="ensemble.active || isGeneratingReport"
+          :disabled="ensemble.active || isGeneratingReport || isStarting || phase === 1"
           :title="`Re-run the simulation ${ensembleRuns} times with different seeds and aggregate the grounded forecast into a confidence-bearing distribution`"
           @click="doRunEnsemble"
         >
@@ -155,6 +157,9 @@
         </button>
       </div>
     </div>
+
+    <p v-if="effectiveConfig" class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · round cap {{ maxRounds || 'configured duration' }} · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
+    <p v-if="['stopped','failed'].includes(runStatus.runner_status)" class="effective-settings" role="status">Simulation {{ runStatus.runner_status }}: {{ runStatus.error || 'operator stop' }}. Partial activity is retained. Generation requires an available workflow allowance.</p>
 
     <!-- Main Content: Dual Timeline -->
     <div class="main-content-area" ref="scrollContainer" tabindex="0" role="region" aria-label="Simulation activity">
@@ -448,6 +453,7 @@ import {
   startSimulation,
   stopSimulation,
   getRunStatus,
+  getSimulationConfig,
   getRunStatusDetail,
   getRunDiagnostics,
   runEnsemble,
@@ -499,6 +505,7 @@ const router = useRouter()
 const isGeneratingReport = ref(false)
 const phase = ref(0) // 0: Not started, 1: Running, 2: Completed
 const isStarting = ref(false)
+const effectiveConfig = ref(null)
 const isStopping = ref(false)
 const startError = ref(null)
 const runStatus = ref({})
@@ -631,6 +638,7 @@ const resetAllState = () => {
 
 // Start simulation
 const doStartSimulation = async () => {
+  if (isStarting.value || phase.value !== 0) return
   if (!props.simulationId) {
     addLog('Error: Missing simulationId')
     return
@@ -646,17 +654,20 @@ const doStartSimulation = async () => {
 
   try {
     const realistic = props.runtimeMode !== 'fast'
+    const configResponse = await getSimulationConfig(props.simulationId)
+    effectiveConfig.value = configResponse.data
+    const selected = configResponse.data?.prediction_settings || {}
     const economy = normalizeEconomySettings(props.economySettings)
     const params = {
       simulation_id: props.simulationId,
-      platform: 'parallel',
-      force: true,  // Force restart
+      platform: selected.platform || 'parallel',
+      force: false,
       // Realistic mode grounds agents each round (forecast target + their graph-derived
       // stance) and writes activity back to the graph; fast mode skips both for speed.
-      enable_graph_memory_update: realistic,
-      scenario_id: 'baseline',
-      seed: Date.now() % 1000000,
-      memory_mode: realistic ? 'practical' : 'off',
+      enable_graph_memory_update: realistic && selected.memory_mode !== 'off',
+      scenario_id: configResponse.data?.active_scenario_id || 'baseline',
+      seed: configResponse.data?.seed ?? selected.seed ?? 42,
+      memory_mode: realistic ? (selected.memory_mode || 'practical') : 'off',
       economy
     }
 
@@ -666,7 +677,7 @@ const doStartSimulation = async () => {
     }
 
     addLog(realistic
-      ? 'Realistic runtime mode: per-round forecast/stance grounding and live graph updates enabled'
+      ? `Realistic runtime mode: memory ${params.memory_mode}; graph memory ${params.enable_graph_memory_update ? 'enabled' : 'disabled'}`
       : 'Fast preview mode: forecast memory and live graph updates disabled')
     addLog(
       economy.enabled
@@ -716,9 +727,10 @@ const handleStopSimulation = async () => {
     if (res.success) {
       addLog('✓ Simulation stopped')
       phase.value = 2
+      runStatus.value = { ...runStatus.value, ...res.data, runner_status: 'stopped' }
       stopPolling()
       loadDiagnostics()
-      emit('update-status', 'completed')
+      emit('update-status', 'stopped')
     } else {
       addLog(`Stop failed: ${res.error || 'Unknown error'}`)
     }
@@ -743,18 +755,8 @@ const stopEnsemblePolling = () => {
 // This replaces the single stochastic run as the forecast basis: the backend persists
 // ensemble_signal.json, which the report's forecast prefers over any single run.
 const doRunEnsemble = async () => {
-  if (!props.simulationId || ensemble.value.active) return
-
-  // Stop the in-progress single run + its polling so the ensemble can restart cleanly.
+  if (!props.simulationId || ensemble.value.active || isStarting.value || phase.value === 1) return
   stopPolling()
-  if (phase.value !== 2) {
-    try {
-      await stopSimulation({ simulation_id: props.simulationId })
-    } catch (err) {
-      // Best effort — the ensemble runner also resets the environment before each run.
-      console.warn('Pre-ensemble stop failed (continuing):', err)
-    }
-  }
 
   ensemble.value = {
     active: true,
@@ -905,22 +907,21 @@ const fetchRunStatus = async () => {
       }
 
       // Check if simulation is complete (via runner_status or platform completion status)
-      const isCompleted = data.runner_status === 'completed' || data.runner_status === 'stopped'
+      const isStopped = data.runner_status === 'stopped'
+      const isFailed = data.runner_status === 'failed'
+      const isCompleted = data.runner_status === 'completed'
 
       // Additional check: if backend hasn't updated runner_status yet, but platforms have reported completion
       // Check via twitter_completed and reddit_completed status
       const platformsCompleted = checkPlatformsCompleted(data)
 
-      if (isCompleted || platformsCompleted) {
-        if (platformsCompleted && !isCompleted) {
-          addLog('✓ Detected all platform simulations have ended')
-        }
-        addLog('✓ Simulation completed')
+      if (isStopped || isFailed || isCompleted) {
+        addLog(isStopped || isFailed ? `Simulation ${data.runner_status}: ${data.error || 'operator stop'}; partial output retained` : '✓ Simulation completed')
         phase.value = 2
         stopPolling()
         loadEconomy()
         loadDiagnostics()
-        emit('update-status', 'completed')
+        emit('update-status', data.runner_status)
       }
     }
   } catch (err) {
@@ -1114,10 +1115,25 @@ watch(() => props.systemLogs?.length, () => {
   })
 })
 
-onMounted(() => {
+onMounted(async () => {
   addLog('Step3 Simulation initialization')
   if (props.simulationId) {
-    doStartSimulation()
+    try {
+      effectiveConfig.value = (await getSimulationConfig(props.simulationId)).data
+      const response = await getRunStatus(props.simulationId)
+      if (response.success && response.data) {
+        runStatus.value = response.data
+        if (['running', 'starting', 'stopping'].includes(response.data.runner_status)) {
+          phase.value = 1
+          startStatusPolling()
+          startDetailPolling()
+        } else if (['completed', 'stopped', 'failed'].includes(response.data.runner_status)) {
+          phase.value = 2
+          loadDiagnostics()
+          emit('update-status', response.data.runner_status)
+        }
+      }
+    } catch (err) { startError.value = err.message }
   }
 })
 
@@ -1136,6 +1152,7 @@ onUnmounted(() => {
   font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
   overflow: hidden;
 }
+.effective-settings { padding: 8px 12px; font: 12px/1.5 system-ui, sans-serif; overflow-wrap: anywhere; flex-shrink: 0; background: #f6f8fb; color: #1f2a36; }
 
 /* --- Control Bar --- */
 .control-bar {

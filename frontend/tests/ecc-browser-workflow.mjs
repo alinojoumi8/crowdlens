@@ -76,6 +76,8 @@ try {
     await page.keyboard.press('Enter')
     await (await chooser).setFiles({ name: 'synthetic-record.txt', mimeType: 'text/plain', buffer: Buffer.from('Alex states that the hearing was postponed until Friday.') })
     await page.getByLabel('Simulation prompt', { exact: true }).fill('Explore the synthetic hearing record.')
+    await page.getByRole('button', { name: 'Authorize this workflow', exact: true }).click()
+    await page.locator('.workflow-controls strong').filter({hasText:/^authorized$/}).waitFor()
     assert(await page.getByRole('button', { name: 'Explore Scenario' }).isEnabled())
   })
   await check('real upload/project/task APIs with explicit ontology and graph substitutes', async () => {
@@ -89,14 +91,14 @@ try {
     receipt.uploadedProject = projectId
     await snapshot('graph-ready')
     await page.getByRole('button', { name: /Enter Environment Setup/ }).click()
-    await page.waitForURL('**/simulation/sim_synthetic')
+    await page.waitForURL('**/simulation/sim_upload')
   })
   await check('scenario configuration with seeded persona and simulation substitutes', async () => {
     await page.getByRole('button', { name: /Prepare environment/ }).click()
     await page.getByText('Ready', { exact: true }).first().waitFor({ timeout: 10000 })
     await snapshot('scenario-ready')
     await page.getByRole('button', { name: /Start dual world parallel simulation/ }).click()
-    await page.waitForURL('**/simulation/sim_synthetic/start**')
+    await page.waitForURL('**/simulation/sim_upload/start**')
     await page.waitForTimeout(2500)
     await snapshot('simulation-completed')
     const emptyTimeline = await page.locator('.waiting-state').boundingBox()
@@ -228,6 +230,25 @@ try {
     await page.getByText(/No simulation records yet/).waitFor()
     await page.screenshot({ path: output + '/history-empty.png' })
     await page.unroute('**/api/simulation/history*')
+  })
+  await check('visible Stop closes durable workflow and refresh cannot start it again', async () => {
+    await page.goto(base + '/simulation/sim_control/start')
+    await page.getByRole('button', { name: 'Start simulation', exact: true }).click()
+    await page.getByRole('button', { name: 'Stop workflow', exact: true }).last().click()
+    await page.getByText(/New calls are blocked: stopped/).waitFor()
+    await page.reload()
+    await page.getByText(/Simulation stopped:/).waitFor()
+    assert.equal(await page.getByRole('button', { name: 'Start simulation', exact: true }).count(), 0)
+    await snapshot('stopped-simulation')
+  })
+  await check('interrupted report has terminal controls and polling stops', async () => {
+    await page.goto(base + '/report/report_interrupted_synthetic')
+    await page.getByRole('button', { name: 'Resume failed section', exact: true }).waitFor()
+    const count = () => receipt.network.filter(item => item.path === '/api/report/report_interrupted_synthetic/progress').length
+    const initial = count()
+    await page.waitForTimeout(4500)
+    assert.equal(count(), initial)
+    await snapshot('interrupted-report')
   })
   receipt.performance = await page.evaluate(() => window.qaVitals)
   receipt.performance.note = 'Laboratory browser samples only; no field Core Web Vitals or representative INP conclusion.'

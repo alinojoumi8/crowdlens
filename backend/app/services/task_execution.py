@@ -5,7 +5,7 @@ transitions with short database/filesystem/graph publication operations. Leases
 are admission deadlines, not proof of process death or automatic continuation.
 """
 from contextlib import contextmanager
-from contextvars import ContextVar
+from contextvars import ContextVar, copy_context
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import wraps
@@ -35,6 +35,13 @@ class TaskBusy(RuntimeError):
 
 def timestamp():
     return datetime.now(timezone.utc).isoformat()
+
+
+def process_start(pid):
+    try:
+        return Path(f'/proc/{int(pid)}/stat').read_text().rsplit(')', 1)[1].split()[19]
+    except (OSError, ValueError, IndexError):
+        return None
 
 
 @dataclass(frozen=True)
@@ -83,6 +90,12 @@ def publication_guard(resource=None):
             task = runtime.get(binding['task_id']) if binding else None
             if task and task['status'] in ACTIVE:
                 raise TaskBusy('resource_has_active_task')
+        from .workflow_execution import current_scope
+        scope = current_scope()
+        if scope and scope.workflow_id:
+            scope.checkpoint()
+            if resource:
+                scope.ledger.bind(scope.workflow_id, resource)
         yield
 
 
@@ -111,6 +124,14 @@ def simulation_write(function):
     return wrapped
 
 
+def run_state_write(function):
+    @wraps(function)
+    def wrapped(cls, state, *args, **kwargs):
+        with publication_guard('simulation-runtime:' + state.simulation_id):
+            return function(cls, state, *args, **kwargs)
+    return wrapped
+
+
 def report_write(function):
     @wraps(function)
     def wrapped(cls, report_or_id, *args, **kwargs):
@@ -124,7 +145,7 @@ class TaskRuntime:
     def __init__(self, repository, *, clock=time.time):
         self.repository, self.clock = repository, clock
         # PID is diagnostic only; a new runtime/process always has a fresh nonce.
-        self.owner = {'worker_id': uuid.uuid4().hex, 'pid': os.getpid()}
+        self.owner = {'worker_id': uuid.uuid4().hex, 'pid': os.getpid(), 'process_start': process_start(os.getpid())}
         self._memory, self._resources, self.handles, self.workers = {}, {}, {}, {}
         self._workers_lock = threading.RLock()
         self._stop = threading.Event()
@@ -215,6 +236,19 @@ class TaskRuntime:
                 raise OwnershipLost('task_attempt_replaced')
         return task
 
+    def validate_child(self, task_id, attempt_id, owner):
+        """Read-only child fence; a child can neither renew nor impersonate its parent."""
+        task = self.get(task_id)
+        execution = (task or {}).get('execution') or {}
+        if (execution.get('attempt_id') != attempt_id or execution.get('owner') != owner
+                or (task or {}).get('status') not in ACTIVE or execution.get('lease_until', 0) <= self.clock()
+                or not owner.get('process_start') or process_start(owner['pid']) != owner['process_start']):
+            raise OwnershipLost('task_ownership_lost')
+        for resource in execution.get('resources', []):
+            if self.binding(resource['key']) != {'task_id': task_id, 'attempt_id': attempt_id}:
+                raise OwnershipLost('task_attempt_replaced')
+        return task
+
     def update(self, attempt, changes):
         with self.gate():
             task = self.validate(attempt)
@@ -264,6 +298,28 @@ class TaskRuntime:
                     record = store.read(identifier)
                     if record.get('state') in {'queued','running'}:
                         raise
+            elif kind in {'simulation-runtime', 'ensemble'}:
+                root = Path(resource['root']).resolve()
+                folder = (root/identifier).resolve()
+                if folder.parent != root or (folder/'run_state.json').is_symlink():
+                    raise ValueError('invalid_task_resource_path')
+                path = folder/'run_state.json'
+                data = (self.repository.get_simulation_run(identifier) if self.repository else
+                        json.loads(path.read_text()) if path.exists() else None)
+                execution = (data or {}).get('execution') or {}
+                if (not data or execution.get('task_id') != task['task_id']
+                        or execution.get('attempt_id') != task['execution']['attempt_id']
+                        or data.get('runner_status') in {'completed','stopped','failed'}):
+                    continue
+                data.update(runner_status='stopped', twitter_running=False, reddit_running=False,
+                            process_pid=None, completed_at=None, error=reason, updated_at=timestamp())
+                if self.repository:
+                    self.repository.put_simulation_run(data)
+                atomic_json(path, data)
+                from .simulation_runner import SimulationRunner
+                if (Path(SimulationRunner.RUN_STATE_DIR).resolve() == root
+                        and SimulationRunner._repository is self.repository):
+                    SimulationRunner._run_states.pop(identifier, None)
             elif kind in {'report', 'simulation'}:
                 root = Path(resource['root']).resolve()
                 folder = (root/identifier).resolve()
@@ -291,7 +347,8 @@ class TaskRuntime:
     def reconcile(self, *, raise_on_error=True):
         errors = []
         counts = {'failed':0,'repaired':0,'unknown':0,'repair_failed':0}
-        with self.gate(), recovery_context():
+        from .workflow_execution import without_execution_scope
+        with self.gate(), recovery_context(), without_execution_scope():
             for task in self.records():
                 execution = task.get('execution')
                 if task['status'] in ACTIVE:
@@ -324,6 +381,15 @@ class TaskRuntime:
             workers = list(self.workers.values())
         for attempt, thread, children in workers:
             try:
+                task = self.get(attempt.task_id)
+                metadata = (task or {}).get('metadata', {})
+                if self.repository and metadata.get('workflow_id'):
+                    from .workflow_execution import WorkflowLedger
+                    record = WorkflowLedger(self.repository.path).status(metadata['workflow_id'])
+                    if record['state'] in {'stopped', 'runtime_limit'} or metadata.get('workflow_epoch') != record['epoch']:
+                        self.cancel_workflow(metadata['workflow_id'], record['reason'] or 'authorization_superseded',
+                                             epoch=metadata.get('workflow_epoch'))
+                        continue
                 if thread.is_alive():
                     # A parent cannot renew on behalf of an exited required child.
                     if all(child.poll() is None for child in list(children)):
@@ -350,13 +416,16 @@ class TaskRuntime:
         self._monitor.start()
 
     def start(self, attempt, target, args=(), *, name=None):
+        context = copy_context()
         def run():
             with attempt.bind():
                 try:
                     target(*args)
-                except BaseException:
+                except BaseException as exc:
                     try:
-                        self.update(attempt, {'status':'failed', 'error':'execution_worker_exited'})
+                        from .workflow_execution import WorkflowHalt
+                        reason = exc.reason if isinstance(exc, WorkflowHalt) else 'execution_worker_exited'
+                        self.update(attempt, {'status':'failed', 'error':reason})
                     except OwnershipLost:
                         pass
                 finally:
@@ -365,7 +434,7 @@ class TaskRuntime:
                     except OwnershipLost:
                         pass
                     self.reconcile(raise_on_error=False)
-        thread = threading.Thread(target=run, daemon=True, name=name)
+        thread = threading.Thread(target=lambda: context.run(run), daemon=True, name=name)
         with self.gate():
             self.validate(attempt)
             with self._workers_lock:
@@ -373,6 +442,20 @@ class TaskRuntime:
             thread.start()
         self.start_monitor()
         return thread
+
+    def cancel_workflow(self, workflow_id, reason='stopped', *, epoch=None):
+        """Invalidate only attempts bound to this workflow; recovery preserves partials."""
+        from .workflow_execution import without_execution_scope
+        with self.gate(), without_execution_scope(), recovery_context():
+            for task in self.records():
+                metadata = task.get('metadata', {})
+                if (task['status'] in ACTIVE and metadata.get('workflow_id') == workflow_id
+                        and (epoch is None or metadata.get('workflow_epoch') == epoch)):
+                    task.update(status='failed', error=reason, message='Generation stopped; partial output preserved',
+                                updated_at=timestamp())
+                    task['recovery'] = dict(reason=reason, recovered_at=timestamp(), pending=True)
+                    self.put(task)
+                    self._repair_related(task)
 
     @contextmanager
     def watch_child(self, attempt, child):
@@ -383,7 +466,19 @@ class TaskRuntime:
             yield
         finally:
             with self._workers_lock:
-                children.remove(child)
+                if child in children:
+                    children.remove(child)
+
+    def release_child(self, attempt, child):
+        """An owning monitor positively observed exit; it now owns finalization."""
+        with self.gate():
+            self.validate(attempt)
+            if child.poll() is None:
+                raise ValueError('child_still_running')
+            with self._workers_lock:
+                worker = self.workers.get(attempt.task_id)
+                if worker and child in worker[2]:
+                    worker[2].remove(child)
 
     def close(self):
         self._stop.set()

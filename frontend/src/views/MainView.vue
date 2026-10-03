@@ -225,6 +225,7 @@ const handleNewProject = async () => {
     pending.files.forEach(f => formData.append('files', f))
     pendingUrls.forEach(u => formData.append('urls', u))
     formData.append('simulation_requirement', pending.simulationRequirement)
+    if (pending.workflowId) formData.append('workflow_id', pending.workflowId)
     // Attach to an existing case (as a new version) when the upload came from a case.
     if (pending.caseId) formData.append('case_id', pending.caseId)
 

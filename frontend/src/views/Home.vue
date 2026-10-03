@@ -145,6 +145,7 @@
             </div>
 
             <div :style="s.btnSection">
+              <WorkflowControls authorize :input-description="authorizationInput" :input-fingerprint="inputFingerprint" @authorized="workflowId = $event" />
               <button :style="s.startEngineBtn" @click="startSimulation" :disabled="!canSubmit || loading">
                 <span v-if="!loading">Explore Scenario</span>
                 <span v-else>Initializing...</span>
@@ -161,7 +162,9 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
+import WorkflowControls from '../components/WorkflowControls.vue'
+import { workflowInputFingerprint } from '../utils/workflowInput'
 import { useRouter } from 'vue-router'
 import HistoryDatabase from '../components/HistoryDatabase.vue'
 
@@ -250,6 +253,11 @@ const formData = ref({ simulationRequirement: '' })
 const files = ref([])
 const urlText = ref('')
 const loading = ref(false)
+const workflowId = ref(null)
+const inputFingerprint = ref('')
+let inputGeneration = 0
+const authorizationInput = computed(() => formData.value.simulationRequirement.trim() && (files.value.length || parsedUrls.value.length)
+  ? `${[...files.value.map(f => `${f.name} (${f.size} bytes)`), ...parsedUrls.value].join(', ')}; ${formData.value.simulationRequirement.trim()}`.slice(0, 500) : '')
 const error = ref('')
 const isDragOver = ref(false)
 const fileInput = ref(null)
@@ -257,9 +265,17 @@ const fileInput = ref(null)
 const parsedUrls = computed(() =>
   urlText.value.split(/[\s,]+/).map(u => u.trim()).filter(Boolean)
 )
+watch([files, () => formData.value.simulationRequirement, parsedUrls], async () => {
+  const token = ++inputGeneration
+  workflowId.value = null; inputFingerprint.value = ''
+  try {
+    const value = await workflowInputFingerprint(files.value, formData.value.simulationRequirement, parsedUrls.value)
+    if (token === inputGeneration) inputFingerprint.value = value
+  } catch (exc) { if (token === inputGeneration) error.value = 'Could not fingerprint this input: ' + exc.message }
+}, { deep:true })
 
 const canSubmit = computed(() => {
-  return formData.value.simulationRequirement.trim() !== '' &&
+  return !!workflowId.value && formData.value.simulationRequirement.trim() !== '' &&
     (files.value.length > 0 || parsedUrls.value.length > 0)
 })
 
@@ -282,7 +298,7 @@ const scrollToBottom = () => { window.scrollTo({ top: document.body.scrollHeight
 const startSimulation = () => {
   if (!canSubmit.value || loading.value) return
   import('../store/pendingUpload.js').then(({ setPendingUpload }) => {
-    setPendingUpload(files.value, formData.value.simulationRequirement, parsedUrls.value)
+    setPendingUpload(files.value, formData.value.simulationRequirement, parsedUrls.value, null, workflowId.value)
     router.push({ name: 'Process', params: { projectId: 'new' } })
   })
 }

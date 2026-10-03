@@ -415,3 +415,18 @@ def test_unowned_project_mutation_cannot_bypass_active_binding(owned,tmp_path,mo
     with pytest.raises(TaskBusy):
         project.status=ProjectStatus.CREATED;ProjectManager.save_project(project)
     assert db.get_project(project.project_id)['status']=='graph_building'
+
+
+def test_observed_normal_child_exit_allows_finalization_beyond_lease(owned):
+    from types import SimpleNamespace
+    runtime,db,clock=owned
+    attempt=runtime.admit(payload('finalizing'))
+    child=SimpleNamespace(poll=lambda:0)
+    runtime.workers[attempt.task_id]=(attempt,SimpleNamespace(is_alive=lambda:True),[child])
+    runtime.release_child(attempt,child)
+    for _ in range(4):
+        clock.advance(20)
+        runtime.tick()
+        runtime.validate(attempt)
+    assert db.get_task(attempt.task_id)['status']=='processing'
+    assert runtime.workers[attempt.task_id][2]==[]

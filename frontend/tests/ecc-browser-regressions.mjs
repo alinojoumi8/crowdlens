@@ -150,6 +150,13 @@ await check('actual abandoned owner recovers in durable API state', async () => 
 await check('recovered failure is visible and has a permitted manual retry', async () => {
   const alert = page.getByRole('alert')
   assert.match(await alert.innerText({ timeout: 1000 }), /ownership.*expired|ownership_lease_expired/i)
+  const configuration = (await (await page.request.get(base + '/api/execution/configuration')).json()).data
+  const authorization = await page.request.post(base + '/api/execution/authorize', { data: {
+    provider: configuration.provider, model: configuration.model, request_key: 'synthetic-recovery-' + abandoned.project_id,
+    input_description: 'Explicit synthetic abandoned-task recovery fixture', max_requests: 10, max_seconds: 120,
+    confirmed: true, resources: ['project:' + abandoned.project_id]
+  } })
+  assert.equal(authorization.status(), 201)
   await page.getByRole('button', { name: 'Retry graph build', exact: true }).click({ timeout: 1000 })
   await page.getByText('Ready', { exact: true }).first().waitFor({ timeout: 10000 })
   const project = (await (await page.request.get(base + '/api/graph/project/' + abandoned.project_id)).json()).data

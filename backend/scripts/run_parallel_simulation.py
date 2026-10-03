@@ -576,6 +576,15 @@ class ParallelIPCHandler:
         if not command:
             return True
         
+        from app.services.workflow_execution import ipc_execution_context, WorkflowHalt
+        try:
+            with ipc_execution_context(command):
+                return await self._execute_command(command)
+        except WorkflowHalt as exc:
+            self.send_response(command.get("command_id"), "failed", error=exc.reason)
+            return True
+
+    async def _execute_command(self, command) -> bool:
         command_id = command.get("command_id")
         command_type = command.get("command_type")
         args = command.get("args", {})

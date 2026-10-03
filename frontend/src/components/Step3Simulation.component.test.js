@@ -1,7 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, expect, it, vi } from 'vitest'
 import Step3Simulation from './Step3Simulation.vue'
-import { runEnsemble } from '../api/simulation'
+import { runEnsemble, startSimulation, stopSimulation, getRunStatus } from '../api/simulation'
 
 vi.mock('vue-router', () => ({ useRouter: () => ({ push: vi.fn() }) }))
 vi.mock('../api/report', () => ({ generateReport: vi.fn() }))
@@ -9,6 +9,7 @@ vi.mock('../api/simulation', () => ({
   startSimulation: vi.fn().mockResolvedValue({ success: true, data: {} }),
   stopSimulation: vi.fn().mockResolvedValue({ success: true }),
   getRunStatus: vi.fn().mockResolvedValue({ success: false }),
+  getSimulationConfig: vi.fn().mockResolvedValue({ success: true, data: { prediction_settings: { platform: 'twitter', memory_mode: 'off', seed: 42 } } }),
   getRunStatusDetail: vi.fn().mockResolvedValue({ success: false }),
   getRunDiagnostics: vi.fn().mockResolvedValue({ success: false }),
   getEconomySummary: vi.fn().mockResolvedValue({ success: false }),
@@ -22,6 +23,23 @@ let wrapper
 afterEach(() => {
   wrapper?.unmount()
   vi.clearAllMocks()
+})
+
+it('opening or refreshing a simulation does not schedule generation', async () => {
+  wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test' } })
+  await flushPromises()
+  expect(startSimulation).not.toHaveBeenCalled()
+  expect(getRunStatus).toHaveBeenCalledWith('sim_test')
+})
+
+it('shows a usable Stop control and preserves the stopped state', async () => {
+  getRunStatus.mockResolvedValueOnce({ success: true, data: { runner_status: 'running' } })
+  wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test' } })
+  await flushPromises()
+  await wrapper.get('button.stop').trigger('click')
+  await flushPromises()
+  expect(stopSimulation).toHaveBeenCalledWith({ simulation_id: 'sim_test' })
+  expect(wrapper.emitted('update-status').flat()).toContain('stopped')
 })
 
 it('passes the selected round cap and economic settings when running an ensemble', async () => {

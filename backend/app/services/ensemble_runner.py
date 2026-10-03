@@ -70,6 +70,10 @@ class EnsembleRunner:
         per_run_signals: List[Optional[Dict[str, Any]]] = []
 
         for i in range(runs):
+            from .workflow_execution import current_scope
+            scope = current_scope()
+            if scope and scope.workflow_id:
+                scope.ledger.require_scheduling(scope.workflow_id, scope.epoch)
             seed = 1000 + i * 97
             cls._reset(simulation_id)
             try:
