@@ -1,0 +1,101 @@
+{
+  "event_records": 26,
+  "action_records": 18,
+  "type_counts": {
+    "simulation_start": 1,
+    "round_start": 3,
+    "CREATE_POST": 14,
+    "round_end": 3,
+    "SCHEDULED_EVENT": 4,
+    "simulation_end": 1
+  },
+  "duplicate_post_texts": [
+    {
+      "text": "I cycle past Main Street every day and the current layout makes intersections feel unsafe. I can support the eight-week protected bike-lane pilot only if the intersections get clear protection, not just paint. Eight weeks of data is reasonable as long as the city reports what it measures.",
+      "rounds": [
+        0,
+        1
+      ]
+    },
+    {
+      "text": "Losing the parking lane worries me because short-stay visitors do stop in to browse. I am not opposed in principle, but I will judge the pilot on whether the two signed loading bays actually keep deliveries on time and whether any customer visit measurement is shared transparently. Trial with measurement, not trial by default.",
+      "rounds": [
+        0,
+        1
+      ]
+    },
+    {
+      "text": "I am focused on what stays the same for people with limited mobility: accessible pickup spaces and an unobstructed pedestrian path. A bike lane is fine, but it cannot come at the cost of curb cuts, clear footpaths or accessible loading. I want those guarantees named before the pilot starts, not after complaints are counted.",
+      "rounds": [
+        0,
+        1
+      ]
+    },
+    {
+      "text": "To be clear on scope: the Cedarbrook pilot is an eight-week, reversible test on Main Street. Before any permanence decision, the city will publish counts of cyclists, deliveries, customer visits and accessibility complaints. No survey, no crash figures, and no revenue figures are being claimed at this stage. The purpose of the pilot is to generate those numbers.",
+      "rounds": [
+        0,
+        1
+      ]
+    },
+    {
+      "text": "Daniel Brooks posts a short note restating that the Cedarbrook Main Street bike-lane pilot is reversible, lasts eight weeks, and that no permanence decision has been made. He lists the four metrics that will be published at the end: cyclist counts, delivery counts, customer visits, and accessibility complaints. No other figures are cited.",
+      "rounds": [
+        1,
+        1
+      ]
+    },
+    {
+      "text": "Leo Martin replies asking how the two signed loading bays will be enforced during morning delivery windows and whether blockage will be reported in the pilot metrics. He does not cite revenue figures but ties his conditional support to loading reliability being visible in the published counts.",
+      "rounds": [
+        1,
+        1
+      ]
+    },
+    {
+      "text": "Maya Chen reiterates that she avoids Main Street today because intersections feel unsafe, and asks whether the pilot design includes protected corners or only a lane-level buffer. She frames her support as contingent on intersection treatment, not on lane mileage.",
+      "rounds": [
+        2,
+        2
+      ]
+    },
+    {
+      "text": "Priya Shah responds that accessible pickup spaces and a clear pedestrian path must be guaranteed before the pilot starts, and that accessibility complaints alone being 'counted' is not sufficient. She does not claim a specific number of complaints; she asks for design-level commitments.",
+      "rounds": [
+        2,
+        2
+      ]
+    }
+  ],
+  "real_simulation_model_requests_in_this_attempt": 2,
+  "round_end_events": [
+    {
+      "round": 0,
+      "timestamp": "2026-10-03T05:11:09.143847",
+      "event_type": "round_end",
+      "actions_count": 4
+    },
+    {
+      "round": 1,
+      "timestamp": "2026-10-03T05:11:18.430080",
+      "event_type": "round_end",
+      "actions_count": 7
+    },
+    {
+      "round": 2,
+      "timestamp": "2026-10-03T05:11:22.948154",
+      "event_type": "round_end",
+      "actions_count": 3
+    }
+  ],
+  "simulation_end_events": [
+    {
+      "timestamp": "2026-10-03T05:11:22.948222",
+      "event_type": "simulation_end",
+      "platform": "twitter",
+      "total_rounds": 2,
+      "total_actions": 14
+    }
+  ],
+  "disabled_platform_action_file_exists": false
+}

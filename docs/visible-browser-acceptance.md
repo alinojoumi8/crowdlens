@@ -1,11 +1,20 @@
-# CrowdLens visible-browser acceptance plan
+# CrowdLens visible-browser acceptance plan and results
 
 Prepared 2026-10-03 for tested source `34ad6d27e298f33317e443f0123143fa5e865eab`,
 fingerprint `fea6ca781b9a175fe9face0055dc195bf7f685551e5af5a5f2b42a5342450006`.
-**Paid execution is not authorized.** The earlier 30-request/15-minute approval
-is exhausted. The [control repair audit](audits/2026-10-03-control-recovery.md)
-and [prior accounting](audits/2026-10-03-bike-lane-request-accounting.md) separate
-passing synthetic controls from the incomplete historical live run.
+The user subsequently approved MiniMax usage as needed, including M3.1 Flash;
+only `MiniMax-M3` was used. The [actual browser audit](audits/2026-10-03-live-cedarbrook.md)
+records three repairs and final source `1f61571`, fingerprint
+`f72be2d03b85a404abf19992ddf2d86a703848bc50dbe87cf519d8c18a25333f`.
+The first journey saved/reopened a revision after source changes (42 requests).
+A separate fresh run on the frozen final source completed its report but all
+three proposals blocked (38 requests). **Full fresh acceptance remains incomplete.**
+Both workflows are stopped; no further call is pending.
+
+The earlier exhausted 30-request/15-minute allowance was not reused.
+[Control repair evidence](audits/2026-10-03-control-recovery.md) and
+[historical accounting](audits/2026-10-03-bike-lane-request-accounting.md)
+retain their separate synthetic and incomplete historical-live boundaries.
 
 ## Frozen fresh input and settings
 
@@ -22,34 +31,40 @@ real personal documents, external market lookup or other source is included.
 - A review copy is ready at
   `/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/fresh-inputs/`.
 
-[Effective settings JSON](acceptance-fixtures/cedarbrook-bike-lane/effective-settings.json)
-contains explicit overrides, so preset defaults cannot silently expand the run:
+[Planned settings JSON](acceptance-fixtures/cedarbrook-bike-lane/effective-settings.json)
+contains the requested overrides. Actual saved settings and worker behavior were
+checked separately; the table incorporates observed limitations:
 
 | Setting | Fresh live test value |
 | --- | --- |
 | Provider/model/transport | MiniMax / `MiniMax-M3` / Anthropic Messages; Standard tier; primary generation only |
 | Endpoint | `https://api.minimax.io/anthropic`, isolated test process configuration |
-| Agent/profile scope | Four profiles, profile parallelism one; review the selected graph entities before preparation |
+| Agent/profile scope | Four profiles, profile parallelism one; use the native Agent types selection to include the types of Maya, Leo, Priya and Daniel and exclude the municipality; generated type labels can vary |
 | Scenario | Baseline; one ensemble run |
 | Time/activation | Two simulated hours, 60 minutes/round, one active agent per round/hour; two maximum rounds |
 | Platform/seed | Twitter only; seed 42 (does not make hosted model output deterministic) |
 | Memory | Off; graph-memory updates disabled |
 | Report | General Prediction / Fast; source facts, simulated discussion, uncertainties requested as three sections |
-| Report work | Tool allowance one; Fast permits up to one reflection; interviews disabled |
+| Report work | Fast allows up to two tools per section and one reflection; interviews disabled. The planned `REPORT_AGENT_MAX_TOOL_CALLS=1` environment value is not read/enforced |
 | Transport | No automatic retries for the controlled live test; any explicit retry still consumes the aggregate allowance |
 | Embeddings | Existing local Ollama `nomic-embed-text`; auto-pull disabled |
 | Other paths | Jev off, market provider none, no boost/secondary provider, remote embeddings or provider server tools |
 
 The internal preset identifier remains a compatibility field; inspect all saved
-overrides and effective values before Start. If four named source entities are
+overrides and effective values before Start. The fresh stored availability flags
+include both platforms and its CLI maximum is 72, while actual Twitter-only
+execution clamps to the duration-derived two rounds. Generated 48-hour reasoning
+and legacy active-hour aliases disagree with effective bounds; these remain
+metadata findings. If four named source entities are
 not selectable or preparation disagrees with these bounds, stop and report the
 mismatch instead of substituting seeded profiles. Outline section count is
 model generated; record any departure from the requested three sections.
 
 ## Preflight and isolated setup
 
-1. Obtain the exact new authorization below before enabling live generation.
-   Preserve it with provider, frozen manifest, request ceiling and runtime.
+1. Preserve explicit provider/input authorization before live generation. The
+   later user approval satisfied this prerequisite for the executed tests;
+   the authorization text below is the historical planning template.
 2. Launch an isolated instance of the tested source with new SQLite/artifact
    roots and a fresh Neo4j database/container. Existing app, old relay, databases,
    volumes, global provider settings and original review artifacts stay intact.
@@ -65,8 +80,10 @@ model generated; record any departure from the requested three sections.
    deliverable; do not reuse its seeded data or generation substitutes for this
    test. Record the newly assigned URL before beginning.
 5. Inspect the authorization dialog against the frozen file/requirement and
-   select 60 physical requests and 1,800 seconds. Confirm only under the separate
-   human approval. One durable workflow ID must follow all generated resources.
+   select a bounded request/time allowance under the existing human approval.
+   The first workflow used 60 requests; the separate fresh workflow used 45;
+   both used 1,800-second admission windows. One durable workflow ID must follow
+   each workflow's generated resources.
 
 ## Fresh actual-generation acceptance
 
@@ -97,10 +114,31 @@ Stop and exhaustion already have synthetic regression evidence. Do not deliberat
 interrupt the sole fresh completion attempt solely to repeat those probes. If
 the user requests Stop, settings differ, or a control fails, Stop immediately,
 preserve partial output, inspect in-flight/unknown requests and verify no new
-admissions. Count all stages/children/retries together. At 60 attempts or the
+admissions. Count all stages/children/retries together. At the chosen request ceiling or the
 deadline, stop scheduling; do not extend the allowance, restart with a fresh
 ledger, or call a partial/recovered run a fresh pass. Review pauses are inside
-the 30-minute clock starting at first admission.
+the 30-minute clock starting at first admission. In the first repair journey,
+explicit window renewals under the user's broader approval retained all
+consumption; that mixed-candidate journey is not the fresh acceptance result.
+The separate fresh run had one epoch, no renewal, and stopped at 38/45 requests
+after 1,459.203 seconds. No generation was resumed by polling or refresh.
+
+## Executed outcomes
+
+The [dated audit](audits/2026-10-03-live-cedarbrook.md) and its selected evidence
+record actual generation without fixture substitution. Both journeys reached
+real graphs, four source participants, two Twitter rounds and three-section
+root reports. The first saved child `report_561a7739a24d480bb5a0ac086eec2cdf`
+remains Needs review; reload/history and repeated acceptance preserved one child
+and unchanged parent files. It used several source revisions during repairs.
+
+The fresh frozen-candidate root `report_6ad447817a9b` remains completed, with
+three retained blocked drafts: `invalid_audit`, `paragraph_kind_mismatch`, then
+`invalid_audit` on a different section. Saving remained disabled and no child
+was accepted. The original raw audit JSON is not persisted, so its exact invalid
+field cannot be reconstructed. This is a safely blocked control outcome and an
+incomplete fresh acceptance journey. Source/trace provenance and conflicting
+prose versus forecast probabilities are separate report-quality findings.
 
 ## Separate recovery on preserved copies
 
@@ -137,16 +175,19 @@ run. This exercise is independent of fresh-run acceptance.
    review is bounded by the same extra allowance. Keep it labelled recovery on
    copies; it never supplies evidence of fresh upload-to-proposal completion.
 
-## Proposed authorization and cost
+## Historical proposed authorization and cost
 
-**Fresh run, not yet approved:** MiniMax-M3 at the Standard Anthropic endpoint,
+This section preserves the proposal written before the user's later broader
+approval. It is not a request for another approval of the completed tests.
+
+**Original fresh-run proposal:** MiniMax-M3 at the Standard Anthropic endpoint,
 only the frozen fictional Cedarbrook packet/requirement and its derived graph,
 personas, simulated discussion, report and proposal context; **60 total physical
 model attempts and 30 minutes from first admission**, all stages/children/retries
 and review pauses included. Use existing local embeddings and the exact supported
 settings above. No automatic extension, other provider, download or deployment.
 
-**Optional recovery, separately approved:** the same provider and fictional
+**Original optional-recovery proposal:** the same provider and fictional
 scope, only isolated copies of the preserved partial run, **at most 30 additional
 attempts**, imported original count 30/new total ceiling 60, and a fresh
 30-minute recovery window. Approval of the fresh run alone does not approve this.
@@ -155,11 +196,12 @@ Historical preparation consumed nine requests, then memory updates and the
 larger dual-platform simulation consumed 19, leaving only two for the report.
 The proposed memory-off/two-round/single-platform run removes that major known
 consumer. A planning breakdown is nine preparation, about two simulation,
-roughly 8–13 report and 3–10 proposal calls, leaving reserve within 60. This is
-an informed estimate: a complete report/proposal has not been measured, OASIS
-may make extra calls and model repair loops/latency can consume the reserve.
-Sixty requests and 30 minutes are likely sufficient for this small test, not
-a completion guarantee.
+roughly 8–13 report and 3–10 proposal calls, leaving reserve within 60. This was
+an estimate, not a completion guarantee. Each actual root consumed 19 requests,
+exceeding that report estimate. The unchanged-candidate journey used two
+ontology/graph calls, seven preparation calls, two simulation calls, 19 report
+calls and eight proposal calls: 38 total. Its time/request allowance was adequate
+for those attempts, but model response-contract failures prevented acceptance.
 
 Published Standard M3 rates checked 2026-10-03 are USD $0.30/M input and $1.20/M
 output tokens at ≤512k input per request; cache reads are $0.06/M.
@@ -172,7 +214,7 @@ Actual larger prompts/output, different account terms or unknown in-flight usage
 can cost more. If a strict monetary cap is required, establish provider-side
 controls or a separate monetary-admission contract before testing.
 
-Suggested new approval text:
+Historical suggested approval text:
 
 > Authorize one fresh visible-browser CrowdLens test using MiniMax-M3 Standard
 > and the frozen fictional Cedarbrook packet in this plan, with at most 60
@@ -181,6 +223,7 @@ Suggested new approval text:
 > the approximately USD $1 estimate is not an enforced dollar cap. Do not extend
 > the allowance or run recovery without another approval.
 
-This plan prepares execution and review. It does not claim full live workflow
-success, independently established model quality, deployment equivalence or
-release readiness.
+Actual token fields and the stopped 80-request combined ledger are in the dated
+audit; the provider invoice amount is unknown. The historical USD $1 estimate
+is not the measured bill for either journey. Full fresh acceptance, independent
+quality, deployment equivalence and release readiness remain unestablished.

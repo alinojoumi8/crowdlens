@@ -1,8 +1,11 @@
 # CrowdLens Roadmap
 
-Reconciled 2026-10-03 against control/recovery candidate `34ad6d2`, routes,
-persistence, tests, and bounded synthetic runtime checks. The [repair audit](docs/audits/2026-10-03-control-recovery.md)
-records its identity and remaining real-model gaps. The earlier [ECC handoff](docs/audits/2026-10-02-ecc-milestones-3-5.md)
+Reconciled 2026-10-03 against candidate `1f61571`, routes, persistence, tests,
+and [actual MiniMax browser results](docs/audits/2026-10-03-live-cedarbrook.md).
+The first journey saved/reopened a revision after repairs; the separate fresh
+run completed its report but all three proposals were blocked. Full fresh
+acceptance remains incomplete. The [earlier repair audit](docs/audits/2026-10-03-control-recovery.md)
+retains synthetic verification for `34ad6d2`. The earlier [ECC handoff](docs/audits/2026-10-02-ecc-milestones-3-5.md)
 retains verification for `242b899` and its separate reporting commit. This is
 a prioritized capability backlog, not a set
 of committed release dates. See [the capability manifest](docs/product-capabilities.md)
@@ -19,16 +22,16 @@ Current production/deployment equivalence remains unverified.
 
 | Capability | Current status | Remaining boundary |
 | --- | --- | --- |
-| Document/URL ingestion and case versions | Implemented | Fresh full-pipeline run and extraction/source fidelity checks. |
-| Neo4j graph build, provenance and embedding readiness | Implemented | Full model-backed build and retrieval-quality verification; owned-task recovery is verified separately. |
-| Scenario profiles/settings, simulation and ensembles | Implemented | Real subprocess lifecycle and scenario-quality evidence. |
-| Root reports, progress, resume and section regeneration | Implemented | Independent factual/omission review and live generation evidence. |
-| Source-scoped proposals and immutable revisions | Implemented; synthetic HTTP and built-UI lifecycle verified | Real-model and independent human quality evaluation. |
+| Document/URL ingestion and case versions | Implemented; fictional Markdown ingestion exercised live | Other formats/URLs and independent extraction/source fidelity checks. |
+| Neo4j graph build, provenance and embedding readiness | Implemented; actual graph build and original-source proposal retrieval exercised | Independent retrieval/source-fidelity evaluation; owned-task recovery is separate. |
+| Scenario profiles/settings, simulation and ensembles | Implemented; four named profiles and two Twitter rounds verified | Broader lifecycle/memory/ensemble quality; reconcile legacy metadata and duplicate activity counts. |
+| Root reports, progress, resume and section regeneration | Implemented; actual three-section reports completed | Graph paraphrases presented as quotations, unsupported discussion/probabilities and conflicting forecasts require repair and independent review. |
+| Source-scoped proposals and immutable revisions | Implemented; one actual revision saved/reopened after repairs | All three final fresh proposals blocked on contracts; reliable fresh acceptance and human quality evaluation remain open. |
 | `/api/status` readiness endpoint | Implemented | Disk usage and actual generation-provider readiness are not reported/probed. |
 | Agent memory persistence | Partial | File-backed short memory/summaries and optional graph memories exist; lossless restart continuity is unverified. |
 | Automated checks | Implemented | Frozen-candidate results are in the ECC handoff; deterministic checks do not establish full model E2E or factual quality. |
 | Provider selection | Partial | Local/OpenAI-compatible/Anthropic adapters and Ollama/Gemini embeddings exist; per-task routing and broader backend compatibility remain future work. |
-| Workflow request/time controls and Stop | Implemented; synthetic concurrency/restart/browser regressions verified | Fresh real-provider acceptance, monetary ceiling and broader provider accounting remain unverified or planned. |
+| Workflow request/time controls and Stop | Implemented; synthetic regressions and 80 actual requests recorded across two stopped workflows | Fresh revision acceptance remains blocked; monetary admission and broader provider accounting remain planned. |
 | Graph visualization and comparison | Partial | Visualization and case-version comparison exist; whole-graph snapshots, temporal views, and simulation graph diffs remain future work. |
 
 ## Next: verify the existing product
@@ -37,7 +40,9 @@ Current production/deployment equivalence remains unverified.
 
 - [x] Establish the historical bike-lane browser's commit/image/source fingerprint and preserve its original evidence. See [runtime identity and accounting](docs/audits/2026-10-03-control-recovery.md).
 - [ ] Reconcile a chosen deployed revision with the intended source under a separately authorized deployment task.
-- [ ] Run a bounded synthetic document through all six stages with real local services or explicitly authorized hosted inference; record source scope, IDs, timings, retries, and original/revision hashes.
+- [x] Exercise a bounded fictional document through actual upload, graph, scenario, OASIS, report and proposal review with visible MiniMax generation. [Real results](docs/audits/2026-10-03-live-cedarbrook.md) distinguish the repaired/reopened journey from the fresh blocked run; all original hashes remain intact.
+- [ ] Repair report provenance and reconcile prose/forecast probabilities; ground discussion in actual actions rather than source-derived narration.
+- [ ] Preserve raw model audits and precise contract diagnostics, reproduce the blocked draft structures, and establish reliable full fresh proposal acceptance/reopen without weakening guards.
 - [ ] Measure source attribution, unsupported claims, omissions, and reviewer effort on approved held-out packets with independent labels. Synthetic model output and unreviewed fixtures are not quality evidence.
 
 ### P2 — recovery and user experience
@@ -47,7 +52,7 @@ Current production/deployment equivalence remains unverified.
 - [ ] Define monetary admission before promising a dollar ceiling; measured tokens, pricing estimates and request/time limits do not establish one.
 - [ ] Verify subprocess restart, failed writes, optional graph memory, and forced-run cleanup. Define the memory retention and continuation promise before strengthening it.
 - [x] Verify supported report/proposal states in the built UI at 375/768/1440px: keyboard/focus, blocked/stale proposals, lost acceptance response/retry, reopen, unknown metrics, and real owned-task failure/manual retry. [QA evidence](docs/audits/2026-10-02-milestone4-browser-qa.md) identifies all seeded and substituted stages.
-- [ ] Execute the [fresh visible-browser acceptance plan](docs/visible-browser-acceptance.md) through actual generation, OASIS, report, proposal, test revision acceptance and reopen after new bounded approval. The previous live allowance is exhausted; recovery on preserved copies is a separate test.
+- [ ] Complete the [fresh visible-browser acceptance plan](docs/visible-browser-acceptance.md) through test revision acceptance/reopen. Newly authorized real generation reached a completed root report on `1f61571`, but three proposal attempts were blocked. An earlier actual child reopened after repairs; it is not a fresh single-candidate acceptance pass. Historical-copy paid recovery is separate and was not run.
 - [x] Rehearse cold synthetic SQLite/artifact restore, same-root expired-task recovery, and separate Neo4j dump/load into new volumes.
 - [ ] Define retention/deletion ownership and coordinated cross-store backup procedures; online atomic backup and active-task relocation remain unverified.
 - [ ] Promote only after exact-candidate remote CI and explicitly authorized deployment verification. Local clean-install, audit, build, recovery, and image results are recorded in the [release evidence](docs/audits/2026-10-02-milestone5-release-verification.md).

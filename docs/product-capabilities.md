@@ -2,9 +2,12 @@
 
 Evidence date: 2026-10-03. Original Milestone 1 baseline: `main` at `34275b7`.
 Method: ECC `product-capability`, followed by the installed ECC 2.2.3 audit,
-evaluation, browser and verification workflows. Current local source/evidence
-identities are in the [control/recovery audit](audits/2026-10-03-control-recovery.md)
-for `34ad6d2`; the prior [execution handoff](audits/2026-10-02-ecc-milestones-3-5.md)
+evaluation, browser and verification workflows. Current source is `1f61571`;
+the [actual MiniMax browser audit](audits/2026-10-03-live-cedarbrook.md) records
+one accepted revision after repairs and a separate fresh run whose three
+proposals were blocked. Full fresh acceptance/reopening remains incomplete.
+The [control/recovery audit](audits/2026-10-03-control-recovery.md) retains
+`34ad6d2` synthetic evidence; the prior [execution handoff](audits/2026-10-02-ecc-milestones-3-5.md)
 retains the separate `242b899` evidence and completion statuses.
 Milestone 1 was documentation-only; subsequent scoped implementation remains local.
 Existing deployment equivalence has not been established.
@@ -29,8 +32,10 @@ Implementation status and live verification are separate dimensions.
 - Simulation events and model judgments are generated artifacts. Source
   attribution and structural checks do not certify factual truth or forecasts.
 - Proposal retrieval must retain the report's graph, case, and case-version
-  scope. Missing/inconsistent scope or missing original source chunks prevents
-  useful drafting; arbitrary report text is not substitute evidence.
+  scope. Incomplete legacy scope can be recovered only from exactly one persisted
+  CaseVersion matching the original project and graph, without changing the
+  parent. Conflicting/ambiguous scope or missing original source chunks blocks
+  drafting; arbitrary report text is not substitute evidence.
 - Acceptance saves a distinct immutable revision, preserves the parent and
   unselected sections, and leaves the revision `needs_review`. It does not run
   another simulation or issue a fresh prediction.
@@ -87,12 +92,12 @@ UI routes are defined in [routes.js](../frontend/src/router/routes.js): `/`,
 
 | Stage / status | Inputs and observable outcome | API contract | Storage and evidence |
 | --- | --- | --- | --- |
-| Upload — implemented | PDF/MD/TXT files and/or URLs plus `simulation_requirement`; creates a project, source documents, case/version metadata, and generated ontology. | `POST /api/graph/ontology/generate`; existing cases can receive documents through `POST /api/graph/case/<case_id>/documents`. | Original/extracted files on disk; project/case metadata in SQLite when configured. [Graph routes](../backend/app/api/graph.py), [case tests](../backend/tests/test_case_litigation_workflow.py), [URL tests](../backend/tests/test_url_fetcher.py). Fresh provider-backed ingestion unverified. |
-| Graph — implemented | Project/ontology and chunk/build settings; returns a task ID, builds entities/edges/source chunks, exposes graph data and embedding readiness. | `POST /api/graph/build`; `GET /api/graph/task/<task_id>`; `GET /api/graph/data/<graph_id>`; `GET /api/graph/<graph_id>/embedding-status`. | Neo4j graph/source/vector records; SQLite project/task state; extraction caches on disk. [Build tests](../backend/tests/test_graph_build_speed.py), [embedding tests](../backend/tests/test_graph_embedding_status.py), [provenance tests](../backend/tests/test_source_tracing.py). Fresh full graph build unverified. |
+| Upload — implemented | PDF/MD/TXT files and/or URLs plus `simulation_requirement`; creates a project, source documents, case/version metadata, and generated ontology. | `POST /api/graph/ontology/generate`; existing cases can receive documents through `POST /api/graph/case/<case_id>/documents`. | Original/extracted files on disk; project/case metadata in SQLite when configured. [Graph routes](../backend/app/api/graph.py), [case tests](../backend/tests/test_case_litigation_workflow.py), [URL tests](../backend/tests/test_url_fetcher.py). Fresh actual-provider Markdown ingestion verified on `1f61571`; other input paths were not live-retested. |
+| Graph — implemented | Project/ontology and chunk/build settings; returns a task ID, builds entities/edges/source chunks, exposes graph data and embedding readiness. | `POST /api/graph/build`; `GET /api/graph/task/<task_id>`; `GET /api/graph/data/<graph_id>`; `GET /api/graph/<graph_id>/embedding-status`. | Neo4j graph/source/vector records; SQLite project/task state; extraction caches on disk. [Build tests](../backend/tests/test_graph_build_speed.py), [embedding tests](../backend/tests/test_graph_embedding_status.py), [provenance tests](../backend/tests/test_source_tracing.py). Fresh actual-provider build with local embeddings and Neo4j verified; generated relations still require review. |
 | Scenario — implemented | Project/graph, entity filters, prediction/scenario settings; creates simulation ID, prepares personas and configuration, returns readiness/progress. | `POST /api/simulation/create`; `POST /api/simulation/prepare`; **POST** `/api/simulation/prepare/status`; `GET /api/simulation/<simulation_id>/config` and `/profiles`. | Simulation `state.json`, profiles, and configuration on disk. This preparation state is distinct from SQLite runner state. [Manager](../backend/app/services/simulation_manager.py), [preparation tests](../backend/tests/test_simulation_manager.py). No guarantee of a particular agent count or persona quality. |
 | Simulation — implemented; restart fidelity partial | Prepared simulation, platform, rounds, seed, optional graph-memory/economy settings; launches workers and exposes actions/progress. | `POST /api/simulation/start`, `/stop`, `/run-ensemble`; `GET /api/simulation/<simulation_id>/run-status`, `/run-status/detail`, `/actions`, `/timeline`. | SQLite runner metadata plus JSON compatibility mirror; platform databases/logs and memory files on disk; optional memories in Neo4j. [Runner](../backend/app/services/simulation_runner.py), [persistence tests](../backend/tests/test_simulation_runner_persistence.py), [runtime-memory tests](../backend/tests/test_forecast_upgrade.py). Restart reconciliation is implemented; automatic exact-round continuation is not established. |
 | Report — implemented; factual quality unverified | Simulation ID, report mode/depth, project graph and requirements; generates outline/sections, progress, evidence and forecast artifacts. | `POST /api/report/generate`, `/generate/status`; `GET /api/report/<report_id>`, `/<report_id>/progress`, `/<report_id>/download`; root reports support explicit resume/section regeneration. | Report JSON/Markdown, sections, logs and progress on disk; generation tasks in SQLite. [Report routes](../backend/app/api/report.py), [quality tests](../backend/tests/test_report_quality_gates.py), [grounding tests](../backend/tests/test_report_source_grounding.py). Unsafe embedding readiness blocks default generation; `allow_degraded` is an explicit override. |
-| Proposal review — implemented; independently measured quality unverified | A saved completed/needs-review report with original source scope; drafts a selected section plus related summary spans; operator accepts or rejects. | `POST /api/report/<report_id>/evidence-proposals`; `GET /api/report/<report_id>/evidence-proposals/<proposal_id>`; `POST` on `/accept` with digest or `/reject` with `{}`; `GET /api/report/<report_id>/revisions`. | Private proposal/source snapshots, leases, staged revision files, tombstones and separate report revision. [Proposal API](../backend/app/api/evidence_proposals.py), [revision service](../backend/app/services/report_revisions.py), [API tests](../backend/tests/test_evidence_proposals_api.py), [revision tests](../backend/tests/test_report_revisions.py). Fresh synthetic HTTP lifecycle passed; real-source quality remains unverified. |
+| Proposal review — implemented; actual-model reliability partial | A saved completed/needs-review report with original source scope; drafts a selected section plus related summary spans; operator accepts or rejects. | `POST /api/report/<report_id>/evidence-proposals`; `GET /api/report/<report_id>/evidence-proposals/<proposal_id>`; `POST` on `/accept` with digest or `/reject` with `{}`; `GET /api/report/<report_id>/revisions`. | Private proposal/source snapshots, leases, staged revision files, tombstones and separate report revision. [Proposal API](../backend/app/api/evidence_proposals.py), [revision service](../backend/app/services/report_revisions.py), [API tests](../backend/tests/test_evidence_proposals_api.py), [revision tests](../backend/tests/test_report_revisions.py). First real journey accepted/reopened one immutable child after repairs; all three fresh final-candidate drafts blocked on response contracts. Independently measured quality remains unverified. |
 
 ### States and transitions
 
@@ -170,6 +175,18 @@ backend compatibility. See [the execution controls](workflow-execution.md).
 
 ### Current local execution evidence
 
+- [Actual MiniMax browser verification](audits/2026-10-03-live-cedarbrook.md) on
+  final source `1f61571`, fingerprint
+  `f72be2d03b85a404abf19992ddf2d86a703848bc50dbe87cf519d8c18a25333f`:
+  506 backend tests, 12 Node tests, 39 component tests and production build pass.
+  Three reproduced selection/monitoring/source-scope defects were repaired.
+  The first journey used 42 requests across source changes and saved/reopened a
+  separate child with the root unchanged. A fresh unchanged-candidate journey
+  used 38 requests, completed real upload, Neo4j graph, four personas, two OASIS
+  rounds and a three-section root, but all three proposals blocked; no child was
+  accepted. Both workflows stopped with zero in-flight/unknown usage. Report
+  provenance and conflicting probabilities remain findings; quality scores are
+  not accuracy evidence. No new image/clean-install/remote CI claim is made.
 - [Control/recovery verification](audits/2026-10-03-control-recovery.md) at
   `34ad6d2`: 545 passing tests/build, 504 repeated structural cases, H1 recovery,
   synthetic cold restore, 12 workflow and 10 separate browser checks at three
@@ -179,8 +196,9 @@ backend compatibility. See [the execution controls](workflow-execution.md).
 - [Historical request accounting](audits/2026-10-03-bike-lane-request-accounting.md)
   reconstructs 30 MiniMax-M3 requests on `242b899`. That live run reached actual
   simulation but stopped before report completion/proposal review. It does not
-  verify the repaired candidate. The [fresh visible-browser plan](visible-browser-acceptance.md)
-  freezes the fictional packet and awaits new bounded authorization.
+  verify the repaired candidate. The [visible-browser plan and results](visible-browser-acceptance.md)
+  retain that historical approval boundary and record the later broader MiniMax
+  authorization and separate actual tests; the exhausted allowance was not reused.
 - Versioned synthetic development/holdout fixtures, deterministic source/revision/
   lifecycle checks, three-repeat measurements, and blinded blank human forms are
   available in [the evaluation guide](evaluations/evidence-quality.md). The frozen
@@ -223,31 +241,30 @@ backend compatibility. See [the execution controls](workflow-execution.md).
 
 | Priority | Verification gap | Required evidence before strengthening the promise |
 | --- | --- | --- |
-| P1 | Historical browser identity is known, but the repair candidate is not deployed. | Historical `242b899` and new `34ad6d2` are distinct. Under a separately authorized deployment task, reconcile the chosen revision and rerun status, report/revision routes and frontend checks; preserve data/configuration. |
-| P1 | No fresh upload-to-reviewed-revision run across all real services. | One bounded synthetic document through upload, Neo4j graph build, scenario preparation, simulation, root report, proposal and revision; record IDs, source scope, timings and failure/retry outcomes. Choose local or explicitly authorized hosted inference first. |
-| P1 | Report/evidence quality is not independently established. | Approved held-out source packets, independent claim/omission labels, measured reviewer time, and baseline/proposed evaluation. Committed synthetic unreviewed fixtures prove metric mechanics only. |
+| P1 | Existing deployment is not reconciled to the chosen source. | Historical `242b899`, synthetic `34ad6d2` and real-test `1f61571` remain distinct. Under a separately authorized deployment task, reconcile the chosen revision and rerun status, report/revision routes and frontend checks; preserve data/configuration. |
+| P1 | Fresh real proposals fail response contracts; full acceptance remains incomplete. | Preserve raw audit JSON and precise schema diagnostics, reproduce invalid structures, retain fail-closed guards and measure reliability across packets. Then rerun fresh actual generation through accepted-child reopening with the parent preserved. The first journey's child does not replace the unchanged-candidate boundary. |
+| P1 | Report provenance, probability consistency and independent quality remain unresolved. | Correct graph paraphrases presented as quotes, distinguish actual trace evidence from source facts, define one probability authority, and obtain independent claim/omission labels plus reviewer-time measurements on held-out packets. The actual 100/90 quality scores did not detect these defects. |
 | P2 | Memory continuity and recovery across processes remain partial. | Exercise actual subprocess restart/forced restart, corrupted or failed memory writes, source separation and graph write failure; demonstrate retained/lost data explicitly. |
-| P2 | Full browser flow still requires actual generation/OASIS prerequisites. | Repeat the bounded built-UI checks with real extraction, scenario generation, simulation and root report; current seeded-stage QA and automated accessibility checks cannot certify the complete live pipeline. |
+| P2 | Broader browser paths and fresh child acceptance remain unverified. | Core upload-to-report and proposal review now have visible actual-provider evidence. Complete fresh acceptance/reopening after contract repairs; separately verify other inputs/providers, responsive/accessibility behavior and failure paths on that candidate. |
 | P2 | Deletion/retention and coordinated multi-store recovery are incomplete product contracts. | Cold SQLite/artifact and separate Neo4j restores are rehearsed. Define retention/deletion ownership, coordinated backup points, and any relocation contract before promising online atomic restore or active-task path changes. |
-| P2 | Monetary ceiling and real-provider aggregate control verification remain open. | Physical-request/time limits now have synthetic concurrency/restart/Stop tests and a written contract. Collect fresh actual-provider receipts; define separate monetary admission before claiming a dollar ceiling. Historical transport characterization is not a live duration/cost measurement. |
+| P2 | Monetary admission, activity semantics and stale setting aliases remain open. | Actual-provider ledgers retain 42/60 and 38/45 requests, Stop and measured token fields; the fresh window was not renewed. Define monetary admission before promising a dollar cap. Reconcile unique posts/model actions with logged events, CLI maximum-round aliases and generated timing rationale before using them as forecast evidence. |
 | P2 | Exact-candidate remote CI is pending. | Obtain authorization to push the reviewed local branch and open/update its PR, then collect checks with the actual checkout SHA/tree; feature-branch push alone does not trigger this workflow, and an older main run is not candidate evidence. |
 | P3 | Hardware, latency, coverage and supported Python ranges need measurements. | Repeatable workload/model/hardware benchmarks; documented coverage gaps; clean installs and checks before claiming additional Python versions. |
 
 ## Non-goals and remaining decisions
 
-The current work does not deploy the application, enable a provider, execute paid
-inference, download a generation model, activate advisory policies, introduce
-multi-user hosting, certify predictions, or automatically publish model output.
-Milestone 1 changed only documentation; later milestones contain bounded repairs
-and synthetic verification described in the dated reports.
+The user authorized actual MiniMax testing of the fictional packet; those
+isolated tests and local test-revision acceptance are recorded above. No
+deployment, push/main merge, generation-model download, multi-user hosting,
+prediction certification or automatic publication occurred. Milestone 1 was
+documentation-only; earlier repair/synthetic audits retain their original scope.
 
-Next owners must establish a suitable local generation model or explicitly
-permitted hosted provider/input/budget, obtain independent human labels for the
-blinded packets, authorize exact-candidate remote CI, and separately plan deployment
-reconciliation. Retention/deletion and monetary admission need explicit
-contracts. Request/time admission is implemented and synthetically verified.
-These decisions do not invalidate completed independent checks, and
-those checks do not satisfy the missing decisions.
+Next work must repair report provenance and proposal response reliability,
+complete the fresh acceptance boundary, obtain independent human labels, and
+separately authorize exact-candidate remote CI and deployment reconciliation.
+Retention/deletion and monetary admission need explicit contracts. Request/time
+admission has synthetic regression evidence and the actual receipts above;
+those checks do not establish a dollar ceiling or factual quality.
 
 ## Handoff
 

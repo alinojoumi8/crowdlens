@@ -1,0 +1,329 @@
+{
+  "simulation_id": "sim_499ec61fc52c",
+  "project_id": "proj_83707effff70",
+  "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489",
+  "simulation_requirement": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+  "time_config": {
+    "total_simulation_hours": 2,
+    "minutes_per_round": 60,
+    "agents_per_hour_min": 1,
+    "agents_per_hour_max": 1,
+    "peak_hours": [
+      8,
+      9,
+      12,
+      13,
+      17,
+      18,
+      19
+    ],
+    "peak_activity_multiplier": 1.5,
+    "off_peak_hours": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "off_peak_activity_multiplier": 0.05,
+    "morning_hours": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "morning_activity_multiplier": 0.4,
+    "work_hours": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "work_activity_multiplier": 0.7
+  },
+  "agent_configs": [
+    {
+      "agent_id": 0,
+      "entity_uuid": "bcbc9ff3-af9f-46ee-b0df-4c061745ceb5",
+      "entity_name": "Maya Chen",
+      "entity_type": "Resident",
+      "activity_level": 0.55,
+      "posts_per_hour": 0.4,
+      "comments_per_hour": 1.2,
+      "active_hours": [
+        7,
+        8,
+        12,
+        13,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "response_delay_min": 25,
+      "response_delay_max": 90,
+      "sentiment_bias": 1.0,
+      "stance": "supportive",
+      "stance_rationale": "Maya Chen expressed support for the bike-lane pilot conditional on protected intersections.",
+      "influence_weight": 0.6
+    },
+    {
+      "agent_id": 1,
+      "entity_uuid": "7dbda585-1207-47ca-b149-fcd74b4a2252",
+      "entity_name": "Leo Martin",
+      "entity_type": "ShopOwner",
+      "activity_level": 0.7,
+      "posts_per_hour": 0.6,
+      "comments_per_hour": 1.8,
+      "active_hours": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "response_delay_min": 10,
+      "response_delay_max": 45,
+      "sentiment_bias": -1.0,
+      "stance": "opposing",
+      "stance_rationale": "Leo Martin opposes the bike-lane pilot in its current form due to concerns about losing short-stay parking.",
+      "influence_weight": 0.85
+    },
+    {
+      "agent_id": 2,
+      "entity_uuid": "495afe69-a17a-4e9c-9663-a32364e46df8",
+      "entity_name": "Priya Shah",
+      "entity_type": "Resident",
+      "activity_level": 0.5,
+      "posts_per_hour": 0.3,
+      "comments_per_hour": 1.0,
+      "active_hours": [
+        8,
+        9,
+        12,
+        13,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "response_delay_min": 40,
+      "response_delay_max": 150,
+      "sentiment_bias": 0.45,
+      "stance": "supportive",
+      "stance_rationale": "",
+      "influence_weight": 0.55
+    },
+    {
+      "agent_id": 3,
+      "entity_uuid": "83c27fc9-04a6-4695-9b80-4ec8702f4f21",
+      "entity_name": "Daniel Brooks",
+      "entity_type": "TransportPlanner",
+      "activity_level": 0.35,
+      "posts_per_hour": 0.2,
+      "comments_per_hour": 0.5,
+      "active_hours": [
+        9,
+        10,
+        11,
+        14,
+        15,
+        16
+      ],
+      "response_delay_min": 90,
+      "response_delay_max": 240,
+      "sentiment_bias": 0.1,
+      "stance": "neutral",
+      "stance_rationale": "",
+      "influence_weight": 0.95
+    }
+  ],
+  "event_config": {
+    "initial_posts": [
+      {
+        "content": "I cycle past Main Street every day and the current layout makes intersections feel unsafe. I can support the eight-week protected bike-lane pilot only if the intersections get clear protection, not just paint. Eight weeks of data is reasonable as long as the city reports what it measures.",
+        "poster_type": "Resident",
+        "poster_agent_id": 0
+      },
+      {
+        "content": "Losing the parking lane worries me because short-stay visitors do stop in to browse. I am not opposed in principle, but I will judge the pilot on whether the two signed loading bays actually keep deliveries on time and whether any customer visit measurement is shared transparently. Trial with measurement, not trial by default.",
+        "poster_type": "ShopOwner",
+        "poster_agent_id": 1
+      },
+      {
+        "content": "I am focused on what stays the same for people with limited mobility: accessible pickup spaces and an unobstructed pedestrian path. A bike lane is fine, but it cannot come at the cost of curb cuts, clear footpaths or accessible loading. I want those guarantees named before the pilot starts, not after complaints are counted.",
+        "poster_type": "Resident",
+        "poster_agent_id": 2
+      },
+      {
+        "content": "To be clear on scope: the Cedarbrook pilot is an eight-week, reversible test on Main Street. Before any permanence decision, the city will publish counts of cyclists, deliveries, customer visits and accessibility complaints. No survey, no crash figures, and no revenue figures are being claimed at this stage. The purpose of the pilot is to generate those numbers.",
+        "poster_type": "TransportPlanner",
+        "poster_agent_id": 3
+      }
+    ],
+    "scheduled_events": [
+      {
+        "round": 1,
+        "hour": 2,
+        "event_type": "news",
+        "title": "Pilot scope clarified as reversible eight-week test",
+        "content": "Daniel Brooks posts a short note restating that the Cedarbrook Main Street bike-lane pilot is reversible, lasts eight weeks, and that no permanence decision has been made. He lists the four metrics that will be published at the end: cyclist counts, delivery counts, customer visits, and accessibility complaints. No other figures are cited.",
+        "poster_type": "TransportPlanner",
+        "expected_effect": "Lowers base-case probability of a permanence debate erupting in round 1; raises probability of discussion staying focused on measurement definitions and pilot conditions.",
+        "poster_agent_id": 3
+      },
+      {
+        "round": 1,
+        "hour": 6,
+        "event_type": "shock",
+        "title": "Shop owner raises loading-bay reliability question",
+        "content": "Leo Martin replies asking how the two signed loading bays will be enforced during morning delivery windows and whether blockage will be reported in the pilot metrics. He does not cite revenue figures but ties his conditional support to loading reliability being visible in the published counts.",
+        "poster_type": "ShopOwner",
+        "expected_effect": "Shifts discussion toward the operational detail of the pilot; slightly raises the upside-case probability (written loading commitments) and reduces the chance the discussion defaults to a binary for/against framing.",
+        "poster_agent_id": 1
+      },
+      {
+        "round": 2,
+        "hour": 1,
+        "event_type": "news",
+        "title": "Resident links intersection design to safety priority",
+        "content": "Maya Chen reiterates that she avoids Main Street today because intersections feel unsafe, and asks whether the pilot design includes protected corners or only a lane-level buffer. She frames her support as contingent on intersection treatment, not on lane mileage.",
+        "poster_type": "Resident",
+        "expected_effect": "Keeps safety prominent as a base-case condition; raises probability that the simulated discussion converges on intersection design as a stated pilot parameter rather than an afterthought.",
+        "poster_agent_id": 0
+      },
+      {
+        "round": 2,
+        "hour": 3,
+        "event_type": "shock",
+        "title": "Accessibility resident sets preconditions on curb access",
+        "content": "Priya Shah responds that accessible pickup spaces and a clear pedestrian path must be guaranteed before the pilot starts, and that accessibility complaints alone being 'counted' is not sufficient. She does not claim a specific number of complaints; she asks for design-level commitments.",
+        "poster_type": "Resident",
+        "expected_effect": "Raises downside-case probability if preconditions are left vague; increases upside-case probability that the simulated agreement includes named accessibility commitments alongside the four metrics.",
+        "poster_agent_id": 2
+      }
+    ],
+    "hot_topics": [
+      "protected bike lane",
+      "Main Street",
+      "loading bays",
+      "intersection safety",
+      "accessibility",
+      "reversible pilot",
+      "measurement-based decision",
+      "short-stay parking",
+      "eight-week pilot"
+    ],
+    "narrative_direction": "The four participants will likely converge on conditional support for the reversible pilot, with the discussion centring on how the city will measure and report the four named indicators (cyclist counts, deliveries, customer visits, accessibility complaints) over the eight-week period. Tension will emerge between Maya's intersection-safety priority, Leo's loading-and-visits concern, Priya's accessibility baseline, and Daniel's framing of the pilot as a data-gathering exercise rather than a permanence vote. The base case is that all four endorse moving into the pilot with measurement commitments; the upside case is that Leo and Priya secure written commitments on loading and accessibility before the lane is installed; the downside case is that ambiguity over the four measurement metrics blocks agreement or that early access complaints harden opposition.",
+    "scenario_pack": "baseline"
+  },
+  "twitter_config": {
+    "platform": "twitter",
+    "recency_weight": 0.4,
+    "popularity_weight": 0.3,
+    "relevance_weight": 0.3,
+    "viral_threshold": 10,
+    "echo_chamber_strength": 0.5
+  },
+  "reddit_config": {
+    "platform": "reddit",
+    "recency_weight": 0.3,
+    "popularity_weight": 0.4,
+    "relevance_weight": 0.3,
+    "viral_threshold": 15,
+    "echo_chamber_strength": 0.6
+  },
+  "forecast_mode": "general",
+  "forecast_horizon": "medium_term",
+  "prediction_target": {
+    "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+    "outcomes": [
+      "Base case materializes",
+      "Upside case materializes",
+      "Downside case materializes"
+    ]
+  },
+  "scenario_pack": "baseline",
+  "ensemble_runs": 1,
+  "memory_mode": "off",
+  "prediction_settings": {
+    "preset": "standard_litigation_prediction",
+    "agent_count": 4,
+    "entity_types_include": [
+      "Resident",
+      "ShopOwner",
+      "TransportPlanner"
+    ],
+    "entity_types_exclude": [],
+    "profile_parallelism": 1,
+    "simulation_duration": 2,
+    "minutes_per_round": 60,
+    "active_agents_per_round": 1,
+    "active_agents_per_hour": 16,
+    "ensemble_runs": 1,
+    "scenario_pack": "baseline",
+    "memory_mode": "off",
+    "report_mode": "prediction",
+    "report_depth": "fast",
+    "max_rounds": 72,
+    "seed": 42,
+    "platform": "twitter",
+    "prediction_target": {
+      "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties."
+    }
+  },
+  "report_mode": "prediction",
+  "report_depth": "fast",
+  "decision_config": {
+    "model": "jev-1.13.0",
+    "configured": false,
+    "timeout_seconds": 3.0,
+    "calibration": "provisional",
+    "thresholds": {
+      "interview_min_score": 0.5,
+      "evidence_min_confidence": 0.8
+    },
+    "features": {
+      "interview": {
+        "mode": "off",
+        "policy_version": "interview-v3",
+        "available": false,
+        "reason": "disabled"
+      },
+      "rerank": {
+        "mode": "off",
+        "policy_version": "rerank-v1",
+        "available": false,
+        "reason": "disabled"
+      },
+      "evidence": {
+        "mode": "off",
+        "policy_version": "evidence-v3",
+        "available": false,
+        "reason": "disabled"
+      }
+    }
+  },
+  "llm_model": "MiniMax-M3",
+  "llm_base_url": "https://api.minimax.io/anthropic",
+  "generated_at": "2026-10-03T05:10:10.843838",
+  "generation_reasoning": "Time config: Small-scale browser test with only 4 named participants across a single platform (Cedarbrook) and 2 rounds. Civil discourse on a reversible local pilot \u2014 not breaking news, so 48h is sufficient. Peak hours cluster around morning commute (8-9), lunch discussions (12-13), and evening wind-down (17-19) when residents and shop owners are most likely to engage. Work hours (9-18) cover the transport planner's professional context and shop owner operating hours. Off-peak overnight hours excluded. 1-3 agents per hour reflects the tiny, focused participant pool \u2014 only 4 agents total, so hourly activation must stay low to avoid unrealistic volume. Two rounds of 60 minutes each fit the concise three-section report structure. | Event config: The source document is a fictional, qualitative test scenario. It provides four named participants, their stated positions, and an explicit instruction not to invent surveys, crash data, revenue changes or permanence decisions. The simulation is therefore framed as a small, two-round platform test where the substantive content is limited to the four themes named in the brief: safety, parking/loading, accessibility, and reversible measurement-based decisions. Initial posts mirror each participant's stated position verbatim in spirit, with poster_type drawn strictly from the available entity types. Scheduled events are deliberately confined to clarifications, operational questions and preconditions, so the discussion trajectory (base / upside / downside) is driven by the depth of the measurement and design commitments rather than by fabricated data. The TransportPlanner clarification in round 1 anchors the base case; the ShopOwner loading question and the accessibility preconditions in round 2 are the levers that move the simulated discussion between the upside case (written commitments) and the downside case (unresolved ambiguity). No permanence decision, no survey, no crash statistic, and no revenue figure is introduced at any point. | Agent config: Successfully generated 4 | Initial posts assigned: 4 posts assigned publishers"
+}

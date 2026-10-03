@@ -1,0 +1,97 @@
+{
+  "workflow_ids": [
+    "wf_47f83c938e6d44888f64dd966ec7afc5",
+    "wf_00a49d682ed94067984ce6637a300f75"
+  ],
+  "requests_by_run": [
+    42,
+    38
+  ],
+  "combined_requests": 80,
+  "combined_usage_by_stage": {
+    "agent_configuration": {
+      "attempts": 3,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 396,
+      "input_tokens": 2215,
+      "output_tokens": 1537,
+      "unknown_usage_attempts": 0
+    },
+    "event_configuration": {
+      "attempts": 3,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 402,
+      "input_tokens": 3765,
+      "output_tokens": 3773,
+      "unknown_usage_attempts": 0
+    },
+    "graph": {
+      "attempts": 2,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 262,
+      "input_tokens": 2717,
+      "output_tokens": 1799,
+      "unknown_usage_attempts": 0
+    },
+    "ontology": {
+      "attempts": 2,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 262,
+      "input_tokens": 3414,
+      "output_tokens": 5269,
+      "unknown_usage_attempts": 0
+    },
+    "profiles": {
+      "attempts": 12,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 1589,
+      "input_tokens": 14729,
+      "output_tokens": 23311,
+      "unknown_usage_attempts": 0
+    },
+    "proposal": {
+      "attempts": 11,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 3709,
+      "input_tokens": 35571,
+      "output_tokens": 8500,
+      "unknown_usage_attempts": 0
+    },
+    "report": {
+      "attempts": 38,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 174009,
+      "input_tokens": 61154,
+      "output_tokens": 21943,
+      "unknown_usage_attempts": 0
+    },
+    "simulation": {
+      "attempts": 6,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 776,
+      "input_tokens": 17079,
+      "output_tokens": 1053,
+      "unknown_usage_attempts": 0
+    },
+    "time_configuration": {
+      "attempts": 3,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 396,
+      "input_tokens": 3302,
+      "output_tokens": 908,
+      "unknown_usage_attempts": 0
+    }
+  },
+  "measured_token_fields": {
+    "input_tokens": 143946,
+    "output_tokens": 68093,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 181801
+  },
+  "actual_invoice_amount": null,
+  "unknown_usage_attempts": 0,
+  "all_attempts_model": [
+    "MiniMax-M3"
+  ],
+  "note": "Separate explicitly authorized workflows: first42 requests retained with repair/renewal history; fresh38 requests on one unchanged source/epoch, including all3 blocked proposals. Request limits are not dollar caps. Provider returned token/cache fields are preserved without assuming billing normalization."
+}

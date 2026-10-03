@@ -1,0 +1,29 @@
+F......                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_general_report_proposal_uses_original_graph_version_without_mutating_parent _
+
+app = <Flask 'test_evidence_proposals_api'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70365b868410>
+
+    def test_general_report_proposal_uses_original_graph_version_without_mutating_parent(app, monkeypatch):
+        from pathlib import Path
+        from evidence_draft_samples import SCOPE
+        legacy_project_scope(app, monkeypatch)
+        root = Path(app.extensions['evidence_proposal_store'].root, 'report_root')
+        before = {p.name: p.read_bytes() for p in root.iterdir()}
+        client = app.test_client()
+        response = client.post('/api/report/report_root/evidence-proposals', json={'section_index': 1, 'request_key': 'general-scope'})
+>       assert response.status_code == 202
+E       assert 409 == 202
+E        +  where 409 = <WrapperTestResponse streamed [409 CONFLICT]>.status_code
+
+backend/tests/test_evidence_proposals_api.py:101: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[05:25:00] INFO: outlinesaved: report_root
+[05:25:00] INFO: reportsaved: report_root
+----------------------------- Captured stdout call -----------------------------
+[05:25:00] INFO: outlinesaved: report_root
+[05:25:00] INFO: reportsaved: report_root
+=========================== short test summary info ============================
+FAILED backend/tests/test_evidence_proposals_api.py::test_general_report_proposal_uses_original_graph_version_without_mutating_parent
+1 failed, 6 passed, 14 deselected in 1.31s

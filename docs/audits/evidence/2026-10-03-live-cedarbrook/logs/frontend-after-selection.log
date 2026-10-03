@@ -1,0 +1,43 @@
+npm notice run crowdlens-frontend@0.1.0 test
+npm notice run npm run test:unit && npm run test:components
+npm notice run crowdlens-frontend@0.1.0 test:unit
+npm notice run node --test src/api/*.test.js src/router/*.test.js src/utils/*.test.js tests/*.test.js
+▶ resolveApiBaseUrl
+  ✔ uses the same origin by default so Vite can proxy API calls (0.849283ms)
+  ✔ ignores VITE_API_BASE_URL in development so preview tunnels can proxy API calls (0.173662ms)
+  ✔ keeps an explicit VITE_API_BASE_URL override in production (0.179262ms)
+  ✔ can opt into an absolute API base URL in development (1.294383ms)
+✔ resolveApiBaseUrl (3.980543ms)
+▶ application routes
+  ✔ lazy-loads every page component (0.815398ms)
+✔ application routes (1.988148ms)
+✔ only ready proposals without structural blockers are acceptable (1.648348ms)
+▶ renderSafeMarkdown
+  ✔ renders raw HTML and event handlers as inert text (1.889158ms)
+  ✔ escapes HTML inside code blocks while preserving Markdown formatting (0.320763ms)
+✔ renderSafeMarkdown (3.643279ms)
+▶ createPoller
+  ✔ owns one interval and releases it on stop (1.739663ms)
+  ✔ does not overlap asynchronous polling calls (0.538709ms)
+✔ createPoller (3.949414ms)
+✔ economic twin defaults to disabled and round-trips through route query (1.929556ms)
+✔ economic twin settings normalize currency and validate numeric limits (0.608703ms)
+ℹ tests 12
+ℹ suites 4
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 112.840785
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+
+ Test Files  11 passed (11)
+      Tests  39 passed (39)
+   Start at  04:45:37
+   Duration  2.52s (transform 6.19s, setup 0ms, import 9.22s, tests 1.15s, environment 8.59s)
+

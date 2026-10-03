@@ -289,6 +289,13 @@ frontend build, root and frontend dependency audits, Compose validation, and a
 Docker image build. Unit/component checks and synthetic report checks do not
 establish a complete live-provider pipeline or independently measured report quality.
 
+The [2026-10-03 actual MiniMax browser test](docs/audits/2026-10-03-live-cedarbrook.md)
+completed a report and saved/reopened one revision after repairs. A separate fresh
+run on `1f61571` completed its report but blocked all three proposals; full fresh
+acceptance remains incomplete. Report provenance and conflicting probabilities
+remain findings. That source passed 506 backend and 51 frontend tests plus build;
+the earlier CI/image results do not transfer to it.
+
 ## Use Cases
 
 - **Communication planning** — explore possible responses to a draft announcement.
@@ -300,7 +307,8 @@ establish a complete live-provider pipeline or independently measured report qua
 
 - [Control/recovery repairs and exact-candidate synthetic verification](docs/audits/2026-10-03-control-recovery.md)
 - [Previous fictional live-run request accounting](docs/audits/2026-10-03-bike-lane-request-accounting.md)
-- [Prepared visible-browser live acceptance plan; new authorization required](docs/visible-browser-acceptance.md)
+- [Real MiniMax browser tests, saved revision, blocked drafts and remaining gaps](docs/audits/2026-10-03-live-cedarbrook.md)
+- [Visible-browser acceptance plan and execution status](docs/visible-browser-acceptance.md)
 - [Workflow request/time authorization and Stop contract](docs/workflow-execution.md)
 - [Product capabilities, contracts, and verification gaps](docs/product-capabilities.md)
 - [ECC workflow and adoption plan](docs/ECC-WORKFLOW-PLAN.md)

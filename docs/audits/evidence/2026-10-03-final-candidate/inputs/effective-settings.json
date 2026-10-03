@@ -1,0 +1,24 @@
+{
+  "preset": "standard_litigation_prediction",
+  "agent_count": 4,
+  "entity_types_include": [
+    "AccessibilityAdvocate",
+    "Cyclist",
+    "SmallBusinessOwner",
+    "TransportPlanner"
+  ],
+  "entity_types_exclude": [],
+  "profile_parallelism": 1,
+  "simulation_duration": 2,
+  "minutes_per_round": 60,
+  "active_agents_per_round": 1,
+  "active_agents_per_hour": 1,
+  "max_rounds": 2,
+  "platform": "twitter",
+  "seed": 42,
+  "scenario_pack": "baseline",
+  "memory_mode": "off",
+  "ensemble_runs": 1,
+  "report_mode": "prediction",
+  "report_depth": "fast"
+}

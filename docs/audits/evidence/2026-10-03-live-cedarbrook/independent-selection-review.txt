@@ -1,0 +1,1 @@
+Independent read-only agent review found no actionable blocker. Confirmed UI nested/top-level entity_types_include; prepare API passes types into EntityReader, which filters before SimulationManager applies agent cap. Empty means all. Saved types restore before graph load. Review did not rerun tests or call providers.

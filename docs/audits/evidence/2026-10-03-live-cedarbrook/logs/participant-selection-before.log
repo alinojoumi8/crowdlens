@@ -1,0 +1,314 @@
+npm notice run crowdlens-frontend@0.1.0 npx
+npm notice run 'vitest' run src/components/PrepareRecovery.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/PrepareRecovery.component.test.js (5 tests | 2 failed) 226ms
+   × filters source participant types before applying the agent limit 33ms
+   × reopens the participant filter from persisted settings 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PrepareRecovery.component.test.js > filters source participant types before applying the agent limit
+Error: Unable to get select[aria-label="Agent types"] within: <div data-v-40ca3d8a="" class="env-setup-panel">
+  <div data-v-40ca3d8a="" class="scroll-container">
+    <!-- Step 01: Simulation Instance -->
+    <div data-v-40ca3d8a="" class="step-card active">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">01</span><span data-v-40ca3d8a="" class="step-title">Simulation Instance Initialization</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge processing">Initialization</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/create</p>
+        <p data-v-40ca3d8a="" class="description"> Create new simulation instance and fetch simulated world parameter template </p>
+        <div data-v-40ca3d8a="" class="info-card">
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Project ID</span><span data-v-40ca3d8a="" class="info-value mono"></span></div>
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Graph ID</span><span data-v-40ca3d8a="" class="info-value mono"></span></div>
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Simulation ID</span><span data-v-40ca3d8a="" class="info-value mono">sim_new</span></div>
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Task ID</span><span data-v-40ca3d8a="" class="info-value mono">Async task completed</span></div>
+        </div>
+      </div>
+    </div><!-- Step 02: Generate Agent Personas -->
+    <div data-v-40ca3d8a="" class="step-card">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">02</span><span data-v-40ca3d8a="" class="step-title">Generate Agent Personas</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge pending">Waiting</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/prepare</p>
+        <p data-v-40ca3d8a="" class="description"> Combined with context，Automatically invoke tools to organize entities and relationships from knowledge graph，Initialize simulation individuals，and give them unique behaviors and memories based on reality seed </p>
+        <!--v-if-->
+        <div data-v-40ca3d8a="" class="forecast-controls-panel">
+          <div data-v-40ca3d8a="" class="forecast-control-header"><span data-v-40ca3d8a="" class="forecast-control-title">Forecast controls</span><span data-v-40ca3d8a="" class="forecast-control-badge">Auto</span></div>
+          <div data-v-40ca3d8a="" class="forecast-control-grid"><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Mode</span><select data-v-40ca3d8a="">
+                <option data-v-40ca3d8a="" value="auto">Auto infer</option>
+                <option data-v-40ca3d8a="" value="legal_case">Legal case</option>
+                <option data-v-40ca3d8a="" value="market_economy">Market/economy</option>
+                <option data-v-40ca3d8a="" value="general">General</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Horizon</span><input data-v-40ca3d8a="" placeholder="auto"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Ensemble</span><input data-v-40ca3d8a="" type="number" min="1" max="20"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Memory</span><select data-v-40ca3d8a="">
+                <option data-v-40ca3d8a="" value="practical">Practical</option>
+                <option data-v-40ca3d8a="" value="off">Off</option>
+                <option data-v-40ca3d8a="" value="full">Full</option>
+              </select></label></div><!-- Macro / price quantitative target (predict a number, not just a bucket) -->
+          <!--v-if-->
+          <div data-v-40ca3d8a="" class="prediction-settings-grid"><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Preset</span><select data-v-40ca3d8a="">
+                <option data-v-40ca3d8a="" value="quick_legal_read">Quick legal read</option>
+                <option data-v-40ca3d8a="" value="standard_litigation_prediction">Standard litigation</option>
+                <option data-v-40ca3d8a="" value="deep_adversarial_run">Deep adversarial</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Agents</span><input data-v-40ca3d8a="" type="number" min="1" max="200"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Parallelism</span><input data-v-40ca3d8a="" type="number" min="1" max="20"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Duration</span><input data-v-40ca3d8a="" type="number" min="1" max="240"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Min/Round</span><input data-v-40ca3d8a="" type="number" min="5" max="240"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Active/Round</span><input data-v-40ca3d8a="" type="number" min="1" max="200"></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Scenario</span><select data-v-40ca3d8a="">
+                <option data-v-40ca3d8a="" value="baseline">Baseline</option>
+                <option data-v-40ca3d8a="" value="baseline_adverse_favorable">Baseline + adverse/favorable</option>
+                <option data-v-40ca3d8a="" value="baseline,plaintiff-favorable,defendant-favorable,procedural-delay,settlement-pressure">Litigation ensemble</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Report</span><select data-v-40ca3d8a="">
+                <option value="prediction" data-v-40ca3d8a="">General prediction</option>
+                <option value="legal_case" data-v-40ca3d8a="">Legal case</option>
+                <option value="market_prediction" data-v-40ca3d8a="">Market prediction</option>
+                <option value="product_risk" data-v-40ca3d8a="">Product risk</option>
+                <option value="motion_only" disabled="" data-v-40ca3d8a="">Motion-only (specialized mode unavailable)</option>
+                <option value="settlement_risk" disabled="" data-v-40ca3d8a="">Settlement risk (specialized mode unavailable)</option>
+                <option value="evidence_gap" disabled="" data-v-40ca3d8a="">Evidence gap (specialized mode unavailable)</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Depth</span><select data-v-40ca3d8a="">
+                <option data-v-40ca3d8a="" value="fast">Fast</option>
+                <option data-v-40ca3d8a="" value="standard">Standard</option>
+                <option data-v-40ca3d8a="" value="deep">Deep</option>
+              </select></label></div>
+          <div data-v-40ca3d8a="" class="forecast-settings-summary"><label data-v-40ca3d8a="">Platform <select data-v-40ca3d8a="">
+                <option data-v-40ca3d8a="" value="parallel">Both platforms</option>
+                <option data-v-40ca3d8a="" value="twitter">Public feed</option>
+                <option data-v-40ca3d8a="" value="reddit">Topic community</option>
+              </select></label><label data-v-40ca3d8a="">Seed <input data-v-40ca3d8a="" type="number"></label><span data-v-40ca3d8a="">Presets replace the numeric controls, scenario, memory and depth. Fast runtime overrides memory to Off. Active agents are capped at the available persona count.</span>
+            <!--v-if-->
+          </div>
+          <!--v-if--><button data-v-40ca3d8a="" type="button" class="prepare-env-btn">Prepare environment →</button>
+        </div><!-- Profiles Stats -->
+        <!--v-if-->
+        <!-- Profiles List Preview -->
+        <!--v-if-->
+      </div>
+    </div><!-- Step 03: Generate Dual Platform Simulation Configuration -->
+    <div data-v-40ca3d8a="" class="step-card">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">03</span><span data-v-40ca3d8a="" class="step-title">Generate Dual Platform Simulation Configuration</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge pending">Waiting</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/prepare</p>
+        <p data-v-40ca3d8a="" class="description"> LLM Based on simulation requirements and reality seed，Intelligently set world time flow rate、Recommendation algorithm、Active time period for each individual、Speech frequency、Event trigger and other parameters </p><!-- Config Preview -->
+        <!--v-if-->
+      </div>
+    </div><!-- Step 04: Initial activation arrangement -->
+    <div data-v-40ca3d8a="" class="step-card">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">04</span><span data-v-40ca3d8a="" class="step-title">Initial activation arrangement</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge pending">Waiting</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/prepare</p>
+        <p data-v-40ca3d8a="" class="description"> Based on narrative direction，Automatically generate initial activation events and trending topics，Guide the initial state of the simulated world </p>
+        <!--v-if-->
+      </div>
+    </div><!-- Step 05: Preparation completed -->
+    <div data-v-40ca3d8a="" class="step-card">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">05</span><span data-v-40ca3d8a="" class="step-title">Preparation completed</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge pending">Waiting</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/start</p>
+        <p data-v-40ca3d8a="" class="description">Simulation environment preparation completed，Can start running simulation</p><!-- Simulation Rounds Configuration - Only show after configuration generation is completed and rounds are calculated -->
+        <!--v-if-->
+        <!--v-if-->
+        <div data-v-40ca3d8a="" class="action-group dual"><button data-v-40ca3d8a="" class="action-btn secondary"> ← Return graph construction </button><button data-v-40ca3d8a="" class="action-btn primary" disabled=""> Start dual world parallel simulation ➝ </button></div>
+      </div>
+    </div>
+  </div><!-- Profile Detail Modal -->
+  <transition-stub data-v-40ca3d8a="" name="modal" appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><!-- Bottom Info / Logs -->
+  <div data-v-40ca3d8a="" class="system-logs">
+    <div data-v-40ca3d8a="" class="log-header"><span data-v-40ca3d8a="" class="log-title">SYSTEM DASHBOARD</span><span data-v-40ca3d8a="" class="log-id">sim_new</span></div>
+    <div data-v-40ca3d8a="" class="log-content" tabindex="0" role="region" aria-label="System log"></div>
+  </div>
+</div>
+ ❯ VueWrapper.get ../../../crowdlens-ecc-release/mirofish-local/frontend/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7182:15
+ ❯ src/components/PrepareRecovery.component.test.js:47:23
+     45|   ]}}})
+     46|   await flushPromises()
+     47|   const types=wrapper.get('select[aria-label="Agent types"]')
+       |                       ^
+     48|   expect(types.findAll('option').map(option=>option.element.value)).to…
+     49|   await types.setValue(['Resident','ShopOwner','TransportPlanner'])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/PrepareRecovery.component.test.js > reopens the participant filter from persisted settings
+Error: Unable to get select[aria-label="Agent types"] within: <div data-v-40ca3d8a="" class="env-setup-panel">
+  <div data-v-40ca3d8a="" class="scroll-container">
+    <!-- Step 01: Simulation Instance -->
+    <div data-v-40ca3d8a="" class="step-card completed">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">01</span><span data-v-40ca3d8a="" class="step-title">Simulation Instance Initialization</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge success">Completed</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/create</p>
+        <p data-v-40ca3d8a="" class="description"> Create new simulation instance and fetch simulated world parameter template </p>
+        <div data-v-40ca3d8a="" class="info-card">
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Project ID</span><span data-v-40ca3d8a="" class="info-value mono"></span></div>
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Graph ID</span><span data-v-40ca3d8a="" class="info-value mono"></span></div>
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Simulation ID</span><span data-v-40ca3d8a="" class="info-value mono">sim_prepared</span></div>
+          <div data-v-40ca3d8a="" class="info-row"><span data-v-40ca3d8a="" class="info-label">Task ID</span><span data-v-40ca3d8a="" class="info-value mono">Async task completed</span></div>
+        </div>
+      </div>
+    </div><!-- Step 02: Generate Agent Personas -->
+    <div data-v-40ca3d8a="" class="step-card completed">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">02</span><span data-v-40ca3d8a="" class="step-title">Generate Agent Personas</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge success">Completed</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/prepare</p>
+        <p data-v-40ca3d8a="" class="description"> Combined with context，Automatically invoke tools to organize entities and relationships from knowledge graph，Initialize simulation individuals，and give them unique behaviors and memories based on reality seed </p>
+        <!--v-if-->
+        <div data-v-40ca3d8a="" class="forecast-controls-panel">
+          <div data-v-40ca3d8a="" class="forecast-control-header"><span data-v-40ca3d8a="" class="forecast-control-title">Forecast controls</span><span data-v-40ca3d8a="" class="forecast-control-badge">Auto</span></div>
+          <div data-v-40ca3d8a="" class="forecast-control-grid"><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Mode</span><select data-v-40ca3d8a="" disabled="">
+                <option data-v-40ca3d8a="" value="auto">Auto infer</option>
+                <option data-v-40ca3d8a="" value="legal_case">Legal case</option>
+                <option data-v-40ca3d8a="" value="market_economy">Market/economy</option>
+                <option data-v-40ca3d8a="" value="general">General</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Horizon</span><input data-v-40ca3d8a="" placeholder="auto" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Ensemble</span><input data-v-40ca3d8a="" type="number" min="1" max="20" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Memory</span><select data-v-40ca3d8a="" disabled="">
+                <option data-v-40ca3d8a="" value="practical">Practical</option>
+                <option data-v-40ca3d8a="" value="off">Off</option>
+                <option data-v-40ca3d8a="" value="full">Full</option>
+              </select></label></div><!-- Macro / price quantitative target (predict a number, not just a bucket) -->
+          <!--v-if-->
+          <div data-v-40ca3d8a="" class="prediction-settings-grid"><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Preset</span><select data-v-40ca3d8a="" disabled="">
+                <option data-v-40ca3d8a="" value="quick_legal_read">Quick legal read</option>
+                <option data-v-40ca3d8a="" value="standard_litigation_prediction">Standard litigation</option>
+                <option data-v-40ca3d8a="" value="deep_adversarial_run">Deep adversarial</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Agents</span><input data-v-40ca3d8a="" type="number" min="1" max="200" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Parallelism</span><input data-v-40ca3d8a="" type="number" min="1" max="20" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Duration</span><input data-v-40ca3d8a="" type="number" min="1" max="240" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Min/Round</span><input data-v-40ca3d8a="" type="number" min="5" max="240" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Active/Round</span><input data-v-40ca3d8a="" type="number" min="1" max="200" disabled=""></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Scenario</span><select data-v-40ca3d8a="" disabled="">
+                <option data-v-40ca3d8a="" value="baseline">Baseline</option>
+                <option data-v-40ca3d8a="" value="baseline_adverse_favorable">Baseline + adverse/favorable</option>
+                <option data-v-40ca3d8a="" value="baseline,plaintiff-favorable,defendant-favorable,procedural-delay,settlement-pressure">Litigation ensemble</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Report</span><select data-v-40ca3d8a="" disabled="">
+                <option value="prediction" data-v-40ca3d8a="">General prediction</option>
+                <option value="legal_case" data-v-40ca3d8a="">Legal case</option>
+                <option value="market_prediction" data-v-40ca3d8a="">Market prediction</option>
+                <option value="product_risk" data-v-40ca3d8a="">Product risk</option>
+                <option value="motion_only" disabled="" data-v-40ca3d8a="">Motion-only (specialized mode unavailable)</option>
+                <option value="settlement_risk" disabled="" data-v-40ca3d8a="">Settlement risk (specialized mode unavailable)</option>
+                <option value="evidence_gap" disabled="" data-v-40ca3d8a="">Evidence gap (specialized mode unavailable)</option>
+              </select></label><label data-v-40ca3d8a="" class="forecast-field"><span data-v-40ca3d8a="" class="forecast-label">Depth</span><select data-v-40ca3d8a="" disabled="">
+                <option data-v-40ca3d8a="" value="fast">Fast</option>
+                <option data-v-40ca3d8a="" value="standard">Standard</option>
+                <option data-v-40ca3d8a="" value="deep">Deep</option>
+              </select></label></div>
+          <div data-v-40ca3d8a="" class="forecast-settings-summary"><label data-v-40ca3d8a="">Platform <select data-v-40ca3d8a="" disabled="">
+                <option data-v-40ca3d8a="" value="parallel">Both platforms</option>
+                <option data-v-40ca3d8a="" value="twitter">Public feed</option>
+                <option data-v-40ca3d8a="" value="reddit">Topic community</option>
+              </select></label><label data-v-40ca3d8a="">Seed <input data-v-40ca3d8a="" type="number" disabled=""></label><span data-v-40ca3d8a="">Presets replace the numeric controls, scenario, memory and depth. Fast runtime overrides memory to Off. Active agents are capped at the available persona count.</span><span data-v-40ca3d8a="">Effective:  hours,  min/round, up to  active agents; report  / . Legacy legal aliases use the shared Legal case mode.</span></div>
+          <div data-v-40ca3d8a="" class="forecast-settings-summary"><span data-v-40ca3d8a="" class="mono"></span><span data-v-40ca3d8a=""></span><span data-v-40ca3d8a=""> run ensemble</span><span data-v-40ca3d8a="">standard_litigation_prediction</span></div>
+          <!--v-if-->
+        </div><!-- Profiles Stats -->
+        <!--v-if-->
+        <!-- Profiles List Preview -->
+        <!--v-if-->
+      </div>
+    </div><!-- Step 03: Generate Dual Platform Simulation Configuration -->
+    <div data-v-40ca3d8a="" class="step-card completed">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">03</span><span data-v-40ca3d8a="" class="step-title">Generate Dual Platform Simulation Configuration</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge success">Completed</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/prepare</p>
+        <p data-v-40ca3d8a="" class="description"> LLM Based on simulation requirements and reality seed，Intelligently set world time flow rate、Recommendation algorithm、Active time period for each individual、Speech frequency、Event trigger and other parameters </p><!-- Config Preview -->
+        <div data-v-40ca3d8a="" class="config-detail-panel">
+          <!-- Time Configuration -->
+          <div data-v-40ca3d8a="" class="config-block">
+            <div data-v-40ca3d8a="" class="config-grid">
+              <div data-v-40ca3d8a="" class="config-item"><span data-v-40ca3d8a="" class="config-item-label">Simulation Duration</span><span data-v-40ca3d8a="" class="config-item-value">- hours</span></div>
+              <div data-v-40ca3d8a="" class="config-item"><span data-v-40ca3d8a="" class="config-item-label">Duration per round</span><span data-v-40ca3d8a="" class="config-item-value">- minutes</span></div>
+              <div data-v-40ca3d8a="" class="config-item"><span data-v-40ca3d8a="" class="config-item-label">Total rounds</span><span data-v-40ca3d8a="" class="config-item-value">- rounds</span></div>
+              <div data-v-40ca3d8a="" class="config-item"><span data-v-40ca3d8a="" class="config-item-label">Active per hour</span><span data-v-40ca3d8a="" class="config-item-value">-</span></div>
+            </div>
+            <div data-v-40ca3d8a="" class="time-periods">
+              <div data-v-40ca3d8a="" class="period-item"><span data-v-40ca3d8a="" class="period-label">Peak period</span><span data-v-40ca3d8a="" class="period-hours">:00</span><span data-v-40ca3d8a="" class="period-multiplier">×</span></div>
+              <div data-v-40ca3d8a="" class="period-item"><span data-v-40ca3d8a="" class="period-label">Working hours</span><span data-v-40ca3d8a="" class="period-hours">:00-:00</span><span data-v-40ca3d8a="" class="period-multiplier">×</span></div>
+              <div data-v-40ca3d8a="" class="period-item"><span data-v-40ca3d8a="" class="period-label">Morning time period</span><span data-v-40ca3d8a="" class="period-hours">:00-:00</span><span data-v-40ca3d8a="" class="period-multiplier">×</span></div>
+              <div data-v-40ca3d8a="" class="period-item"><span data-v-40ca3d8a="" class="period-label">Valley period</span><span data-v-40ca3d8a="" class="period-hours">:00-:00</span><span data-v-40ca3d8a="" class="period-multiplier">×</span></div>
+            </div>
+          </div><!-- Agent Configuration -->
+          <div data-v-40ca3d8a="" class="config-block">
+            <div data-v-40ca3d8a="" class="config-block-header"><span data-v-40ca3d8a="" class="config-block-title">Agent Configuration</span><span data-v-40ca3d8a="" class="config-block-badge">0 Number</span></div>
+            <div data-v-40ca3d8a="" class="agents-cards"></div>
+          </div><!-- Platform configuration -->
+          <div data-v-40ca3d8a="" class="config-block">
+            <div data-v-40ca3d8a="" class="config-block-header"><span data-v-40ca3d8a="" class="config-block-title">Recommendation algorithm configuration</span></div>
+            <div data-v-40ca3d8a="" class="platforms-grid">
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </div><!-- LLM Configuration inference -->
+          <!--v-if-->
+        </div>
+      </div>
+    </div><!-- Step 04: Initial activation arrangement -->
+    <div data-v-40ca3d8a="" class="step-card completed">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">04</span><span data-v-40ca3d8a="" class="step-title">Initial activation arrangement</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge success">Completed</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/prepare</p>
+        <p data-v-40ca3d8a="" class="description"> Based on narrative direction，Automatically generate initial activation events and trending topics，Guide the initial state of the simulated world </p>
+        <!--v-if-->
+      </div>
+    </div><!-- Step 05: Preparation completed -->
+    <div data-v-40ca3d8a="" class="step-card active">
+      <div data-v-40ca3d8a="" class="card-header">
+        <div data-v-40ca3d8a="" class="step-info"><span data-v-40ca3d8a="" class="step-num">05</span><span data-v-40ca3d8a="" class="step-title">Preparation completed</span></div>
+        <div data-v-40ca3d8a="" class="step-status"><span data-v-40ca3d8a="" class="badge processing">In progress</span></div>
+      </div>
+      <div data-v-40ca3d8a="" class="card-content">
+        <p data-v-40ca3d8a="" class="api-note">POST /api/simulation/start</p>
+        <p data-v-40ca3d8a="" class="description">Simulation environment preparation completed，Can start running simulation</p><!-- Simulation Rounds Configuration - Only show after configuration generation is completed and rounds are calculated -->
+        <!--v-if-->
+        <div data-v-40ca3d8a="" class="economy-config-section">
+          <div data-v-40ca3d8a="" class="rounds-header">
+            <div data-v-40ca3d8a="" class="header-left"><span data-v-40ca3d8a="" class="section-title">Economic Twin</span><span data-v-40ca3d8a="" class="section-desc">Optional daily decisions and balanced settlement across both social platforms. Off by default.</span></div><label data-v-40ca3d8a="" class="switch-control"><input data-v-40ca3d8a="" type="checkbox"><span data-v-40ca3d8a="" class="switch-track"></span><span data-v-40ca3d8a="" class="switch-label">Enable</span></label>
+          </div>
+          <div data-v-40ca3d8a="" class="economy-controls disabled"><label data-v-40ca3d8a="" class="economy-field"><span data-v-40ca3d8a="">Initial balance (cents)</span><input data-v-40ca3d8a="" type="number" min="0" step="1" disabled=""></label><label data-v-40ca3d8a="" class="economy-field"><span data-v-40ca3d8a="">Currency code</span><input data-v-40ca3d8a="" maxlength="8" placeholder="USD" disabled=""></label><label data-v-40ca3d8a="" class="economy-field"><span data-v-40ca3d8a="">Decisions per tick</span><input data-v-40ca3d8a="" type="number" min="1" max="500" step="1" disabled=""></label></div>
+          <!--v-if-->
+        </div>
+        <div data-v-40ca3d8a="" class="action-group dual"><button data-v-40ca3d8a="" class="action-btn secondary"> ← Return graph construction </button><button data-v-40ca3d8a="" class="action-btn primary"> Start dual world parallel simulation ➝ </button></div>
+      </div>
+    </div>
+  </div><!-- Profile Detail Modal -->
+  <transition-stub data-v-40ca3d8a="" name="modal" appear="false" persisted="false" css="true">
+    <!--v-if-->
+  </transition-stub><!-- Bottom Info / Logs -->
+  <div data-v-40ca3d8a="" class="system-logs">
+    <div data-v-40ca3d8a="" class="log-header"><span data-v-40ca3d8a="" class="log-title">SYSTEM DASHBOARD</span><span data-v-40ca3d8a="" class="log-id">sim_prepared</span></div>
+    <div data-v-40ca3d8a="" class="log-content" tabindex="0" role="region" aria-label="System log"></div>
+  </div>
+</div>
+ ❯ VueWrapper.get ../../../crowdlens-ecc-release/mirofish-local/frontend/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7182:15
+ ❯ src/components/PrepareRecovery.component.test.js:66:26
+     64|   ]}}})
+     65|   await flushPromises()
+     66|   const selected=wrapper.get('select[aria-label="Agent types"]').findA…
+       |                          ^
+     67|   expect(selected.map(option=>option.element.value)).toEqual(['Residen…
+     68|   expect(prepareSimulation).not.toHaveBeenCalled()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  04:45:08
+   Duration  1.65s (transform 427ms, setup 0ms, import 592ms, tests 226ms, environment 660ms)
+

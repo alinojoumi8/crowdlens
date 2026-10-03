@@ -1,0 +1,149 @@
+- region "Workflow allowance":
+  - paragraph:
+    - strong: authorized
+    - text: · 2/45 requests · 0 in flight or delivery unknown · 122 seconds elapsed
+  - button "Stop workflow"
+  - paragraph: Stop blocks new calls. In-flight provider requests may still finish and be billed.
+- banner:
+  - link "CrowdLens":
+    - /url: /
+  - button "Graph"
+  - button "Split"
+  - button "Workbench"
+  - generic: Step 2/5
+  - generic: Env Setup
+  - generic: Preparing
+- main:
+  - generic: Graph Relationship Visualization
+  - button "↻ Refresh":
+    - generic: ↻
+    - generic: Refresh
+  - button "⛶":
+    - generic: ⛶
+  - generic: Entity Types
+  - generic: MunicipalGovernment
+  - generic: Cyclist
+  - generic: SmallBusinessOwner
+  - generic: AccessibilityAdvocate
+  - generic: TransportPlanner
+  - checkbox "Show edge labels" [checked]
+  - generic: Show Edge Labels
+  - generic: "01"
+  - generic: Simulation Instance Initialization
+  - generic: Initialization
+  - paragraph: POST /api/simulation/create
+  - paragraph: Create new simulation instance and fetch simulated world parameter template
+  - generic: Project ID
+  - generic: proj_a6ed1026d573
+  - generic: Graph ID
+  - generic: b056ed0d-5897-4565-b5f6-e02553870309
+  - generic: Simulation ID
+  - generic: sim_9ac5f4ad6a6c
+  - generic: Task ID
+  - generic: Async task completed
+  - generic: "02"
+  - generic: Generate Agent Personas
+  - generic: Waiting
+  - paragraph: POST /api/simulation/prepare
+  - paragraph: Combined with context，Automatically invoke tools to organize entities and relationships from knowledge graph，Initialize simulation individuals，and give them unique behaviors and memories based on reality seed
+  - generic: Forecast controls
+  - generic: General
+  - generic: Mode
+  - combobox "Mode":
+    - option "Auto infer"
+    - option "Legal case"
+    - option "Market/economy"
+    - option "General" [selected]
+  - generic: Horizon
+  - textbox "Horizon":
+    - /placeholder: auto
+  - generic: Ensemble
+  - spinbutton "Ensemble": "1"
+  - generic: Memory
+  - combobox "Memory":
+    - option "Practical"
+    - option "Off" [selected]
+    - option "Full"
+  - generic: Preset
+  - combobox "Preset":
+    - option "Quick legal read"
+    - option "Standard litigation" [selected]
+    - option "Deep adversarial"
+  - generic: Agents
+  - spinbutton "Agents": "4"
+  - generic: Agent types
+  - listbox "Agent types":
+    - option "AccessibilityAdvocate" [selected]
+    - option "Cyclist" [selected]
+    - option "MunicipalGovernment"
+    - option "SmallBusinessOwner" [selected]
+    - option "TransportPlanner" [selected]
+  - generic: Parallelism
+  - spinbutton "Parallelism": "1"
+  - generic: Duration
+  - spinbutton "Duration": "2"
+  - generic: Min/Round
+  - spinbutton "Min/Round": "60"
+  - generic: Active/Round
+  - spinbutton "Active/Round" [active]: "1"
+  - generic: Scenario
+  - combobox "Scenario":
+    - option "Baseline" [selected]
+    - option "Baseline + adverse/favorable"
+    - option "Litigation ensemble"
+  - generic: Report
+  - combobox "Report":
+    - option "General prediction" [selected]
+    - option "Legal case"
+    - option "Market prediction"
+    - option "Product risk"
+    - option "Motion-only (specialized mode unavailable)" [disabled]
+    - option "Settlement risk (specialized mode unavailable)" [disabled]
+    - option "Evidence gap (specialized mode unavailable)" [disabled]
+  - generic: Depth
+  - combobox "Depth":
+    - option "Fast" [selected]
+    - option "Standard"
+    - option "Deep"
+  - text: Platform
+  - combobox "Platform":
+    - option "Both platforms"
+    - option "Public feed" [selected]
+    - option "Topic community"
+  - text: Seed
+  - spinbutton "Seed": "42"
+  - generic: Presets replace the numeric controls, scenario, memory and depth. Fast runtime overrides memory to Off. Active agents are capped at the available persona count.
+  - generic: "Agent types: AccessibilityAdvocate, Cyclist, SmallBusinessOwner, TransportPlanner. Select types to filter before the agent limit; leave empty to include all."
+  - button "Prepare environment →"
+  - generic: "03"
+  - generic: Generate Dual Platform Simulation Configuration
+  - generic: Waiting
+  - paragraph: POST /api/simulation/prepare
+  - paragraph: LLM Based on simulation requirements and reality seed，Intelligently set world time flow rate、Recommendation algorithm、Active time period for each individual、Speech frequency、Event trigger and other parameters
+  - generic: "04"
+  - generic: Initial activation arrangement
+  - generic: Waiting
+  - paragraph: POST /api/simulation/prepare
+  - paragraph: Based on narrative direction，Automatically generate initial activation events and trending topics，Guide the initial state of the simulated world
+  - generic: "05"
+  - generic: Preparation completed
+  - generic: Waiting
+  - paragraph: POST /api/simulation/start
+  - paragraph: Simulation environment preparation completed，Can start running simulation
+  - button "← Return graph construction"
+  - button "Start dual world parallel simulation ➝" [disabled]
+  - generic: SYSTEM DASHBOARD
+  - generic: sim_9ac5f4ad6a6c
+  - region "System log":
+    - generic: 05:41:50.081
+    - generic: Step2 Env Setup Initialization
+    - generic: 05:41:50.081
+    - generic: SimulationView initialized
+    - generic: 05:41:50.138
+    - generic: Configure forecast controls, then click Prepare environment
+    - generic: 05:41:50.159
+    - generic: "Loading simulation data: sim_9ac5f4ad6a6c"
+    - generic: 05:41:50.182
+    - generic: "Project loaded: proj_a6ed1026d573"
+    - generic: 05:41:50.236
+    - generic: Graph data loaded successfully

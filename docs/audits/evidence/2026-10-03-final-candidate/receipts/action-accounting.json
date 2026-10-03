@@ -1,0 +1,59 @@
+{
+  "database_counts": {
+    "user": 4,
+    "post": 9,
+    "trace": 14
+  },
+  "json_action_types": {
+    "CREATE_POST": 13,
+    "SCHEDULED_EVENT": 4,
+    "DO_NOTHING": 1
+  },
+  "json_total_actions": 18,
+  "round_events": [
+    {
+      "round": 0,
+      "timestamp": "2026-10-03T05:49:08.572127",
+      "event_type": "round_start",
+      "simulated_hour": 0
+    },
+    {
+      "round": 0,
+      "timestamp": "2026-10-03T05:49:08.775570",
+      "event_type": "round_end",
+      "actions_count": 4
+    },
+    {
+      "round": 1,
+      "timestamp": "2026-10-03T05:49:11.369521",
+      "event_type": "round_start",
+      "simulated_hour": 7
+    },
+    {
+      "round": 1,
+      "timestamp": "2026-10-03T05:49:12.801151",
+      "event_type": "round_end",
+      "actions_count": 7
+    },
+    {
+      "round": 2,
+      "timestamp": "2026-10-03T05:49:12.974411",
+      "event_type": "round_start",
+      "simulated_hour": 8
+    },
+    {
+      "round": 2,
+      "timestamp": "2026-10-03T05:49:16.783650",
+      "event_type": "round_end",
+      "actions_count": 3
+    },
+    {
+      "timestamp": "2026-10-03T05:49:16.783713",
+      "event_type": "simulation_end",
+      "platform": "twitter",
+      "total_rounds": 2,
+      "total_actions": 14
+    }
+  ],
+  "note": "JSON action traces include repeated initial-post logs and both scheduled-event metadata and actual posts; trace18 is not18 distinct replies or model calls. Simulation stage made2 physical provider requests."
+}

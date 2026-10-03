@@ -11,8 +11,11 @@ or existing deployment verification.
 The [2026-10-03 control/recovery follow-up](audits/2026-10-03-control-recovery.md)
 reproduces the fictional live test's failures and repairs settings, Stop,
 terminal report polling and whole-workflow request/time admission on `34ad6d2`.
-Synthetic checks pass; the [fresh visible-browser plan](visible-browser-acceptance.md)
-is prepared and awaits new provider/input/request/runtime authorization.
+Synthetic checks pass. A subsequent user approval enabled the
+[actual MiniMax browser tests](audits/2026-10-03-live-cedarbrook.md): one revision
+saved/reopened after three repairs, then a fresh `1f61571` run completed its report
+but all three proposals were blocked. Full fresh acceptance, model quality,
+human labels, remote CI and deployment verification remain open.
 Prepared: 2026-10-02. Source baseline: `main` at `34275b7`.
 Skill reference: the original plan used ECC 2.2.2 `ecc-guide`; this execution
 read the installed ECC 2.2.3 instructions for each assigned milestone. Recheck
@@ -223,8 +226,28 @@ These results do not transfer prior image/CI/service checks to the new source.
 
 The [previous-run accounting](audits/2026-10-03-bike-lane-request-accounting.md)
 accounts for all 30 admitted requests with stage-assignment and billing unknowns.
-The [visible acceptance plan](visible-browser-acceptance.md) freezes the original
-fictional input/requirement and supported settings. Next work is a separately
-authorized fresh actual-generation run through report, proposal and immutable
-revision reopen; optional recovery on a copy has its own allowance. No further
-paid calls are authorized or performed by this follow-up.
+The [visible acceptance plan](visible-browser-acceptance.md) froze the original
+fictional input/requirement and supported settings. That repair-only follow-up
+made no paid calls. Subsequent explicit approval enabled the separate real tests
+below; the historical 30-request allowance was not reused.
+
+## Actual browser follow-up — 2026-10-03
+
+[The real-test audit](audits/2026-10-03-live-cedarbrook.md) records three minimal
+fail-first repairs: visible participant-type selection, structured single-platform
+worker events, and original graph/version scope recovery for general reports.
+Candidate `1f61571` passed 506 backend, 12 Node and 39 component tests plus build;
+independent code review found no blocking issue in those fixes.
+
+The first actual journey used 42 requests and saved/reopened a separate Needs
+review child with its parent and other sections unchanged. Its application source
+changed between stages, so it is not a fresh single-candidate pass. A separate
+unchanged-candidate run used 38 requests, completed actual graph/personas/OASIS
+and a three-section report, but all three proposal attempts were safely blocked.
+No fresh child was accepted. Both stopped ledgers retain all attempts and unknown
+billing amount; no push, main merge or deployment occurred.
+
+Next corrective work is report source/trace provenance, consistent uncalibrated
+forecast presentation, precise retained audit diagnostics and real-model draft
+contract reliability. Independent human evaluation remains required. Do not mark
+Milestones 3–5 complete or transfer prior release checks based on these tests.

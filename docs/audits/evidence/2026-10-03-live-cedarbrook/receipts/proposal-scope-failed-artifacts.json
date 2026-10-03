@@ -1,0 +1,30 @@
+[
+  {
+    "path": "/home/ali/Documents/CrowdLens-reviews/2026-10-03-live-cedarbrook/runtime/reports/.evidence-proposals/proposal_7b76f48edeb74d95a3bc6034f99f3d05/record.json",
+    "sha256": "dd9ceb40bc18e0ed1720d78dd8eeda71bf6b344fc8f5a532c6cc7a84c8d0d391",
+    "record": {
+      "schema_version": 1,
+      "proposal_id": "proposal_7b76f48edeb74d95a3bc6034f99f3d05",
+      "parent_report_id": "report_38eb8454832e",
+      "revision_report_id": "report_48dd18d88a87414ebbabc8fa85bbf68f",
+      "request_key_hash": "07aa2fc38be028452bee05a37c715e6bcf3bfb921f2152fcf9a07948c04917cb",
+      "request_digest": "7bef911825d879d77603553860c57950690717f8b100ebaf3b6e2455fdae6658",
+      "state": "failed",
+      "phase": "queued",
+      "created_at": "2026-10-03T09:16:48.105871+00:00",
+      "updated_at": "2026-10-03T09:16:48.122970+00:00",
+      "deadline_at": 1791019188.1059072,
+      "before": {},
+      "after": {},
+      "ledger": [],
+      "sources": [],
+      "findings": [],
+      "usage": {},
+      "timing": {},
+      "limitations": [],
+      "accepted_report_id": null,
+      "proposal_digest": null,
+      "error_code": "admission_failed"
+    }
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "workflow_id": "wf_00a49d682ed94067984ce6637a300f75",
+  "project_id": "proj_a6ed1026d573",
+  "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+  "case_id": "case_d61e8c54c9bb",
+  "case_version_id": "casever_6066a8caca25",
+  "simulation_id": "sim_9ac5f4ad6a6c",
+  "report_id": "report_6ad447817a9b",
+  "proposal_id": "proposal_58c0cb1b68774a998250e844ae64701a",
+  "blocked_proposal_id": "proposal_41906b440b3d49758794e2ea69afb196",
+  "second_blocked_proposal_id": "proposal_20eda4b6140f4a2b8541e828165301de",
+  "uncertainties_proposal_id": "proposal_58c0cb1b68774a998250e844ae64701a"
+}

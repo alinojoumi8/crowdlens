@@ -1,0 +1,15 @@
+{
+  "approved_at_source": "Latest user message in this chat",
+  "approved_instruction": "I approve it you can use minimax as much as you need, also you can use minmax m3.1 flash as well",
+  "purpose": "One fresh full real-provider browser workflow on frozen final code1f61571e7788493043f2c929ed9eaf6520a0e7b8 after first journey required repairs",
+  "provider": "minimax",
+  "model": "MiniMax-M3",
+  "input_sha256": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b",
+  "operator_bound": {
+    "max_requests": 45,
+    "max_seconds": 1800
+  },
+  "prior_run_total_retained": 42,
+  "prior_run_directory": "/home/ali/Documents/CrowdLens-reviews/2026-10-03-live-cedarbrook",
+  "scope": "Fictional local test revision acceptance/reopen, no publication or deployment"
+}
