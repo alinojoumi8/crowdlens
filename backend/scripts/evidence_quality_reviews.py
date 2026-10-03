@@ -16,7 +16,8 @@ def rate(numerator, denominator):
             'rate': numerator / denominator if denominator else None}
 
 
-def export_packets(directory, fixtures, observations):
+def export_packets(directory, fixtures, observations, *, namespace='evidence-quality-v1',
+                   candidate_origin='deterministic_substitute', real_model_output=False):
     reviewer, admin = directory / 'reviewer', directory / 'administrator'
     reviewer.mkdir(parents=True)
     admin.mkdir()
@@ -28,7 +29,7 @@ def export_packets(directory, fixtures, observations):
         observation = observed.get(fixture['id'])
         if not observation or not observation.get('after'):
             continue
-        packet_id = 'packet_' + sha256(('evidence-quality-v1:' + fixture['id']).encode())[:12]
+        packet_id = 'packet_' + sha256((namespace + ':' + fixture['id']).encode())[:12]
         aliases = {source['evidence_id']: 'S' + str(index + 1).zfill(2)
                    for index, source in enumerate(observation['sources'])}
         sources = [{'source_id': aliases[source['evidence_id']], 'document_id': 'D' + str(index + 1).zfill(2),
@@ -41,7 +42,7 @@ def export_packets(directory, fixtures, observations):
                   | {'citation_ids': [aliases.get(identifier, 'UNKNOWN') for identifier in claim['citation_ids']]}
                   for claim in observation['claims']]
         packet = {'schema_version': 1, 'packet_id': packet_id,
-                  'notice': 'Fictional synthetic packet. Candidate origin and expected assertions are withheld. Review only against these sources.',
+                  'notice': 'Fictional source packet. Candidate origin and expected assertions are withheld. Review only against these sources.',
                   'task': fixture['section']['description'], 'sources': sources,
                   'candidate_section': observation['after']['section'],
                   'candidate_summary': observation['after']['summary'], 'claims': claims}
@@ -55,7 +56,7 @@ def export_packets(directory, fixtures, observations):
                           for claim in claims], 'reference_facts': None, 'omitted_reference_fact_ids': None,
                       'conflicts_handled': None, 'notes': None})
         mapping.append({'packet_id': packet_id, 'packet_sha256': digest, 'fixture_id': fixture['id'],
-                        'candidate_origin': 'deterministic_substitute', 'real_model_output': False,
+                        'candidate_origin': candidate_origin, 'real_model_output': real_model_output,
                         'source_aliases': aliases, 'split': fixture['split']})
     forms.sort(key=lambda row: row['packet_id'])
     mapping.sort(key=lambda row: row['packet_id'])
