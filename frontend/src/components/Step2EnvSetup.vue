@@ -736,7 +736,7 @@
               :disabled="phase < 4 || !!economySettingsError"
               @click="handleStartSimulation"
             >
-              Start dual world parallel simulation ➝
+              Open simulation controls ➝
             </button>
           </div>
         </div>

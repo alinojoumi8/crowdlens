@@ -97,7 +97,7 @@ try {
     await page.getByRole('button', { name: /Prepare environment/ }).click()
     await page.getByText('Ready', { exact: true }).first().waitFor({ timeout: 10000 })
     await snapshot('scenario-ready')
-    await page.getByRole('button', { name: /Start dual world parallel simulation/ }).click()
+    await page.getByRole('button', { name: /Open simulation controls/ }).click()
     await page.waitForURL('**/simulation/sim_upload/start**')
     await page.waitForTimeout(2500)
     await snapshot('simulation-completed')

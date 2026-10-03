@@ -379,38 +379,39 @@
 
     <div v-if="diagnostics" class="diagnostics-panel">
       <div class="diagnostics-header">
-        <span class="diagnostics-title">Agent Diagnostics</span>
+        <span class="diagnostics-title">Activity Log Diagnostics</span>
         <div class="diagnostics-header-right">
           <span class="diagnostics-badge">{{ diagnostics.quality_report?.recommended_next_run || 'none' }}</span>
           <button class="diagnostics-export-btn" title="Download full diagnostics as JSON" @click="exportDiagnostics">Export JSON</button>
         </div>
       </div>
+      <p>These counts include initial posts and scheduled events. Topic flags and activity scores are heuristics; they do not measure model-only activity or real-world influence.</p>
       <div class="diagnostics-grid">
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.summary?.actions_count || 0 }}</span>
-          <span class="metric-label">Actions</span>
+          <span class="metric-label">Log Entries</span>
         </div>
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.summary?.useful_actions_count || 0 }}</span>
-          <span class="metric-label">Useful</span>
+          <span class="metric-label">Non-idle Entries</span>
         </div>
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.off_track_agents?.length || 0 }}</span>
-          <span class="metric-label">Off Track</span>
+          <span class="metric-label">Heuristic Flags</span>
         </div>
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.high_impact_agents?.length || 0 }}</span>
-          <span class="metric-label">High Impact</span>
+          <span class="metric-label">Activity-ranked</span>
         </div>
       </div>
       <div class="diagnostics-lists">
         <div class="diagnostics-list">
-          <span class="list-title">High-impact agents</span>
+          <span class="list-title">Activity-ranked agents</span>
           <div v-for="agent in (diagnostics.high_impact_agents || []).slice(0, 4)" :key="`impact-${agent.agent_id}`" class="list-row">
             <span>{{ agent.agent_name }}</span>
             <span class="mono">{{ agent.influence_score }}</span>
           </div>
-          <div v-if="!(diagnostics.high_impact_agents || []).length" class="list-empty">No high-impact agents yet</div>
+          <div v-if="!(diagnostics.high_impact_agents || []).length" class="list-empty">No agents above the activity threshold yet</div>
         </div>
         <div class="diagnostics-list">
           <span class="list-title">Issues</span>
