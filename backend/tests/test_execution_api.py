@@ -249,3 +249,27 @@ def test_reading_report_never_rebinds_another_workflows_shared_graph(controlled,
     assert client.get('/api/report/readonly').status_code==200
     assert ledger.resolve('graph:shared')==first
     assert ledger.resolve('simulation:sim_readonly') is None
+
+
+def test_recovery_response_does_not_rebind_existing_related_resources(controlled,monkeypatch,tmp_path):
+    from app.services.report_agent import ReportManager,Report,ReportStatus
+    client,ledger,runtime,calls=controlled
+    first=client.post('/api/execution/authorize',json=terms('first')).json['data']['workflow_id']
+    second=client.post('/api/execution/authorize',json=terms('second')).json['data']['workflow_id']
+    ledger.bind(first,'simulation:shared');ledger.bind(first,'graph:shared');ledger.bind(second,'report:recovery')
+    report=Report('recovery','shared','shared','fictional',ReportStatus.INTERRUPTED)
+    monkeypatch.setattr(ReportManager,'REPORTS_DIR',str(tmp_path/'reports'))
+    monkeypatch.setattr(ReportManager,'get_report',lambda rid:report)
+    monkeypatch.setattr('app.api.report.GraphToolsService',lambda **kw:object())
+    client.application.extensions['neo4j_storage']=object()
+    class Agent:
+        def __init__(self,**kw):pass
+        def resume_report(self,report,**kw):return report
+    monkeypatch.setattr('app.api.report.ReportAgent',Agent)
+    def start(self,identifier,function,*a,**kw):
+        with self.attempt(identifier).bind():function()
+    monkeypatch.setattr(TaskManager,'start_task',start)
+    response=client.post('/api/report/recovery/resume',json={})
+    assert response.status_code==200
+    assert ledger.resolve('simulation:shared')==first and ledger.resolve('graph:shared')==first
+    assert ledger.status(second)['admitted']==0

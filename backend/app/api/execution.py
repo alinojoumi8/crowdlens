@@ -223,14 +223,21 @@ def install_workflow_controls(app):
     def bind_response(response):
         if request.method != 'POST':
             return response  # Reading an artifact never changes its allowance bindings.
+        created_kinds = {
+            '/api/graph/ontology/generate': ('project',),
+            '/api/simulation/create': ('simulation',),
+            '/api/report/generate': ('report',),
+        }.get(request.path, ('report',) if request.path.endswith('/accept') else ())
         wid = getattr(g, 'workflow_id', None)
         if ledger and wid and response.status_code < 400 and response.is_json:
             payload = response.get_json(silent=True) or {}
             data = payload.get('data')
             if isinstance(data, dict):
-                for kind in ('project', 'simulation', 'report', 'graph'):
+                for kind in created_kinds:
                     if data.get(kind + '_id'):
-                        ledger.bind(wid, kind + ':' + data[kind + '_id'])
+                        resource = kind + ':' + data[kind + '_id']
+                        if ledger.resolve(resource) is None:
+                            ledger.bind(wid, resource)
         return response
 
     @app.teardown_request
