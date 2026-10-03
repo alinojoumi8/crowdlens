@@ -1,0 +1,16 @@
+{
+  "final_requests": 26,
+  "partial_requests": 87,
+  "total_responses": 113,
+  "final_observed_token_fields": {
+    "input_tokens": 69001,
+    "output_tokens": 21111,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 53267
+  },
+  "monetary_cost": null,
+  "adapter_protocol": "anthropic",
+  "actual_provider": "minimax",
+  "actual_model": "MiniMax-M3",
+  "unknown_or_inflight": 0
+}

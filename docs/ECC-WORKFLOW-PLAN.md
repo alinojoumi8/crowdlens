@@ -14,8 +14,10 @@ terminal report polling and whole-workflow request/time admission on `34ad6d2`.
 Synthetic checks pass. A subsequent user approval enabled the
 [actual MiniMax browser tests](audits/2026-10-03-live-cedarbrook.md): one revision
 saved/reopened after three repairs, then a fresh `1f61571` run completed its report
-but all three proposals were blocked. Full fresh acceptance, model quality,
-human labels, remote CI and deployment verification remain open.
+but all three proposals were blocked on that earlier candidate. The subsequent
+[report reliability follow-up](audits/2026-10-03-report-reliability.md) completes
+fresh accepted-child reload/history on `7f4d68e`. Independent model quality, human
+labels, remote CI and deployment verification remain open.
 Prepared: 2026-10-02. Source baseline: `main` at `34275b7`.
 Skill reference: the original plan used ECC 2.2.2 `ecc-guide`; this execution
 read the installed ECC 2.2.3 instructions for each assigned milestone. Recheck
@@ -251,3 +253,22 @@ Next corrective work is report source/trace provenance, consistent uncalibrated
 forecast presentation, precise retained audit diagnostics and real-model draft
 contract reliability. Independent human evaluation remains required. Do not mark
 Milestones 3–5 complete or transfer prior release checks based on these tests.
+
+## Scoped report reliability follow-up — 2026-10-03
+
+All four [corrective tasks](tasks/2026-10-03-report-reliability.md) are complete
+locally on application candidate `7f4d68e`: precise private proposal diagnostics,
+original/action report provenance and frozen forecast authority, honest effective
+settings/activity/state, and fresh actual MiniMax-M3 visible-browser acceptance.
+A bounded counted correction addresses model quote drift while preserving failed
+text/findings and the same guards. Full check: 563 backend + 63 frontend tests and
+build. The accepted child `report_3d12d343d6fa4c5d86998d8d88ea042a` remains Needs review; parent and unselected
+sections are unchanged. Final workflow stopped at 26/90 with no pending calls;
+87 earlier partial-candidate attempts remain accounted separately. See [the audit](audits/2026-10-03-report-reliability.md).
+
+Next milestone: add semantic regressions for the retained Round 1 contradiction
+and unverified conditional-symmetry premise, then independently label held-out
+source/claim/omission cases and
+measure reviewer effort. Then run the separately authorized exact-candidate
+release/CI/deployment task. This scoped result does not mark original Milestones
+3–5 globally complete or transfer their previous release evidence.

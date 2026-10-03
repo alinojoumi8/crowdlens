@@ -1,0 +1,162 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+__ test_history_finds_root_in_effective_store_even_after_new_revision[False] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fae06475710>
+fallback = False
+
+    @pytest.mark.parametrize("fallback", [False, True])
+    def test_history_finds_root_in_effective_store_even_after_new_revision(tmp_path, monkeypatch, fallback):
+        configured = tmp_path / "configured"
+        if fallback:
+            configured.write_text("blocked directory", encoding="utf-8")
+        monkeypatch.setattr(ReportManager, "REPORTS_DIR", str(configured))
+        monkeypatch.setattr(ReportManager, "FALLBACK_REPORTS_DIR", str(tmp_path / "fallback"))
+        root = Report("report_browser_root", "sim_browser_regression", "graph", "test",
+                      ReportStatus.COMPLETED, created_at="2026-10-03T12:00:00")
+        child = Report("report_browser_child", root.simulation_id, "graph", "test",
+                       ReportStatus.NEEDS_REVIEW, created_at="2026-10-03T12:05:00",
+                       revision={"parent_report_id": root.report_id})
+        ReportManager.save_report(root)
+        ReportManager.save_report(child)
+
+>       assert _get_report_id_for_simulation(root.simulation_id) == root.report_id
+E       AssertionError: assert None == 'report_browser_root'
+E        +  where None = _get_report_id_for_simulation('sim_browser_regression')
+E        +    where 'sim_browser_regression' = Report(report_id='report_browser_root', simulation_id='sim_browser_regression', graph_id='graph', simulation_requireme...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).simulation_id
+E        +  and   'report_browser_root' = Report(report_id='report_browser_root', simulation_id='sim_browser_regression', graph_id='graph', simulation_requireme...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).report_id
+
+tests/test_report_browser_regressions.py:27: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[14:45:13] INFO: reportsaved: report_browser_root
+[14:45:13] INFO: reportsaved: report_browser_child
+___ test_history_finds_root_in_effective_store_even_after_new_revision[True] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fae0665aed0>
+fallback = True
+
+    @pytest.mark.parametrize("fallback", [False, True])
+    def test_history_finds_root_in_effective_store_even_after_new_revision(tmp_path, monkeypatch, fallback):
+        configured = tmp_path / "configured"
+        if fallback:
+            configured.write_text("blocked directory", encoding="utf-8")
+        monkeypatch.setattr(ReportManager, "REPORTS_DIR", str(configured))
+        monkeypatch.setattr(ReportManager, "FALLBACK_REPORTS_DIR", str(tmp_path / "fallback"))
+        root = Report("report_browser_root", "sim_browser_regression", "graph", "test",
+                      ReportStatus.COMPLETED, created_at="2026-10-03T12:00:00")
+        child = Report("report_browser_child", root.simulation_id, "graph", "test",
+                       ReportStatus.NEEDS_REVIEW, created_at="2026-10-03T12:05:00",
+                       revision={"parent_report_id": root.report_id})
+        ReportManager.save_report(root)
+        ReportManager.save_report(child)
+
+>       assert _get_report_id_for_simulation(root.simulation_id) == root.report_id
+E       AssertionError: assert None == 'report_browser_root'
+E        +  where None = _get_report_id_for_simulation('sim_browser_regression')
+E        +    where 'sim_browser_regression' = Report(report_id='report_browser_root', simulation_id='sim_browser_regression', graph_id='graph', simulation_requireme...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).simulation_id
+E        +  and   'report_browser_root' = Report(report_id='report_browser_root', simulation_id='sim_browser_regression', graph_id='graph', simulation_requireme...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).report_id
+
+tests/test_report_browser_regressions.py:27: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] INFO: reportsaved: report_browser_root
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] WARNING: Using fallback report storage directory: reports_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured fallback_dir=/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/fallback error=[Errno 17] File exists: '/tmp/pytest-of-ali/pytest-106/test_history_finds_root_in_eff1/configured'
+[14:45:13] INFO: reportsaved: report_browser_child
+____________ test_process_note_is_not_adopted_as_completed_section _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fae06483650>
+
+    def test_process_note_is_not_adopted_as_completed_section(monkeypatch):
+        note = "I have the source. Let me verify the simulated discussion before writing."
+        agent, calls = react_agent(monkeypatch, [TOOL, note, "Final Answer: The source describes an eight-week pilot."])
+        section = ReportSection(title="Source facts")
+        outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+
+        result = agent._generate_section_react_once(section, outline, [])
+
+>       assert result == "The source describes an eight-week pilot."
+E       AssertionError: assert 'I have the s...fore writing.' == 'The source d...t-week pilot.'
+E
+E         - The source describes an eight-week pilot.
+E         + I have the source. Let me verify the simulated discussion before writing.
+
+tests/test_report_browser_regressions.py:64: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[14:45:13] INFO: ReACT generating section: Source facts
+[14:45:13] INFO: Section Source facts did not detectto 'Final Answer:' prefix, directlyadoptLLM outputas finalcontent（Tool call: 1times)
+______ test_exhausted_writer_does_not_publish_missing_final_answer[None] _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fae06474d90>
+unfinished = None
+
+    @pytest.mark.parametrize("unfinished", [None, "", "Let me verify another source."])
+    def test_exhausted_writer_does_not_publish_missing_final_answer(monkeypatch, unfinished):
+        agent, calls = react_agent(monkeypatch, [TOOL] + ["Still checking the source."] * 4 + [unfinished])
+        section = ReportSection(title="Source facts")
+        outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+
+>       with pytest.raises(ValueError, match="completed Final Answer"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_report_browser_regressions.py:75: Failed
+----------------------------- Captured stdout call -----------------------------
+[14:45:13] INFO: ReACT generating section: Source facts
+[14:45:13] INFO: Section Source facts did not detectto 'Final Answer:' prefix, directlyadoptLLM outputas finalcontent（Tool call: 1times)
+________ test_exhausted_writer_does_not_publish_missing_final_answer[] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fae06483f90>
+unfinished = ''
+
+    @pytest.mark.parametrize("unfinished", [None, "", "Let me verify another source."])
+    def test_exhausted_writer_does_not_publish_missing_final_answer(monkeypatch, unfinished):
+        agent, calls = react_agent(monkeypatch, [TOOL] + ["Still checking the source."] * 4 + [unfinished])
+        section = ReportSection(title="Source facts")
+        outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+
+>       with pytest.raises(ValueError, match="completed Final Answer"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_report_browser_regressions.py:75: Failed
+----------------------------- Captured stdout call -----------------------------
+[14:45:13] INFO: ReACT generating section: Source facts
+[14:45:13] INFO: Section Source facts did not detectto 'Final Answer:' prefix, directlyadoptLLM outputas finalcontent（Tool call: 1times)
+_ test_exhausted_writer_does_not_publish_missing_final_answer[Let me verify another source.] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fae064f4b50>
+unfinished = 'Let me verify another source.'
+
+    @pytest.mark.parametrize("unfinished", [None, "", "Let me verify another source."])
+    def test_exhausted_writer_does_not_publish_missing_final_answer(monkeypatch, unfinished):
+        agent, calls = react_agent(monkeypatch, [TOOL] + ["Still checking the source."] * 4 + [unfinished])
+        section = ReportSection(title="Source facts")
+        outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+
+>       with pytest.raises(ValueError, match="completed Final Answer"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_report_browser_regressions.py:75: Failed
+----------------------------- Captured stdout call -----------------------------
+[14:45:13] INFO: ReACT generating section: Source facts
+[14:45:13] INFO: Section Source facts did not detectto 'Final Answer:' prefix, directlyadoptLLM outputas finalcontent（Tool call: 1times)
+=========================== short test summary info ============================
+FAILED tests/test_report_browser_regressions.py::test_history_finds_root_in_effective_store_even_after_new_revision[False]
+FAILED tests/test_report_browser_regressions.py::test_history_finds_root_in_effective_store_even_after_new_revision[True]
+FAILED tests/test_report_browser_regressions.py::test_process_note_is_not_adopted_as_completed_section
+FAILED tests/test_report_browser_regressions.py::test_exhausted_writer_does_not_publish_missing_final_answer[None]
+FAILED tests/test_report_browser_regressions.py::test_exhausted_writer_does_not_publish_missing_final_answer[]
+FAILED tests/test_report_browser_regressions.py::test_exhausted_writer_does_not_publish_missing_final_answer[Let me verify another source.]
+6 failed in 1.23s

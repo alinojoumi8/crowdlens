@@ -37,9 +37,9 @@ See [the rebrand plan and compatibility notes](docs/rebranding.md).
 1. **Upload** — Provide PDF, Markdown, or text files and/or website URLs with a scenario requirement. CrowdLens stores source documents, creates project/case-version metadata, and generates an ontology.
 2. **Graph** — Build entities, relationships, and source-linked chunks in Neo4j. Inspect graph progress and embedding readiness before continuing.
 3. **Scenario** — Select entities and settings, generate agent profiles, and prepare the simulation configuration. Agent count and behavior depend on the sources and settings.
-4. **Simulation** — Run agents on simulated social platforms and inspect actions and progress. Run metadata and artifacts persist; file-backed agent memory and optional Neo4j memory updates do not guarantee complete history or lossless restart continuity.
-5. **Report** — Generate a structured analysis using graph retrieval and, when available, agent interviews. Inspect source evidence and review warnings; report completion does not certify factual correctness.
-6. **Proposal review** — On an eligible saved report, use **Draft with sources** to review a proposed section, summary changes, claim ledger, and original excerpts. **Save as new revision** preserves the parent and creates a separate immutable report that remains `needs_review`.
+4. **Simulation** — Run agents on the selected simulated platform and inspect effective settings, unique posts, model actions and separately labelled initial/scheduled inputs. Run metadata and artifacts persist; file-backed agent memory and optional Neo4j memory updates do not guarantee complete history or lossless restart continuity.
+5. **Report** — Generate a structured analysis with bounded original-source excerpts and actual simulation actions distinguished from graph/persona paraphrases and input posts. New reports save provenance and freeze the forecast before prose so the headline table and panel share one authority. Inspect source evidence and review warnings; mechanical checks and report completion do not certify factual correctness.
+6. **Proposal review** — On an eligible saved report, use **Draft with sources** to review a proposed section, summary changes, claim ledger, original excerpts and precise validation findings. Private diagnostics retain completion text and parsed model output. **Save as new revision** preserves the parent and creates a separate immutable report that remains `needs_review`.
 
 Report chat and agent interviews are optional follow-up tools. Agent interviews
 require an available simulation environment. See the
@@ -289,12 +289,17 @@ frontend build, root and frontend dependency audits, Compose validation, and a
 Docker image build. Unit/component checks and synthetic report checks do not
 establish a complete live-provider pipeline or independently measured report quality.
 
-The [2026-10-03 actual MiniMax browser test](docs/audits/2026-10-03-live-cedarbrook.md)
-completed a report and saved/reopened one revision after repairs. A separate fresh
-run on `1f61571` completed its report but blocked all three proposals; full fresh
-acceptance remains incomplete. Report provenance and conflicting probabilities
-remain findings. That source passed 506 backend and 51 frontend tests plus build;
-the earlier CI/image results do not transfer to it.
+The [2026-10-03 report reliability audit](docs/audits/2026-10-03-report-reliability.md)
+records a fresh visible MiniMax-M3 upload → graph → four personas → two OASIS
+rounds → root report → source proposal → accepted revision → reload/history reopen
+on frozen application candidate `7f4d68e`. Original reports and failed attempts
+remain preserved. **563 backend and 63 frontend tests plus build pass.** One
+fictional journey verifies that boundary; independent claim/omission quality,
+cross-packet reliability and exact-candidate release/deployment checks remain open.
+The retained report includes a Round 1 contradiction that its mechanical score
+missed; the saved revision remains Needs review. Semantic verification is next.
+The [previous live tests](docs/audits/2026-10-03-live-cedarbrook.md) retain their
+separate mixed-candidate and blocked outcomes.
 
 ## Use Cases
 
@@ -304,6 +309,9 @@ the earlier CI/image results do not transfer to it.
 - **Research and storytelling** — study agent interactions under different assumptions.
 
 ## Documentation
+
+- [Report reliability tasks and fresh actual-provider acceptance](docs/audits/2026-10-03-report-reliability.md)
+- [Completed corrective task checklist](docs/tasks/2026-10-03-report-reliability.md)
 
 - [Control/recovery repairs and exact-candidate synthetic verification](docs/audits/2026-10-03-control-recovery.md)
 - [Previous fictional live-run request accounting](docs/audits/2026-10-03-bike-lane-request-accounting.md)

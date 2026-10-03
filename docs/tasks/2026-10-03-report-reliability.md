@@ -31,18 +31,20 @@ the local integration branch; push, main merge and deployment are outside scope.
 - [x] Distinguish unique posts, model actions, initial posts and scheduled events.
 - [x] Reconcile saved effective settings, worker bounds, platform labels and
   pre-Start/terminal state; retain compatibility fields explicitly.
-- [ ] Verify visible UI behavior with relevant component and browser checks.
+- [x] Verify visible UI behavior with relevant component and browser checks.
 
 ## Task 4 — Fresh final-candidate visible-browser acceptance
 
-- [ ] Freeze the verified candidate and frontend bundle; launch new isolated
+- [x] Freeze the verified candidate and frontend bundle; launch new isolated
   artifact/SQLite roots and Neo4j volume with existing local embeddings.
-- [ ] Use the unchanged fictional Cedarbrook packet and existing user MiniMax
+- [x] Use the unchanged fictional Cedarbrook packet and existing user MiniMax
   authorization with durable, bounded request/time accounting.
-- [ ] Execute real upload → graph → scenario → OASIS → root report → source
+- [x] Execute real upload → graph → scenario → OASIS → root report → source
   proposal → local test revision acceptance → reload/history reopen in the
   visible browser. No seeded later outputs or substituted generation.
-- [ ] Preserve original files, failed attempts and usage; record exact identities
+- [x] Preserve original files, failed attempts and usage; record exact identities
   and completion/quality findings and leave the result open for review.
-- [ ] Reconcile README, roadmap/capability evidence and the dated audit; report
+- [x] Reconcile README, roadmap/capability evidence and the dated audit; report
   remaining independent-quality and release-verification work separately.
+
+Completed on application candidate `7f4d68e`; [audit and retained evidence](../audits/2026-10-03-report-reliability.md) record the exact runtime identity, checks, original preservation and fresh actual-provider acceptance. Independent quality and release work remain the next boundary.

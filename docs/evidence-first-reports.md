@@ -14,6 +14,42 @@ Each proposal is limited to 2,000 admitted chunks / 8 million characters, six re
 
 Raw source snapshots and proposals are stored under the existing private report root in `.evidence-proposals`. Leases live separately in `.evidence-locks`; staging and deletion tombstones have separate hidden directories. Keep these directories with report backups. Startup marks abandoned queued/running work interrupted without restarting inference. Do not remove lock files while any backend is running.
 
+Private `diagnostics.json` snapshots retain the actual completion text before JSON
+cleanup/parsing, the parsed response when available, and exact audit/paragraph
+validation findings. They do not contain a full HTTP response envelope. Each
+completion is capped at 256,000 characters with a full-content SHA-256 and an
+explicit truncation flag. Parsed JSON is retained within the same character limit;
+oversized parsed output is explicitly omitted and blocked. Atomic writes use private file permissions;
+the public proposal contains a diagnostics digest rather than the raw responses.
+Responses arriving after cancellation can be retained privately without making a
+proposal ready or weakening ownership, deadline, Stop or acceptance fences.
+
+Drafts must keep every paragraph's kind consistent with all its linked claims.
+Audits must supply the exact coverage arrays, booleans and finding fields required
+by the existing schema. Malformed or incomplete model output remains blocked;
+review errors now identify the affected paragraph or audit field.
+
+New root reports save a bounded original-source and simulation-action packet under
+`source_grounding` using `report-grounding-v1`. Original excerpts, generated graph
+paraphrases, initial/scheduled inputs and actual model actions remain distinct.
+Quotation checks require an exact excerpt and exact bracketed source/action ID;
+generated input posts cannot pass as model-action quotations. The saved forecast
+is frozen before prose generation and reused for the headline table, panel,
+resume and regeneration. Numerical percentages outside that table require matching
+original-source evidence. These mechanical checks do not establish semantic
+correctness, omission coverage or forecast calibration. Legacy reports retain
+their historical status and are not retroactively certified.
+
+Fresh generation checks the planned summary and each section against that same
+provenance/percentage guard. A blocking passage gets at most one ordinary counted
+model correction with the exact findings and frozen context. Before/after text
+and findings remain in `agent_log.jsonl`; an invalid or empty correction still
+blocks, and ownership/Stop fences reject a late response before adoption. The
+final assembled report is validated again. Existing summaries are not automatically
+corrected during Resume, and late correction text rejected by Stop is not appended
+to the report log. This improves a mechanical generation boundary; it does not
+certify paraphrase entailment, omissions, or the heuristic forecast.
+
 A creation retry must reuse its request key. Acceptance uses the displayed immutable proposal digest. Parent/source changes make an unpublished proposal stale; source outages leave it retryable. After an interrupted save, **Retry saving revision** uses the same digest and works after reloading. If publication succeeded before the interruption, retry recovers that revision without parent/source availability. **Keep original** can abandon an interrupted save only when no revision was published; a published revision must first be recovered. Deleted revisions return 410 and are not recreated. Existing reports need no data migration.
 
 Cancelled or expired proposals retain observed usage and phase timings, including responses that arrive after cancellation, without becoming ready again. Retrieval windows follow literal quotations or matching search terms, and the review panel discloses clipped windows and capped candidate coverage.

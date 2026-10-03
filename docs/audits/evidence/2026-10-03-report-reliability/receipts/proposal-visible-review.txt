@@ -1,0 +1,95 @@
+Review source-based draft
+Ready for your review
+
+Compare the wording and inspect its sources. Saving creates a separate report that remains Needs review. Model checks can miss errors.
+
+ORIGINAL SECTION
+
+Source Facts and Positions
+
+The report rests on a single fictional source document, explicitly framed as a test scenario rather than a real municipal proposal. That framing shapes how the positions below should be read: they are qualitative source statements, not survey results, observed behaviour or empirical inputs.
+
+Source-defined scope
+
+According to the source, Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street, in which one parking lane is repurposed as a bike lane and deliveries are routed through two signed loading bays. The city has not decided whether the pilot will become permanent. The source explicitly states that there is no survey, crash count, business revenue measurement or final decision in the document, so any later section that touches numbers, safety statistics, revenue or a permanence ruling must treat them as absent rather than inferred. The four statements are likewise described as qualitative, not representing all residents, and are explicitly separated from any simulated output.
+
+Four named participants and their attributed positions
+
+The source identifies four participants, each representing a distinct stakeholder lens:
+
+Maya Chen (resident cyclist) — supports the pilot conditional on protected intersections; reports currently avoiding Main Street because traffic feels unsafe.
+Leo Martin (Main Street shop owner) — concerned about the loss of short-stay parking; could support a trial if loading access remains reliable and customer visits are measured.
+Priya Shah (resident with limited mobility) — requires that accessible pickup spaces and a clear pedestrian path remain; states that a bike lane alone does not answer those needs.
+Daniel Brooks (city transport planner) — frames the pilot as reversible and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before any permanence decision is considered.
+This participatory composition — cyclist, shop owner, accessibility advocate, transport planner — is the source's own framing and explains why safety, parking/loading, accessibility and measurement all appear as legitimate concerns from the outset.
+
+Conditional symmetry as a source fact
+
+A notable implication of how the source is written is that none of the four statements is unconditional: three are framed as support-pending-conditions, and the fourth is a procedural commitment to reversibility and measurement rather than an endorsement. No participant in the source endorses permanence, and none rejects the pilot outright. That conditional symmetry is a source fact, not a simulated outcome, and it constrains how confidently any later section can describe convergence or conflict among the four — and it means the source itself already anticipates the measurement-based, reversible decision path that the simulation later revisits.
+
+Boundary between source positions and simulated output
+
+The four statements above are the only documentary positions in the packet and should be treated as the baseline against which any generated reaction is compared. Any later discussion of how these positions shifted, softened or aligned must be sourced from recorded model actions, not inferred from the persona descriptions.
+
+PROPOSED SECTION
+
+The report rests on a single fictional source document, explicitly framed as a test scenario rather than a real municipal proposal, with Cedarbrook and the named people described as invented and not a prediction. That framing shapes how the positions below should be read: they are qualitative source statements, not survey results, observed behaviour or empirical inputs. [1]
+
+According to the source, Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street, in which one parking lane is repurposed as a bike lane and deliveries are routed through two signed loading bays. The city has not decided whether the pilot will become permanent. [1]
+
+The source explicitly states that there is no survey, crash count, business revenue measurement or final decision in the document, so any later section that touches numbers, safety statistics, revenue or a permanence ruling must treat them as absent rather than inferred. The four statements are likewise described as qualitative, not representing all residents, and are explicitly separated from any simulated output. [1]
+
+Maya Chen, a resident who cycles to work, states she supports the pilot if the intersections are protected and that she currently avoids Main Street because traffic feels unsafe. [1]
+
+Leo Martin, a Main Street shop owner, states he is concerned about losing short-stay parking and could support a trial if loading access remains reliable and customer visits are measured. [1]
+
+Priya Shah, a resident with limited mobility, states that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not answer those needs. [1]
+
+Daniel Brooks, the city's transport planner, states the pilot is reversible and that the city will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change. [1]
+
+This participatory composition — cyclist, shop owner, accessibility advocate, transport planner — is the source's own framing and explains why safety, parking/loading, accessibility and measurement all appear as legitimate concerns from the outset. [1]
+
+Analysis: None of the four participant statements is unconditional: three (Chen, Martin, Shah) are framed as support-pending-conditions, and Brooks offers a procedural commitment to reversibility and measurement rather than an endorsement. No participant endorses permanence and none rejects the pilot outright, a conditional symmetry that is a source fact and constrains how confidently convergence or conflict among the four can be described, and that means the source itself already anticipates the measurement-based, reversible decision path that the simulation later revisits.
+
+The four statements above are the only documentary positions in the packet and should be treated as the baseline against which any generated reaction is compared. Any later discussion of how these positions shifted, softened or aligned must be sourced from recorded model actions, not inferred from the persona descriptions. [1]
+
+Summary changes · unchanged
+ORIGINAL SUMMARY
+
+A four-agent, two-round simulation on a single platform produced minimal model-driven activity, with participants restating reversible, measurement-based positions and no permanence decision reached.
+
+PROPOSED SUMMARY
+
+A four-agent, two-round simulation on a single platform produced minimal model-driven activity, with participants restating reversible, measurement-based positions and no permanence decision reached.
+
+Review needed: premise unverified
+Claim ledger · 8 statements
+source statement — The source document is framed as a fictional example for testing CrowdLens, with Cedarbrook and the named people described as invented and not a real municipal proposal or prediction.
+source statement — Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street, converting one parking lane to a bike lane and routing deliveries through two signed loading bays; the city has not decided whether the pilot will become permanent.
+attributed allegation — Maya Chen, a resident who cycles to work, states she supports the pilot if the intersections are protected and that she currently avoids Main Street because traffic feels unsafe.
+attributed allegation — Leo Martin, a Main Street shop owner, states he is concerned about losing short-stay parking and could support a trial if loading access remains reliable and customer visits are measured.
+attributed allegation — Priya Shah, a resident with limited mobility, states that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not answer those needs.
+attributed allegation — Daniel Brooks, the city's transport planner, states the pilot is reversible and that the city will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.
+source statement — The source states the four statements are qualitative, do not represent all residents, and that no survey, crash count, business revenue measurement or final decision is contained in the source; readers are instructed not to invent those facts and that simulated conversations are generated output, not new documentary evidence.
+analysis — None of the four participant statements is unconditional: three (Chen, Martin, Shah) are framed as support-pending-conditions, and Brooks offers a procedural commitment to reversibility and measurement rather than an endorsement; no participant endorses permanence and none rejects the pilot outright, a conditional symmetry that is a source fact and constrains how confidently convergence or conflict among them can be described.
+Original source excerpts · 1
+Source 1 · cedarbrook-bike-lane.md · page not recorded · chunk 0
+# Cedarbrook bike-lane pilot — fictional browser test
+
+This is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.
+
+Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.
+
+Four participants provided these statements:
+- Maya Chen, a resident who cycles to work: "I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe."
+- Leo Martin, a Main Street shop owner: "I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured."
+- Priya Shah, a resident with limited mobility: "Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs."
+- Daniel Brooks, the city's transport planner: "The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change."
+
+The four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.
+Source provenance
+Search and review limits
+model audit is not factual certification
+Save as new revision
+Keep original
+New proposal

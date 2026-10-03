@@ -1,0 +1,43 @@
+{
+  "parent_unchanged": true,
+  "parent_files_checked": 9,
+  "checks": {
+    "runtime/reports/report_7b90d18cdb75/section_03.md": true,
+    "runtime/reports/report_7b90d18cdb75/console_log.txt": true,
+    "runtime/reports/report_7b90d18cdb75/section_01.md": true,
+    "runtime/reports/report_7b90d18cdb75/outline.json": true,
+    "runtime/reports/report_7b90d18cdb75/agent_log.jsonl": true,
+    "runtime/reports/report_7b90d18cdb75/section_02.md": true,
+    "runtime/reports/report_7b90d18cdb75/meta.json": true,
+    "runtime/reports/report_7b90d18cdb75/progress.json": true,
+    "runtime/reports/report_7b90d18cdb75/full_report.md": true
+  },
+  "forecast_inherited": true,
+  "summary_inherited": true,
+  "unselected_sections_unchanged": true,
+  "revision_metadata": {
+    "immutable": true,
+    "parent_report_id": "report_7b90d18cdb75",
+    "root_report_id": "report_7b90d18cdb75",
+    "proposal_id": "proposal_a960d285e17d4a339892b7647869c301",
+    "proposal_digest": "98b291f1585356c0da16bc8da1d8b629c03c1bbd8196da6ab7b8fb629cab7d0b",
+    "accepted_at": "2026-10-03T19:03:04.729644+00:00",
+    "section_index": 1,
+    "inherited_forecast": true,
+    "source_checked_at": "2026-10-03T19:03:04.728300+00:00",
+    "inherited_section_indices": [
+      2,
+      3
+    ],
+    "summary_edits": [],
+    "source_digest": "56d85a2ec6708e2803eceffb566526a67e30c94c0e746f30031d7e5c5d53d8fc",
+    "content_digest": "edb5f074a4410a00438f175583a69a8fca87154855f791c2d05d6c216331fbf6"
+  },
+  "proposal_record_sha256": "30971552600b9cabdc692e445a0a6bb74a6641de5a94a14f626713a38a4d2b1b",
+  "proposal_diagnostics_sha256": "d0325ce07254de0cd82b751c581476ada0e4cedcb564ba8e5c4ff9956b47ebf3",
+  "diagnostics_phases": [
+    "planning",
+    "drafting",
+    "auditing"
+  ]
+}

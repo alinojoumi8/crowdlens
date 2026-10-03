@@ -1,5 +1,18 @@
 # CrowdLens visible-browser acceptance plan and results
 
+Current result: **fresh visible-browser acceptance completed on `7f4d68e`**.
+[The reliability audit](audits/2026-10-03-report-reliability.md) records actual
+MiniMax-M3 upload → graph → four personas → two Twitter rounds → root report →
+source proposal → local test revision acceptance → reload/history reopen. The
+new child `report_3d12d343d6fa4c5d86998d8d88ea042a` remains Needs review and the parent is unchanged. One 90-request/
+60-minute window stopped at 26 completed requests, with zero in-flight/unknown
+attempts. Five stopped intermediate candidates used 87 requests separately.
+Source, settings, compiled frontend and application candidate stayed unchanged
+through this final run. Generation was not seeded or substituted. Independent
+quality and exact-candidate release/deployment verification remain open.
+
+## Historical preparation and earlier results
+
 Prepared 2026-10-03 for tested source `34ad6d27e298f33317e443f0123143fa5e865eab`,
 fingerprint `fea6ca781b9a175fe9face0055dc195bf7f685551e5af5a5f2b42a5342450006`.
 The user subsequently approved MiniMax usage as needed, including M3.1 Flash;
@@ -8,7 +21,7 @@ records three repairs and final source `1f61571`, fingerprint
 `f72be2d03b85a404abf19992ddf2d86a703848bc50dbe87cf519d8c18a25333f`.
 The first journey saved/reopened a revision after source changes (42 requests).
 A separate fresh run on the frozen final source completed its report but all
-three proposals blocked (38 requests). **Full fresh acceptance remains incomplete.**
+three proposals blocked (38 requests). **That earlier fresh acceptance attempt remained incomplete.**
 Both workflows are stopped; no further call is pending.
 
 The earlier exhausted 30-request/15-minute allowance was not reused.
@@ -225,5 +238,6 @@ Historical suggested approval text:
 
 Actual token fields and the stopped 80-request combined ledger are in the dated
 audit; the provider invoice amount is unknown. The historical USD $1 estimate
-is not the measured bill for either journey. Full fresh acceptance, independent
-quality, deployment equivalence and release readiness remain unestablished.
+is not the measured bill for either historical journey. The later fresh acceptance
+is recorded at the top; independent quality, deployment equivalence and release
+readiness remain unestablished.

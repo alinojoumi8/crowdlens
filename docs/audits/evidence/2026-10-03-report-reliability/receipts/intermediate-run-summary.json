@@ -1,0 +1,82 @@
+[
+  {
+    "workflow_id": "wf_094cce223ddc4019a7ee7b0142173c2b",
+    "state": "stopped",
+    "reason": "stopped",
+    "epoch": 1,
+    "admitted": 11,
+    "max_requests": 90,
+    "max_seconds": 3600,
+    "input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+    "request_statuses": {
+      "response": 11
+    },
+    "test_revision": "f4f6515968f6edb39068241b2e0c9296f11eb5f0",
+    "finding": "Disabled-memory graph banner and raw-log heuristic labels",
+    "folder": "live-candidate"
+  },
+  {
+    "workflow_id": "wf_db141162259d4ba88a580a88160decd5",
+    "state": "stopped",
+    "reason": "stopped",
+    "epoch": 1,
+    "admitted": 9,
+    "max_requests": 90,
+    "max_seconds": 3600,
+    "input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+    "request_statuses": {
+      "response": 9
+    },
+    "test_revision": "86feb231a322d3155a66488ac77b373f7b0bda39",
+    "finding": "Runtime help claimed graph updates and measured accuracy",
+    "folder": "final-candidate"
+  },
+  {
+    "workflow_id": "wf_518e6a0879ec4db09d30788dbcc0b33f",
+    "state": "stopped",
+    "reason": "stopped",
+    "epoch": 1,
+    "admitted": 21,
+    "max_requests": 90,
+    "max_seconds": 3600,
+    "input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+    "request_statuses": {
+      "response": 21
+    },
+    "test_revision": "c35d4177350299b0712b53510f3fc572d41d8a9e",
+    "finding": "Report blocked on nine unsupported source/input/method quotations",
+    "folder": "verified-candidate"
+  },
+  {
+    "workflow_id": "wf_0ba39ef76fab4772baf1c2d575c9ad83",
+    "state": "stopped",
+    "reason": "stopped",
+    "epoch": 1,
+    "admitted": 22,
+    "max_requests": 90,
+    "max_seconds": 3600,
+    "input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+    "request_statuses": {
+      "response": 22
+    },
+    "test_revision": "5a682771a1f350b440424df202f07bb8c3b0ee7a",
+    "finding": "Report blocked on four altered response quotations or unsupported quoted labels",
+    "folder": "acceptance-candidate"
+  },
+  {
+    "workflow_id": "wf_bca84c5ce41047f59c0abc5de995e2d3",
+    "state": "stopped",
+    "reason": "stopped",
+    "epoch": 1,
+    "admitted": 24,
+    "max_requests": 90,
+    "max_seconds": 3600,
+    "input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+    "request_statuses": {
+      "response": 24
+    },
+    "test_revision": "b1329302619c3beca49ea71338e567ba27d97b7e",
+    "finding": "History ignored configured report store; first root section retained an unfinished process note. Semantic attribution remains a quality gap.",
+    "folder": "final-acceptance"
+  }
+]

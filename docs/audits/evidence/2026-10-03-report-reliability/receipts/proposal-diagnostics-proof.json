@@ -1,0 +1,83 @@
+{
+  "proposal_id": "proposal_a960d285e17d4a339892b7647869c301",
+  "state": "accepted",
+  "proposal_digest": "98b291f1585356c0da16bc8da1d8b629c03c1bbd8196da6ab7b8fb629cab7d0b",
+  "diagnostics_digest": "aba1e5e01fdeda5f20963f4ed29afef39a3de042859e43d53eff2b62b63748ef",
+  "diagnostics_file_sha256": "d0325ce07254de0cd82b751c581476ada0e4cedcb564ba8e5c4ff9956b47ebf3",
+  "record_file_sha256": "30971552600b9cabdc692e445a0a6bb74a6641de5a94a14f626713a38a4d2b1b",
+  "findings": [
+    {
+      "code": "premise_unverified",
+      "blocking": false,
+      "claim_id": "claim_08"
+    }
+  ],
+  "limitations": [
+    "model_audit_is_not_factual_certification"
+  ],
+  "usage": {
+    "calls": [
+      {
+        "provider": "anthropic",
+        "model": "MiniMax-M3",
+        "attempt_count": 1,
+        "input_tokens": 1919,
+        "output_tokens": 845,
+        "elapsed_ms": 8275.63
+      },
+      {
+        "provider": "anthropic",
+        "model": "MiniMax-M3",
+        "attempt_count": 1,
+        "input_tokens": 3353,
+        "output_tokens": 760,
+        "elapsed_ms": 7711.39
+      },
+      {
+        "provider": "anthropic",
+        "model": "MiniMax-M3",
+        "attempt_count": 1,
+        "input_tokens": 4767,
+        "output_tokens": 48,
+        "elapsed_ms": 1165.91
+      }
+    ],
+    "elapsed_ms": 17840.31,
+    "remaining_ms": 162144.69,
+    "cost": null
+  },
+  "phases": {
+    "planning": {
+      "completion_characters": 3419,
+      "raw_sha256": "0560be3eaef7d505fb69efbb41a8f0f1d916c0d4850b5ced0ba9a688c8412f9c",
+      "raw_truncated": false,
+      "parsed_response_keys": [
+        "claims",
+        "gaps"
+      ],
+      "parsed_snapshot_sha256": "d4bea29cdc98af2d208f332a9d93f7733df280ae0647fbbf49c7a65bb631ec0b"
+    },
+    "drafting": {
+      "completion_characters": 3729,
+      "raw_sha256": "7c366d5bd81a81043f3c6d8df6e768da05368e3a9b5efa16909c8f16c53af48c",
+      "raw_truncated": false,
+      "parsed_response_keys": [
+        "paragraphs",
+        "summary_edits"
+      ],
+      "parsed_snapshot_sha256": "2576d23f52562902004f2667a89b5fe0c9c43e50ab3ea78fabeac161617fc417"
+    },
+    "auditing": {
+      "completion_characters": 135,
+      "raw_sha256": "54423ce3d770d02f8f509bff3c68c620259187205013f57d35ac7265d332a365",
+      "raw_truncated": false,
+      "parsed_response_keys": [
+        "findings",
+        "covered_paragraph_indices",
+        "covered_summary_edit_indices",
+        "summary_unchanged_consistent"
+      ],
+      "parsed_snapshot_sha256": "8b4754a4edd42c5fcee9f0c900fa4689a286b30b4e0c62caea23f02d0e58ad2a"
+    }
+  }
+}

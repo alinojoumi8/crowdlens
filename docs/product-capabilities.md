@@ -1,16 +1,14 @@
 # CrowdLens product capabilities
 
 Evidence date: 2026-10-03. Original Milestone 1 baseline: `main` at `34275b7`.
-Method: ECC `product-capability`, followed by the installed ECC 2.2.3 audit,
-evaluation, browser and verification workflows. Current source is `1f61571`;
-the [actual MiniMax browser audit](audits/2026-10-03-live-cedarbrook.md) records
-one accepted revision after repairs and a separate fresh run whose three
-proposals were blocked. Full fresh acceptance/reopening remains incomplete.
-The [control/recovery audit](audits/2026-10-03-control-recovery.md) retains
-`34ad6d2` synthetic evidence; the prior [execution handoff](audits/2026-10-02-ecc-milestones-3-5.md)
-retains the separate `242b899` evidence and completion statuses.
-Milestone 1 was documentation-only; subsequent scoped implementation remains local.
-Existing deployment equivalence has not been established.
+Method: ECC `product-capability`, followed by installed ECC 2.2.3 audit/evaluation,
+browser and verification workflows. Current application candidate is `7f4d68e`;
+[the reliability audit](audits/2026-10-03-report-reliability.md) records a fresh
+actual-provider workflow through accepted-child reload/history reopen. Original
+and failed artifacts remain preserved. Earlier audits retain their exact source
+identities and distinct results. Milestone 1 was documentation-only; subsequent
+scoped implementation remains local. Existing deployment equivalence and
+independently measured factual quality remain unestablished.
 
 ## Capability
 
@@ -57,8 +55,9 @@ Implementation status and live verification are separate dimensions.
   newer active owners and requires explicit manual retry of abandoned work.
 - Existing persisted identifiers and storage compatibility remain intact.
   Original authorship and AGPL licensing remain in place.
-- The supported verification baseline is Python 3.11 and Node 22. The declared
-  Python range is broader than the verified dependency-lock compatibility.
+- Python 3.11 is the verified dependency-lock baseline. Earlier release checks used
+  Node 22; the current local check used Node 24.21.0. Broader Python compatibility
+  and exact-candidate remote CI remain unverified.
 
 ### Architecture preferences and trust boundaries
 
@@ -92,12 +91,12 @@ UI routes are defined in [routes.js](../frontend/src/router/routes.js): `/`,
 
 | Stage / status | Inputs and observable outcome | API contract | Storage and evidence |
 | --- | --- | --- | --- |
-| Upload — implemented | PDF/MD/TXT files and/or URLs plus `simulation_requirement`; creates a project, source documents, case/version metadata, and generated ontology. | `POST /api/graph/ontology/generate`; existing cases can receive documents through `POST /api/graph/case/<case_id>/documents`. | Original/extracted files on disk; project/case metadata in SQLite when configured. [Graph routes](../backend/app/api/graph.py), [case tests](../backend/tests/test_case_litigation_workflow.py), [URL tests](../backend/tests/test_url_fetcher.py). Fresh actual-provider Markdown ingestion verified on `1f61571`; other input paths were not live-retested. |
+| Upload — implemented | PDF/MD/TXT files and/or URLs plus `simulation_requirement`; creates a project, source documents, case/version metadata, and generated ontology. | `POST /api/graph/ontology/generate`; existing cases can receive documents through `POST /api/graph/case/<case_id>/documents`. | Original/extracted files on disk; project/case metadata in SQLite when configured. [Graph routes](../backend/app/api/graph.py), [case tests](../backend/tests/test_case_litigation_workflow.py), [URL tests](../backend/tests/test_url_fetcher.py). Fresh actual-provider Markdown ingestion verified on `7f4d68e`; other input paths were not live-retested. |
 | Graph — implemented | Project/ontology and chunk/build settings; returns a task ID, builds entities/edges/source chunks, exposes graph data and embedding readiness. | `POST /api/graph/build`; `GET /api/graph/task/<task_id>`; `GET /api/graph/data/<graph_id>`; `GET /api/graph/<graph_id>/embedding-status`. | Neo4j graph/source/vector records; SQLite project/task state; extraction caches on disk. [Build tests](../backend/tests/test_graph_build_speed.py), [embedding tests](../backend/tests/test_graph_embedding_status.py), [provenance tests](../backend/tests/test_source_tracing.py). Fresh actual-provider build with local embeddings and Neo4j verified; generated relations still require review. |
 | Scenario — implemented | Project/graph, entity filters, prediction/scenario settings; creates simulation ID, prepares personas and configuration, returns readiness/progress. | `POST /api/simulation/create`; `POST /api/simulation/prepare`; **POST** `/api/simulation/prepare/status`; `GET /api/simulation/<simulation_id>/config` and `/profiles`. | Simulation `state.json`, profiles, and configuration on disk. This preparation state is distinct from SQLite runner state. [Manager](../backend/app/services/simulation_manager.py), [preparation tests](../backend/tests/test_simulation_manager.py). No guarantee of a particular agent count or persona quality. |
 | Simulation — implemented; restart fidelity partial | Prepared simulation, platform, rounds, seed, optional graph-memory/economy settings; launches workers and exposes actions/progress. | `POST /api/simulation/start`, `/stop`, `/run-ensemble`; `GET /api/simulation/<simulation_id>/run-status`, `/run-status/detail`, `/actions`, `/timeline`. | SQLite runner metadata plus JSON compatibility mirror; platform databases/logs and memory files on disk; optional memories in Neo4j. [Runner](../backend/app/services/simulation_runner.py), [persistence tests](../backend/tests/test_simulation_runner_persistence.py), [runtime-memory tests](../backend/tests/test_forecast_upgrade.py). Restart reconciliation is implemented; automatic exact-round continuation is not established. |
 | Report — implemented; factual quality unverified | Simulation ID, report mode/depth, project graph and requirements; generates outline/sections, progress, evidence and forecast artifacts. | `POST /api/report/generate`, `/generate/status`; `GET /api/report/<report_id>`, `/<report_id>/progress`, `/<report_id>/download`; root reports support explicit resume/section regeneration. | Report JSON/Markdown, sections, logs and progress on disk; generation tasks in SQLite. [Report routes](../backend/app/api/report.py), [quality tests](../backend/tests/test_report_quality_gates.py), [grounding tests](../backend/tests/test_report_source_grounding.py). Unsafe embedding readiness blocks default generation; `allow_degraded` is an explicit override. |
-| Proposal review — implemented; actual-model reliability partial | A saved completed/needs-review report with original source scope; drafts a selected section plus related summary spans; operator accepts or rejects. | `POST /api/report/<report_id>/evidence-proposals`; `GET /api/report/<report_id>/evidence-proposals/<proposal_id>`; `POST` on `/accept` with digest or `/reject` with `{}`; `GET /api/report/<report_id>/revisions`. | Private proposal/source snapshots, leases, staged revision files, tombstones and separate report revision. [Proposal API](../backend/app/api/evidence_proposals.py), [revision service](../backend/app/services/report_revisions.py), [API tests](../backend/tests/test_evidence_proposals_api.py), [revision tests](../backend/tests/test_report_revisions.py). First real journey accepted/reopened one immutable child after repairs; all three fresh final-candidate drafts blocked on response contracts. Independently measured quality remains unverified. |
+| Proposal review — implemented; actual-model reliability partial | A saved completed/needs-review report with original source scope; drafts a selected section plus related summary spans; operator accepts or rejects. | `POST /api/report/<report_id>/evidence-proposals`; `GET /api/report/<report_id>/evidence-proposals/<proposal_id>`; `POST` on `/accept` with digest or `/reject` with `{}`; `GET /api/report/<report_id>/revisions`. | Private proposal/source snapshots, leases, staged revision files, tombstones and separate report revision. [Proposal API](../backend/app/api/evidence_proposals.py), [revision service](../backend/app/services/report_revisions.py), [API tests](../backend/tests/test_evidence_proposals_api.py), [revision tests](../backend/tests/test_report_revisions.py). Fresh `7f4d68e` actual-provider proposal accepted and reopened one immutable child with its parent unchanged. Completion/parsed model responses and exact findings remain privately retained. Cross-packet reliability and independently measured quality remain unverified. |
 
 ### States and transitions
 
@@ -175,6 +174,15 @@ backend compatibility. See [the execution controls](workflow-execution.md).
 
 ### Current local execution evidence
 
+- [Report reliability and fresh acceptance](audits/2026-10-03-report-reliability.md)
+  on `7f4d68e`: 563 backend, 12 Node, 51 component tests and build pass. Real
+  upload, graph, four personas, two OASIS rounds, root report, source proposal,
+  local test revision acceptance and reload/history reopen completed with the
+  parent unchanged. The workflow stopped at 26/90 requests, with zero
+  in-flight/unknown attempts; 87 earlier partial-candidate requests are separate.
+  Mechanical guards, provenance, forecast authority and honest activity/settings
+  are verified at this boundary. Independent quality and release checks remain open.
+- Historical evidence below retains its original source and limitations.
 - [Actual MiniMax browser verification](audits/2026-10-03-live-cedarbrook.md) on
   final source `1f61571`, fingerprint
   `f72be2d03b85a404abf19992ddf2d86a703848bc50dbe87cf519d8c18a25333f`:
@@ -185,7 +193,7 @@ backend compatibility. See [the execution controls](workflow-execution.md).
   used 38 requests, completed real upload, Neo4j graph, four personas, two OASIS
   rounds and a three-section root, but all three proposals blocked; no child was
   accepted. Both workflows stopped with zero in-flight/unknown usage. Report
-  provenance and conflicting probabilities remain findings; quality scores are
+  provenance and conflicting probabilities were findings on that earlier source; quality scores are
   not accuracy evidence. No new image/clean-install/remote CI claim is made.
 - [Control/recovery verification](audits/2026-10-03-control-recovery.md) at
   `34ad6d2`: 545 passing tests/build, 504 repeated structural cases, H1 recovery,
@@ -242,12 +250,12 @@ backend compatibility. See [the execution controls](workflow-execution.md).
 | Priority | Verification gap | Required evidence before strengthening the promise |
 | --- | --- | --- |
 | P1 | Existing deployment is not reconciled to the chosen source. | Historical `242b899`, synthetic `34ad6d2` and real-test `1f61571` remain distinct. Under a separately authorized deployment task, reconcile the chosen revision and rerun status, report/revision routes and frontend checks; preserve data/configuration. |
-| P1 | Fresh real proposals fail response contracts; full acceptance remains incomplete. | Preserve raw audit JSON and precise schema diagnostics, reproduce invalid structures, retain fail-closed guards and measure reliability across packets. Then rerun fresh actual generation through accepted-child reopening with the parent preserved. The first journey's child does not replace the unchanged-candidate boundary. |
-| P1 | Report provenance, probability consistency and independent quality remain unresolved. | Correct graph paraphrases presented as quotes, distinguish actual trace evidence from source facts, define one probability authority, and obtain independent claim/omission labels plus reviewer-time measurements on held-out packets. The actual 100/90 quality scores did not detect these defects. |
+| P1 | Cross-packet report/proposal reliability needs measurement. | Fresh acceptance now passes with retained diagnostics and unchanged guards. Measure blocked/ready rates, valid audit/paragraph contracts and original-source fidelity on approved held-out packets; one fictional case is insufficient. |
+| P1 | Semantic support, omissions and predictive quality remain unmeasured. | New source/action packets, exact quote guards, bounded corrections and one forecast authority address mechanical defects. Obtain independent claim/attribution/omission labels and reviewer time; do not infer calibration or truth from quality scores or successful correction. |
 | P2 | Memory continuity and recovery across processes remain partial. | Exercise actual subprocess restart/forced restart, corrupted or failed memory writes, source separation and graph write failure; demonstrate retained/lost data explicitly. |
-| P2 | Broader browser paths and fresh child acceptance remain unverified. | Core upload-to-report and proposal review now have visible actual-provider evidence. Complete fresh acceptance/reopening after contract repairs; separately verify other inputs/providers, responsive/accessibility behavior and failure paths on that candidate. |
+| P2 | Broader browser and runtime paths remain unverified. | Fresh actual accepted-child reload/history now passes. Separately verify other inputs/providers, responsive/accessibility behavior, failure paths, optional memory and ensembles on the chosen candidate. |
 | P2 | Deletion/retention and coordinated multi-store recovery are incomplete product contracts. | Cold SQLite/artifact and separate Neo4j restores are rehearsed. Define retention/deletion ownership, coordinated backup points, and any relocation contract before promising online atomic restore or active-task path changes. |
-| P2 | Monetary admission, activity semantics and stale setting aliases remain open. | Actual-provider ledgers retain 42/60 and 38/45 requests, Stop and measured token fields; the fresh window was not renewed. Define monetary admission before promising a dollar cap. Reconcile unique posts/model actions with logged events, CLI maximum-round aliases and generated timing rationale before using them as forecast evidence. |
+| P2 | Monetary admission and broader operational semantics remain open. | Current ledgers retain all attempts and measured tokens; unique posts/origins, actual model actions, selected platforms and effective round bounds are reconciled. Legacy aliases are explicit. Define monetary admission before promising a dollar cap; broader providers/paths need checks. |
 | P2 | Exact-candidate remote CI is pending. | Obtain authorization to push the reviewed local branch and open/update its PR, then collect checks with the actual checkout SHA/tree; feature-branch push alone does not trigger this workflow, and an older main run is not candidate evidence. |
 | P3 | Hardware, latency, coverage and supported Python ranges need measurements. | Repeatable workload/model/hardware benchmarks; documented coverage gaps; clean installs and checks before claiming additional Python versions. |
 
@@ -259,12 +267,13 @@ deployment, push/main merge, generation-model download, multi-user hosting,
 prediction certification or automatic publication occurred. Milestone 1 was
 documentation-only; earlier repair/synthetic audits retain their original scope.
 
-Next work must repair report provenance and proposal response reliability,
-complete the fresh acceptance boundary, obtain independent human labels, and
-separately authorize exact-candidate remote CI and deployment reconciliation.
-Retention/deletion and monetary admission need explicit contracts. Request/time
-admission has synthetic regression evidence and the actual receipts above;
-those checks do not establish a dollar ceiling or factual quality.
+Next work first reproduces the retained Round 1 contradiction and unverified
+conditional-symmetry premise as labelled semantic regressions, then runs
+independent held-out claim/omission/source-quality evaluation and
+reviewer-time measurement, followed by separately authorized exact-candidate
+remote CI and deployment reconciliation. Retention/deletion and monetary
+admission still need explicit contracts. One fictional acceptance pass and
+mechanical validation do not establish calibration or factual quality.
 
 ## Handoff
 

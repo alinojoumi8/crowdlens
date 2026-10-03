@@ -1,0 +1,64 @@
+..............FFFF                                                       [100%]
+=================================== FAILURES ===================================
+_____________ test_valid_grounded_text_does_not_trigger_correction _____________
+
+    def test_valid_grounded_text_does_not_trigger_correction():
+        text = f'Original: "{SOURCE}" [doc_1]'
+        agent = correction_agent('must not be used')
+>       assert agent._repair_grounded_text(text, 'Facts', 1) == text
+E       AttributeError: 'ReportAgent' object has no attribute '_repair_grounded_text'
+
+tests/test_report_provenance_contract.py:169: AttributeError
+______ test_grounding_correction_uses_findings_and_frozen_authority_once _______
+
+    def test_grounding_correction_uses_findings_and_frozen_authority_once():
+        bad = 'Original: "Invented quotation." [doc_1]'
+        fixed = f'Original: "{SOURCE}" [doc_1]'
+        agent = correction_agent(fixed)
+>       assert agent._repair_grounded_text(bad, 'Facts', 1) == fixed
+E       AttributeError: 'ReportAgent' object has no attribute '_repair_grounded_text'
+
+tests/test_report_provenance_contract.py:177: AttributeError
+_______ test_failed_correction_stays_blocked_and_preserves_both_attempts _______
+
+    def test_failed_correction_stays_blocked_and_preserves_both_attempts():
+        import pytest
+        text = 'Original: "Invented quotation." [doc_1]'
+        agent = correction_agent(text)
+        with pytest.raises(ValueError, match='Grounding correction failed'):
+>           agent._repair_grounded_text(text, 'Facts', 1)
+E           AttributeError: 'ReportAgent' object has no attribute '_repair_grounded_text'
+
+tests/test_report_provenance_contract.py:194: AttributeError
+____________ test_correction_response_after_stop_cannot_be_adopted _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x78772070c7d0>
+
+    def test_correction_response_after_stop_cannot_be_adopted(monkeypatch):
+        from contextlib import contextmanager
+        import pytest
+        from app.services.task_execution import OwnershipLost
+        active = True
+        @contextmanager
+        def gate(*args, **kwargs):
+            if not active:
+                raise OwnershipLost('controlled stop')
+            yield
+        monkeypatch.setattr('app.services.report_agent.publication_guard', gate, raising=False)
+        agent = correction_agent(f'Original: "{SOURCE}" [doc_1]')
+        def stop_during_call(**kwargs):
+            nonlocal active
+            active = False
+            return f'Original: "{SOURCE}" [doc_1]'
+        agent.llm.chat.side_effect = stop_during_call
+        with pytest.raises(OwnershipLost, match='controlled stop'):
+>           agent._repair_grounded_text('Original: "Invented." [doc_1]', 'Facts', 1)
+E           AttributeError: 'ReportAgent' object has no attribute '_repair_grounded_text'
+
+tests/test_report_provenance_contract.py:220: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_report_provenance_contract.py::test_valid_grounded_text_does_not_trigger_correction
+FAILED tests/test_report_provenance_contract.py::test_grounding_correction_uses_findings_and_frozen_authority_once
+FAILED tests/test_report_provenance_contract.py::test_failed_correction_stays_blocked_and_preserves_both_attempts
+FAILED tests/test_report_provenance_contract.py::test_correction_response_after_stop_cannot_be_adopted
+4 failed, 14 passed in 1.34s
