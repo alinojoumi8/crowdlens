@@ -155,6 +155,8 @@ class ReportRevisionService:
             revision.outline.summary_claim_check_hash = ''
         revision.claim_checks = [dict(c, section_title=s.title) for s in revision.outline.sections for c in s.claim_checks]
         revision.markdown_content = revision.outline.to_markdown()
+        from .report_semantics import proposal_review_findings
+        revision.revision['review_findings'] = proposal_review_findings(record)
         revision.validation_issues = self.manager.validate_report_output(revision)
         if any(issue.get('blocking') for issue in revision.validation_issues):
             raise ProposalError('report_validation_failed')

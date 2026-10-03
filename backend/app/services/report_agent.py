@@ -3503,6 +3503,9 @@ class ReportManager:
         issues: List[Dict[str, Any]] = []
         from .report_grounding import provenance_issues
         issues.extend(provenance_issues(content, report.source_grounding, report.forecast))
+        from .report_semantics import assess_trace_claims
+        issues.extend(assess_trace_claims(content, report.source_grounding)["issues"])
+        issues.extend(report.revision.get("review_findings", []))
         if normalize_report_mode(report.report_mode) == "legal_case" and report.source_grounding:
             from .procedural_grounding import attribution_issues
             issues.extend(attribution_issues(content, report.source_grounding))
@@ -3620,7 +3623,7 @@ class ReportManager:
         return {
             "score": score,
             "threshold": cls.QUALITY_REVIEW_THRESHOLD,
-            "status": "pass" if score >= cls.QUALITY_REVIEW_THRESHOLD else "needs_review",
+            "status": "pass" if score >= cls.QUALITY_REVIEW_THRESHOLD and not any(i.get("requires_review") for i in issues) else "needs_review",
             "deductions": deductions,
             "section_count": len(sections),
             "section_evidence_counts": evidence_counts,

@@ -329,6 +329,8 @@ def get_generate_status():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+from ..services.report_semantics import current_review
+
 # ============== Report Retrieval Interface ==============
 
 @report_bp.route('/<report_id>', methods=['GET'])
@@ -337,7 +339,7 @@ def get_report(report_id: str):
         report = ReportManager.get_report(report_id)
         if not report:
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
-        return jsonify({"success": True, "data": report.to_dict()})
+        return jsonify({"success": True, "data": {**report.to_dict(), 'current_review': current_review(report, ReportManager._get_reports_dir())}})
     except Exception as e:
         logger.error(f"Failed to get report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -349,7 +351,7 @@ def get_report_by_simulation(simulation_id: str):
         report = ReportManager.get_report_by_simulation(simulation_id)
         if not report:
             return jsonify({"success": False, "error": f"No report available for this simulation: {simulation_id}", "has_report": False}), 404
-        return jsonify({"success": True, "data": report.to_dict()})
+        return jsonify({"success": True, "data": {**report.to_dict(), 'current_review': current_review(report, ReportManager._get_reports_dir())}})
     except Exception as e:
         logger.error(f"Failed to get report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

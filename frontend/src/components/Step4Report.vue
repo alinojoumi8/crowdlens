@@ -20,6 +20,7 @@
             </nav>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
             <p class="sub-title">{{ reportOutline.summary }}</p>
+            <ReportReview :assessment="currentReview" />
             <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
             <p v-if="forecastData?.status === 'unavailable'" class="sub-title" role="status">
               {{ forecastData.limitations }}
@@ -245,7 +246,7 @@
           </div>
 
           <div v-if="reportQuality || reportProgress?.is_stale" class="quality-strip" :class="`quality-strip--${statusClass}`">
-            <span v-if="reportQuality" class="quality-score mono">Quality {{ displayScore(reportQuality.score) }}</span>
+            <span v-if="reportQuality" class="quality-score mono">Automated checks {{ displayScore(reportQuality.score) }}</span>
             <span v-if="reportQuality?.deductions?.length" class="quality-note">{{ reportQuality.deductions[0].message }}</span>
             <span v-if="reportProgress?.is_stale" class="quality-note">No heartbeat for {{ reportProgress.seconds_since_update }}s</span>
           </div>
@@ -593,11 +594,13 @@ import { benchmarkGraphEmbeddings, getGraphQuality, reembedGraph } from '../api/
 import { renderSafeMarkdown as renderMarkdown } from '../utils/markdown'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
+import ReportReview from './ReportReview.vue'
 import EvidenceDraftReview from './EvidenceDraftReview.vue'
 
 const router = useRouter()
 const route = useRoute()
 const reportRevision = ref({})
+const currentReview = ref(null)
 let reportGeneration = 0
 const openRevision = reportId => router.push({ name: 'Report', params: { reportId } })
 
@@ -2454,6 +2457,7 @@ const fetchReportSnapshot = async () => {
     if (reportRes.status === 'fulfilled' && reportRes.value?.success && reportRes.value.data) {
       const report = reportRes.value.data
       reportRevision.value = report.revision || {}
+      currentReview.value = report.current_review || null
       reportStatus.value = report.status || reportStatus.value
       reportQuality.value = report.quality_score || null
       reportTiming.value = report.timing || reportTiming.value
@@ -2489,7 +2493,7 @@ const fetchReportSnapshot = async () => {
       if (['completed', 'needs_review'].includes(report.status)) {
         isComplete.value = true
         currentSectionIndex.value = null
-        emit('update-status', report.status === 'needs_review' ? 'needs-review' : 'completed')
+        emit('update-status', report.status === 'needs_review' || currentReview.value?.requires_review ? 'needs-review' : 'completed')
       } else if (['failed', 'interrupted'].includes(report.status)) {
         isComplete.value = false
         currentSectionIndex.value = null
@@ -2508,6 +2512,10 @@ const fetchReportSnapshot = async () => {
       if (reportProgress.value.is_stale) {
         emit('update-status', 'stale')
       }
+    }
+    if (currentReview.value?.requires_review && ['completed', 'needs_review'].includes(reportStatus.value)) {
+      reportStatus.value = 'needs_review'
+      emit('update-status', 'needs-review')
     }
     if (reportProgress.value?.terminal || ['completed', 'needs_review', 'failed', 'interrupted', 'cancelled'].includes(reportStatus.value)) {
       currentSectionIndex.value = null
@@ -2632,6 +2640,7 @@ onUnmounted(() => {
 watch(() => props.reportId, (newId) => {
   reportGeneration++
   reportRevision.value = {}
+  currentReview.value = null
   stopPolling()
   if (newId) {
     agentLogs.value = []

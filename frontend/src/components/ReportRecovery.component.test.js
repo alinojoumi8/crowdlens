@@ -45,3 +45,17 @@ it('an explicit resume restarts polling after an interrupted snapshot', async ()
   expect(getReportProgress.mock.calls.length).toBeGreaterThan(reads)
   expect(resumeReport).toHaveBeenCalledTimes(1)
 })
+
+it('current review survives historical completed progress and never regenerates the report', async () => {
+  vi.useFakeTimers()
+  getReport.mockResolvedValue({success:true,data:{status:'completed',outline:{title:'Retained report',summary:'',sections:[]},
+    current_review:{requires_review:true,saved_status:'completed',issues:[],limitations:[],coverage:{}}}})
+  getReportProgress.mockResolvedValue({success:true,data:{effective_status:'completed',terminal:true}})
+  wrapper=mount(Step4Report,{props:{reportId:'report_retained',systemLogs:[]},global:{stubs:{EvidenceDraftReview:true,ClaimEvidence:true,SafeMarkdown:true}}})
+  await flushPromises()
+  expect(wrapper.text()).toContain('Current assessment · Needs review')
+  expect(wrapper.emitted('update-status').flat()).toContain('needs-review')
+  expect(wrapper.emitted('update-status').flat()).not.toContain('completed')
+  expect(generateReport).not.toHaveBeenCalled()
+  expect(resumeReport).not.toHaveBeenCalled()
+})
