@@ -149,3 +149,74 @@ def test_interrupted_initial_planning_retains_forecast_authority(tmp_path, monke
     result = agent.generate_report('report_interrupted')
     assert result.status == ReportStatus.FAILED
     assert ReportManager.get_report(result.report_id).forecast == agent._forecast_authority
+
+
+def correction_agent(response):
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+    agent = ReportAgent.__new__(ReportAgent)
+    baseline = report_with('')
+    agent._source_grounding = deepcopy(baseline.source_grounding)
+    agent._forecast_authority = deepcopy(baseline.forecast)
+    agent.llm = SimpleNamespace(chat=Mock(return_value=response))
+    agent.report_logger = SimpleNamespace(log=Mock())
+    return agent
+
+
+def test_valid_grounded_text_does_not_trigger_correction():
+    text = f'Original: "{SOURCE}" [doc_1]'
+    agent = correction_agent('must not be used')
+    assert agent._repair_grounded_text(text, 'Facts', 1) == text
+    agent.llm.chat.assert_not_called()
+
+
+def test_grounding_correction_uses_findings_and_frozen_authority_once():
+    bad = 'Original: "Invented quotation." [doc_1]'
+    fixed = f'Original: "{SOURCE}" [doc_1]'
+    agent = correction_agent(fixed)
+    assert agent._repair_grounded_text(bad, 'Facts', 1) == fixed
+    agent.llm.chat.assert_called_once()
+    prompt = agent.llm.chat.call_args.kwargs['messages'][-1]['content']
+    import json
+    assert json.loads(prompt)['passage'] == bad and 'unverified_quotation' in prompt
+    assert SOURCE in prompt and '0.465' in prompt
+    retained = agent.report_logger.log.call_args_list
+    assert retained[0].kwargs['details']['content'] == bad
+    assert retained[-1].kwargs['details']['content'] == fixed
+    assert retained[-1].kwargs['details']['accepted'] is True
+    assert agent._forecast_authority == report_with('').forecast
+
+
+def test_failed_correction_stays_blocked_and_preserves_both_attempts():
+    import pytest
+    text = 'Original: "Invented quotation." [doc_1]'
+    agent = correction_agent(text)
+    with pytest.raises(ValueError, match='Grounding correction failed'):
+        agent._repair_grounded_text(text, 'Facts', 1)
+    agent.llm.chat.assert_called_once()
+    retained = agent.report_logger.log.call_args_list
+    assert len(retained) == 2
+    assert all(row.kwargs['details']['content'] == text for row in retained)
+    assert retained[-1].kwargs['details']['accepted'] is False
+
+
+def test_correction_response_after_stop_cannot_be_adopted(monkeypatch):
+    from contextlib import contextmanager
+    import pytest
+    from app.services.task_execution import OwnershipLost
+    active = True
+    @contextmanager
+    def gate(*args, **kwargs):
+        if not active:
+            raise OwnershipLost('controlled stop')
+        yield
+    monkeypatch.setattr('app.services.report_agent.publication_guard', gate, raising=False)
+    agent = correction_agent(f'Original: "{SOURCE}" [doc_1]')
+    def stop_during_call(**kwargs):
+        nonlocal active
+        active = False
+        return f'Original: "{SOURCE}" [doc_1]'
+    agent.llm.chat.side_effect = stop_during_call
+    with pytest.raises(OwnershipLost, match='controlled stop'):
+        agent._repair_grounded_text('Original: "Invented." [doc_1]', 'Facts', 1)
+    assert agent.report_logger.log.call_count == 1
