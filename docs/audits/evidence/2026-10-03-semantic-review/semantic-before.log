@@ -1,0 +1,164 @@
+FFFFFFF..........FF                                                      [100%]
+=================================== FAILURES ===================================
+___ test_actual_round_one_contradiction_requires_review_even_with_score_100 ____
+
+    def test_actual_round_one_contradiction_requires_review_even_with_score_100():
+        fixture = json.loads((Path(__file__).parent/'fixtures/report_grounding/cedarbrook-semantic.json').read_text())
+        value = report(fixture['markdown_content'], fixture['source_grounding']);value.forecast=fixture['forecast']
+        value.validation_issues = ReportManager.validate_report_output(value)
+>       assert set(fixture['expected_issue_codes']) <= {i['code'] for i in value.validation_issues}
+E       AssertionError: assert {'round_actio...unt_conflict'} <= set()
+E         
+E         Extra items in the left set:
+E         'round_action_count_conflict'
+
+tests/test_report_semantics.py:37: AssertionError
+_ test_distinct_explicit_trace_contradictions[Round 1 contains no model actions.-round_action_count_conflict] _
+
+text = 'Round 1 contains no model actions.'
+code = 'round_action_count_conflict'
+
+    @pytest.mark.parametrize('text,code', [
+        ('Round 1 contains no model actions.', 'round_action_count_conflict'),
+        ('No model actions occurred in Round 1.', 'round_action_count_conflict'),
+        ('Round 1 produced 2 model actions.', 'round_action_count_conflict'),
+        ('Leo Martin at `twitter:trace:11` generated the post.', 'trace_author_conflict'),
+        ('The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.', 'trace_round_conflict'),
+        ('The model action at `twitter:trace:9` is a response.', 'trace_origin_conflict'),
+    ])
+    def test_distinct_explicit_trace_contradictions(text, code):
+>       assert code in {i['code'] for i in semantic_issues(report(text))}
+E       AssertionError: assert 'round_action_count_conflict' in set()
+
+tests/test_report_semantics.py:55: AssertionError
+_ test_distinct_explicit_trace_contradictions[No model actions occurred in Round 1.-round_action_count_conflict] _
+
+text = 'No model actions occurred in Round 1.'
+code = 'round_action_count_conflict'
+
+    @pytest.mark.parametrize('text,code', [
+        ('Round 1 contains no model actions.', 'round_action_count_conflict'),
+        ('No model actions occurred in Round 1.', 'round_action_count_conflict'),
+        ('Round 1 produced 2 model actions.', 'round_action_count_conflict'),
+        ('Leo Martin at `twitter:trace:11` generated the post.', 'trace_author_conflict'),
+        ('The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.', 'trace_round_conflict'),
+        ('The model action at `twitter:trace:9` is a response.', 'trace_origin_conflict'),
+    ])
+    def test_distinct_explicit_trace_contradictions(text, code):
+>       assert code in {i['code'] for i in semantic_issues(report(text))}
+E       AssertionError: assert 'round_action_count_conflict' in set()
+
+tests/test_report_semantics.py:55: AssertionError
+_ test_distinct_explicit_trace_contradictions[Round 1 produced 2 model actions.-round_action_count_conflict] _
+
+text = 'Round 1 produced 2 model actions.', code = 'round_action_count_conflict'
+
+    @pytest.mark.parametrize('text,code', [
+        ('Round 1 contains no model actions.', 'round_action_count_conflict'),
+        ('No model actions occurred in Round 1.', 'round_action_count_conflict'),
+        ('Round 1 produced 2 model actions.', 'round_action_count_conflict'),
+        ('Leo Martin at `twitter:trace:11` generated the post.', 'trace_author_conflict'),
+        ('The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.', 'trace_round_conflict'),
+        ('The model action at `twitter:trace:9` is a response.', 'trace_origin_conflict'),
+    ])
+    def test_distinct_explicit_trace_contradictions(text, code):
+>       assert code in {i['code'] for i in semantic_issues(report(text))}
+E       AssertionError: assert 'round_action_count_conflict' in set()
+
+tests/test_report_semantics.py:55: AssertionError
+_ test_distinct_explicit_trace_contradictions[Leo Martin at `twitter:trace:11` generated the post.-trace_author_conflict] _
+
+text = 'Leo Martin at `twitter:trace:11` generated the post.'
+code = 'trace_author_conflict'
+
+    @pytest.mark.parametrize('text,code', [
+        ('Round 1 contains no model actions.', 'round_action_count_conflict'),
+        ('No model actions occurred in Round 1.', 'round_action_count_conflict'),
+        ('Round 1 produced 2 model actions.', 'round_action_count_conflict'),
+        ('Leo Martin at `twitter:trace:11` generated the post.', 'trace_author_conflict'),
+        ('The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.', 'trace_round_conflict'),
+        ('The model action at `twitter:trace:9` is a response.', 'trace_origin_conflict'),
+    ])
+    def test_distinct_explicit_trace_contradictions(text, code):
+>       assert code in {i['code'] for i in semantic_issues(report(text))}
+E       AssertionError: assert 'trace_author_conflict' in set()
+
+tests/test_report_semantics.py:55: AssertionError
+_ test_distinct_explicit_trace_contradictions[The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.-trace_round_conflict] _
+
+text = 'The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.'
+code = 'trace_round_conflict'
+
+    @pytest.mark.parametrize('text,code', [
+        ('Round 1 contains no model actions.', 'round_action_count_conflict'),
+        ('No model actions occurred in Round 1.', 'round_action_count_conflict'),
+        ('Round 1 produced 2 model actions.', 'round_action_count_conflict'),
+        ('Leo Martin at `twitter:trace:11` generated the post.', 'trace_author_conflict'),
+        ('The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.', 'trace_round_conflict'),
+        ('The model action at `twitter:trace:9` is a response.', 'trace_origin_conflict'),
+    ])
+    def test_distinct_explicit_trace_contradictions(text, code):
+>       assert code in {i['code'] for i in semantic_issues(report(text))}
+E       AssertionError: assert 'trace_round_conflict' in set()
+
+tests/test_report_semantics.py:55: AssertionError
+_ test_distinct_explicit_trace_contradictions[The model action at `twitter:trace:9` is a response.-trace_origin_conflict] _
+
+text = 'The model action at `twitter:trace:9` is a response.'
+code = 'trace_origin_conflict'
+
+    @pytest.mark.parametrize('text,code', [
+        ('Round 1 contains no model actions.', 'round_action_count_conflict'),
+        ('No model actions occurred in Round 1.', 'round_action_count_conflict'),
+        ('Round 1 produced 2 model actions.', 'round_action_count_conflict'),
+        ('Leo Martin at `twitter:trace:11` generated the post.', 'trace_author_conflict'),
+        ('The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.', 'trace_round_conflict'),
+        ('The model action at `twitter:trace:9` is a response.', 'trace_origin_conflict'),
+    ])
+    def test_distinct_explicit_trace_contradictions(text, code):
+>       assert code in {i['code'] for i in semantic_issues(report(text))}
+E       AssertionError: assert 'trace_origin_conflict' in set()
+
+tests/test_report_semantics.py:55: AssertionError
+_ test_truncated_packet_cannot_disprove_missing_action_but_can_show_observed_one _
+
+    def test_truncated_packet_cannot_disprove_missing_action_but_can_show_observed_one():
+        grounding=packet();grounding['limitations']=['report_action_context_truncated']
+        assert not any(i['code']=='round_action_count_conflict' for i in semantic_issues(report('Round 2 contains 3 model actions.', grounding)))
+>       assert any(i['code']=='semantic_claim_unverified' for i in semantic_issues(report('Round 2 contains 3 model actions.', grounding)))
+E       assert False
+E        +  where False = any(<generator object test_truncated_packet_cannot_disprove_missing_action_but_can_show_observed_one.<locals>.<genexpr> at 0x727cd23af850>)
+
+tests/test_report_semantics.py:77: AssertionError
+_______ test_read_assessment_adds_findings_without_changing_saved_report _______
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-113/test_read_assessment_adds_find0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x727cd23cd0d0>
+
+    def test_read_assessment_adds_findings_without_changing_saved_report(tmp_path, monkeypatch):
+        from flask import Flask
+        from app.api import report_bp
+        monkeypatch.setattr(ReportManager,'REPORTS_DIR',str(tmp_path))
+        value=report('Round 1 contains no model actions.');ReportManager.save_report(value)
+        before={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (tmp_path/value.report_id).iterdir() if p.is_file()}
+        app=Flask(__name__);app.register_blueprint(report_bp,url_prefix='/api/report')
+        response=app.test_client().get('/api/report/'+value.report_id)
+        assert response.status_code==200
+        assert response.json['data']['status']=='completed'  # Historical persisted state is retained.
+>       assert response.json['data']['current_review']['requires_review']
+E       KeyError: 'current_review'
+
+tests/test_report_semantics.py:91: KeyError
+----------------------------- Captured stdout call -----------------------------
+[15:34:04] INFO: reportsaved: semantic_report
+=========================== short test summary info ============================
+FAILED tests/test_report_semantics.py::test_actual_round_one_contradiction_requires_review_even_with_score_100
+FAILED tests/test_report_semantics.py::test_distinct_explicit_trace_contradictions[Round 1 contains no model actions.-round_action_count_conflict]
+FAILED tests/test_report_semantics.py::test_distinct_explicit_trace_contradictions[No model actions occurred in Round 1.-round_action_count_conflict]
+FAILED tests/test_report_semantics.py::test_distinct_explicit_trace_contradictions[Round 1 produced 2 model actions.-round_action_count_conflict]
+FAILED tests/test_report_semantics.py::test_distinct_explicit_trace_contradictions[Leo Martin at `twitter:trace:11` generated the post.-trace_author_conflict]
+FAILED tests/test_report_semantics.py::test_distinct_explicit_trace_contradictions[The Round 2 model action belongs to Maya Chen at `twitter:trace:11`.-trace_round_conflict]
+FAILED tests/test_report_semantics.py::test_distinct_explicit_trace_contradictions[The model action at `twitter:trace:9` is a response.-trace_origin_conflict]
+FAILED tests/test_report_semantics.py::test_truncated_packet_cannot_disprove_missing_action_but_can_show_observed_one
+FAILED tests/test_report_semantics.py::test_read_assessment_adds_findings_without_changing_saved_report
+9 failed, 10 passed in 1.25s

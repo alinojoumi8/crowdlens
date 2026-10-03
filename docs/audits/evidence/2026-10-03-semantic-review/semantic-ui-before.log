@@ -1,0 +1,28 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run --run src/components/ReportRecovery.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/ReportRecovery.component.test.js (3 tests | 1 failed) 135ms
+   × current review survives historical completed progress and never regenerates the report 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ReportRecovery.component.test.js > current review survives historical completed progress and never regenerates the report
+AssertionError: expected [ 'completed', 'needs-review', …(1) ] to not include 'completed'
+ ❯ src/components/ReportRecovery.component.test.js:59:55
+     57|   expect(wrapper.text()).toContain('Current assessment · Needs review')
+     58|   expect(wrapper.emitted('update-status').flat()).toContain('needs-rev…
+     59|   expect(wrapper.emitted('update-status').flat()).not.toContain('compl…
+       |                                                       ^
+     60|   expect(generateReport).not.toHaveBeenCalled()
+     61|   expect(resumeReport).not.toHaveBeenCalled()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  15:51:15
+   Duration  1.71s (transform 599ms, setup 0ms, import 717ms, tests 135ms, environment 690ms)
+
