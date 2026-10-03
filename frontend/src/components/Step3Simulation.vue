@@ -1180,7 +1180,7 @@ onUnmounted(() => {
   border-radius: 4px;
   background: #FAFAFA;
   border: 1px solid #EAEAEA;
-  opacity: 0.7;
+  opacity: 1;
   transition: all 0.3s;
   min-width: 140px;
   position: relative;

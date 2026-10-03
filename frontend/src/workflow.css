@@ -18,6 +18,7 @@
 #app .report-panel .log-title, #app .report-panel .log-id { color: #a3a3a3; }
 #app .main-view .workflow-step .step-num { color: #666; opacity: 1; }
 #app .main-view :is(.api-note, .tag-label, .stat-label, .stat-total, .info-label, .profile-username, .config-item-label, .section-desc, .runtime-mode-hint) { color: #626b7a; }
+#app .main-view :is(.header-index, .header-title, .wf-step--todo .wf-step-title, .workflow-empty > span) { color: #626b7a; }
 #app .main-view .log-header, #app .main-view .log-time { color: #a3a3a3; }
 #app .main-view .badge.accent, #app .main-view .badge.processing { background: #bf360c; }
 #app .simulation-panel .waiting-state { color: #626b7a; }
