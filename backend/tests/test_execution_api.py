@@ -236,3 +236,16 @@ def test_pending_recovery_returns_queued_instead_of_old_interruption(controlled,
     assert response.status_code==200
     assert response.json['data']['effective_status']=='queued'
     assert response.json['data']['terminal'] is False
+
+
+def test_reading_report_never_rebinds_another_workflows_shared_graph(controlled,monkeypatch):
+    from app.services.report_agent import ReportManager,Report,ReportStatus
+    client,ledger,runtime,calls=controlled
+    first=client.post('/api/execution/authorize',json=terms('first')).json['data']['workflow_id']
+    second=client.post('/api/execution/authorize',json=terms('second')).json['data']['workflow_id']
+    ledger.bind(first,'graph:shared');ledger.bind(second,'report:readonly')
+    report=Report('readonly','sim_readonly','shared','fictional',ReportStatus.INTERRUPTED)
+    monkeypatch.setattr(ReportManager,'get_report',lambda rid:report)
+    assert client.get('/api/report/readonly').status_code==200
+    assert ledger.resolve('graph:shared')==first
+    assert ledger.resolve('simulation:sim_readonly') is None

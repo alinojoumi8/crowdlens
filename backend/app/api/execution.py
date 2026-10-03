@@ -221,6 +221,8 @@ def install_workflow_controls(app):
 
     @app.after_request
     def bind_response(response):
+        if request.method != 'POST':
+            return response  # Reading an artifact never changes its allowance bindings.
         wid = getattr(g, 'workflow_id', None)
         if ledger and wid and response.status_code < 400 and response.is_json:
             payload = response.get_json(silent=True) or {}
