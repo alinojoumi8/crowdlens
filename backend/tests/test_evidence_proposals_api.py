@@ -69,6 +69,57 @@ def test_bad_creation_never_calls_model(app, body):
     assert app.test_client().post('/api/report/report_root/evidence-proposals', json=body).status_code == 400
 
 
+def legacy_project_scope(app, monkeypatch):
+    """A real general report has no grounding and its saved config omits case IDs."""
+    from types import SimpleNamespace
+    from app.models.case import CaseManager
+    from app.models.project import ProjectManager
+    from evidence_draft_samples import SCOPE
+    report = ReportManager.get_report('report_root')
+    report.source_grounding = {}
+    ReportManager.save_report(report)
+    config = {'project_id': 'project_original', 'graph_id': SCOPE['graph_id']}
+    original = SimpleNamespace(project_id='project_original', graph_id=SCOPE['graph_id'],
+                               version_id=SCOPE['case_version_id'])
+    newer = SimpleNamespace(project_id='project_newer', graph_id='graph_newer', version_id='version_newer')
+    project = SimpleNamespace(case_id=SCOPE['case_id'], case_version_id='version_newer', graph_id='graph_newer')
+    case = SimpleNamespace(case_id=SCOPE['case_id'], versions=[original, newer])
+    monkeypatch.setattr('app.api.evidence_proposals.load_simulation_config', lambda _: config)
+    monkeypatch.setattr(ProjectManager, 'get_project', lambda identifier: project if identifier == 'project_original' else None)
+    monkeypatch.setattr(CaseManager, 'get_case', lambda identifier: case if identifier == SCOPE['case_id'] else None)
+    return config, project, case
+
+
+def test_general_report_proposal_uses_original_graph_version_without_mutating_parent(app, monkeypatch):
+    from pathlib import Path
+    from evidence_draft_samples import SCOPE
+    legacy_project_scope(app, monkeypatch)
+    root = Path(app.extensions['evidence_proposal_store'].root, 'report_root')
+    before = {p.name: p.read_bytes() for p in root.iterdir()}
+    client = app.test_client()
+    response = client.post('/api/report/report_root/evidence-proposals', json={'section_index': 1, 'request_key': 'general-scope'})
+    assert response.status_code == 202
+    proposal = terminal(client, response.json['data']['proposal_id'])
+    assert proposal['state'] == 'ready'
+    assert proposal['scope'] == SCOPE
+    assert {p.name: p.read_bytes() for p in root.iterdir()} == before
+
+
+@pytest.mark.parametrize('problem', ['missing_case', 'ambiguous_version', 'wrong_project', 'wrong_graph', 'wrong_case', 'wrong_version'])
+def test_general_report_scope_recovery_fails_closed_without_model_calls(app, monkeypatch, problem):
+    config, project, case = legacy_project_scope(app, monkeypatch)
+    if problem == 'missing_case': project.case_id = 'case_missing'
+    elif problem == 'ambiguous_version': case.versions.append(case.versions[0])
+    elif problem == 'wrong_project': case.versions[0].project_id = 'project_other'
+    elif problem == 'wrong_graph': config['graph_id'] = 'graph_other'
+    elif problem == 'wrong_case': config['case_id'] = 'case_other'
+    elif problem == 'wrong_version': config['case_version_id'] = 'version_other'
+    app.extensions['evidence_llm_factory'] = lambda *a: pytest.fail('must not call model')
+    response = app.test_client().post('/api/report/report_root/evidence-proposals', json={'section_index': 1, 'request_key': problem})
+    assert response.status_code == 409
+    assert response.json['error'] == 'missing_or_inconsistent_scope'
+
+
 def test_watchdog_fences_late_response_without_releasing_capacity(app, monkeypatch):
     import threading
     entered, release = threading.Event(), threading.Event()

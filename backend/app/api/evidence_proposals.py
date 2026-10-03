@@ -7,6 +7,8 @@ from werkzeug.exceptions import BadRequest, RequestEntityTooLarge, UnsupportedMe
 from . import report_bp
 from ..config import Config
 from ..models.task import TaskManager, TaskStatus
+from ..models.project import ProjectManager
+from ..models.case import CaseManager
 from ..services.task_execution import OwnershipLost
 from ..services.report_agent import ReportManager, ReportStatus
 from ..services.proposal_store import ProposalStore, ProposalError, canonical_digest
@@ -55,6 +57,29 @@ def default_embedder():
         return SimpleNamespace(provider=Config.EMBEDDING_PROVIDER)
     from ..storage.embedding_service import EmbeddingService
     return EmbeddingService(auto_pull=False)
+
+
+def proposal_source_scope(snapshot, config):
+    """Recover legacy general-report scope only from its original graph version."""
+    try:
+        return source_scope(snapshot, config)
+    except ValueError:
+        pass
+    config = config or {}
+    project_id, graph_id = config.get('project_id'), config.get('graph_id')
+    if not isinstance(project_id, str) or not project_id or not isinstance(graph_id, str) or not graph_id:
+        raise ValueError('scope_mismatch')
+    project = ProjectManager.get_project(project_id)
+    case = CaseManager.get_case(project.case_id) if project and project.case_id else None
+    matches = [version for version in case.versions
+               if version.project_id == project_id and version.graph_id == graph_id] if case else []
+    if len(matches) != 1:
+        raise ValueError('scope_mismatch')
+    inferred = {'case_id': case.case_id, 'case_version_id': matches[0].version_id, 'graph_id': graph_id}
+    for row in (snapshot.get('source_grounding') or {}, config):
+        if any(row.get(key) and row[key] != value for key, value in inferred.items()):
+            raise ValueError('scope_mismatch')
+    return source_scope(snapshot, {**config, **inferred})
 
 
 def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, embedder_factory, tasks):
@@ -121,7 +146,7 @@ def create_evidence_proposal(report_id):
         if not parent.outline or data['section_index'] > len(parent.outline.sections):
             raise ProposalError('invalid_section', 400)
         try:
-            scope = source_scope(parent.to_dict(), load_simulation_config(parent.simulation_id))
+            scope = proposal_source_scope(parent.to_dict(), load_simulation_config(parent.simulation_id))
         except ValueError:
             raise ProposalError('missing_or_inconsistent_scope', 409)
         storage = current_app.extensions.get('neo4j_storage')
