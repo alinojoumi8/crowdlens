@@ -11,3 +11,11 @@
 - [ ] Report independent judgments and measured effort without imputing missing labels.
 
 Application behavior is unchanged. The human quality milestone remains PENDING; 0/4 ready proposals is a workflow result. See [audit](../evaluations/2026-10-03-source-review-v2.md). Next implementation uses separate development data to repair summary-patch contracts, followed by fresh held-out verification.
+
+## User-authorized AI review substitution
+
+- [x] Delegate to GPT-6 Astra with maximum reasoning and source-first frozen facts.
+- [x] Retain four AI-provenance review rows and all 19 judgments separately from human forms.
+- [x] Verify packet/hash/schema integrity, preserve originals and show the [AI review](../evaluations/results/2026-10-03-source-review-v2/astra-ai-review/review.md) in the browser.
+
+The user requested AI review instead of reviewing personally. This completes that substituted task; the unchecked human items above remain unmeasured and are not prerequisites to presenting these AI findings. Human importer policy is unchanged.

@@ -29,3 +29,11 @@ Independent code review verified the collector preserves the four-case denominat
 ## Next step
 
 Import the user's actual reviews and report reviewed/attempted denominators, unsupported-claim judgments, attribution/citation errors, omissions, disagreements and measured effort with unresolved values retained. Three cases encountered the summary-patch contract gate; repair that behavior on separate development data after review, then freeze fresh held-out cases for verification. Do not tune against this holdout or claim release readiness from these four packets. Exact-candidate remote CI/deployment reconciliation remains a separately scoped task.
+
+## Authorized AI review follow-up
+
+The user substituted GPT-6 Astra with maximum reasoning for their own review. The [completed AI assessment](results/2026-10-03-source-review-v2/astra-ai-review/review.md) covers four packets, eight originals and 19 exact ledger claims. Source-only facts were frozen before candidate inspection: 28 facts, with 10 judged materially omitted. Astra judged 17 claims supported, one unsupported and one ambiguous. These are single-AI-reviewer judgments, not human ratings or adjudicated truth. Human review status and time remain PENDING/null.
+
+The coordinator verified packet hashes, exact claim coverage, typed judgments, reference IDs and null timing; the unchanged human importer correctly rejects these AI rows. All 47 previously preserved collection/reviewer artifacts remain unchanged. Application behavior, proposal states and human blank forms are unchanged. The AI review is shown separately at http://127.0.0.1:18789/.
+
+Highest-priority next work is source coverage and attribution, alongside the previously observed summary-patch contract failures, implemented on separate development data and verified on fresh holdout inputs. The packet-level summary-target observations do not independently diagnose runtime behavior. Original drafts and AI judgments remain preserved.
