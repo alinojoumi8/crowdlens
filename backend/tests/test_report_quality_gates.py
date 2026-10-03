@@ -184,6 +184,7 @@ class ResumeAgent(ReportAgent):
         self.graph_id = "graph_1"
         self.simulation_id = "sim_1"
         self.simulation_requirement = "test"
+        self.simulation_config = {}
         self.report_mode = "prediction"
         self.report_logger = None
         self.console_logger = None

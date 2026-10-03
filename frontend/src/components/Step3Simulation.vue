@@ -4,7 +4,7 @@
     <div class="control-bar">
       <div class="status-group">
         <!-- Twitter Platform Progress -->
-        <div class="platform-status twitter" :class="{ active: runStatus.twitter_running, completed: runStatus.twitter_completed }">
+        <div v-if="selectedPlatforms.includes('twitter')" class="platform-status twitter" :class="{ active: runStatus.twitter_running, completed: runStatus.twitter_completed }">
           <div class="platform-header">
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
@@ -19,15 +19,15 @@
           <div class="platform-stats">
             <span class="stat">
               <span class="stat-label">ROUND</span>
-              <span class="stat-value mono">{{ runStatus.twitter_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
+              <span class="stat-value mono">{{ runStatus.twitter_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || effectiveRounds || '-' }}</span></span>
             </span>
             <span class="stat">
               <span class="stat-label">Elapsed Time</span>
               <span class="stat-value mono">{{ twitterElapsedTime }}</span>
             </span>
             <span class="stat">
-              <span class="stat-label">ACTS</span>
-              <span class="stat-value mono">{{ runStatus.twitter_actions_count || 0 }}</span>
+              <span class="stat-label">MODEL ACTIONS</span>
+              <span class="stat-value mono">{{ runStatus.platform_activity?.twitter?.model_actions ?? 0 }}</span>
             </span>
           </div>
           <!-- Available Actions Tooltip -->
@@ -45,7 +45,7 @@
         </div>
         
         <!-- Reddit Platform Progress -->
-        <div class="platform-status reddit" :class="{ active: runStatus.reddit_running, completed: runStatus.reddit_completed }">
+        <div v-if="selectedPlatforms.includes('reddit')" class="platform-status reddit" :class="{ active: runStatus.reddit_running, completed: runStatus.reddit_completed }">
           <div class="platform-header">
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
@@ -60,15 +60,15 @@
           <div class="platform-stats">
             <span class="stat">
               <span class="stat-label">ROUND</span>
-              <span class="stat-value mono">{{ runStatus.reddit_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
+              <span class="stat-value mono">{{ runStatus.reddit_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || effectiveRounds || '-' }}</span></span>
             </span>
             <span class="stat">
               <span class="stat-label">Elapsed Time</span>
               <span class="stat-value mono">{{ redditElapsedTime }}</span>
             </span>
             <span class="stat">
-              <span class="stat-label">ACTS</span>
-              <span class="stat-value mono">{{ runStatus.reddit_actions_count || 0 }}</span>
+              <span class="stat-label">MODEL ACTIONS</span>
+              <span class="stat-value mono">{{ runStatus.platform_activity?.reddit?.model_actions ?? 0 }}</span>
             </span>
           </div>
           <!-- Available Actions Tooltip -->
@@ -89,14 +89,14 @@
           </div>
         </div>
 
-        <div v-if="runTiming" class="platform-status runtime" :class="{ active: runStatus.runner_status === 'running', completed: runStatus.runner_status === 'completed' }">
+        <div class="platform-status runtime" :class="{ active: runStatus.runner_status === 'running', completed: runStatus.runner_status === 'completed' }">
           <div class="platform-header">
             <span class="platform-name">Runtime</span>
           </div>
           <div class="platform-stats">
             <span class="stat">
               <span class="stat-label">WALL</span>
-              <span class="stat-value mono">{{ formatWallDuration(runTiming.total_seconds || runTiming.duration_seconds) }}</span>
+              <span class="stat-value mono">{{ formatWallDuration(runTiming?.total_seconds || runTiming?.duration_seconds) }}</span>
             </span>
             <span class="stat">
               <span class="stat-label">STATUS</span>
@@ -158,7 +158,8 @@
       </div>
     </div>
 
-    <p v-if="effectiveConfig" class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · round cap {{ maxRounds || 'configured duration' }} · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
+    <p v-if="effectiveConfig" class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
+    <p v-if="runStatus.activity_summary" class="activity-accounting" role="status">{{ runStatus.activity_summary.model_actions }} model actions · {{ runStatus.activity_summary.unique_posts }} unique posts ({{ runStatus.activity_summary.initial_posts }} initial, {{ runStatus.activity_summary.scheduled_posts }} scheduled) · {{ runStatus.activity_summary.logged_entries }} logged entries · {{ runStatus.activity_summary.unknown_origin_actions }} unknown-origin actions</p>
     <p v-if="['stopped','failed'].includes(runStatus.runner_status)" class="effective-settings" role="status">Simulation {{ runStatus.runner_status }}: {{ runStatus.error || 'operator stop' }}. Partial activity is retained. Generation requires an available workflow allowance.</p>
 
     <!-- Main Content: Dual Timeline -->
@@ -208,6 +209,7 @@
                     <svg v-if="action.platform === 'twitter'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                     <svg v-else viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                   </div>
+                  <span class="origin-label">{{ originLabel(action.origin) }}</span>
                   <div class="action-badge" :class="getActionTypeClass(action.action_type)">
                     {{ getActionTypeLabel(action.action_type) }}
                   </div>
@@ -527,6 +529,21 @@ const ensemble = ref({
 })
 
 // Computed
+const selectedPlatforms = computed(() => {
+  const platform = effectiveConfig.value?.prediction_settings?.platform || 'parallel'
+  return platform === 'parallel' ? ['twitter', 'reddit'] : [platform]
+})
+const effectiveRounds = computed(() => {
+  const config = effectiveConfig.value
+  const hours = config?.time_config?.total_simulation_hours
+  const minutes = config?.time_config?.minutes_per_round
+  if (!hours || !minutes) return config?.effective_settings?.round_limit || props.maxRounds
+  const duration = Math.floor(hours * 60 / minutes)
+  const cap = props.maxRounds || config?.prediction_settings?.max_rounds
+  return cap ? Math.min(duration, cap) : duration
+})
+const originLabel = (origin) => ({ initial_post: 'Initial input', scheduled_event: 'Scheduled input', model_action: 'Model action' }[origin] || 'Unknown origin')
+
 // Display actions in chronological order (newest at the bottom)
 const chronologicalActions = computed(() => {
   return allActions.value
@@ -649,7 +666,7 @@ const doStartSimulation = async () => {
 
   isStarting.value = true
   startError.value = null
-  addLog('Starting dual-platform parallel simulation...')
+  addLog(`Starting ${selectedPlatforms.value.join(' + ')} simulation...`)
   emit('update-status', 'processing')
 
   try {
@@ -893,7 +910,7 @@ const fetchRunStatus = async () => {
     if (res.success && res.data) {
       const data = res.data
 
-      runStatus.value = data
+      runStatus.value = { ...runStatus.value, ...data }
 
       // Detect round changes for each platform and output logs
       if (data.twitter_current_round > prevTwitterRound.value) {
@@ -993,12 +1010,15 @@ const fetchRunStatusDetail = async () => {
     if (res.success && res.data) {
       // Use all_actions to get complete action list
       const serverActions = res.data.all_actions || []
+      if (res.data.activity_summary) {
+        runStatus.value = { ...runStatus.value, activity_summary: res.data.activity_summary, platform_activity: res.data.platform_activity }
+      }
 
       // Incrementally add new actions (with deduplication)
       let newActionsAdded = 0
       serverActions.forEach(action => {
         // Generate unique ID
-        const actionId = action.id || `${action.timestamp}-${action.platform}-${action.agent_id}-${action.action_type}`
+        const actionId = action.id || (action.trace_id != null ? `${action.platform}:trace:${action.trace_id}` : `${action.timestamp}-${action.platform}-${action.agent_id}-${action.action_type}`)
 
         if (!actionIds.value.has(actionId)) {
           actionIds.value.add(actionId)
@@ -1123,6 +1143,8 @@ onMounted(async () => {
       const response = await getRunStatus(props.simulationId)
       if (response.success && response.data) {
         runStatus.value = response.data
+        emit('update-status', response.data.runner_status || 'idle')
+        await fetchRunStatusDetail()
         if (['running', 'starting', 'stopping'].includes(response.data.runner_status)) {
           phase.value = 1
           startStatusPolling()
@@ -1152,6 +1174,8 @@ onUnmounted(() => {
   font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
   overflow: hidden;
 }
+.activity-accounting { margin: 0; padding: 8px 16px; font-size: 12px; color: #374151; }
+.origin-label { font-size: 11px; color: #4b5563; }
 .effective-settings { padding: 8px 12px; font: 12px/1.5 system-ui, sans-serif; overflow-wrap: anywhere; flex-shrink: 0; background: #f6f8fb; color: #1f2a36; }
 
 /* --- Control Bar --- */

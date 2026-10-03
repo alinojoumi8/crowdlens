@@ -1979,7 +1979,7 @@ const forecastRows = computed(() => {
     const probability = Number(row.probability || 0)
     return {
       ...row,
-      percent: `${Math.round(probability * 100)}%`
+      percent: `${(probability * 100).toFixed(1)}%`
     }
   })
 })

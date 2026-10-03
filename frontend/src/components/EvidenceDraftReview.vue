@@ -24,7 +24,7 @@
       <ul v-if="proposal.findings?.length" class="findings" aria-label="Review findings">
         <li v-for="(finding, index) in proposal.findings" :key="index">
           <strong>{{ finding.blocking ? 'Blocks saving' : 'Review needed' }}:</strong>
-          {{ words(finding.code) }}<span v-if="finding.detail"> — {{ finding.detail }}</span>
+          {{ words(finding.code) }}<span v-if="Number.isInteger(finding.paragraph_index)"> (paragraph {{ finding.paragraph_index + 1 }})</span><span v-if="finding.detail"> — {{ finding.detail }}</span>
         </li>
       </ul>
       <details v-if="proposal.ledger?.length" class="ledger" open>

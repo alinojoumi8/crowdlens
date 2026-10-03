@@ -245,7 +245,7 @@ class LLMClient:
         temperature: float = 0.3,
         max_tokens: int = 4096,
         disable_reasoning: bool = False,
-        *, request_timeout=None, request_max_retries=None, usage_callback=None,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None, response_callback=None,
     ) -> Dict[str, Any]:
         """
         Send chat request and return JSON
@@ -299,6 +299,12 @@ class LLMClient:
                 **({k: v for k, v in dict(request_timeout=request_timeout,
                      request_max_retries=request_max_retries, usage_callback=usage_callback).items() if v is not None})
             )
+        # Preserve completion text before JSON cleanup/parsing, including failures.
+        # Opt-in observers own their private storage; nothing is logged globally.
+        if response_callback is not None:
+            response_callback(response)
+        if not isinstance(response, str):
+            raise ValueError("invalid_llm_response_text")
         # Clean markdown code block markers
         cleaned_response = response.strip()
         cleaned_response = re.sub(r'^```(?:json)?\s*\n?', '', cleaned_response, flags=re.IGNORECASE)

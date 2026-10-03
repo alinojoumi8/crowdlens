@@ -91,6 +91,8 @@ class AgentAction:
     action_args: Dict[str, Any] = field(default_factory=dict)
     result: Optional[str] = None
     success: bool = True
+    origin: str = 'unknown'
+    trace_id: Optional[int] = None
     
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -103,6 +105,8 @@ class AgentAction:
             "action_args": self.action_args,
             "result": self.result,
             "success": self.success,
+            "origin": self.origin,
+            "trace_id": self.trace_id,
         }
 
 
@@ -356,6 +360,7 @@ class SimulationRunner:
                 agent_name=action_data.get("agent_name", ""),
                 action_type=action_data.get("action_type", ""),
                 action_args=action_data.get("action_args", {}),
+                origin=action_data.get("origin", "unknown"), trace_id=action_data.get("trace_id"),
                 result=action_data.get("result"),
                 success=action_data.get("success", True),
             ))
@@ -599,8 +604,8 @@ class SimulationRunner:
                 cmd.append("--" + platform + "-only")
             
             # If max_rounds specified, add to command-line arguments
-            if max_rounds is not None and max_rounds > 0:
-                cmd.extend(["--max-rounds", str(max_rounds)])
+            if total_rounds > 0:
+                cmd.extend(["--max-rounds", str(total_rounds)])
             
             # Create main log file to avoid stdout/stderr pipe buffer overflow
             main_log_path = os.path.join(sim_dir, "simulation.log")
@@ -923,6 +928,7 @@ class SimulationRunner:
                                 agent_name=action_data.get("agent_name", ""),
                                 action_type=action_data.get("action_type", ""),
                                 action_args=action_data.get("action_args", {}),
+                                origin=action_data.get("origin", "unknown"), trace_id=action_data.get("trace_id"),
                                 result=action_data.get("result"),
                                 success=action_data.get("success", True),
                             )
@@ -1135,6 +1141,7 @@ class SimulationRunner:
                         agent_name=data.get("agent_name", ""),
                         action_type=data.get("action_type", ""),
                         action_args=data.get("action_args", {}),
+                        origin=data.get("origin", "unknown"), trace_id=data.get("trace_id"),
                         result=data.get("result"),
                         success=data.get("success", True),
                     ))

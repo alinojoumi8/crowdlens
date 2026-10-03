@@ -38,6 +38,7 @@ def test_single_platform_launch_uses_the_observable_worker(tmp_path, monkeypatch
         assert state.twitter_running == (platform == 'twitter')
         assert state.reddit_running == (platform == 'reddit')
         assert state.total_rounds == 2
+        assert commands[0][commands[0].index('--max-rounds') + 1] == '2'
     finally:
         for handle in SimulationRunner._stdout_files.values():
             handle.close()

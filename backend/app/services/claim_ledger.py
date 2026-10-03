@@ -152,18 +152,19 @@ def validate_paragraphs(paragraphs, ledger):
     claims = {c['claim_id']: c for c in ledger}
     findings = []
     for index, paragraph in enumerate(paragraphs):
+        def issue(code, **details):
+            findings.append({**finding(code), 'paragraph_index': index, **details})
         if not isinstance(paragraph, dict):
-            findings.append(finding('invalid_paragraph'))
+            issue('invalid_paragraph')
             continue
         text, identifiers = paragraph.get('text'), paragraph.get('claim_ids')
         if not isinstance(text, str) or not text.strip() or len(text) > 8000:
-            findings.append(finding('invalid_paragraph_text'))
+            issue('invalid_paragraph_text')
         if not _strings(identifiers) or not identifiers or any(i not in claims for i in identifiers):
-            findings.append(finding('unlinked_paragraph'))
+            issue('unlinked_paragraph')
         elif any(claims[i]['kind'] != paragraph.get('kind') for i in identifiers):
-            findings.append(finding('paragraph_kind_mismatch'))
-        for item in findings:
-            item.setdefault('paragraph_index', index)
+            issue('paragraph_kind_mismatch', expected_kinds=sorted({claims[i]['kind'] for i in identifiers}),
+                  detail='Every linked claim must have the paragraph kind; separate different kinds.')
     return findings
 
 

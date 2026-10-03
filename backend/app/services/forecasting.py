@@ -441,7 +441,8 @@ class ForecastSynthesizer:
                         actions.append(entry)
             except OSError:
                 continue
-        return actions
+        from .simulation_activity import forecast_actions
+        return forecast_actions(actions)
 
     @staticmethod
     def _action_text(action: Dict[str, Any]) -> str:
@@ -520,6 +521,8 @@ class ForecastSynthesizer:
         return {
             "net_sentiment": round(net, 3),
             "total_actions": len(actions),
+            "model_actions": sum(action.get('origin') == 'model_action' for action in actions),
+            "unknown_origin_actions": sum(action.get('origin', 'unknown') == 'unknown' for action in actions),
             "active_agents": len(participants),
             "support_weight": round(support_w, 2),
             "oppose_weight": round(oppose_w, 2),
@@ -958,9 +961,10 @@ def forecast_to_markdown(forecast: Dict[str, Any]) -> str:
         lines.extend([
             "",
             (
-                f"Grounded in {signal.get('total_actions', 0)} simulated agent actions "
-                f"({signal.get('active_agents', 0)} agents; {signal.get('agents_supporting', 0)} supporting, "
-                f"{signal.get('agents_opposing', 0)} opposing; net sentiment {signal.get('net_sentiment', 0):+.2f})."
+                f"Derived from {signal.get('total_actions', 0)} non-noop recorded actions "
+                f"({signal.get('active_agents', 0)} agents; {signal.get('agents_supporting', 0)} configured supportive, "
+                f"{signal.get('agents_opposing', 0)} configured opposing; heuristic net sentiment {signal.get('net_sentiment', 0):+.2f}; "
+                f"{signal.get('unknown_origin_actions', 0)} actions have unverified legacy origins)."
             ),
         ])
     if forecast.get("limitations"):

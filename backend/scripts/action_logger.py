@@ -48,7 +48,9 @@ class PlatformActionLogger:
         action_type: str,
         action_args: Optional[Dict[str, Any]] = None,
         result: Optional[str] = None,
-        success: bool = True
+        success: bool = True,
+        origin: str = 'unknown',
+        trace_id: Optional[int] = None,
     ):
         """Log an action"""
         entry = {
@@ -60,6 +62,8 @@ class PlatformActionLogger:
             "action_args": action_args or {},
             "result": result,
             "success": success,
+            "origin": origin,
+            "trace_id": trace_id,
         }
         
         with open(self.log_path, 'a', encoding='utf-8') as f:
@@ -89,13 +93,17 @@ class PlatformActionLogger:
         with open(self.log_path, 'a', encoding='utf-8') as f:
             f.write(json.dumps(entry, ensure_ascii=False) + '\n')
     
-    def log_simulation_start(self, config: Dict[str, Any]):
+    def log_simulation_start(self, config: Dict[str, Any], max_rounds: Optional[int] = None):
         """Log simulation start"""
+        timing = config.get('time_config', {})
+        rounds = int(timing.get('total_simulation_hours', 72) * 60) // max(1, int(timing.get('minutes_per_round', 30)))
+        if max_rounds is not None and max_rounds > 0:
+            rounds = min(rounds, max_rounds)
         entry = {
             "timestamp": datetime.now().isoformat(),
             "event_type": "simulation_start",
             "platform": self.platform,
-            "total_rounds": config.get("time_config", {}).get("total_simulation_hours", 72) * 2,
+            "total_rounds": rounds,
             "agents_count": len(config.get("agent_configs", [])),
         }
         

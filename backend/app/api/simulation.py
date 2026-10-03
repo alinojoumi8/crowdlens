@@ -1856,7 +1856,8 @@ def start_simulation():
         
         response_data = run_state.to_dict()
         if max_rounds:
-            response_data['max_rounds_applied'] = max_rounds
+            response_data['requested_max_rounds'] = max_rounds
+            response_data['max_rounds_applied'] = run_state.total_rounds
         response_data['graph_memory_update_enabled'] = enable_graph_memory_update
         response_data['force_restarted'] = force_restarted
         if enable_graph_memory_update:
@@ -1935,7 +1936,7 @@ def stop_simulation():
         
         return jsonify({
             "success": True,
-            "data": run_state.to_dict()
+            "data": _activity_status(simulation_id, run_state.to_dict())
         })
         
     except ValueError as e:
@@ -1954,6 +1955,15 @@ def stop_simulation():
 
 
 # ============== Real-time status monitoring interface ==============
+
+def _activity_status(simulation_id, result):
+    from ..services.simulation_activity import read_activity, summarize_activity
+    rows = read_activity(os.path.join(SimulationRunner.RUN_STATE_DIR, simulation_id))
+    result['activity_summary'] = summarize_activity(rows)
+    result['platform_activity'] = {platform: summarize_activity([r for r in rows if r['platform'] == platform])
+                                   for platform in ('twitter', 'reddit')}
+    return result
+
 
 @simulation_bp.route('/<simulation_id>/run-status', methods=['GET'])
 def get_run_status(simulation_id: str):
@@ -2001,7 +2011,7 @@ def get_run_status(simulation_id: str):
         
         return jsonify({
             "success": True,
-            "data": run_state.to_dict()
+            "data": _activity_status(simulation_id, run_state.to_dict())
         })
         
     except Exception as e:
@@ -2092,7 +2102,7 @@ def get_run_status_detail(simulation_id: str):
         ) if current_round > 0 else []
         
         # Get basic status information
-        result = run_state.to_dict()
+        result = _activity_status(simulation_id, run_state.to_dict())
         result["all_actions"] = [a.to_dict() for a in all_actions]
         result["twitter_actions"] = [a.to_dict() for a in twitter_actions]
         result["reddit_actions"] = [a.to_dict() for a in reddit_actions]

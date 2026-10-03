@@ -273,6 +273,12 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
         if isinstance(value, bool) or int(value) < 1 or (isinstance(value, float) and value != int(value)):
             raise ValueError('invalid_' + key)
         settings[key] = int(value)
+    # The worker selects agents per round. Keep the old hour alias aligned
+    # rather than retaining an unrelated preset value after a round override.
+    if raw.get('active_agents_per_round') not in (None, ''):
+        settings['active_agents_per_hour'] = settings['active_agents_per_round']
+    elif raw.get('active_agents_per_hour') not in (None, ''):
+        settings['active_agents_per_round'] = settings['active_agents_per_hour']
     for key in ("entity_types_include", "entity_types_exclude"):
         value = settings.get(key)
         if isinstance(value, str):

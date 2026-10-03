@@ -104,7 +104,7 @@ const projectData = ref(null)
 const graphData = ref(null)
 const graphLoading = ref(false)
 const systemLogs = ref([])
-const currentStatus = ref('processing') // processing | completed | error
+const currentStatus = ref('idle') // processing | completed | error
 
 // --- Computed Layout Styles ---
 const leftPanelStyle = computed(() => {
@@ -129,6 +129,9 @@ const statusText = computed(() => {
   if (currentStatus.value === 'completed') return 'Completed'
   if (currentStatus.value === 'stopped') return 'Stopped'
   if (currentStatus.value === 'failed') return 'Failed'
+  if (currentStatus.value === 'idle') return 'Idle'
+  if (currentStatus.value === 'starting') return 'Starting'
+  if (currentStatus.value === 'stopping') return 'Stopping'
   return 'Running'
 })
 

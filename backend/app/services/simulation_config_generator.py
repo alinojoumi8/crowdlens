@@ -204,6 +204,9 @@ class SimulationParameters:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""
         time_dict = asdict(self.time_config)
+        duration_rounds = int(self.time_config.total_simulation_hours * 60) // max(1, self.time_config.minutes_per_round)
+        cap = self.prediction_settings.get('max_rounds')
+        effective_rounds = min(duration_rounds, cap) if cap else duration_rounds
         return {
             "simulation_id": self.simulation_id,
             "project_id": self.project_id,
@@ -221,6 +224,14 @@ class SimulationParameters:
             "ensemble_runs": self.ensemble_runs,
             "memory_mode": self.memory_mode,
             "prediction_settings": self.prediction_settings,
+            "effective_settings": {
+                "platform": self.prediction_settings.get('platform', 'parallel'),
+                "available_platforms": [p for p, c in [('twitter', self.twitter_config), ('reddit', self.reddit_config)] if c],
+                "duration_rounds": duration_rounds, "requested_round_cap": cap,
+                "round_limit": effective_rounds,
+                "active_agents_per_round": self.time_config.agents_per_hour_max,
+                "hour_fields_are_compatibility_aliases": True,
+            },
             "report_mode": self.report_mode,
             "report_depth": self.report_depth,
             "decision_config": self.decision_config,
@@ -352,7 +363,11 @@ class SimulationConfigGenerator:
         time_config = self._apply_prediction_time_controls(time_config, prediction)
         time_config.agents_per_hour_min = min(time_config.agents_per_hour_min, num_entities)
         time_config.agents_per_hour_max = min(time_config.agents_per_hour_max, num_entities)
-        reasoning_parts.append(f"Time config: {time_config_result.get('reasoning', 'Success')}")
+        reasoning_parts.append(
+            f"Effective time config after user controls: {time_config.total_simulation_hours} hours; "
+            f"{time_config.minutes_per_round} minutes per round; "
+            f"{time_config.agents_per_hour_min}-{time_config.agents_per_hour_max} active agents per round. "
+            "Generated timing suggestions are superseded by these effective values.")
 
         # ========== Step 2: Generate event configuration ==========
         report_progress(2, "Generating event configuration and hot topics...")
