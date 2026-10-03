@@ -39,13 +39,17 @@ def export_packets(directory, fixtures, observations, *, namespace='evidence-qua
                    for index, source in enumerate(observation['sources'])]
         claims = [{key: copy.deepcopy(claim.get(key)) for key in
                    ('claim_id', 'kind', 'text', 'attribution', 'premise_claim_ids')}
-                  | {'citation_ids': [aliases.get(identifier, 'UNKNOWN') for identifier in claim['citation_ids']]}
+                  | {'citation_ids': [aliases.get(identifier, 'UNKNOWN') for identifier in claim.get('citation_ids', [])]}
                   for claim in observation['claims']]
         packet = {'schema_version': 1, 'packet_id': packet_id,
                   'notice': 'Fictional source packet. Candidate origin and expected assertions are withheld. Review only against these sources.',
                   'task': fixture['section']['description'], 'sources': sources,
                   'candidate_section': observation['after']['section'],
                   'candidate_summary': observation['after']['summary'], 'claims': claims}
+        citations = list(dict.fromkeys(identifier for c in observation['claims'] for identifier in c.get('citation_ids', [])))
+        packet['citation_number_sources'] = {str(index+1): aliases.get(identifier, 'UNKNOWN') for index,identifier in enumerate(citations)}
+        if 'candidate_summary_edits' in observation:
+            packet['candidate_summary_edits'] = copy.deepcopy(observation['candidate_summary_edits'])
         content = json_bytes(packet)
         (reviewer / (packet_id + '.json')).write_bytes(content)
         digest = sha256(content)
@@ -175,7 +179,7 @@ def import_reviews(packet_directory, forms):
                                         'mean': sum(seconds) / len(seconds) if seconds else None},
             'reviews': accepted, 'pending': pending, 'disagreements': disagreements,
             'real_model_quality': None,
-            'limitations': ['These packets contain deterministic substitutes, not real model outputs.',
+            'limitations': ['Candidate origin must be established from the administrator mapping and collection receipts; labels alone do not establish model provenance.',
                             'Rates pool individual reviewer judgments, not adjudicated ground truth.',
                             'Imported labels do not imply completed adjudication or human sign-off.',
                             'Ambiguous and conflicting support is preserved and excluded from binary support denominator.',
