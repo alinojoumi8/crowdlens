@@ -1291,7 +1291,7 @@ onUnmounted(() => {
 
 .stat-label {
   font-size: 8px;
-  color: #999;
+  color: #626B78;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1305,7 +1305,7 @@ onUnmounted(() => {
 
 .stat-total, .stat-unit {
   font-size: 9px;
-  color: #999;
+  color: #626B78;
   font-weight: 400;
 }
 
