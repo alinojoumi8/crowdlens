@@ -1,0 +1,9 @@
+{
+  "status": 500,
+  "body": {
+    "error": "can't subtract offset-naive and offset-aware datetimes",
+    "error_code": "internal_error",
+    "request_id": "bd9d7980-312f-4110-a858-bbd3efecdd15",
+    "success": false
+  }
+}

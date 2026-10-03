@@ -1,0 +1,62 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_recovery_response_does_not_rebind_existing_related_resources _______
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7ce08e304a10>, <app.services.task_execution.TaskRuntime object at 0x7ce08e306210>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ce08e3047d0>
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-64/test_recovery_response_does_no0')
+
+    def test_recovery_response_does_not_rebind_existing_related_resources(controlled,monkeypatch,tmp_path):
+        from app.services.report_agent import ReportManager,Report,ReportStatus
+        client,ledger,runtime,calls=controlled
+        first=client.post('/api/execution/authorize',json=terms('first')).json['data']['workflow_id']
+        second=client.post('/api/execution/authorize',json=terms('second')).json['data']['workflow_id']
+        ledger.bind(first,'simulation:shared');ledger.bind(first,'graph:shared');ledger.bind(second,'report:recovery')
+        report=Report('recovery','shared','shared','fictional',ReportStatus.INTERRUPTED)
+        monkeypatch.setattr(ReportManager,'REPORTS_DIR',str(tmp_path/'reports'))
+        monkeypatch.setattr(ReportManager,'get_report',lambda rid:report)
+        monkeypatch.setattr('app.api.report.GraphToolsService',lambda **kw:object())
+        client.application.extensions['neo4j_storage']=object()
+        class Agent:
+            def __init__(self,**kw):pass
+            def resume_report(self,report,**kw):return report
+        monkeypatch.setattr('app.api.report.ReportAgent',Agent)
+        def start(self,identifier,function,*a,**kw):
+            with self.attempt(identifier).bind():function()
+        monkeypatch.setattr(TaskManager,'start_task',start)
+        response=client.post('/api/report/recovery/resume',json={})
+>       assert response.status_code==200
+E       assert 500 == 200
+E        +  where 500 = <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]>.status_code
+
+tests/test_execution_api.py:273: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[03:13:59] INFO: Task created: task_id=464b9288-839a-4ebd-a878-1b9c69b1c989 task_type=report_resume metadata_keys=graph_id,report_id,simulation_id,workflow_epoch,workflow_id
+[03:13:59] INFO: Task status changed: task_id=464b9288-839a-4ebd-a878-1b9c69b1c989 pending -> processing progress=0 message=Resuming report...
+[03:13:59] INFO: Task status changed: task_id=464b9288-839a-4ebd-a878-1b9c69b1c989 processing -> failed progress=0 message=Task failed
+[03:13:59] ERROR: Task failed: task_id=464b9288-839a-4ebd-a878-1b9c69b1c989 error=Report resume failed
+------------------------------ Captured log call -------------------------------
+ERROR    test_execution_api:app.py:875 Exception on /api/report/recovery/resume [POST]
+Traceback (most recent call last):
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 920, in full_dispatch_request
+    return self.finalize_request(rv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 941, in finalize_request
+    response = self.process_response(response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 1319, in process_response
+    response = self.ensure_sync(func)(response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/api/execution.py", line 233, in bind_response
+    ledger.bind(wid, kind + ':' + data[kind + '_id'])
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/workflow_execution.py", line 138, in bind
+    self._bind(db, wid, resource)
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/workflow_execution.py", line 132, in _bind
+    raise ValueError('resource_has_different_authorization')
+ValueError: resource_has_different_authorization
+=========================== short test summary info ============================
+FAILED tests/test_execution_api.py::test_recovery_response_does_not_rebind_existing_related_resources
+1 failed, 12 deselected in 1.29s

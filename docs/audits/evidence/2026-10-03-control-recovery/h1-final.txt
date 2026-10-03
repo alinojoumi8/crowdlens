@@ -1,0 +1,3 @@
+[03:25:07] INFO: Task created: task_id=80dd6db2-4908-4c4d-93c9-855359e4e34e task_type=graph_build metadata_keys=project_id
+[03:25:07] INFO: Task status changed: task_id=80dd6db2-4908-4c4d-93c9-855359e4e34e pending -> processing progress=0 message=-
+{"task_id": "80dd6db2-4908-4c4d-93c9-855359e4e34e", "writer_process_exited": true, "restored_status": "failed", "reason": "ownership_lease_expired", "elapsed_seconds": 30.05, "unresolved": false}

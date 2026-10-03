@@ -1,0 +1,1678 @@
+{
+  "browser": "154.0.8037.92",
+  "browserLaunch": {
+    "arguments": [
+      "/usr/bin/google-chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--enable-automation",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--user-data-dir=/tmp/playwright_chromiumdev_profile-bXXB9i",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--noerrdialogs",
+      "--ozone-platform=headless",
+      "--ozone-override-screen-size=800,600",
+      "--use-angle=swiftshader-webgl",
+      "--flag-switches-begin",
+      "--flag-switches-end"
+    ],
+    "sandboxStatus": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tYes\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed."
+  },
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": true
+    },
+    {
+      "name": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "passed": true
+    },
+    {
+      "name": "scenario configuration with seeded persona and simulation substitutes",
+      "passed": true
+    },
+    {
+      "name": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "passed": true
+    },
+    {
+      "name": "source review and keyboard provenance inspection",
+      "passed": true
+    },
+    {
+      "name": "changed source produces an honest 409 conflict and disables save",
+      "passed": true
+    },
+    {
+      "name": "unrelated unsupported proposal blocks saving",
+      "passed": true
+    },
+    {
+      "name": "duplicate clicks plus response-loss retry create one immutable child",
+      "passed": true
+    },
+    {
+      "name": "saved revision reload, inherited section and source ledger remain reviewable",
+      "passed": true
+    },
+    {
+      "name": "history loading, error, explicit retry and empty states",
+      "passed": true
+    },
+    {
+      "name": "visible Stop closes durable workflow and refresh cannot start it again",
+      "passed": true
+    },
+    {
+      "name": "interrupted report has terminal controls and polling stops",
+      "passed": true
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "interrupted-report",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "interrupted-report",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "interrupted-report",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    }
+  ],
+  "console": [
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (NOT FOUND)"
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 404\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Failed to fetch diagnostics: AxiosError: Request failed with status code 404\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 (CONFLICT)"
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 409\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "type": "error",
+      "text": "Response error: AxiosError: Network Error\n    at y.onerror (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19927)"
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "type": "error",
+      "text": "Network error - please check your connection"
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 503\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "type": "error",
+      "text": "Failed to load history projects: AxiosError: Request failed with status code 503\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)\n    at Xt.request (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:6:2279)\n    at async Z (http://127.0.0.1:18749/assets/Home-CXgh7pJn.js:2:5482)\n    at async http://127.0.0.1:18749/assets/Home-CXgh7pJn.js:2:6190"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (NOT FOUND)"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 404\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "warning",
+      "text": "Failed to fetch diagnostics: AxiosError: Request failed with status code 404\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (NOT FOUND)"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 404\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "warning",
+      "text": "Failed to fetch diagnostics: AxiosError: Request failed with status code 404\n    at Xc (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:12158)\n    at XMLHttpRequest._ (http://127.0.0.1:18749/assets/index-Bz0JUq96.js:4:19548)"
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    }
+  ],
+  "pageErrors": [],
+  "network": [
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "POST",
+      "path": "/api/execution/authorize",
+      "status": 201
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "POST",
+      "path": "/api/graph/ontology/generate",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "POST",
+      "path": "/api/graph/build",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/task/807fdb50-8307-4ffe-acac-116fb06df297",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/task/807fdb50-8307-4ffe-acac-116fb06df297",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/project/proj_8808d25cca7d",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph_6e78359d35c1",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "POST",
+      "path": "/api/simulation/create",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/prepare/status",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/env-status",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/project/proj_8808d25cca7d",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph_6e78359d35c1",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/prepare",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload/profiles/realtime",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload/config/realtime",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload/config",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload/config",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload/run-status",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_upload/diagnostics",
+      "status": 404
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/project/proj_8808d25cca7d",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph_6e78359d35c1",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/execution/wf_f76b958f320d49fb9f76ceec8cf809fd",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "POST",
+      "path": "/api/report/generate",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals",
+      "status": 202
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_3683038abc9549178f55531d8eec71a4",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_3683038abc9549178f55531d8eec71a4/accept",
+      "status": 409
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_3683038abc9549178f55531d8eec71a4/reject",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals",
+      "status": 202
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_713e935a932e4b12a4cb9be9a9b32abf",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_713e935a932e4b12a4cb9be9a9b32abf/reject",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals",
+      "status": 202
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_e798cd92e3b54a25aabbc958865735a1",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_e798cd92e3b54a25aabbc958865735a1/accept",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a/progress",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a/progress",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_745c14e6362e43edb52d5771af157b1a/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/wf_7b9f785804e74b7ab87667a5c20cc912",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_713e935a932e4b12a4cb9be9a9b32abf",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_e798cd92e3b54a25aabbc958865735a1",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/case/list",
+      "status": 200
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 503
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/config",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/config",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/run-status",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/config",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "POST",
+      "path": "/api/simulation/start",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "POST",
+      "path": "/api/simulation/stop",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/diagnostics",
+      "status": 404
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/config",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/config",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/run-status",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/simulation/sim_control/diagnostics",
+      "status": 404
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "visible Stop closes durable workflow and refresh cannot start it again",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/report/report_interrupted_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/report/report_interrupted_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/report/report_interrupted_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/execution/resolve",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/report/report_interrupted_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/report/report_interrupted_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/simulation/sim_control",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/graph/project/proj_a1ea2fd6b807",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    },
+    {
+      "scenario": "interrupted report has terminal controls and polling stops",
+      "method": "GET",
+      "path": "/api/execution/wf_8f9b070ed2a848d5830f255a60f21856",
+      "status": 200
+    }
+  ],
+  "substitutes": [
+    "Harness ontology, graph builder/storage, simulation endpoints, drafting model; no provider calls",
+    "Root generation response intercepted to open an explicitly seeded report",
+    "One acceptance response deliberately lost after its real HTTP publication",
+    "External font CSS fulfilled empty; no external browser requests",
+    "History list response held, then 503, then empty 200 for state testing"
+  ],
+  "performance": {
+    "lcp": 180,
+    "cls": 0.2299465060763889,
+    "interactionDurations": [],
+    "note": "Laboratory browser samples only; no field Core Web Vitals or representative INP conclusion."
+  },
+  "uploadedProject": "proj_8808d25cca7d",
+  "simulationButtons": [
+    "Stop workflow",
+    "Graph",
+    "Split",
+    "Workbench",
+    "↻Refresh",
+    "⛶",
+    "",
+    " Start Generating Report →"
+  ],
+  "acceptance": {
+    "status": 200,
+    "body": {
+      "data": {
+        "claim_checks": [],
+        "completed_at": "2026-10-03T07:18:57.276597+00:00",
+        "created_at": "2026-10-03T07:18:57.276597+00:00",
+        "decision_config": {},
+        "error": null,
+        "forecast": {
+          "limitations": "Synthetic source-only example; no simulation has run.",
+          "status": "unavailable"
+        },
+        "graph_id": "synthetic_graph",
+        "markdown_content": "# Synthetic hearing report\n\n> Alex states that the hearing was postponed until Friday. Other issues remain open.\n\n## Hearing\n\nAlex states that the hearing was postponed until Friday. [1]\n\n## Unrelated contracts\n\nUnrelated contracts remain unresolved.\n\n",
+        "outline": {
+          "sections": [
+            {
+              "claim_check_hash": "41a8e7a9d5f5dc14948f8895c750e985e3727cbb25e5c54d0169d2fc7a746575",
+              "claim_checks": [],
+              "claim_ledger": [
+                {
+                  "attribution": "Alex",
+                  "checks": [],
+                  "citation_ids": [
+                    "episode:one"
+                  ],
+                  "claim_id": "claim_01",
+                  "kind": "attributed_allegation",
+                  "premise_claim_ids": [],
+                  "quote": "",
+                  "schema_version": 1,
+                  "scope": {
+                    "case_id": "synthetic_case",
+                    "case_version_id": "synthetic_v1",
+                    "graph_id": "synthetic_graph"
+                  },
+                  "text": "Alex states that the hearing was postponed until Friday."
+                }
+              ],
+              "claims": [
+                {
+                  "attribution": "Alex",
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1",
+                  "checks": [],
+                  "citation_ids": [
+                    "episode:one"
+                  ],
+                  "claim_id": "claim_01",
+                  "evidence_ids": [
+                    "episode:one"
+                  ],
+                  "graph_id": "synthetic_graph",
+                  "kind": "attributed_allegation",
+                  "premise_claim_ids": [],
+                  "quote": "",
+                  "schema_version": 1,
+                  "scope": {
+                    "case_id": "synthetic_case",
+                    "case_version_id": "synthetic_v1",
+                    "graph_id": "synthetic_graph"
+                  },
+                  "text": "Alex states that the hearing was postponed until Friday."
+                }
+              ],
+              "content": "Alex states that the hearing was postponed until Friday. [1]",
+              "description": "",
+              "evidence_cards": [
+                {
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1",
+                  "document_id": "synthetic_doc",
+                  "episode_id": "one",
+                  "evidence_id": "episode:one",
+                  "excerpt": "Alex states that the hearing was postponed until Friday.",
+                  "filename": "synthetic-record.txt",
+                  "graph_id": "synthetic_graph",
+                  "locator": {
+                    "char_end": 56,
+                    "char_start": 0,
+                    "chunk_index": 0,
+                    "offset_basis": "stored_chunk",
+                    "page": 1,
+                    "paragraph": null
+                  },
+                  "origin": "source_document",
+                  "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                  "window": "Alex states that the hearing was postponed until Friday.",
+                  "window_end": 56,
+                  "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                  "window_start": 0
+                }
+              ],
+              "title": "Hearing"
+            },
+            {
+              "claim_check_hash": "",
+              "claim_checks": [],
+              "claim_ledger": [],
+              "claims": [],
+              "content": "Unrelated contracts remain unresolved.",
+              "description": "",
+              "evidence_cards": [],
+              "title": "Unrelated contracts"
+            }
+          ],
+          "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open.",
+          "summary_claim_check_hash": "",
+          "summary_claim_checks": [],
+          "summary_claims": [],
+          "title": "Synthetic hearing report"
+        },
+        "quality_score": {
+          "deductions": [
+            {
+              "code": "procedural_source_unavailable",
+              "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.",
+              "penalty": 5
+            },
+            {
+              "code": "thin_section_evidence",
+              "message": "2 section(s) use fewer than 3 distinct evidence points.",
+              "penalty": 10
+            }
+          ],
+          "score": 85,
+          "section_count": 2,
+          "section_evidence_counts": [
+            1,
+            0
+          ],
+          "status": "pass",
+          "threshold": 80
+        },
+        "report_depth": "standard",
+        "report_id": "report_745c14e6362e43edb52d5771af157b1a",
+        "report_mode": "legal_case",
+        "revision": {
+          "accepted_at": "2026-10-03T07:18:57.276609+00:00",
+          "content_digest": "3d51ca4e70d920304b9df49700288846389aa03774585513fe03d3d4a231679f",
+          "immutable": true,
+          "inherited_forecast": true,
+          "inherited_section_indices": [
+            2
+          ],
+          "parent_report_id": "report_synthetic",
+          "proposal_digest": "dda724ddae24bb6000740109d11c7c6bd3378e19e97230a6b6c8c440e413b906",
+          "proposal_id": "proposal_e798cd92e3b54a25aabbc958865735a1",
+          "root_report_id": "report_synthetic",
+          "section_index": 1,
+          "source_checked_at": "2026-10-03T07:18:57.276405+00:00",
+          "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+          "summary_edits": [
+            {
+              "claim_ids": [
+                "claim_01"
+              ],
+              "end": 24,
+              "new_text": "Alex states that the hearing was postponed until Friday.",
+              "old_text": "The hearing is Thursday.",
+              "start": 0
+            }
+          ]
+        },
+        "simulation_id": "sim_synthetic",
+        "simulation_requirement": "Review the synthetic hearing record.",
+        "source_grounding": {
+          "case_id": "synthetic_case",
+          "case_version_id": "synthetic_v1",
+          "graph_id": "synthetic_graph"
+        },
+        "status": "needs_review",
+        "timing": {},
+        "validation_issues": [
+          {
+            "blocking": false,
+            "code": "procedural_source_unavailable",
+            "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.",
+            "requires_review": true
+          }
+        ]
+      },
+      "success": true
+    }
+  },
+  "revisionId": "report_745c14e6362e43edb52d5771af157b1a",
+  "persisted": {
+    "parentUnchanged": true,
+    "reportCount": 3,
+    "parentDigests": {
+      "full_report.md": "0feed4baa82583e7e04f2666eddbbe9a9afc10cbd5f9658f326ee7eb94552e8d",
+      "meta.json": "f31ab1902f9eb672e6d6c93010c65eec1d342893863e3e9652d8f0e3f5eeac22",
+      "outline.json": "d34711f3f87cc9e041377677d97f81c4d362c478f5e5e5ef15e9584140ac68b6",
+      "progress.json": "dc291b1970060bbff010a306bbb43cf380eddf7801a8af46cf08a42491cc0606",
+      "section_01.md": "ce26115a42ef730bde11bcf281d43b9a27a553f6585a43b40926deadfd82bf5c",
+      "section_02.md": "3bdfd0835821fee23bc51813455dc63b2b441e6c32f1aeba3966490d396ff79f"
+    },
+    "source": {
+      "declared_revision": null,
+      "scope": "runtime-source-v1",
+      "source_sha256": "fea6ca781b9a175fe9face0055dc195bf7f685551e5af5a5f2b42a5342450006"
+    },
+    "gitHead": "34ad6d27e298f33317e443f0123143fa5e865eab"
+  }
+}

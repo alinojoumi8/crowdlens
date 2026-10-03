@@ -1,0 +1,198 @@
+{
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": true
+    },
+    {
+      "name": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "passed": true
+    },
+    {
+      "name": "scenario configuration with seeded persona and simulation substitutes",
+      "passed": true
+    },
+    {
+      "name": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "passed": true
+    },
+    {
+      "name": "source review and keyboard provenance inspection",
+      "passed": true
+    },
+    {
+      "name": "changed source produces an honest 409 conflict and disables save",
+      "passed": true
+    },
+    {
+      "name": "unrelated unsupported proposal blocks saving",
+      "passed": true
+    },
+    {
+      "name": "duplicate clicks plus response-loss retry create one immutable child",
+      "passed": true
+    },
+    {
+      "name": "saved revision reload, inherited section and source ledger remain reviewable",
+      "passed": true
+    },
+    {
+      "name": "history loading, error, explicit retry and empty states",
+      "passed": true
+    },
+    {
+      "name": "visible Stop closes durable workflow and refresh cannot start it again",
+      "passed": true
+    },
+    {
+      "name": "interrupted report has terminal controls and polling stops",
+      "passed": true
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "interrupted-report",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "interrupted-report",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "interrupted-report",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    }
+  ]
+}

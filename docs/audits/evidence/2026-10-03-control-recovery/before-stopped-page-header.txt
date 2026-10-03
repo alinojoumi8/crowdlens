@@ -1,0 +1,32 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/Step3Simulation.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/Step3Simulation.component.test.js (4 tests | 1 failed) 148ms
+   × the simulation page header reflects the stopped child state 54ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Step3Simulation.component.test.js > the simulation page header reflects the stopped child state
+AssertionError: expected 'Running' to be 'Stopped' // Object.is equality
+
+Expected: "Stopped"
+Received: "Running"
+
+ ❯ src/components/Step3Simulation.component.test.js:41:51
+     39|   wrapper=mount(SimulationRunView,{global:{stubs:{GraphPanel:true,Step…
+     40|   await flushPromises()
+     41|   expect(wrapper.get('.status-indicator').text()).toBe('Stopped')
+       |                                                   ^
+     42| })
+     43|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  03:11:43
+   Duration  1.77s (transform 448ms, setup 0ms, import 772ms, tests 148ms, environment 697ms)
+

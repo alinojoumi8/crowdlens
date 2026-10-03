@@ -198,8 +198,19 @@ migration, and recovery details.
 
 Root report generation assigns one `request_key` per logical browser request.
 Network retries reuse its task/report identity while the task record is retained;
-a new manual invocation receives a new key. This prevents duplicate admission
-without claiming a whole-report cost or deadline limit.
+a new manual invocation receives a new key. Generation also requires an explicit
+workflow authorization in the browser, backed by the SQLite control database.
+Choose the provider/model, frozen inputs, maximum physical requests and runtime
+before upload. The aggregate allowance includes graph/profile workers, simulation
+children, memory updates, report/proposal work and actual transport retries.
+Refresh and manual retries retain consumed requests.
+
+The workflow bar displays usage, remaining requests and effective terminal reason.
+**Stop** closes admission and preserves partial output; an already submitted
+request may still incur provider billing. Interrupted reports stop polling and
+require explicit recovery with new authorization. Request/time controls do not
+enforce a dollar ceiling. See [the execution contract](docs/workflow-execution.md)
+for API use, supported providers and recovery semantics.
 
 Run the embedding benchmark from `backend/`:
 
@@ -287,6 +298,10 @@ establish a complete live-provider pipeline or independently measured report qua
 
 ## Documentation
 
+- [Control/recovery repairs and exact-candidate synthetic verification](docs/audits/2026-10-03-control-recovery.md)
+- [Previous fictional live-run request accounting](docs/audits/2026-10-03-bike-lane-request-accounting.md)
+- [Prepared visible-browser live acceptance plan; new authorization required](docs/visible-browser-acceptance.md)
+- [Workflow request/time authorization and Stop contract](docs/workflow-execution.md)
 - [Product capabilities, contracts, and verification gaps](docs/product-capabilities.md)
 - [ECC workflow and adoption plan](docs/ECC-WORKFLOW-PLAN.md)
 - [Local ECC execution handoff and exact-candidate verification](docs/audits/2026-10-02-ecc-milestones-3-5.md)

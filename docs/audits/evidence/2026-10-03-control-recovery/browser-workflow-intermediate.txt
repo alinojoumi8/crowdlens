@@ -1,0 +1,30 @@
+{
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": false,
+      "error": "The expression evaluated to a falsy value:\n\n  assert(await page.getByRole('button', { name: 'Explore Scenario' }).isEnabled())\n"
+    }
+  ],
+  "fatal": "The expression evaluated to a falsy value:\n\n  assert(await page.getByRole('button', { name: 'Explore Scenario' }).isEnabled())\n",
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    }
+  ]
+}

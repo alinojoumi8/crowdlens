@@ -1,8 +1,9 @@
 # CrowdLens Roadmap
 
-Reconciled 2026-10-02 against local integration candidate `242b899`, routes,
-persistence, tests, and bounded runtime checks. The [ECC handoff](docs/audits/2026-10-02-ecc-milestones-3-5.md)
-identifies exact verification results and the separate reporting commit. This is
+Reconciled 2026-10-03 against control/recovery candidate `34ad6d2`, routes,
+persistence, tests, and bounded synthetic runtime checks. The [repair audit](docs/audits/2026-10-03-control-recovery.md)
+records its identity and remaining real-model gaps. The earlier [ECC handoff](docs/audits/2026-10-02-ecc-milestones-3-5.md)
+retains verification for `242b899` and its separate reporting commit. This is
 a prioritized capability backlog, not a set
 of committed release dates. See [the capability manifest](docs/product-capabilities.md)
 for contracts and verification evidence.
@@ -12,8 +13,9 @@ for contracts and verification evidence.
 The source implements upload → graph → scenario → simulation → report → proposal
 review, using Neo4j, SQLite, and filesystem artifacts. Ollama can keep generation
 and embeddings local; hosted providers, website ingestion, and enabled market
-lookups use the network. The observed local deployment uses hosted generation
-and appears to predate the current source; deployed/source equivalence is unverified.
+lookups use the network. The historical bike-lane browser served hosted generation
+on `242b899`; it differs from the new repair candidate and remains unchanged.
+Current production/deployment equivalence remains unverified.
 
 | Capability | Current status | Remaining boundary |
 | --- | --- | --- |
@@ -26,23 +28,26 @@ and appears to predate the current source; deployed/source equivalence is unveri
 | Agent memory persistence | Partial | File-backed short memory/summaries and optional graph memories exist; lossless restart continuity is unverified. |
 | Automated checks | Implemented | Frozen-candidate results are in the ECC handoff; deterministic checks do not establish full model E2E or factual quality. |
 | Provider selection | Partial | Local/OpenAI-compatible/Anthropic adapters and Ollama/Gemini embeddings exist; per-task routing and broader backend compatibility remain future work. |
+| Workflow request/time controls and Stop | Implemented; synthetic concurrency/restart/browser regressions verified | Fresh real-provider acceptance, monetary ceiling and broader provider accounting remain unverified or planned. |
 | Graph visualization and comparison | Partial | Visualization and case-version comparison exist; whole-graph snapshots, temporal views, and simulation graph diffs remain future work. |
 
 ## Next: verify the existing product
 
 ### P1 — deployment, full workflow, and evidence quality
 
-- [ ] Establish the deployed commit/build identity and reconcile it with the intended source revision under a separate deployment task.
+- [x] Establish the historical bike-lane browser's commit/image/source fingerprint and preserve its original evidence. See [runtime identity and accounting](docs/audits/2026-10-03-control-recovery.md).
+- [ ] Reconcile a chosen deployed revision with the intended source under a separately authorized deployment task.
 - [ ] Run a bounded synthetic document through all six stages with real local services or explicitly authorized hosted inference; record source scope, IDs, timings, retries, and original/revision hashes.
 - [ ] Measure source attribution, unsupported claims, omissions, and reviewer effort on approved held-out packets with independent labels. Synthetic model output and unreviewed fixtures are not quality evidence.
 
 ### P2 — recovery and user experience
 
 - [x] Audit agent/tool/source-scope boundaries and repair reproduced high-priority failures, including owned-task recovery, duplicate root admission, preparation readiness, and stale ensemble cleanup. See [audit follow-ups](docs/audits/2026-10-02-h1-integration-review.md).
-- [ ] Define and enforce a whole-root generation call/cost/deadline policy; transport retry characterization and proposal budgets do not establish this contract.
+- [x] Define and enforce whole-workflow physical-request/time limits, counted retries, Stop, explicit recovery authorization and retained partial outputs. [Contract](docs/workflow-execution.md) and [synthetic verification](docs/audits/2026-10-03-control-recovery.md) cover concurrent admission, restart, delayed responses and terminal polling.
+- [ ] Define monetary admission before promising a dollar ceiling; measured tokens, pricing estimates and request/time limits do not establish one.
 - [ ] Verify subprocess restart, failed writes, optional graph memory, and forced-run cleanup. Define the memory retention and continuation promise before strengthening it.
 - [x] Verify supported report/proposal states in the built UI at 375/768/1440px: keyboard/focus, blocked/stale proposals, lost acceptance response/retry, reopen, unknown metrics, and real owned-task failure/manual retry. [QA evidence](docs/audits/2026-10-02-milestone4-browser-qa.md) identifies all seeded and substituted stages.
-- [ ] Repeat the browser workflow with actual generation and OASIS processes once model prerequisites exist.
+- [ ] Execute the [fresh visible-browser acceptance plan](docs/visible-browser-acceptance.md) through actual generation, OASIS, report, proposal, test revision acceptance and reopen after new bounded approval. The previous live allowance is exhausted; recovery on preserved copies is a separate test.
 - [x] Rehearse cold synthetic SQLite/artifact restore, same-root expired-task recovery, and separate Neo4j dump/load into new volumes.
 - [ ] Define retention/deletion ownership and coordinated cross-store backup procedures; online atomic backup and active-task relocation remain unverified.
 - [ ] Promote only after exact-candidate remote CI and explicitly authorized deployment verification. Local clean-install, audit, build, recovery, and image results are recorded in the [release evidence](docs/audits/2026-10-02-milestone5-release-verification.md).

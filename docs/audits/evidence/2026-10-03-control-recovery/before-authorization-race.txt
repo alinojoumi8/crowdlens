@@ -1,0 +1,28 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run --run src/components/WorkflowControls.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/WorkflowControls.component.test.js (1 test | 1 failed) 59ms
+   × ignores authorization for an input that changed while the response was delayed 57ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkflowControls.component.test.js > ignores authorization for an input that changed while the response was delayed
+AssertionError: expected [ null, 'wf_old' ] to not include 'wf_old'
+ ❯ src/components/WorkflowControls.component.test.js:21:59
+     19|   resolve({data:{workflow_id:'wf_old',state:'authorized',admitted:0,ma…
+     20|   await flushPromises()
+     21|   expect(wrapper.emitted('authorized')?.flat() || []).not.toContain('w…
+       |                                                           ^
+     22| })
+     23|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  02:12:55
+   Duration  1.11s (transform 149ms, setup 0ms, import 226ms, tests 59ms, environment 654ms)
+

@@ -1,0 +1,62 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+.............................................................F.......... [ 46%]
+........................................................................ [ 62%]
+........................................................................ [ 77%]
+........................................................................ [ 93%]
+................................                                         [100%]
+=================================== FAILURES ===================================
+____________ test_anthropic_retry_budget_observation_is_per_attempt ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x754227258f50>
+record_property = <function record_property.<locals>.append_property at 0x754227235e40>
+
+    def test_anthropic_retry_budget_observation_is_per_attempt(monkeypatch, record_property):
+        """Characterize an existing bound; do not invent an aggregate deadline contract."""
+        from app.utils.llm_client import LLMClient
+        from app.utils import llm_client
+        elapsed, timeouts, sleeps = [0.0], [], []
+        def timeout(*args, **kwargs):
+            timeouts.append(kwargs['timeout'])
+            elapsed[0] += kwargs['timeout']
+            raise requests.exceptions.Timeout('synthetic full transport timeout')
+        def sleep(seconds):
+            sleeps.append(seconds)
+            elapsed[0] += seconds
+        monkeypatch.setattr(llm_client.requests, 'post', timeout)
+        monkeypatch.setattr(llm_client.time, 'sleep', sleep)
+        monkeypatch.setenv('LLM_HTTP_MAX_RETRIES', '4')
+        monkeypatch.setenv('LLM_HTTP_RETRY_BASE_SECONDS', '2')
+        monkeypatch.setenv('LLM_HTTP_RETRY_MAX_SECONDS', '30')
+        client = LLMClient.__new__(LLMClient)
+        client.timeout = 300.0
+        with pytest.raises(requests.exceptions.Timeout):
+>           client._post_anthropic_with_retry('https://synthetic.invalid/v1/messages', {}, {})
+
+tests/test_evidence_quality_faults.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <app.utils.llm_client.LLMClient object at 0x7542272fc2d0>
+url = 'https://synthetic.invalid/v1/messages', headers = {}, body = {}
+
+    def _post_anthropic_with_retry(
+        self,
+        url: str,
+        headers: Dict[str, str],
+        body: Dict[str, Any],
+        *, request_timeout=None, request_max_retries=None,
+    ) -> requests.Response:
+        max_retries = int(os.environ.get("LLM_HTTP_MAX_RETRIES", "4")) if request_max_retries is None else request_max_retries
+        base_delay = float(os.environ.get("LLM_HTTP_RETRY_BASE_SECONDS", "2"))
+        max_delay = float(os.environ.get("LLM_HTTP_RETRY_MAX_SECONDS", "30"))
+        last_error: Optional[Exception] = None
+    
+        for attempt in range(max_retries + 1):
+            try:
+>               with transport_attempt(self.model, self.base_url, attempt + 1) as receipt:
+E               AttributeError: 'LLMClient' object has no attribute 'model'
+
+app/utils/llm_client.py:129: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_evidence_quality_faults.py::test_anthropic_retry_budget_observation_is_per_attempt
+1 failed, 463 passed in 9.35s

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "upload chooser is keyboard reachable and named",
+    "passed": true
+  },
+  {
+    "name": "simulation prompt and website fields have explicit names",
+    "passed": true
+  },
+  {
+    "name": "history dialog traps focus, closes with Escape and restores trigger",
+    "passed": true
+  },
+  {
+    "name": "375px report panels and header controls fit the viewport",
+    "passed": true
+  },
+  {
+    "name": "hidden graph panel cannot receive keyboard focus",
+    "passed": true
+  },
+  {
+    "name": "missing report and graph metrics explicitly remain unknown",
+    "passed": true
+  },
+  {
+    "name": "interrupted root report exposes manual resume controls",
+    "passed": true
+  },
+  {
+    "name": "actual abandoned owner recovers in durable API state",
+    "passed": true
+  },
+  {
+    "name": "recovered failure is visible and has a permitted manual retry",
+    "passed": true
+  },
+  {
+    "name": "recovery has no uncaught browser errors",
+    "passed": true
+  }
+]

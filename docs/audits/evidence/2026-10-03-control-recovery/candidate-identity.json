@@ -1,0 +1,17 @@
+{
+  "tested_code_commit": "34ad6d27e298f33317e443f0123143fa5e865eab",
+  "tested_code_tree": "8bad4a6db9e2b510743fd596f1d934310379cac9",
+  "runtime_source": {
+    "declared_revision": null,
+    "source_sha256": "fea6ca781b9a175fe9face0055dc195bf7f685551e5af5a5f2b42a5342450006",
+    "scope": "runtime-source-v1"
+  },
+  "verification_checkout": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local",
+  "source_tracked_clean_after_verification": true,
+  "fingerprint_exclusions": [
+    "documentation",
+    "backend/tests",
+    "frontend/tests",
+    "generated bundles; bundle hashes recorded separately"
+  ]
+}

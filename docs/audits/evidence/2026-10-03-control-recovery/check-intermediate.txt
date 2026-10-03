@@ -1,0 +1,99 @@
+npm notice run crowdlens@0.2.0 check
+npm notice run npm test && npm run build
+npm notice run crowdlens@0.2.0 test
+npm notice run npm run test:backend && npm run test:frontend
+npm notice run crowdlens@0.2.0 test:backend
+npm notice run cd backend && uv run pytest -q
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 75%]
+........................................................................ [ 90%]
+.............................................                            [100%]
+477 passed in 12.06s
+npm notice run crowdlens@0.2.0 test:frontend
+npm notice run npm --prefix frontend test
+npm notice run crowdlens-frontend@0.1.0 test
+npm notice run npm run test:unit && npm run test:components
+npm notice run crowdlens-frontend@0.1.0 test:unit
+npm notice run node --test src/api/*.test.js src/router/*.test.js src/utils/*.test.js tests/*.test.js
+▶ resolveApiBaseUrl
+  ✔ uses the same origin by default so Vite can proxy API calls (0.851023ms)
+  ✔ ignores VITE_API_BASE_URL in development so preview tunnels can proxy API calls (0.174353ms)
+  ✔ keeps an explicit VITE_API_BASE_URL override in production (0.19416ms)
+  ✔ can opt into an absolute API base URL in development (4.009306ms)
+✔ resolveApiBaseUrl (6.658889ms)
+▶ application routes
+  ✔ lazy-loads every page component (0.874528ms)
+✔ application routes (2.056842ms)
+✔ only ready proposals without structural blockers are acceptable (1.010216ms)
+▶ renderSafeMarkdown
+  ✔ renders raw HTML and event handlers as inert text (1.747333ms)
+  ✔ escapes HTML inside code blocks while preserving Markdown formatting (0.285534ms)
+✔ renderSafeMarkdown (3.351963ms)
+▶ createPoller
+  ✔ owns one interval and releases it on stop (1.563101ms)
+  ✔ does not overlap asynchronous polling calls (0.406174ms)
+✔ createPoller (3.321364ms)
+✔ economic twin defaults to disabled and round-trips through route query (1.843726ms)
+✔ economic twin settings normalize currency and validate numeric limits (0.553675ms)
+ℹ tests 12
+ℹ suites 4
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.59134
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+
+ Test Files  9 passed (9)
+      Tests  31 passed (31)
+   Start at  02:35:24
+   Duration  1.92s (transform 2.99s, setup 0ms, import 5.68s, tests 815ms, environment 6.75s)
+
+npm notice run crowdlens@0.2.0 build
+npm notice run cd frontend && npm run build
+npm notice run crowdlens-frontend@0.1.0 build
+npm notice run vite build
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 703 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                               1.04 kB │ gzip:  0.53 kB
+dist/assets/CaseCompareView-COpOAnvG.css      1.91 kB │ gzip:  0.74 kB
+dist/assets/SimulationView-v4ajHxY3.css       2.14 kB │ gzip:  0.83 kB
+dist/assets/CasesView-CwHzJCV_.css            3.20 kB │ gzip:  1.11 kB
+dist/assets/CaseDetailView-snTT7t4x.css       4.00 kB │ gzip:  1.16 kB
+dist/assets/GraphPanel-Bx73uTCP.css           9.14 kB │ gzip:  2.28 kB
+dist/assets/MainView-B9zbc17M.css            10.48 kB │ gzip:  2.55 kB
+dist/assets/index-Av9QvyKp.css               11.90 kB │ gzip:  3.22 kB
+dist/assets/Home-BwkCD-fp.css                14.02 kB │ gzip:  3.07 kB
+dist/assets/SimulationRunView-DK85PRSM.css   15.21 kB │ gzip:  3.37 kB
+dist/assets/InteractionView-ByVH7bwX.css     27.02 kB │ gzip:  4.86 kB
+dist/assets/Step2EnvSetup-D4xRweRN.css       27.15 kB │ gzip:  5.10 kB
+dist/assets/ReportView-BTAbuh99.css          61.44 kB │ gzip:  9.37 kB
+dist/assets/report-D5P3ZtrP.js                0.88 kB │ gzip:  0.44 kB
+dist/assets/graph-B1SVjrET.js                 1.09 kB │ gzip:  0.37 kB
+dist/assets/simulation-DgZlRa65.js            1.25 kB │ gzip:  0.47 kB
+dist/assets/economySettings-M8O0gDiO.js       1.32 kB │ gzip:  0.54 kB
+dist/assets/SafeMarkdown-5zMQtVoi.js          2.26 kB │ gzip:  0.91 kB
+dist/assets/CasesView-ByOjNdjI.js             3.39 kB │ gzip:  1.56 kB
+dist/assets/CaseCompareView-CdSJMgix.js       4.14 kB │ gzip:  1.76 kB
+dist/assets/SimulationView-CxcwKc8j.js        4.93 kB │ gzip:  2.14 kB
+dist/assets/CaseDetailView-B8vPLkM0.js        5.39 kB │ gzip:  2.31 kB
+dist/assets/MainView-CFLExf0D.js             20.67 kB │ gzip:  6.83 kB
+dist/assets/InteractionView-Cu8iQJ61.js      24.49 kB │ gzip:  7.88 kB
+dist/assets/Home-DAqFDIVg.js                 26.97 kB │ gzip:  9.15 kB
+dist/assets/SimulationRunView-D4wj1lVX.js    38.69 kB │ gzip: 11.45 kB
+dist/assets/Step2EnvSetup-DVxIRDRw.js        47.27 kB │ gzip: 13.74 kB
+dist/assets/ReportView-CNFmi07v.js           76.91 kB │ gzip: 21.91 kB
+dist/assets/GraphPanel-CKJsLXXn.js           80.09 kB │ gzip: 26.93 kB
+dist/assets/index-CTG8hAdt.js               163.60 kB │ gzip: 62.60 kB
+✓ built in 3.33s

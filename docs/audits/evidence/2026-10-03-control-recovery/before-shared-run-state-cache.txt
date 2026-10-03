@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_cached_reader_observes_same_attempt_progress_and_completion _______
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7d8c21612810>, <app.services.task_execution.TaskRuntime object at 0x7d8cc8aeb2d0>, [])
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-61/test_cached_reader_observes_sa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d8c216060d0>
+
+    def test_cached_reader_observes_same_attempt_progress_and_completion(controlled,tmp_path,monkeypatch):
+        client,ledger,runtime,calls=controlled
+        monkeypatch.setattr(SimulationRunner,'RUN_STATE_DIR',str(tmp_path/'runs'))
+        monkeypatch.setattr(SimulationRunner,'_repository',runtime.repository)
+        state=SimulationRunState('sim_shared',runner_status=RunnerStatus.RUNNING,current_round=1,
+            execution={'task_id':'same','attempt_id':'same'})
+        SimulationRunner._save_run_state(state)
+        assert SimulationRunner.get_run_state('sim_shared').current_round==1
+        data=state.to_detail_dict();data.update(runner_status='completed',current_round=2)
+        runtime.repository.put_simulation_run(data)
+        refreshed=SimulationRunner.get_run_state('sim_shared')
+>       assert refreshed.runner_status==RunnerStatus.COMPLETED and refreshed.current_round==2
+E       AssertionError: assert (<RunnerStatus...NG: 'running'> == <RunnerStatus...: 'completed'>
+E         
+E         - completed
+E         + running)
+
+backend/tests/test_control_edges.py:214: AssertionError
+=========================== short test summary info ============================
+FAILED backend/tests/test_control_edges.py::test_cached_reader_observes_same_attempt_progress_and_completion
+1 failed, 11 deselected in 1.28s

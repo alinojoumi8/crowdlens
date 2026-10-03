@@ -1,9 +1,11 @@
 # CrowdLens product capabilities
 
-Evidence date: 2026-10-02. Original Milestone 1 baseline: `main` at `34275b7`.
+Evidence date: 2026-10-03. Original Milestone 1 baseline: `main` at `34275b7`.
 Method: ECC `product-capability`, followed by the installed ECC 2.2.3 audit,
 evaluation, browser and verification workflows. Current local source/evidence
-identities and separate completion statuses are in the [execution handoff](audits/2026-10-02-ecc-milestones-3-5.md).
+identities are in the [control/recovery audit](audits/2026-10-03-control-recovery.md)
+for `34ad6d2`; the prior [execution handoff](audits/2026-10-02-ecc-milestones-3-5.md)
+retains the separate `242b899` evidence and completion statuses.
 Milestone 1 was documentation-only; subsequent scoped implementation remains local.
 Existing deployment equivalence has not been established.
 
@@ -36,7 +38,15 @@ Implementation status and live verification are separate dimensions.
   displayed `proposal_digest`. Reads never schedule drafting.
 - Root generation retries reuse one logical `request_key` and return the existing
   task/report while the task record is retained. Changed parameters conflict;
-  a new manual attempt uses a new key. Whole-root cost/deadline policy remains open.
+  a new manual attempt uses a new key. It remains within the separately authorized
+  workflow's durable physical-request and wall-time allowance; a new task/key
+  cannot reset consumption. Monetary admission remains open.
+- Generation requires explicit provider/model/endpoint and frozen-input
+  authorization. All stages, applicable children and actual transport retries
+  share atomic request admission. Stop prevents new calls and follow-on work,
+  preserves partial outputs and records measured/unknown in-flight usage.
+  Local cancellation cannot guarantee cancelled provider billing. Recovery is
+  explicit and needs new authorization; polling/refresh never provides it.
 - Owned background attempts must retain their worker token, lease and resource
   binding before publication or destructive ensemble operations. Recovery preserves
   newer active owners and requires explicit manual retry of abandoned work.
@@ -51,7 +61,8 @@ Implementation status and live verification are separate dimensions.
   Authentication, tenancy, and public hosting are future scope.
 - Neo4j owns graph entities, edges, original chunks, embeddings, and optional
   agent memories. SQLite owns project/case/task metadata and runner state.
-  The filesystem owns documents, scenario files, logs, reports, and proposals.
+  SQLite also owns workflow authorizations and physical-attempt receipts. The
+  filesystem owns documents, scenario files, logs, reports, and proposals.
 - Ollama generation and embeddings can remain local. Hosted generation or
   embeddings send inputs to the selected provider. Website ingestion and
   enabled market lookups also use the network.
@@ -147,10 +158,29 @@ See [proposal limits](evidence-first-reports.md) and
 follow-up surfaces; interviews depend on a live simulation environment rather
 than guaranteeing permanent availability for every saved report.
 
+Whole-workflow admission now adds a durable provider/input/request/deadline
+contract across these operations. It supports primary generation and configured
+local Ollama embeddings; secondary generation, remote embeddings and enabled
+Jev paths are excluded from this allowance. Structured interruption is terminal
+for polling. Effective validated settings reach preparation and execution;
+specialized legal aliases are disabled in the UI while retaining shared legacy
+backend compatibility. See [the execution controls](workflow-execution.md).
+
 ## Verification evidence and priority gaps
 
 ### Current local execution evidence
 
+- [Control/recovery verification](audits/2026-10-03-control-recovery.md) at
+  `34ad6d2`: 545 passing tests/build, 504 repeated structural cases, H1 recovery,
+  synthetic cold restore, 12 workflow and 10 separate browser checks at three
+  widths, visible Stop/refresh and actual immutable acceptance/reopen, dependency
+  audits and independent review scope. Generation is substituted/blocked. New
+  clean-install/image/CI and real Neo4j/OASIS/provider checks are not claimed.
+- [Historical request accounting](audits/2026-10-03-bike-lane-request-accounting.md)
+  reconstructs 30 MiniMax-M3 requests on `242b899`. That live run reached actual
+  simulation but stopped before report completion/proposal review. It does not
+  verify the repaired candidate. The [fresh visible-browser plan](visible-browser-acceptance.md)
+  freezes the fictional packet and awaits new bounded authorization.
 - Versioned synthetic development/holdout fixtures, deterministic source/revision/
   lifecycle checks, three-repeat measurements, and blinded blank human forms are
   available in [the evaluation guide](evaluations/evidence-quality.md). The frozen
@@ -193,13 +223,13 @@ than guaranteeing permanent availability for every saved report.
 
 | Priority | Verification gap | Required evidence before strengthening the promise |
 | --- | --- | --- |
-| P1 | Running deployment does not match current source behavior. | Record deployed revision/build identity; under a deployment task, reconcile it with the intended commit and rerun status, report/revision route, and frontend smoke checks. Preserve data and configuration. |
+| P1 | Historical browser identity is known, but the repair candidate is not deployed. | Historical `242b899` and new `34ad6d2` are distinct. Under a separately authorized deployment task, reconcile the chosen revision and rerun status, report/revision routes and frontend checks; preserve data/configuration. |
 | P1 | No fresh upload-to-reviewed-revision run across all real services. | One bounded synthetic document through upload, Neo4j graph build, scenario preparation, simulation, root report, proposal and revision; record IDs, source scope, timings and failure/retry outcomes. Choose local or explicitly authorized hosted inference first. |
 | P1 | Report/evidence quality is not independently established. | Approved held-out source packets, independent claim/omission labels, measured reviewer time, and baseline/proposed evaluation. Committed synthetic unreviewed fixtures prove metric mechanics only. |
 | P2 | Memory continuity and recovery across processes remain partial. | Exercise actual subprocess restart/forced restart, corrupted or failed memory writes, source separation and graph write failure; demonstrate retained/lost data explicitly. |
 | P2 | Full browser flow still requires actual generation/OASIS prerequisites. | Repeat the bounded built-UI checks with real extraction, scenario generation, simulation and root report; current seeded-stage QA and automated accessibility checks cannot certify the complete live pipeline. |
 | P2 | Deletion/retention and coordinated multi-store recovery are incomplete product contracts. | Cold SQLite/artifact and separate Neo4j restores are rehearsed. Define retention/deletion ownership, coordinated backup points, and any relocation contract before promising online atomic restore or active-task path changes. |
-| P2 | Whole-root generation has no aggregate call/cost/deadline policy. | Define the policy before setting acceptance thresholds, then add fault/budget checks. The 1,530-second simulated transport retry observation is characterization, not a measured model duration or budget pass. |
+| P2 | Monetary ceiling and real-provider aggregate control verification remain open. | Physical-request/time limits now have synthetic concurrency/restart/Stop tests and a written contract. Collect fresh actual-provider receipts; define separate monetary admission before claiming a dollar ceiling. Historical transport characterization is not a live duration/cost measurement. |
 | P2 | Exact-candidate remote CI is pending. | Obtain authorization to push the reviewed local branch and open/update its PR, then collect checks with the actual checkout SHA/tree; feature-branch push alone does not trigger this workflow, and an older main run is not candidate evidence. |
 | P3 | Hardware, latency, coverage and supported Python ranges need measurements. | Repeatable workload/model/hardware benchmarks; documented coverage gaps; clean installs and checks before claiming additional Python versions. |
 
@@ -214,8 +244,9 @@ and synthetic verification described in the dated reports.
 Next owners must establish a suitable local generation model or explicitly
 permitted hosted provider/input/budget, obtain independent human labels for the
 blinded packets, authorize exact-candidate remote CI, and separately plan deployment
-reconciliation. Retention/deletion and whole-root budget policies need explicit
-contracts. These decisions do not invalidate completed independent checks, and
+reconciliation. Retention/deletion and monetary admission need explicit
+contracts. Request/time admission is implemented and synthetically verified.
+These decisions do not invalidate completed independent checks, and
 those checks do not satisfy the missing decisions.
 
 ## Handoff

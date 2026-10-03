@@ -1,0 +1,38 @@
+npm notice run crowdlens-frontend@0.1.0 test
+npm notice run npm run test:unit && npm run test:components --run src/components/PrepareRecovery.component.test.js src/views/CaseDetailView.component.test.js
+npm notice run crowdlens-frontend@0.1.0 test:unit
+npm notice run node --test src/api/*.test.js src/router/*.test.js src/utils/*.test.js tests/*.test.js
+▶ resolveApiBaseUrl
+  ✔ uses the same origin by default so Vite can proxy API calls (0.978281ms)
+  ✔ ignores VITE_API_BASE_URL in development so preview tunnels can proxy API calls (0.182637ms)
+  ✔ keeps an explicit VITE_API_BASE_URL override in production (0.185684ms)
+  ✔ can opt into an absolute API base URL in development (3.806752ms)
+✔ resolveApiBaseUrl (6.770852ms)
+▶ application routes
+  ✔ lazy-loads every page component (0.858754ms)
+✔ application routes (2.031165ms)
+✔ only ready proposals without structural blockers are acceptable (1.036813ms)
+▶ renderSafeMarkdown
+  ✔ renders raw HTML and event handlers as inert text (1.871971ms)
+  ✔ escapes HTML inside code blocks while preserving Markdown formatting (0.331481ms)
+✔ renderSafeMarkdown (3.624226ms)
+▶ createPoller
+  ✔ owns one interval and releases it on stop (1.901438ms)
+  ✔ does not overlap asynchronous polling calls (0.375144ms)
+✔ createPoller (3.701462ms)
+✔ economic twin defaults to disabled and round-trips through route query (2.761434ms)
+✔ economic twin settings normalize currency and validate numeric limits (0.769655ms)
+ℹ tests 12
+ℹ suites 4
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.275136
+npm warn "src/components/PrepareRecovery.component.test.js" is being parsed as a normal command line argument.
+npm error code EUNKNOWNCONFIG
+npm error Unknown cli flag:
+npm error   - --run
+npm error Run `npm help config` for supported options.
+npm error A complete log of this run can be found in: /home/ali/.npm/_logs/2026-10-03T06_58_25_548Z-debug-0.log

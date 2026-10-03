@@ -1,0 +1,54 @@
+{"run": 1, "exit_code": 0, "cases": 168, "counts": {"passed": 168}}
+{"run": 2, "exit_code": 0, "cases": 168, "counts": {"passed": 168}}
+{"run": 3, "exit_code": 0, "cases": 168, "counts": {"passed": 168}}
+{
+  "summary": {
+    "status": "COMPLETE",
+    "runs": 3,
+    "unique_test_count": 168,
+    "first_attempt_success": {
+      "numerator": 168,
+      "denominator": 168,
+      "rate": 1.0
+    },
+    "pass_at_k": {
+      "numerator": 168,
+      "denominator": 168,
+      "rate": 1.0
+    },
+    "pass_power_k": {
+      "numerator": 168,
+      "denominator": 168,
+      "rate": 1.0
+    },
+    "counts_across_runs": {
+      "passed": 504
+    },
+    "missing_test_observations": 0,
+    "corpus_workflow_outcomes": {
+      "ready": 15,
+      "blocked": 30
+    },
+    "corpus_substitute_calls": 54,
+    "corpus_real_model_calls": 0,
+    "all_suite_substitute_calls": null,
+    "model_quality": {
+      "status": "BLOCKED",
+      "outputs": 0,
+      "source_attribution_accuracy": null,
+      "unsupported_claim_rate": null,
+      "omissions": null,
+      "human_review_seconds": null,
+      "provider_latency_seconds": null,
+      "cost": null
+    },
+    "denominator_policy": "All collected unique test IDs, including failed/error/skipped and missing repeats. Correctly blocked workflow cases pass safety assertions but are not successful drafts.",
+    "latency_scope": "pytest wall time and synthetic proposal service time only; not model or production latency."
+  },
+  "human_review": {
+    "packet_count": 4,
+    "completed_human_reviews": 0,
+    "status": "PENDING"
+  },
+  "output": "/tmp/crowdlens-ecc-eval-control-recovery-34ad6d2/results.json"
+}

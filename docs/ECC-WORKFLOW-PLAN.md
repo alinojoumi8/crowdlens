@@ -8,6 +8,11 @@ Milestones 3–5 have local implementation and evidence recorded in the
 [consolidated handoff](audits/2026-10-02-ecc-milestones-3-5.md). Use its separate
 status table: deterministic checks do not complete model/human quality, remote CI,
 or existing deployment verification.
+The [2026-10-03 control/recovery follow-up](audits/2026-10-03-control-recovery.md)
+reproduces the fictional live test's failures and repairs settings, Stop,
+terminal report polling and whole-workflow request/time admission on `34ad6d2`.
+Synthetic checks pass; the [fresh visible-browser plan](visible-browser-acceptance.md)
+is prepared and awaits new provider/input/request/runtime authorization.
 Prepared: 2026-10-02. Source baseline: `main` at `34275b7`.
 Skill reference: the original plan used ECC 2.2.2 `ecc-guide`; this execution
 read the installed ECC 2.2.3 instructions for each assigned milestone. Recheck
@@ -38,8 +43,9 @@ or complete persistence.
   output. The examples below are prompts, not shell commands.
 - Use the installed plugin skills directly. This plan requires no additional
   installer, copied command collection, or hook configuration.
-- Follow the project's codebase knowledge graph instructions: discover code with
-  `get_architecture`, `search_graph`, `trace_path`, and `get_code_snippet`. Use
+- Follow the project's codebase knowledge graph instructions: prefer `search_graph`,
+  `trace_path`, `get_code_snippet`, then complex graph queries; use `get_architecture`
+  for an overview. Use
   file searches for documentation/configuration or when graph results are
   insufficient; verify that the index covers recently merged code.
 - Adapt examples to Vue and Flask. Record absent lint, type-check, or coverage
@@ -202,6 +208,23 @@ checks, and independent AI review findings and repairs.
 Remaining actions are bounded: arrange a suitable generation model with explicit
 runtime/input constraints; obtain independent human labels; authorize and run
 exact-candidate remote CI; separately reconcile the existing deployment. Define
-whole-root cost/deadline and retention/backup policies before expanding those
+monetary admission and retention/backup policies before expanding those
 promises. No prompt tuning, model-quality improvement, main merge, deployment,
 or human approval is implied by successful synthetic verification.
+
+## Control/recovery follow-up — 2026-10-03
+
+The [repair audit](audits/2026-10-03-control-recovery.md) identifies historical
+browser source `242b899`, the new tested source `34ad6d2`, retained fail-first
+regressions, durable request/time accounting and explicit recovery semantics.
+It records 545 passing tests/build, 504 repeated structural executions, H1 and
+synthetic cold restore, isolated browser suites and independent review scope.
+These results do not transfer prior image/CI/service checks to the new source.
+
+The [previous-run accounting](audits/2026-10-03-bike-lane-request-accounting.md)
+accounts for all 30 admitted requests with stage-assignment and billing unknowns.
+The [visible acceptance plan](visible-browser-acceptance.md) freezes the original
+fictional input/requirement and supported settings. Next work is a separately
+authorized fresh actual-generation run through report, proposal and immutable
+revision reopen; optional recovery on a copy has its own allowance. No further
+paid calls are authorized or performed by this follow-up.

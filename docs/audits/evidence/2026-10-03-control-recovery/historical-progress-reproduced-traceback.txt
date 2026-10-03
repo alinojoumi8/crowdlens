@@ -1,0 +1,5 @@
+Synthetic invocation of historical enrich_progress with frozen original progress. This is a reproduced stack, not a recovered production stack.
+Traceback (most recent call last):
+  File "<stdin>", line 13, in <module>
+  File "242b899:backend/app/services/report_agent.py", line 3229, in enrich_progress
+TypeError: can't subtract offset-naive and offset-aware datetimes

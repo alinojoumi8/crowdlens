@@ -1,0 +1,69 @@
+{
+  "stopped_only_owned_synthetic_previews": [
+    {
+      "pid": 2627521,
+      "port": 18743,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-preview-20261003-2 --port 18743 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2630944,
+      "port": 18744,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-automated-20261003 --port 18744 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2684631,
+      "port": 18745,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-candidate-20261003 --port 18745 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2693972,
+      "port": 18746,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-candidate-20261003-v2 --port 18746 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2704727,
+      "port": 18747,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-final-auto --port 18747 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2707805,
+      "port": 18748,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-final-20261003 --port 18748 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2729423,
+      "port": 18749,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-delivery-automated --port 18749 ",
+      "signal": "SIGTERM"
+    },
+    {
+      "pid": 2736353,
+      "port": 18751,
+      "verified_command": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python3 scripts/smoke_ecc_browser.py --synthetic --output-dir /tmp/crowdlens-control-recovery-delivery-regressions --port 18751 ",
+      "signal": "SIGTERM"
+    }
+  ],
+  "kept_visible": {
+    "pid": 2729425,
+    "port": 18750
+  },
+  "logs_preserved_outside_repository": [
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/candidate-preview-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/delivery-visible-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/delivery-regressions-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/candidate-preview-server-v2.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/final-auto-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/automated-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/preview-server-2.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/preview-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/delivery-automated-server.log",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-control-recovery/live-logs/final-preview-server.log"
+  ],
+  "original_services_modified": false
+}

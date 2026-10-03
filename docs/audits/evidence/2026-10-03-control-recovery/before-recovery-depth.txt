@@ -1,0 +1,60 @@
+.F..F                                                                    [100%]
+=================================== FAILURES ===================================
+_____ test_recovery_enforces_saved_report_depth[fast-section/1/regenerate] _____
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x77f2dbebd5d0>, <app.services.task_execution.TaskRuntime object at 0x77f2ddab9690>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77f2dbea8710>
+operation = 'section/1/regenerate', depth = 'fast'
+
+    @pytest.mark.parametrize('operation',['resume','section/1/regenerate'])
+    @pytest.mark.parametrize('depth',['fast','deep'])
+    def test_recovery_enforces_saved_report_depth(controlled,monkeypatch,operation,depth):
+        from app.api import report as api
+        from app.services.report_agent import Report, ReportStatus
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        ledger.bind(wid,'report:report_depth')
+        saved=Report('report_depth','sim_synthetic','graph_synthetic','fixture',ReportStatus.INTERRUPTED,report_depth=depth)
+        monkeypatch.setattr(api.ReportManager,'get_report',lambda rid:saved)
+        monkeypatch.setattr(api,'GraphToolsService',lambda **kw:object())
+        client.application.extensions['neo4j_storage']=object()
+        seen=[]
+        class Agent:
+            def __init__(self,**kw):seen.append(kw)
+            def resume_report(self,report,**kw):return report
+            def regenerate_section(self,report,**kw):seen.append(kw);return report
+        monkeypatch.setattr(api,'ReportAgent',Agent)
+        def start(self,identifier,function,*a,**kw):
+            with self.attempt(identifier).bind():function()
+        monkeypatch.setattr(TaskManager,'start_task',start)
+        response=client.post('/api/report/report_depth/'+operation,json={})
+        assert response.status_code==200,response.json
+        assert seen[0]['report_depth']==depth
+>       if operation!='resume':assert seen[1]['disable_interviews'] is (depth=='fast')
+E       AssertionError: assert False is ('fast' == 'fast'
+E         
+E           fast)
+
+tests/test_execution_api.py:225: AssertionError
+_______ test_pending_recovery_returns_queued_instead_of_old_interruption _______
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x77f2dbe96f90>, <app.services.task_execution.TaskRuntime object at 0x77f2dbda9cd0>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77f2dbeb0190>
+
+    def test_pending_recovery_returns_queued_instead_of_old_interruption(controlled,monkeypatch):
+        from app.services.report_agent import ReportManager
+        client,ledger,runtime,calls=controlled
+        runtime.admit(dict(task_id='replacement',task_type='report_resume',status='pending',
+            created_at='2026-10-03T00:00:00+00:00',updated_at='2026-10-03T00:00:00+00:00'),
+            [{'key':'report:partial','root':'.'}])
+        monkeypatch.setattr(ReportManager,'get_progress',lambda rid:dict(status='interrupted',progress=24))
+        response=client.get('/api/report/partial/progress')
+        assert response.status_code==200
+>       assert response.json['data']['effective_status']=='queued'
+E       KeyError: 'effective_status'
+
+tests/test_execution_api.py:237: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_execution_api.py::test_recovery_enforces_saved_report_depth[fast-section/1/regenerate]
+FAILED tests/test_execution_api.py::test_pending_recovery_returns_queued_instead_of_old_interruption
+2 failed, 3 passed in 1.28s

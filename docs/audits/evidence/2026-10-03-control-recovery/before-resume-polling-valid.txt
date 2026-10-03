@@ -1,0 +1,28 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/ReportRecovery.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/ReportRecovery.component.test.js (2 tests | 1 failed) 107ms
+   × an explicit resume restarts polling after an interrupted snapshot 39ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ReportRecovery.component.test.js > an explicit resume restarts polling after an interrupted snapshot
+AssertionError: expected 2 to be greater than 2
+ ❯ src/components/ReportRecovery.component.test.js:45:47
+     43|   const reads=getReportProgress.mock.calls.length
+     44|   await vi.advanceTimersByTimeAsync(6000);await flushPromises()
+     45|   expect(getReportProgress.mock.calls.length).toBeGreaterThan(reads)
+       |                                               ^
+     46|   expect(resumeReport).toHaveBeenCalledTimes(1)
+     47| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  02:47:54
+   Duration  1.63s (transform 585ms, setup 0ms, import 690ms, tests 107ms, environment 675ms)
+

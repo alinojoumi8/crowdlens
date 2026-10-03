@@ -1,0 +1,67 @@
+........................F.................................               [100%]
+=================================== FAILURES ===================================
+__________ test_repeated_stop_and_invalid_or_replayed_reauthorization __________
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7f50c8477a90>, <app.services.task_execution.TaskRuntime object at 0x7f50c83e1c90>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f50c8459c50>
+
+    def test_repeated_stop_and_invalid_or_replayed_reauthorization(controlled,monkeypatch):
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        old=owned_task(runtime,ledger,wid)
+        ledger.bind(wid,'simulation:sim_synthetic')
+        state=SimulationRunState('sim_synthetic',runner_status=RunnerStatus.RUNNING,execution={'workflow_epoch':1})
+        process=SimpleNamespace()
+        monkeypatch.setattr(SimulationRunner,'get_run_state',lambda sid:state)
+        SimulationRunner._processes['sim_synthetic']=process
+        stops=[]
+        def stop(sid):
+            assert state.runner_status==RunnerStatus.RUNNING
+            stops.append(sid);state.runner_status=RunnerStatus.STOPPED
+        monkeypatch.setattr(SimulationRunner,'stop_simulation',stop)
+        invalid=client.post('/api/execution/'+wid+'/reauthorize',json={'confirmed':False,'request_key':'bad','max_requests':10,'max_seconds':60})
+        assert invalid.status_code==400
+        runtime.validate(old)
+        assert stops==[]
+        assert client.post('/api/simulation/stop',json={'simulation_id':'sim_synthetic'}).status_code==200
+>       assert client.post('/api/execution/'+wid+'/stop',json={}).status_code==200
+E       AssertionError: assert 500 == 200
+E        +  where 500 = <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]>.status_code
+E        +    where <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]> = <bound method Client.post of <FlaskClient <Flask 'test_execution_api'>>>((('/api/execution/' + 'wf_7a9085113abb49549c66da26951b4908') + '/stop'), json={})
+E        +      where <bound method Client.post of <FlaskClient <Flask 'test_execution_api'>>> = <FlaskClient <Flask 'test_execution_api'>>.post
+
+tests/test_execution_api.py:110: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    test_execution_api:app.py:875 Exception on /api/execution/wf_7a9085113abb49549c66da26951b4908/stop [POST]
+Traceback (most recent call last):
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/api/execution.py", line 244, in wrapped
+    return view(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/api/execution.py", line 134, in stop
+    record = stop_owned(wid)
+             ^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/api/execution.py", line 58, in stop_owned
+    cancel_owned(wid, 'stopped', record['epoch'])
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/api/execution.py", line 49, in cancel_owned
+    SimulationRunner.stop_simulation(sim_id)
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/tests/test_execution_api.py", line 102, in stop
+    assert state.runner_status==RunnerStatus.RUNNING
+AssertionError: assert <RunnerStatus...ED: 'stopped'> == <RunnerStatus...NG: 'running'>
+  
+  - running
+  + stopped
+=========================== short test summary info ============================
+FAILED tests/test_execution_api.py::test_repeated_stop_and_invalid_or_replayed_reauthorization
+1 failed, 57 passed in 7.32s

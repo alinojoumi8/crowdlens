@@ -1,0 +1,80 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_stop_transition_serializes_with_publication _______________
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x799285a93e50>, <app.services.task_execution.TaskRuntime object at 0x799285a89d50>, [])
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-50/test_stop_transition_serialize0')
+
+    def test_stop_transition_serializes_with_publication(controlled,tmp_path):
+        import threading
+        import time
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        entered=threading.Event();release=threading.Event();stopping=threading.Event();errors=[]
+        def publish():
+            try:
+                with execution_scope(ledger,wid,'report'):
+                    identifier=TaskManager().create_task('report',resources=[{'key':'report:controlled','root':str(tmp_path)}])
+                    with TaskManager().attempt(identifier).bind(),publication_guard():
+                        entered.set();assert release.wait(5)
+                        (tmp_path/'artifact').write_text('authorized publication')
+                        TaskManager().complete_task(identifier,{})
+            except BaseException as exc: errors.append(exc)
+        def stop():
+            stopping.set()
+            with client.application.test_client() as other:
+                assert other.post('/api/execution/'+wid+'/stop',json={}).status_code==200
+        worker=threading.Thread(target=publish);worker.start();assert entered.wait(5)
+        stopper=threading.Thread(target=stop);stopper.start();assert stopping.wait(5)
+        try:
+            time.sleep(.05)
+            # Stop cannot commit behind an open publication guard. Its linearization
+            # occurs after that earlier admitted publication has finished.
+>           assert ledger.status(wid)['state']=='authorized'
+E           AssertionError: assert 'stopped' == 'authorized'
+E             
+E             - authorized
+E             + stopped
+
+tests/test_control_edges.py:128: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[02:43:21] INFO: Task created: task_id=ffe1c56a-b6f2-4445-946f-878312fe15db task_type=report metadata_keys=workflow_epoch,workflow_id
+[02:43:21] INFO: Task status changed: task_id=ffe1c56a-b6f2-4445-946f-878312fe15db pending -> completed progress=100 message=Task completed
+[02:43:21] INFO: Task completed: task_id=ffe1c56a-b6f2-4445-946f-878312fe15db result_keys=-
+_________ test_exhausted_memory_drain_always_releases_runner_resources _________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-50/test_exhausted_memory_drain_al0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x799330703510>
+
+    def test_exhausted_memory_drain_always_releases_runner_resources(tmp_path,monkeypatch):
+        from app.services.graph_memory_updater import GraphMemoryManager
+        state=SimulationRunState('sim_done',runner_status=RunnerStatus.RUNNING,total_rounds=1,
+            twitter_current_round=1,twitter_running=True)
+        process=SimpleNamespace(poll=lambda:0,returncode=0)
+        runner(monkeypatch,tmp_path,state,process)
+        closed=[]
+        SimulationRunner._stdout_files[state.simulation_id]=SimpleNamespace(close=lambda:closed.append(True))
+        SimulationRunner._action_queues[state.simulation_id]='queue'
+        SimulationRunner._graph_memory_enabled[state.simulation_id]=True
+        def halted(*args,**kwargs): raise WorkflowHalt('request_limit')
+        monkeypatch.setattr(GraphMemoryManager,'stop_updater',halted)
+>       SimulationRunner._monitor_simulation(state.simulation_id)
+
+tests/test_control_edges.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/services/simulation_runner.py:780: in _monitor_simulation
+    GraphMemoryManager.stop_updater(simulation_id, drain=state.runner_status == RunnerStatus.COMPLETED)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('sim_done',), kwargs = {'drain': True}
+
+>   def halted(*args,**kwargs): raise WorkflowHalt('request_limit')
+E   app.services.workflow_execution.WorkflowHalt: request_limit
+
+tests/test_control_edges.py:145: WorkflowHalt
+----------------------------- Captured stdout call -----------------------------
+[02:43:22] INFO: Simulation completed: sim_done
+=========================== short test summary info ============================
+FAILED tests/test_control_edges.py::test_stop_transition_serializes_with_publication
+FAILED tests/test_control_edges.py::test_exhausted_memory_drain_always_releases_runner_resources
+2 failed in 1.36s

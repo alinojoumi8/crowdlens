@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "source_sha256": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b",
+  "requirement_sha256": "46b6a2f9ce9ff202bd0a295a71ec731d233e3298da5faea59493f9dd23a3bd4f",
+  "settings_sha256": "f0d96fe8932d4f7af8b09c35e93fc802835792a5a02abf876ba55a73c81bfd96",
+  "authorized_input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+  "input_packet": {
+    "files": [
+      {
+        "name": "cedarbrook-bike-lane.md",
+        "sha256": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b"
+      }
+    ],
+    "requirement": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+    "urls": []
+  },
+  "candidate": "34ad6d27e298f33317e443f0123143fa5e865eab",
+  "fresh_proposal": {
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "endpoint": "https://api.minimax.io/anthropic",
+    "max_requests": 60,
+    "max_seconds": 1800,
+    "consumed_requests": 0,
+    "authorization_status": "NOT AUTHORIZED"
+  },
+  "recovery_proposal": {
+    "additional_requests": 30,
+    "imported_requests": 30,
+    "total_ceiling": 60,
+    "max_seconds": 1800,
+    "authorization_status": "NOT AUTHORIZED"
+  }
+}

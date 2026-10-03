@@ -1,0 +1,43 @@
+{
+  "scope": "configuration parsing only; disposable synthetic .env; no build/start",
+  "results": [
+    {
+      "gpu_override": false,
+      "command": [
+        "docker",
+        "compose",
+        "--project-directory",
+        "/tmp/crowdlens-control-recovery-compose",
+        "-f",
+        "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/docker-compose.yml",
+        "--env-file",
+        "/tmp/crowdlens-control-recovery-compose/.env",
+        "config",
+        "--quiet"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "gpu_override": true,
+      "command": [
+        "docker",
+        "compose",
+        "--project-directory",
+        "/tmp/crowdlens-control-recovery-compose",
+        "-f",
+        "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/docker-compose.yml",
+        "-f",
+        "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/docker-compose.gpu.yml",
+        "--env-file",
+        "/tmp/crowdlens-control-recovery-compose/.env",
+        "config",
+        "--quiet"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

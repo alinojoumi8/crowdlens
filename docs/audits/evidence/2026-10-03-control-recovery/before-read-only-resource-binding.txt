@@ -1,0 +1,47 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_reading_report_never_rebinds_another_workflows_shared_graph _______
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7d9e019a80d0>, <app.services.task_execution.TaskRuntime object at 0x7d9dff6d3b10>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d9dff6f8f90>
+
+    def test_reading_report_never_rebinds_another_workflows_shared_graph(controlled,monkeypatch):
+        from app.services.report_agent import ReportManager,Report,ReportStatus
+        client,ledger,runtime,calls=controlled
+        first=client.post('/api/execution/authorize',json=terms('first')).json['data']['workflow_id']
+        second=client.post('/api/execution/authorize',json=terms('second')).json['data']['workflow_id']
+        ledger.bind(first,'graph:shared');ledger.bind(second,'report:readonly')
+        report=Report('readonly','sim_readonly','shared','fictional',ReportStatus.INTERRUPTED)
+        monkeypatch.setattr(ReportManager,'get_report',lambda rid:report)
+>       assert client.get('/api/report/readonly').status_code==200
+E       AssertionError: assert 500 == 200
+E        +  where 500 = <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]>.status_code
+E        +    where <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]> = <bound method Client.get of <FlaskClient <Flask 'test_execution_api'>>>('/api/report/readonly')
+E        +      where <bound method Client.get of <FlaskClient <Flask 'test_execution_api'>>> = <FlaskClient <Flask 'test_execution_api'>>.get
+
+tests/test_execution_api.py:249: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    test_execution_api:app.py:875 Exception on /api/report/readonly [GET]
+Traceback (most recent call last):
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 920, in full_dispatch_request
+    return self.finalize_request(rv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 941, in finalize_request
+    response = self.process_response(response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/lib/python3.11/site-packages/flask/app.py", line 1319, in process_response
+    response = self.ensure_sync(func)(response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/api/execution.py", line 231, in bind_response
+    ledger.bind(wid, kind + ':' + data[kind + '_id'])
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/workflow_execution.py", line 138, in bind
+    self._bind(db, wid, resource)
+  File "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/workflow_execution.py", line 132, in _bind
+    raise ValueError('resource_has_different_authorization')
+ValueError: resource_has_different_authorization
+=========================== short test summary info ============================
+FAILED tests/test_execution_api.py::test_reading_report_never_rebinds_another_workflows_shared_graph
+1 failed, 11 deselected in 1.13s

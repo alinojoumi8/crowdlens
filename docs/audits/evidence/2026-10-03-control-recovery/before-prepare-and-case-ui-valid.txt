@@ -1,0 +1,109 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/PrepareRecovery.component.test.js src/views/CaseDetailView.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/views/CaseDetailView.component.test.js (1 test | 1 failed) 77ms
+   × requires input-bound authorization for adding a case version and forwards its ID 75ms
+ ❯ src/components/PrepareRecovery.component.test.js (2 tests | 2 failed) 131ms
+   × opening a prepared environment reads saved settings without generation 90ms
+   × shows two automatic rounds and clamps a custom cap to the actual configuration 40ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PrepareRecovery.component.test.js > opening a prepared environment reads saved settings without generation
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "active_agents_per_round": 16,
+        "agent_count": 48,
+        "ensemble_runs": 5,
+        "memory_mode": "practical",
+        "minutes_per_round": 60,
+        "parallel_profile_count": 5,
+        "platform": "parallel",
+        "prediction_settings": Object {
+          "active_agents_per_round": 16,
+          "agent_count": 48,
+          "ensemble_runs": 5,
+          "memory_mode": "practical",
+          "minutes_per_round": 60,
+          "platform": "parallel",
+          "prediction_target": Object {
+            "question": "Forecast the most likely future paths.",
+          },
+          "preset": "standard_litigation_prediction",
+          "profile_parallelism": 5,
+          "report_depth": "standard",
+          "report_mode": "legal_case",
+          "scenario_pack": "baseline_adverse_favorable",
+          "seed": 42,
+          "simulation_duration": 72,
+        },
+        "prediction_target": Object {
+          "question": "Forecast the most likely future paths.",
+        },
+        "preset": "standard_litigation_prediction",
+        "profile_parallelism": 5,
+        "report_depth": "standard",
+        "report_mode": "legal_case",
+        "scenario_pack": "baseline_adverse_favorable",
+        "seed": 42,
+        "simulation_duration": 72,
+        "simulation_id": "sim_prepared",
+        "use_llm_for_profiles": true,
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/PrepareRecovery.component.test.js:22:33
+     20|   wrapper=mount(Step2,{props:{simulationId:'sim_prepared'}})
+     21|   await flushPromises()
+     22|   expect(prepareSimulation).not.toHaveBeenCalled()
+       |                                 ^
+     23|   expect(getSimulationConfigRealtime).toHaveBeenCalledWith('sim_prepar…
+     24| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/PrepareRecovery.component.test.js > shows two automatic rounds and clamps a custom cap to the actual configuration
+AssertionError: expected '40' to be '2' // Object.is equality
+
+Expected: "2"
+Received: "40"
+
+ ❯ src/components/PrepareRecovery.component.test.js:28:54
+     26|   wrapper=mount(Step2,{props:{simulationId:'sim_prepared'}})
+     27|   await flushPromises()
+     28|   expect(wrapper.get('.auto-value .val-num').text()).toBe('2')
+       |                                                      ^
+     29|   await wrapper.get('.switch-control input').setValue(true)
+     30|   expect(wrapper.get('input[type="range"]').attributes('max')).toBe('2…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/views/CaseDetailView.component.test.js > requires input-bound authorization for adding a case version and forwards its ID
+AssertionError: expected undefined to be defined
+ ❯ src/views/CaseDetailView.component.test.js:20:40
+     18|   await input.trigger('change');await flushPromises()
+     19|   const build=wrapper.findAll('button').find(b=>b.text()==='Build vers…
+     20|   expect(build.attributes('disabled')).toBeDefined()
+       |                                        ^
+     21|   expect(wrapper.findComponent({name:'WorkflowControls'}).exists()||wr…
+     22|   await wrapper.get('.authorize-fixture').trigger('click')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed (3)
+   Start at  02:59:14
+   Duration  1.52s (transform 518ms, setup 0ms, import 977ms, tests 208ms, environment 1.36s)
+

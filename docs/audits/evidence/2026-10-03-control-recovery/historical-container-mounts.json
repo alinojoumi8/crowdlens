@@ -1,0 +1,1 @@
+[{"Type":"bind","Source":"/home/ali/Documents/CrowdLens-reviews/2026-10-02-bike-lane/logs","Destination":"/app/backend/logs","Mode":"","RW":true,"Propagation":"rprivate"},{"Type":"bind","Source":"/home/ali/Documents/CrowdLens-reviews/2026-10-02-bike-lane/data","Destination":"/app/backend/uploads","Mode":"","RW":true,"Propagation":"rprivate"}]

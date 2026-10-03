@@ -13,7 +13,7 @@ Vue routes and components
           |
           v
 Flask API blueprints
-  graph | simulation | diagnostics | report | market | status
+  graph | simulation | diagnostics | report | market | status | execution
           |
           v
 Application services
@@ -22,7 +22,7 @@ Application services
        v                     v                         v
 Neo4j graph store     SQLite control database     Artifact filesystem
 entities, edges,      projects, cases, tasks,     documents, extracted
-memories, vectors     simulation run state        text, caches, run files
+memories, vectors     runs, workflow allowance   text, caches, run files
 ```
 
 `create_app()` owns startup composition. It initializes Neo4j and embeddings,
@@ -74,7 +74,23 @@ HTML.
   ensemble cleanup and process control validate ownership at the operation.
 - Root report retries with the same request key return the existing task/report
   while that task record is retained. One active root request owns each simulation
-  generation resource; a whole-report cost/deadline budget remains undefined.
+  generation resource. A separate durable workflow ledger counts physical model
+  attempts across all stages/children/retries and enforces an authorized request
+  ceiling and deadline. It preserves consumption across refresh/restart and
+  requires explicit new authorization for recovery.
+- Stop serializes with admission/publication, closes the workflow and cancels only
+  its matching owned epoch. Late attempts retain measured/unknown usage without
+  publishing after Stop or time expiry. Provider billing cancellation is not
+  guaranteed. Expected interrupted reports return structured terminal progress;
+  polling/reopening never schedules replacement generation.
+- Simulation state readers refresh same-attempt persisted progress/completion.
+  Expired matching workers repair run mirrors, and stale writers cannot publish
+  over a new owner. GET and recovery responses preserve existing authorization
+  bindings; only new supported artifacts receive automatic bindings.
+
+See [workflow execution](workflow-execution.md) for exact accounting semantics and
+[the 2026-10-03 control/recovery audit](audits/2026-10-03-control-recovery.md) for
+before/after evidence. Request/time admission is distinct from a monetary ceiling.
 
 ## Trust boundary
 
