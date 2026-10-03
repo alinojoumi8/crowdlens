@@ -659,6 +659,8 @@ Use only the original-source and executed-action packet supplied with the reques
 Original source positions, generated seed/event inputs, actual model responses and analysis are distinct.
 A thin simulation is not evidence of consensus, opinion change or a real-world forecast.
 Plan sections around what can actually be supported, with visible uncertainty and omissions.
+The summary must distinguish scenario inputs from actual model responses; a no-op is not speech.
+Prefer unquoted paraphrases. Do not quote seed posts, scheduled events, event titles or method instructions.
 The structured frozen forecast is an uncalibrated heuristic scenario estimate. Do not invent numerical probabilities.
 
 [Section Number Limit]
@@ -687,10 +689,10 @@ PLAN_USER_PROMPT_TEMPLATE = """\
 Variable (simulation requirement) injected into the simulated world: {simulation_requirement}
 
 [Simulated World Scale]
-- Number of entities participating in simulation: {total_nodes}
-- Number of relationships generated between entities: {total_edges}
+- Graph nodes available as context: {total_nodes}
+- Graph relationships available as context: {total_edges}
 - Entity type distribution: {entity_types}
-- Number of active agents: {total_entities}
+- Graph entity records: {total_entities}; actual model activity comes from the executed-action packet
 
 [Sample of Some Future Facts Predicted by Simulation]
 {related_facts_json}
@@ -728,8 +730,13 @@ A sparse run supports a short report with explicit limitations, not an invented 
 [Evidence rules]
 1. Use the bounded original-source and executed-action packet supplied with this request.
    Retrieval tools provide additional context within the current tool budget; generated graph facts are paraphrases.
-2. Prefer attributed paraphrases. Quotations must match exact original excerpts with [document_id]
+2. Prefer unquoted attributed paraphrases. Quotations must match exact original excerpts with [document_id]
    or exact model_action content with [platform:trace:id] in the same paragraph.
+   Copy case, punctuation and wording exactly; only whitespace is normalized by the validator.
+   Do not quote initial_post, scheduled_event, unknown-origin rows, event titles, labels,
+   tool/method instructions or this contract, even when they have trace references.
+   Describe those inputs and metadata using unquoted paraphrases with clear origin labels.
+   Double quotes, curly quotes and blockquotes signal verbatim quotation, even around short phrases.
    Seeded and scheduled posts are scenario inputs, never evidence of a participant's model response.
 
 3. [Language Consistency - ALWAYS Write in English]
@@ -764,24 +771,21 @@ A sparse run supports a short report with explicit limitations, not an invented 
 - ❌ Forbidden to use any Markdown titles (#, ##, ###, ####, etc.) within the section
 - ❌ Forbidden to add section titles at the beginning of content
 - ✅ Section titles are added automatically by the system, just write pure body text
-- ✅ Use **bold**, paragraph separation, quotes, and lists to organize content, but don't use titles
+- ✅ Use **bold**, paragraph separation and lists to organize content, but don't use titles
 
 [Correct Example]
 ```
-This section analyzes how the regulatory shift reshaped corporate strategy. Through in-depth analysis of simulation data, we found...
+This section separates documented positions from recorded simulated behavior.
 
-**Initial Industry Response**
+**Original-source boundary**
 
-Major tech companies moved quickly to reassess their compliance posture:
+Use an attributed paraphrase of a supplied original excerpt with its document reference.
 
-> "OpenAI and Anthropic scrambled to meet the new transparency requirements..."
+**Recorded activity**
 
-**Emerging Strategic Divergence**
-
-A clear split emerged between companies embracing regulation and those resisting it:
-
-- Proactive compliance as competitive advantage
-- Lobbying efforts to soften enforcement
+- Describe only actions present in the executed-action packet.
+- Label seeded and scheduled inputs separately; a no-op does not express a position.
+- State the missing evidence without inventing a conversation or outcome.
 ```
 
 [Incorrect Example]
@@ -794,7 +798,7 @@ This section analyzes...
 ```
 
 ═══════════════════════════════════════════════════════════════
-[Available Retrieval Tools] (call 3-5 times per section)
+[Available Retrieval Tools] (stay within the effective tool budget supplied for this section)
 ═══════════════════════════════════════════════════════════════
 
 {tools_description}
@@ -803,7 +807,7 @@ This section analyzes...
 - insight_forge: Deep insight analysis, automatically decompose problems and retrieve facts and relationships from multiple dimensions
 - panorama_search: Wide-angle panoramic search, understand complete event view, timeline, and evolution process
 - quick_search: Quick verification of specific information points
-- interview_agents: Interview simulated agents, get first-person perspectives and real reactions from different roles
+- interview_agents: Request generated follow-up perspectives from simulated agents when available
 
 ═══════════════════════════════════════════════════════════════
 [Workflow]
@@ -1223,6 +1227,10 @@ class ReportAgent:
                 "Graph facts, graph quotations and generated personas are derived paraphrases, NEVER original quotations. "
                 "Prefer attributed paraphrases over quotes. A quotation must be copied verbatim from an original source excerpt "
                 "with [document_id], or from a model_action content with [platform:trace:id], in the same paragraph. "
+                "Copy case, punctuation and wording exactly; only whitespace is normalized. "
+                "Do not quote initial_post, scheduled_event, unknown-origin rows, event titles, labels, method instructions "
+                "or this contract. Paraphrase those inputs and metadata without quotation marks or blockquotes, "
+                "even when their trace references are present. Double/curly quotes and blockquotes are verbatim quotations. "
                 "Only model_action rows describe model responses. initial_post and scheduled_event rows are scenario inputs, "
                 "not participant reactions. DO_NOTHING is a no-op, not expressed support. Unknown origins stay unknown. "
                 "Describe only the actual recorded rounds, agents and actions; a thin run supports a thin report. "

@@ -23,6 +23,24 @@ def test_graph_paraphrase_cannot_pass_as_original_quote():
     assert any(i['code'] == 'unverified_quotation' and i['blocking'] for i in ReportManager.validate_report_output(report))
 
 
+def test_section_prompt_example_obeys_the_same_quote_guard_as_output():
+    from app.services.report_agent import SECTION_SYSTEM_PROMPT_TEMPLATE
+    example = SECTION_SYSTEM_PROMPT_TEMPLATE.split('[Correct Example]', 1)[1].split('[Incorrect Example]', 1)[0]
+    assert not any(i['code'] == 'unverified_quotation' for i in ReportManager.validate_report_output(report_with(example)))
+
+
+def test_actual_blocked_cedarbrook_output_stays_blocked_after_prompt_repair():
+    import json
+    from pathlib import Path
+    captured = json.loads((Path(__file__).parent / 'fixtures/report_grounding/cedarbrook-blocked.json').read_text())
+    report = report_with(captured['markdown_content'])
+    report.forecast = captured['forecast']
+    report.source_grounding = captured['source_grounding']
+    failures = [i for i in ReportManager.validate_report_output(report) if i['code'] == 'unverified_quotation']
+    assert len(failures) == captured['expected_quote_failures']
+    assert all(i['blocking'] for i in failures)
+
+
 def test_exact_original_and_actual_trace_quotes_pass_with_references():
     report = report_with(f'Original packet: "{SOURCE}" [doc_1]\n\n'
         'Simulated model response: "A trial could help, provided loading access stays open." [twitter:trace:3]')
