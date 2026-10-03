@@ -52,6 +52,17 @@ it('opening or refreshing a simulation does not schedule generation', async () =
   expect(getRunStatus).toHaveBeenCalledWith('sim_test')
 })
 
+it('a restored starting worker publishes its running state on the next poll', async () => {
+  vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] })
+  getRunStatus.mockResolvedValueOnce({ success: true, data: { runner_status: 'starting' } })
+    .mockResolvedValueOnce({ success: true, data: { runner_status: 'running' } })
+  wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test' } })
+  await flushPromises()
+  await vi.advanceTimersByTimeAsync(2000)
+  await flushPromises()
+  expect(wrapper.emitted('update-status').flat().at(-1)).toBe('running')
+})
+
 it('shows the selected platform and duration-derived bound before Start', async () => {
   getSimulationConfig.mockResolvedValueOnce({ success: true, data: {
     prediction_settings: { platform: 'twitter', memory_mode: 'off' },

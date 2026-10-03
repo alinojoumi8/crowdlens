@@ -913,6 +913,7 @@ const fetchRunStatus = async () => {
       const data = res.data
 
       runStatus.value = { ...runStatus.value, ...data }
+      if (data.runner_status) emit('update-status', data.runner_status)
 
       // Detect round changes for each platform and output logs
       if (data.twitter_current_round > prevTwitterRound.value) {
@@ -940,7 +941,6 @@ const fetchRunStatus = async () => {
         stopPolling()
         loadEconomy()
         loadDiagnostics()
-        emit('update-status', data.runner_status)
       }
     }
   } catch (err) {

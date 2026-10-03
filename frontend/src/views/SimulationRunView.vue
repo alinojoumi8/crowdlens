@@ -189,7 +189,7 @@ const handleGoBack = async () => {
       }
     } else {
       // Environment not running, check if process needs to be stopped
-      if (isSimulating.value) {
+      if (isSimulating.value || ['starting', 'stopping'].includes(currentStatus.value)) {
         addLog('Stopping simulation process...')
         try {
           await stopSimulation({ simulation_id: currentSimulationId.value })
