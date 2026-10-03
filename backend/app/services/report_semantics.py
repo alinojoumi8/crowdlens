@@ -6,7 +6,7 @@ MAX_CONTENT = 500000
 LIMITATIONS = [
     'Checks cover explicit round action counts and nearby trace author/round/origin assertions only. Quoted, hypothetical and negated statements are excluded.',
     'Arbitrary paraphrases, omissions, predictions and implied agreement require independent review.',
-    'Proposal-audit findings are model judgments, not independently established facts.',
+    'Proposal-audit findings are model judgments, not independently established facts. Up to 30 unresolved findings are displayed; full sealed provenance is retained.',
 ]
 REF = r'\b[a-z][a-z0-9_-]*:(?:trace|legacy):\d+\b'
 ACTION = r'model(?:[- ](?:driven|generated))?\s+actions?'
@@ -53,7 +53,7 @@ def assess_trace_claims(content, grounding):
     result['coverage']['action_context_complete'] = complete
     if not complete:
         result['limitations'].append('Frozen actions are incomplete or lack verified origins; absence cannot disprove an action.')
-    names = sorted({r.get('agent_name') for r in rows if isinstance(r.get('agent_name'), str) and r['agent_name']})
+    names = sorted({r.get('agent_name') for r in rows if isinstance(r.get('agent_name'), str) and r['agent_name'].strip()})
     aliases = {name: name for name in names}
     for name in names:
         first = name.split()[0]
@@ -124,7 +124,7 @@ def assess_trace_claims(content, grounding):
             if not row:
                 issue('semantic_claim_unverified', sentence, paragraph, reference=ref)
                 continue
-            if ((author and not row.get('agent_name'))
+            if ((author and (not isinstance(row.get('agent_name'), str) or not row['agent_name'].strip()))
                     or (round_claim and type(row.get('round_num')) is not int)
                     or (origin and row.get('origin') not in {'model_action', 'scheduled_event', 'initial_post'})):
                 issue('semantic_claim_unverified', sentence, paragraph, [row])

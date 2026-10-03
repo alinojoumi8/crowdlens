@@ -1,7 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, expect, it, vi } from 'vitest'
 import Step4Report from './Step4Report.vue'
-import { getReport, getReportProgress, generateReport, resumeReport } from '../api/report'
+import { getReport, getReportProgress, generateReport, resumeReport, getAgentLog } from '../api/report'
 
 vi.mock('vue-router', () => ({ useRoute: () => ({ query: {} }), useRouter: () => ({ push: vi.fn() }) }))
 vi.mock('../api/report', () => ({
@@ -48,6 +48,7 @@ it('an explicit resume restarts polling after an interrupted snapshot', async ()
 
 it('current review survives historical completed progress and never regenerates the report', async () => {
   vi.useFakeTimers()
+  getAgentLog.mockResolvedValue({success:true,data:{logs:[{action:'report_complete'}],from_line:0}})
   getReport.mockResolvedValue({success:true,data:{status:'completed',outline:{title:'Retained report',summary:'',sections:[]},
     current_review:{requires_review:true,saved_status:'completed',issues:[],limitations:[],coverage:{}}}})
   getReportProgress.mockResolvedValue({success:true,data:{effective_status:'completed',terminal:true}})

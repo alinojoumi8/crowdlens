@@ -155,3 +155,8 @@ def test_missing_authors_and_boolean_rounds_cannot_prove_contradictions():
     assert [i['code'] for i in semantic_issues(report('Round 1 contains 1 model action from Leo.',grounding))]==['semantic_claim_unverified']
     grounding=packet();grounding['simulation_activity']['actions'][0]['round_num']=True
     assert [i['code'] for i in semantic_issues(report('Round 1 contains no model actions.',grounding))]==['semantic_claim_unverified']
+
+
+def test_blank_author_is_unverified_and_does_not_crash_read_assessment():
+    grounding=packet();grounding['simulation_activity']['actions'][0]['agent_name']='   '
+    assert [i['code'] for i in semantic_issues(report('Leo Martin at twitter:trace:11 generated the post.',grounding))]==['semantic_claim_unverified']

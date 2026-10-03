@@ -2414,9 +2414,8 @@ const fetchAgentLog = async () => {
           if (log.action === 'report_complete') {
             isComplete.value = true
             currentSectionIndex.value = null  // Ensure loading state is cleared
-            emit('update-status', 'completed')
-            stopPolling()
-            // Scroll logic handled uniformly in nextTick after loop
+            // Historical logs cannot determine the current review status.
+            // The report snapshot owns completion and polling termination.
           }
           
           if (log.action === 'report_start') {
@@ -2425,6 +2424,7 @@ const fetchAgentLog = async () => {
         })
         
         agentLogLine.value = res.data.from_line + newLogs.length
+        if (newLogs.some(log => log.action === 'report_complete')) await fetchReportSnapshot()
         
         nextTick(() => {
           if (rightPanel.value) {
