@@ -158,6 +158,12 @@
                 <input v-model.number="agentCount" :disabled="forecastControlsLocked" type="number" min="1" max="200" />
               </label>
               <label class="forecast-field">
+                <span class="forecast-label">Agent types</span>
+                <select v-model="agentTypesInclude" multiple aria-label="Agent types" :disabled="forecastControlsLocked">
+                  <option v-for="type in availableAgentTypes" :key="type" :value="type">{{ type }}</option>
+                </select>
+              </label>
+              <label class="forecast-field">
                 <span class="forecast-label">Parallelism</span>
                 <input v-model.number="profileParallelism" :disabled="forecastControlsLocked" type="number" min="1" max="20" />
               </label>
@@ -206,6 +212,7 @@
               <label>Platform <select v-model="simulationPlatform" :disabled="forecastControlsLocked"><option value="parallel">Both platforms</option><option value="twitter">Public feed</option><option value="reddit">Topic community</option></select></label>
               <label>Seed <input v-model.number="simulationSeed" type="number" :disabled="forecastControlsLocked" /></label>
               <span>Presets replace the numeric controls, scenario, memory and depth. Fast runtime overrides memory to Off. Active agents are capped at the available persona count.</span>
+              <span>Agent types: {{ agentTypesInclude.length ? agentTypesInclude.join(', ') : 'all source types' }}. Select types to filter before the agent limit; leave empty to include all.</span>
               <span v-if="simulationConfig">Effective: {{ simulationConfig.time_config?.total_simulation_hours }} hours, {{ simulationConfig.time_config?.minutes_per_round }} min/round, up to {{ simulationConfig.time_config?.agents_per_hour_max }} active agents; report {{ simulationConfig.report_mode }} / {{ simulationConfig.report_depth }}. Legacy legal aliases use the shared Legal case mode.</span>
             </div>
             <div v-if="forecastSettings" class="forecast-settings-summary">
@@ -902,6 +909,11 @@ const memoryMode = ref('practical')
 const forecastSettings = ref(null)
 const predictionPreset = ref('standard_litigation_prediction')
 const agentCount = ref(48)
+const agentTypesInclude = ref([])
+const availableAgentTypes = computed(() => [...new Set([
+  ...(props.graphData?.nodes || []).flatMap(node => node.labels || []),
+  ...agentTypesInclude.value
+])].filter(type => type && !['Entity', 'Node'].includes(type)).sort())
 const profileParallelism = ref(5)
 const simulationDuration = ref(72)
 const minutesPerRoundSetting = ref(60)
@@ -1074,6 +1086,7 @@ const buildForecastPayload = () => {
   const predictionSettings = {
     preset: predictionPreset.value,
     agent_count: agentCount.value,
+    entity_types_include: [...agentTypesInclude.value],
     profile_parallelism: profileParallelism.value,
     simulation_duration: simulationDuration.value,
     minutes_per_round: minutesPerRoundSetting.value,
@@ -1144,7 +1157,7 @@ watch(simulationConfig, config => {
   const saved = config?.prediction_settings
   if (!saved) return
   if (saved.preset) predictionPreset.value = saved.preset
-  const fields = {agent_count:agentCount,profile_parallelism:profileParallelism,
+  const fields = {agent_count:agentCount,entity_types_include:agentTypesInclude,profile_parallelism:profileParallelism,
     simulation_duration:simulationDuration,minutes_per_round:minutesPerRoundSetting,
     active_agents_per_round:activeAgentsPerRound,ensemble_runs:ensembleRuns,
     scenario_pack:scenarioPack,memory_mode:memoryMode,report_depth:reportDepth,
