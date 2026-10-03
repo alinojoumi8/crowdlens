@@ -198,3 +198,17 @@ def test_replaced_owner_cannot_publish_run_state(controlled,tmp_path,monkeypatch
         with owner.bind(),pytest.raises(OwnershipLost): SimulationRunner._save_run_state(state)
     assert (tmp_path/'runs'/'sim_owned'/'run_state.json').read_bytes()==original
     assert runtime.repository.get_simulation_run('sim_owned')['execution']['task_id']==replacement
+
+
+def test_cached_reader_observes_same_attempt_progress_and_completion(controlled,tmp_path,monkeypatch):
+    client,ledger,runtime,calls=controlled
+    monkeypatch.setattr(SimulationRunner,'RUN_STATE_DIR',str(tmp_path/'runs'))
+    monkeypatch.setattr(SimulationRunner,'_repository',runtime.repository)
+    state=SimulationRunState('sim_shared',runner_status=RunnerStatus.RUNNING,current_round=1,
+        execution={'task_id':'same','attempt_id':'same'})
+    SimulationRunner._save_run_state(state)
+    assert SimulationRunner.get_run_state('sim_shared').current_round==1
+    data=state.to_detail_dict();data.update(runner_status='completed',current_round=2)
+    runtime.repository.put_simulation_run(data)
+    refreshed=SimulationRunner.get_run_state('sim_shared')
+    assert refreshed.runner_status==RunnerStatus.COMPLETED and refreshed.current_round==2

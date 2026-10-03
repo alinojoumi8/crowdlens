@@ -127,6 +127,8 @@ const statusClass = computed(() => {
 const statusText = computed(() => {
   if (currentStatus.value === 'error') return 'Error'
   if (currentStatus.value === 'completed') return 'Completed'
+  if (currentStatus.value === 'stopped') return 'Stopped'
+  if (currentStatus.value === 'failed') return 'Failed'
   return 'Running'
 })
 

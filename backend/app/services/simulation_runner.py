@@ -285,9 +285,7 @@ class SimulationRunner:
         if simulation_id in cls._run_states:
             cached = cls._run_states[simulation_id]
             persisted = cls._repository.get_simulation_run(simulation_id) if cls._repository else None
-            if persisted and (persisted.get('execution') != cached.execution or
-                    (persisted.get('runner_status') in {'stopped','failed'} and
-                     persisted.get('runner_status') != cached.runner_status.value)):
+            if persisted and persisted != cached.to_detail_dict():
                 cls._run_states.pop(simulation_id, None)
             else:
                 return cached

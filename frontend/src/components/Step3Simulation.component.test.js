@@ -1,9 +1,11 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, expect, it, vi } from 'vitest'
 import Step3Simulation from './Step3Simulation.vue'
+import SimulationRunView from '../views/SimulationRunView.vue'
 import { runEnsemble, startSimulation, stopSimulation, getRunStatus } from '../api/simulation'
 
-vi.mock('vue-router', () => ({ useRouter: () => ({ push: vi.fn() }) }))
+vi.mock('vue-router', () => ({ useRoute:()=>({params:{simulationId:'sim_test'},query:{}}),useRouter: () => ({ push: vi.fn() }) }))
+vi.mock('../api/graph',()=>({getProject:vi.fn(),getGraphData:vi.fn()}))
 vi.mock('../api/report', () => ({ generateReport: vi.fn() }))
 vi.mock('../api/simulation', () => ({
   startSimulation: vi.fn().mockResolvedValue({ success: true, data: {} }),
@@ -17,6 +19,7 @@ vi.mock('../api/simulation', () => ({
   runEnsemble: vi.fn().mockResolvedValue({ success: true, data: { task_id: 'task_ensemble' } }),
   getEnsembleStatus: vi.fn(),
   getDiagnosticsExportUrl: vi.fn()
+  ,getSimulation:vi.fn().mockResolvedValue({success:false}),getEnvStatus:vi.fn(),closeSimulationEnv:vi.fn()
 }))
 
 let wrapper
@@ -30,6 +33,12 @@ it('opening or refreshing a simulation does not schedule generation', async () =
   await flushPromises()
   expect(startSimulation).not.toHaveBeenCalled()
   expect(getRunStatus).toHaveBeenCalledWith('sim_test')
+})
+
+it('the simulation page header reflects the stopped child state',async()=>{
+  wrapper=mount(SimulationRunView,{global:{stubs:{GraphPanel:true,Step3Simulation:{template:'<div />',mounted(){this.$emit('update-status','stopped')}}}}})
+  await flushPromises()
+  expect(wrapper.get('.status-indicator').text()).toBe('Stopped')
 })
 
 it('shows a usable Stop control and preserves the stopped state', async () => {
