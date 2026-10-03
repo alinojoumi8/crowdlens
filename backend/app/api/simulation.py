@@ -994,59 +994,11 @@ def list_simulations():
 
 
 def _get_report_id_for_simulation(simulation_id: str) -> str:
-    """
-    Get simulation Corresponding latest report_id
-    
-    Traverse reports directory and find the report matching the simulation_id.
-    If multiple exist, return the latest one (by created_at timestamp).
-    
-    Args:
-        simulation_id: Simulation ID
-        
-    Returns:
-        report_id Or None
-    """
-    import json
-    from datetime import datetime
-    
-    # reports Directory path：backend/uploads/reports
-    # __file__ Is app/api/simulation.py，Need to go up two levels to backend/
-    reports_dir = os.path.join(os.path.dirname(__file__), '../../uploads/reports')
-    if not os.path.exists(reports_dir):
-        return None
-    
-    matching_reports = []
-    
+    """Find the latest root report through the effective report store."""
+    from ..services.report_agent import ReportManager
     try:
-        for report_folder in os.listdir(reports_dir):
-            report_path = os.path.join(reports_dir, report_folder)
-            if not os.path.isdir(report_path):
-                continue
-            
-            meta_file = os.path.join(report_path, "meta.json")
-            if not os.path.exists(meta_file):
-                continue
-            
-            try:
-                with open(meta_file, 'r', encoding='utf-8') as f:
-                    meta = json.load(f)
-                
-                if meta.get("simulation_id") == simulation_id:
-                    matching_reports.append({
-                        "report_id": meta.get("report_id"),
-                        "created_at": meta.get("created_at", ""),
-                        "status": meta.get("status", "")
-                    })
-            except Exception:
-                continue
-        
-        if not matching_reports:
-            return None
-        
-        # Sort by creation time descending，ReturnLatest
-        matching_reports.sort(key=lambda x: x.get("created_at", ""), reverse=True)
-        return matching_reports[0].get("report_id")
-        
+        report = ReportManager.get_report_by_simulation(simulation_id)
+        return report.report_id if report else None
     except Exception as e:
         logger.warning(f"Failed to find report for simulation {simulation_id}: {e}")
         return None

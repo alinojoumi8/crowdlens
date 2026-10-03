@@ -1984,6 +1984,10 @@ class ReportAgent:
                 # Normal completion
                 final_answer = response.split("Final Answer:")[-1].strip()
                 final_answer = ReportManager._clean_section_content(final_answer, section.title)
+                if not final_answer:
+                    messages.append({"role": "assistant", "content": response})
+                    messages.append({"role": "user", "content": "Include the completed section prose after 'Final Answer:'."})
+                    continue
                 logger.info(f"Section {section.title} generation completed (tool calls: {tool_calls_count}times)")
 
                 if self.report_logger:
@@ -2094,20 +2098,15 @@ class ReportAgent:
                 })
                 continue
 
-            # Directly adopt this content as final answer, no more waiting
-            # directlyconvertthis contentas finalanswer, no more waiting
-            logger.info(f"Section {section.title} did not detectto 'Final Answer:' prefix, directlyadoptLLM outputas finalcontent（Tool call: {tool_calls_count}times)")
-            final_answer = response.strip()
-            final_answer = ReportManager._clean_section_content(final_answer, section.title)
-
-            if self.report_logger:
-                self.report_logger.log_section_content(
-                    section_title=section.title,
-                    section_index=section_index,
-                    content=final_answer,
-                    tool_calls_count=tool_calls_count
-                )
-            return final_answer
+            # A process note is not section content, even after enough retrieval.
+            messages.append({
+                "role": "user",
+                "content": (
+                    "Write the completed section now, beginning with 'Final Answer:'. "
+                    "Include only the report prose after that prefix, not plans to verify "
+                    "or write later. Do not include a tool call in the final answer."
+                ),
+            })
         
         # Reachedmaximum iterations, forcegeneratecontent
         logger.warning(f"Section {section.title} reachedmaximumiterationscount，Forcegenerate")
@@ -2119,15 +2118,12 @@ class ReportAgent:
             max_tokens=4096
         )
 
-        # Check forceconclusion when LLM return is None
-        if response is None:
-            final_answer = f"(This section generation failed: LLM returned empty response, please retry later)"
-            final_answer = f"(ThisSectiongeneratefailed: LLM returnedemptyresponse, pleaselaterretry)"
-        elif "Final Answer:" in response:
-            final_answer = response.split("Final Answer:")[-1].strip()
-        else:
-            final_answer = response
+        if not response or "Final Answer:" not in response or self._parse_tool_calls(response):
+            raise ValueError("Section writer did not return a completed Final Answer within its bounded attempts")
+        final_answer = response.split("Final Answer:")[-1].strip()
         final_answer = ReportManager._clean_section_content(final_answer, section.title)
+        if not final_answer:
+            raise ValueError("Section writer did not return a completed Final Answer within its bounded attempts")
         
         # Log sectioncontentgeneratecompletion log
         if self.report_logger:
@@ -3842,7 +3838,7 @@ class ReportManager:
 
     @classmethod
     def list_reports(cls, simulation_id: Optional[str] = None, limit: int = 50) -> List[Report]:
-        """columnappearreport"""
+        """List readable reports without hiding valid records behind a bad one."""
         reports_dir = cls._get_reports_dir()
         
         reports = []
@@ -3850,19 +3846,19 @@ class ReportManager:
             if item.startswith('.'):
                 continue
             item_path = os.path.join(reports_dir, item)
-            # newformat：filefolder
             if os.path.isdir(item_path):
-                report = cls.get_report(item)
-                if report:
-                    if simulation_id is None or report.simulation_id == simulation_id:
-                        reports.append(report)
-            # backward compatibleformat：JSONfile
+                report_id = item
             elif item.endswith('.json'):
                 report_id = item[:-5]
+            else:
+                continue
+            try:
                 report = cls.get_report(report_id)
-                if report:
-                    if simulation_id is None or report.simulation_id == simulation_id:
-                        reports.append(report)
+            except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+                logger.warning("Skipping unreadable report %s: %s", report_id, exc)
+                continue
+            if report and (simulation_id is None or report.simulation_id == simulation_id):
+                reports.append(report)
         
         # sorted by creation time descending
         reports.sort(key=lambda r: (r.created_at, r.report_id), reverse=True)
