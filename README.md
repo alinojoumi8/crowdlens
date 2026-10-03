@@ -297,7 +297,7 @@ remain preserved. **563 backend and 63 frontend tests plus build pass.** One
 fictional journey verifies that boundary; independent claim/omission quality,
 cross-packet reliability and exact-candidate release/deployment checks remain open.
 The retained report includes a Round 1 contradiction that its mechanical score
-missed; the saved revision remains Needs review. Semantic verification is next.
+missed; the saved revision remains Needs review. The [semantic-review follow-up](docs/audits/2026-10-03-semantic-review.md) checks explicit action counts and trace author/round/origin assertions, carries unresolved proposal findings into new revisions, and displays a read-only current assessment on retained reports. These limited checks do not certify truth or completeness. Independent held-out quality evaluation is next.
 The [previous live tests](docs/audits/2026-10-03-live-cedarbrook.md) retain their
 separate mixed-candidate and blocked outcomes.
 

@@ -42,8 +42,7 @@ Current production/deployment equivalence remains unverified.
 - [x] Repair source/action provenance, exact quotation checks and one frozen forecast authority; bounded invalid-passage correction keeps the guards. See [the reliability audit](docs/audits/2026-10-03-report-reliability.md). Semantic quality remains independently unmeasured.
 - [x] Preserve completion/parsed audit snapshots and precise contract findings; reproduce failures and complete one fresh proposal acceptance/reopen without weakening guards. Cross-packet reliability remains open.
 - [ ] Measure source attribution, unsupported claims, omissions, and reviewer effort on approved held-out packets with independent labels. Synthetic model output and unreviewed fixtures are not quality evidence.
-- [ ] Start that semantic milestone with the retained Round 1 contradiction and
-  unverified conditional-symmetry premise from the [fresh reliability audit](docs/audits/2026-10-03-report-reliability.md); both escaped mechanical scoring.
+- [x] Add limited trace regressions for the retained Round 1 contradiction and carry the unresolved conditional-symmetry premise into current review. Historical files remain unchanged; [semantic review](docs/audits/2026-10-03-semantic-review.md) exposes evidence and coverage limits. Independent entailment/omission labels remain pending.
 
 ### P2 — recovery and user experience
 

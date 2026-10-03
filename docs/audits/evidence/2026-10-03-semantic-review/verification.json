@@ -1,0 +1,171 @@
+{
+  "report_7b90d18cdb75": {
+    "saved_status": "completed",
+    "current_review": {
+      "contract": "trace-review-v1",
+      "coverage": {
+        "action_context_complete": true,
+        "matched_assertions": 3
+      },
+      "issues": [
+        {
+          "blocking": false,
+          "check_family": "semantic_review",
+          "claim_text": "Round 1 contains no model actions.",
+          "claimed_count": 0,
+          "code": "round_action_count_conflict",
+          "evidence": [
+            {
+              "action_type": "CREATE_POST",
+              "agent_name": "Maya Chen",
+              "origin": "model_action",
+              "reference": "twitter:trace:11",
+              "round_num": 1
+            }
+          ],
+          "message": "The stated model-action count conflicts with recorded actions.",
+          "observed_count": 1,
+          "origin": "recorded_actions",
+          "paragraph_index": 25,
+          "requires_review": true,
+          "round_num": 1
+        }
+      ],
+      "limitations": [
+        "Checks cover explicit round action counts and nearby trace author/round/origin assertions only. Quoted, hypothetical and negated statements are excluded.",
+        "Arbitrary paraphrases, omissions, predictions and implied agreement require independent review.",
+        "Proposal-audit findings are model judgments, not independently established facts. Up to 30 unresolved findings are displayed; full sealed provenance is retained."
+      ],
+      "requires_review": true,
+      "saved_status": "completed"
+    }
+  },
+  "report_3d12d343d6fa4c5d86998d8d88ea042a": {
+    "saved_status": "needs_review",
+    "current_review": {
+      "contract": "trace-review-v1",
+      "coverage": {
+        "action_context_complete": true,
+        "matched_assertions": 3
+      },
+      "issues": [
+        {
+          "blocking": false,
+          "check_family": "semantic_review",
+          "claim_text": "Round 1 contains no model actions.",
+          "claimed_count": 0,
+          "code": "round_action_count_conflict",
+          "evidence": [
+            {
+              "action_type": "CREATE_POST",
+              "agent_name": "Maya Chen",
+              "origin": "model_action",
+              "reference": "twitter:trace:11",
+              "round_num": 1
+            }
+          ],
+          "message": "The stated model-action count conflicts with recorded actions.",
+          "observed_count": 1,
+          "origin": "recorded_actions",
+          "paragraph_index": 17,
+          "requires_review": true,
+          "round_num": 1
+        },
+        {
+          "blocking": false,
+          "check_family": "semantic_review",
+          "claim_id": "claim_08",
+          "claim_text": "None of the four participant statements is unconditional: three (Chen, Martin, Shah) are framed as support-pending-conditions, and Brooks offers a procedural commitment to reversibility and measurement rather than an endorsement; no participant endorses permanence and none rejects the pilot outright, a conditional symmetry that is a source fact and constrains how confidently convergence or conflict among them can be described.",
+          "code": "proposal_premise_unverified",
+          "evidence": [],
+          "message": "The proposal audit left a finding unresolved; inspect the claim and its original sources.",
+          "origin": "proposal_model_audit",
+          "proposal_id": "proposal_a960d285e17d4a339892b7647869c301",
+          "requires_review": true
+        }
+      ],
+      "limitations": [
+        "Checks cover explicit round action counts and nearby trace author/round/origin assertions only. Quoted, hypothetical and negated statements are excluded.",
+        "Arbitrary paraphrases, omissions, predictions and implied agreement require independent review.",
+        "Proposal-audit findings are model judgments, not independently established facts. Up to 30 unresolved findings are displayed; full sealed provenance is retained."
+      ],
+      "requires_review": true,
+      "saved_status": "needs_review"
+    }
+  },
+  "generation_disabled": {
+    "http_status": 428,
+    "response": {
+      "error": "authorization_required",
+      "error_code": "authorization_required",
+      "recovery_requires_action": true,
+      "success": false,
+      "terminal": true,
+      "workflow_id": null
+    }
+  },
+  "mutations_disabled": {
+    "http_status": 403,
+    "response": {
+      "error": "Read-only retained-artifact review runtime; generation is disabled.",
+      "success": false
+    }
+  },
+  "preservation": {
+    "protected_files": 99,
+    "changed_files": []
+  },
+  "reviewed_report_copies_unchanged": true,
+  "runtime": {
+    "pid": 136139,
+    "source": {
+      "declared_revision": "4faf90a4b5a57b99397a47e413a27c2ca2ac3806",
+      "source_sha256": "a65ffe53cbd41035841857dca969682230f5c10df44247b28017a7baa2bd6897",
+      "scope": "runtime-source-v1"
+    },
+    "tested_code_revision": "4faf90a4b5a57b99397a47e413a27c2ca2ac3806",
+    "wrapper_sha256": "03d84435a165872c733cd96679b2415b533fef1171c650c4b8fd83bb4594e764",
+    "frontend_sha256": {
+      "home-styles.css": "33a9a3cf3d347d56df1ccd733e5b1d3b48a195b766b3d4778080082acc214e41",
+      "icon.png": "2b2c19d0400056000bb88636410c71c39ec3bc6b9cc871d6b022adf8cddb6e7a",
+      "crowdlens-mark.svg": "7cedfca9c1a7a143eacb45238d11475a4dd62bc1bbd83112c11108b2fe3f7679",
+      "crowdlens-icon.svg": "62b1e7f9470a0e69ef164feba1438a4a6bf71034ae4054415c5abb836fa868b7",
+      "index.html": "4f7edf021b440f059747418be30caedd84acf20d7fd7c545b68b28195b0bfca7",
+      "assets/InteractionView-ByVH7bwX.css": "cf0ea8cbc86b1d37c1cf3dd079924b74f0e3a18ff498895f65b34146364fca7b",
+      "assets/ReportView-4eOp738f.js": "2b48ee9ee3c72c8f67929bc38732012ee5f92770763c6401859d3d2f1b9a9049",
+      "assets/Home-0lQ63tEI.js": "87ddfcdee65ebe02920a6af980e6479aa49273431ae5c42a237a1f8151539993",
+      "assets/GraphPanel-vV7fLVck.js": "911506348a5b41107d20a6d18bc98b067587b4235822779499db8e5c5d55e261",
+      "assets/CasesView-6MJn4NNI.js": "c217277500c217545beb2bf62d7400c77fd38249dea0b793165600c78c9e8fc5",
+      "assets/SafeMarkdown-DbLCH-El.js": "a6c4a155ae19690399b42b453d585aeae07dcd6ed61e3d7f1e26e4d94694024f",
+      "assets/index-CbbZr_sK.css": "850c1e5dbce752a2b7506e0e96c3f0bf6b68c49568eaad496180961fab5a6523",
+      "assets/SimulationRunView-D45rF6dH.css": "0578b9ef7f8fbbbef47bf90962d75d110433b057523974f02efec5bd17b98f3a",
+      "assets/SimulationView-v4ajHxY3.css": "b57c27140b621638c66e9543f2acdbcb2473cc487e8a65bff67eaafbf14e30bb",
+      "assets/Step2EnvSetup-DCon21tX.css": "7328787ec7f3025c2cb54b167bb8ce56f42c0700ac45f99756612c0de5720024",
+      "assets/InteractionView-DMGcwtl9.js": "2315638e60448d9cb2f3e5ee8183f90e76505a5a1de868f9fbfd1bcf23f99462",
+      "assets/ReportView-BhVKCT4S.css": "ecd63ee5179f539936fba0cccd0c17229989bbbecfc6f56a97e99dc85b256d44",
+      "assets/GraphPanel-BrW_UL1d.css": "bb712520fe6552f0475d67499e5c78bff4ad082dd6a41f14b0d6ef658ba69fec",
+      "assets/MainView-DrHJsskW.js": "f1022277967981f5229cb0271536d013b384d1f2956120fb324f89bf4554c518",
+      "assets/economySettings-M8O0gDiO.js": "b2f4cc8b62b57bb6d21e9527ae0e7c894cb668a441ebf6b118afd6c46682babe",
+      "assets/workflowInput-2Usd-cif.js": "b894faa7f9f6677ceb6d119e48e5ddcfca1ffbe891551956e563a7478bbbec7c",
+      "assets/SimulationView-89BaDVDN.js": "12ad8e87a11e4a8f7680fe91ae55d9f7448d36df64634436f3abe7dd69b7574e",
+      "assets/Home-BwkCD-fp.css": "a5cd6de0ac2a7b93d21fb7e3f6704382ff9387931d469785025f9f10ff655516",
+      "assets/CaseCompareView-COpOAnvG.css": "3a04aae6634bfecd55960575ceb1e1d751677cb2db673cc4392e14e0ab54cfc7",
+      "assets/index-BJolO8w4.js": "bebc4471853a1fe9acc98ea32ff1d58d35a3e5b29ba68256efeed0d1077d24ef",
+      "assets/CaseDetailView-BjDDspP6.css": "f3e8f009888266b197c50c32fcc19899d84b373de65e85682b6e6765a6624796",
+      "assets/CaseDetailView-BRtmt3du.js": "fb74f2dc923d744805c67d6b2fa869e228ff18395d5af9672c02d9ba022d40c3",
+      "assets/MainView-B9zbc17M.css": "5fd5467085785f17fb2e8aa6adfd975c4003ba9da774c6ff04d85d38d3adda80",
+      "assets/SimulationRunView-Bo2GFdu8.js": "28059b307aa80ce97e051acec44170e4789216347141c553308895761b9b46df",
+      "assets/Step2EnvSetup-eLGxLClQ.js": "83d411dbd6b10ebc38aeba7978235967a0ba5cd77f8c768bd986e60b983cfd66",
+      "assets/graph-BLrelttg.js": "318a899b970e89fe5da66a39447ccc1f028ce5c977577f4f21101afc876bdec6",
+      "assets/CasesView-CwHzJCV_.css": "0d2c36df725e10c5a33646e674a69343c183c26447a7246c3d242683a9449a10",
+      "assets/CaseCompareView-txlAGtcS.js": "9f38523d897853eb9156d87ce7334844f25147c73efb22caa419335cb2a2f6c7",
+      "assets/report-c_IjQ30V.js": "11f5dd93a9b1f8f21388fadc54667c66c6fd9a873ce3878a19c570a0c9d4a614",
+      "assets/simulation-BEUxsm7N.js": "8179c3593cfd4d201d5f77ce609f5fb152c32f42a67ab4a105344c9b65ca7de2"
+    }
+  },
+  "workflow_request_counts": {
+    "history-acceptance": 26,
+    "semantic-review": 26
+  },
+  "new_model_requests": 0
+}

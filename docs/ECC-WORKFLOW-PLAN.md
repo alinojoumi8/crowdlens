@@ -266,9 +266,8 @@ build. The accepted child `report_3d12d343d6fa4c5d86998d8d88ea042a` remains Need
 sections are unchanged. Final workflow stopped at 26/90 with no pending calls;
 87 earlier partial-candidate attempts remain accounted separately. See [the audit](audits/2026-10-03-report-reliability.md).
 
-Next milestone: add semantic regressions for the retained Round 1 contradiction
-and unverified conditional-symmetry premise, then independently label held-out
-source/claim/omission cases and
-measure reviewer effort. Then run the separately authorized exact-candidate
+The [semantic-review milestone](audits/2026-10-03-semantic-review.md) adds limited deterministic trace checks, preserves unresolved proposal audit findings, and displays current read-only assessments on retained reports. This does not establish general entailment, omissions or independent truth labels.
+
+Next milestone: independently label held-out source/claim/omission cases and measure reviewer effort. Then run the separately authorized exact-candidate
 release/CI/deployment task. This scoped result does not mark original Milestones
 3–5 globally complete or transfer their previous release evidence.
