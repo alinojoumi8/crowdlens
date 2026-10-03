@@ -268,6 +268,6 @@ sections are unchanged. Final workflow stopped at 26/90 with no pending calls;
 
 The [semantic-review milestone](audits/2026-10-03-semantic-review.md) adds limited deterministic trace checks, preserves unresolved proposal audit findings, and displays current read-only assessments on retained reports. This does not establish general entailment, omissions or independent truth labels.
 
-Next milestone: independently label held-out source/claim/omission cases and measure reviewer effort. Then run the separately authorized exact-candidate
+Held-out collection and browser review preparation are complete: [four actual-model drafts](evaluations/2026-10-03-source-review-v2.md), 0/4 ready, nine requests, unchanged application behavior. Independent human labels and measured reviewer effort remain PENDING; the user will review in the browser. Then run the separately authorized exact-candidate
 release/CI/deployment task. This scoped result does not mark original Milestones
 3–5 globally complete or transfer their previous release evidence.

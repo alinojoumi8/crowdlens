@@ -77,10 +77,14 @@ ran a [comparable after baseline](2026-10-02-evidence-quality-after-root.md) on 
 runs. Fixture and prompt hashes match; the before evidence remains unchanged.
 The final combined candidate still requires the release owner's fresh verification.
 
-Model quality is **BLOCKED** by absent generation-model execution. Human labels
+For the original v1 corpus, model quality was **BLOCKED** by absent generation-model execution. Human labels
 and measured effort are **PENDING**; four blinded packets and their blank forms
 are [preserved here](results/2026-10-02-before/human-review/reviewer/blank-review-forms.jsonl).
 Exact-candidate CI, real-service workflow and existing deployment verification
 belong to separate workstreams. The importer subsequently received three schema/
 partial-review regression tests; these additions do not alter the original
 164-test receipt or its frozen corpus.
+
+## Actual held-out collection follow-up
+
+The [v2 source-review milestone](2026-10-03-source-review-v2.md) freezes separate inputs and preserves actual MiniMax-M3 proposal drafts: four attempted, four blocked, nine requests. The standalone browser review includes all current original documents, blank judgments, manual timing and partial JSONL export. Independent ratings and measured effort remain PENDING; this does not retroactively convert v1 scripted outputs into model-quality evidence. Application behavior is unchanged.

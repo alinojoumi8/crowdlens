@@ -269,8 +269,7 @@ documentation-only; earlier repair/synthetic audits retain their original scope.
 
 The [semantic-review follow-up](audits/2026-10-03-semantic-review.md) adds deterministic regressions for explicit round/count/author/origin contradictions and preserves the retained unresolved premise as a model-audit finding, not an independent label. Report GET responses include a current read-only assessment; saved status and original files remain unchanged. New immutable revisions retain unresolved proposal findings. Coverage is limited to explicit supported syntax and frozen actions.
 
-Next work runs independent held-out claim/omission/source-quality evaluation and
-reviewer-time measurement, followed by separately authorized exact-candidate
+[Held-out source review preparation](evaluations/2026-10-03-source-review-v2.md) collected four actual MiniMax-M3 drafts with 0/4 ready under current gates and nine requests. Human judgments and reviewer-time measurement remain PENDING, followed by separately authorized exact-candidate
 remote CI and deployment reconciliation. Retention/deletion and monetary
 admission still need explicit contracts. One fictional acceptance pass and
 mechanical validation do not establish calibration or factual quality.

@@ -1,0 +1,15 @@
+{
+  "tooling_commit": "318370b8acbf3913c6489b0cc7626eef3c54607a",
+  "checked_source_sha256": {
+    "backend/scripts/collect_source_review_v2.py": "2da7880420f1740546044339e35514be7185a9d20e26142bf5fda7c51e5fa93c",
+    "backend/scripts/evidence_quality_reviews.py": "0373c33c300688af431831103c34110783746456cd474e10561b36f1ec8cf08e",
+    "backend/scripts/export_source_review_v2.py": "96d7b38c892bf939ad1d79d63e3c60d5c539476804566da13b5a1cd5de05abae",
+    "backend/scripts/build_source_review_ui.py": "6f63975279403ced0fb7879696a3c5ff0e6f7ca26526a6d4bd6a1c2494f409d4",
+    "backend/tests/test_source_review_v2.py": "835b846ebcf3700f1e561e7040df2594c67f57508cc64cd3d063a4d0186c9766"
+  },
+  "application_candidate": "4faf90a4b5a57b99397a47e413a27c2ca2ac3806",
+  "full_check_log": "check.log",
+  "full_check_tests": 663,
+  "focused_final_tests": 5,
+  "independent_code_review": "No remaining material blockers; reference notes roundtrip and null pending metrics verified. No human quality judgments."
+}

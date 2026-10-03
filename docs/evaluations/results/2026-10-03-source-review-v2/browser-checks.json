@@ -1,0 +1,30 @@
+[
+  {
+    "claimCount": 5,
+    "packet": "Packet 1 of 4",
+    "sourceCount": 2,
+    "unassessed": true,
+    "uniqueIDs": true
+  },
+  {
+    "claimCount": 4,
+    "packet": "Packet 2 of 4",
+    "sourceCount": 2,
+    "unassessed": true,
+    "uniqueIDs": true
+  },
+  {
+    "claimCount": 5,
+    "packet": "Packet 3 of 4",
+    "sourceCount": 2,
+    "unassessed": true,
+    "uniqueIDs": true
+  },
+  {
+    "claimCount": 5,
+    "packet": "Packet 4 of 4",
+    "sourceCount": 2,
+    "unassessed": true,
+    "uniqueIDs": true
+  }
+]
