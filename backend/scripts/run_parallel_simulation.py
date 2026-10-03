@@ -1580,8 +1580,8 @@ async def main():
     
     # Create log manager
     log_manager = SimulationLogManager(simulation_dir)
-    twitter_logger = log_manager.get_twitter_logger()
-    reddit_logger = log_manager.get_reddit_logger()
+    twitter_logger = log_manager.get_twitter_logger() if not args.reddit_only else None
+    reddit_logger = log_manager.get_reddit_logger() if not args.twitter_only else None
     
     log_manager.info("=" * 60)
 

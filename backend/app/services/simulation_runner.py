@@ -562,14 +562,14 @@ class SimulationRunner:
         
         # Determine which script to run (scripts located in backend/scripts/ directory)
         with startup_timing.time("select_script", label="Select simulation script"):
+            # The shared worker emits the structured action/round events consumed
+            # by the monitor, including when only one platform is enabled.
+            script_name = "run_parallel_simulation.py"
             if platform == "twitter":
-                script_name = "run_twitter_simulation.py"
                 state.twitter_running = True
             elif platform == "reddit":
-                script_name = "run_reddit_simulation.py"
                 state.reddit_running = True
             else:
-                script_name = "run_parallel_simulation.py"
                 state.twitter_running = True
                 state.reddit_running = True
 
@@ -595,6 +595,8 @@ class SimulationRunner:
                 script_path,
                 "--config", config_path,  # Use full config file path
             ]
+            if platform in {"twitter", "reddit"}:
+                cmd.append("--" + platform + "-only")
             
             # If max_rounds specified, add to command-line arguments
             if max_rounds is not None and max_rounds > 0:
