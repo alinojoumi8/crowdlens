@@ -21,6 +21,7 @@ def export_saved(run, destination, corpus=CORPUS):
         if not item.get('proposal_id'):continue
         store=ProposalStore(run/item['case_id']/'reports')
         record=store.read(item['proposal_id'])
+        if not record.get('diagnostics_digest'):continue
         diagnostic=store.load_snapshot(item['proposal_id'],'diagnostics',record['diagnostics_digest'])
         draft=diagnostic.get('drafting',{}).get('parsed_response')
         if not draft:continue
@@ -36,7 +37,8 @@ def export_saved(run, destination, corpus=CORPUS):
             'after':{'section':section,'summary':record.get('after',{}).get('summary',record['before']['summary'])},
             'original_comparison_summary':record['before']['summary'],
             'candidate_summary_edits':record.get('summary_edits',draft.get('summary_edits',[])),
-            'candidate_summary_replacements':draft.get('summary_replacements',[])})
+            'candidate_summary_replacements':draft.get('summary_replacements',[]),
+            'candidate_section_summary':draft.get('section_summary')})
         states[item['case_id']]={'state':item['state'],'finding_codes':item['finding_codes'],
             'candidate_origin':'actual_model_draft_response','summary_origin':'actual_draft_applied_to_comparison' if record.get('after') else 'authored_comparison_input',
             'summary_edits_applied':bool(record.get('after') and record.get('summary_edits')),'complete_original_sources_provided':True,

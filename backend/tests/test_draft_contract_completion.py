@@ -87,3 +87,46 @@ def test_acceptance_rechecks_scoped_summary_even_for_sealed_producer_output(tmp_
         ReportRevisionService(store,storage=SourceStorage()).accept(parent.report_id,record['proposal_id'],record['proposal_digest'])
     assert not (tmp_path/record['revision_report_id']).exists()
     assert ReportManager.get_report(parent.report_id).outline.summary==full
+
+
+def test_server_owned_summary_target_preserves_other_clauses(tmp_path):
+    draft={'paragraphs':[{'text':TEXT,'kind':'attributed_allegation','claim_ids':['claim_01']}],
+           'section_summary':{'text':TEXT,'claim_ids':['claim_01']}}
+    result,_=run(tmp_path,{'EVIDENCE_DRAFT_V1':draft})
+    assert result['state']=='ready'
+    assert result['after']['summary']==TEXT+' Other issues remain open.'
+
+
+def test_competing_summary_contracts_block(tmp_path):
+    draft={'paragraphs':[{'text':TEXT,'kind':'attributed_allegation','claim_ids':['claim_01']}],
+           'section_summary':{'text':TEXT,'claim_ids':['claim_01']},'summary_replacements':[]}
+    result,_=run(tmp_path,{'EVIDENCE_DRAFT_V1':draft})
+    assert result['state']=='blocked'
+
+
+@pytest.mark.parametrize('consistent',[True,False])
+def test_explicit_result_summary_audit(tmp_path,consistent):
+    value=audit(consistent,reviewed());value['summary_consistent']=value.pop('summary_unchanged_consistent')
+    result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+    assert result['state']==('ready' if consistent else 'blocked')
+    if not consistent:assert any(f['code']=='summary_inconsistent' for f in result['findings'])
+
+
+def test_conflicting_summary_audit_aliases_block(tmp_path):
+    value=audit(True,reviewed());value['summary_consistent']=False
+    result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+    assert result['state']=='blocked'
+
+
+def test_topic_query_retrieves_scoped_original_with_generic_title_suffix():
+    from app.services.evidence_drafting import draft_queries
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.utils.draft_budget import DraftBudget
+    from evidence_draft_samples import SCOPE
+    rows=[{**SCOPE,'uuid':'fence','document_id':'brief','data':'Reservoir fencing design remains pending.'},
+          {**SCOPE,'case_id':'foreign','uuid':'other','document_id':'foreign','data':'Reservoir fencing proposal approved.'}]
+    corpus=freeze_sources(rows,SCOPE)
+    section={'title':'Reservoir fencing proposal','description':'','content':'Old assertion.'}
+    assert retrieve_sources(corpus,[section['title']],budget=DraftBudget())['sources']==[]
+    selected=retrieve_sources(corpus,draft_queries(section),budget=DraftBudget())['sources']
+    assert [source['evidence_id'] for source in selected]==['episode:fence']
