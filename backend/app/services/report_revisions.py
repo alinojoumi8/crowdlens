@@ -112,6 +112,13 @@ class ReportRevisionService:
             frozen = self.store.load_snapshot(proposal_id, 'parent', record['parent_digest'])
             self.store.load_snapshot(proposal_id, 'sources', record['source_snapshot_digest'])
             ledger = self.store.load_snapshot(proposal_id, 'ledger', record['ledger_digest'])
+            if record.get('policy') == 'evidence-draft-v3-grounded-summary-scope':
+                from .claim_ledger import summary_edit_scope, validate_summary_edit_scope
+                contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'])
+                try:
+                    validate_summary_edit_scope(record['summary_edits'], contract)
+                except (ValueError, TypeError, KeyError):
+                    raise ProposalError('summary_scope_mismatch') from None
             findings = validate_ledger(ledger, record['sources'], record['scope']) + validate_paragraphs(record['paragraphs'], ledger)
             if (ledger != record['ledger'] or any(f['blocking'] for f in findings)
                     or render_paragraphs(record['paragraphs'], ledger) != record['after']['section']

@@ -65,7 +65,11 @@ class ScriptedDraft:
                       'summary_edits': []}
         elif prompt == AUDIT_PROMPT:
             result = {'findings': [], 'covered_paragraph_indices': list(range(len(payload['paragraphs']))),
-                      'covered_summary_edit_indices': [], 'summary_unchanged_consistent': True}
+                      'covered_summary_edit_indices': [], 'summary_unchanged_consistent': True,
+                      'claim_reviews': [{'claim_id': c['claim_id'], 'outcome': 'supported',
+                          'evidence_ids': c.get('citation_ids', []),
+                          'detail': 'Synthetic positive model judgment for structural testing only; not a quality label.'}
+                          for c in payload['ledger']]}
         else:
             raise AssertionError('unknown_model_phase')
         # The provider/model explicitly identifies a substitute. Token counts remain unknown.

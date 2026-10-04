@@ -27,7 +27,9 @@ class FakeLLM:
                     'new_text': TEXT, 'claim_ids': ['claim_01']}]}
         else:
             value = {'findings': [], 'covered_paragraph_indices': [0], 'covered_summary_edit_indices': [0],
-                     'summary_unchanged_consistent': True}
+                     'summary_unchanged_consistent': True,
+                     'claim_reviews': [{'claim_id': 'claim_01', 'outcome': 'supported', 'evidence_ids': ['episode:one'],
+                                        'detail': 'The cited source expressly records the postponement.'}]}
         return self.change.get(phase, value)
 
 

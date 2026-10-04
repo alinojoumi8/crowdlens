@@ -174,7 +174,9 @@ def main():
                     'summary_edits': [{'start': 0, 'end': 24, 'old_text': 'The hearing is Thursday.',
                                       'new_text': TEXT, 'claim_ids': ['claim_01']}]}
             return {'findings': [], 'covered_paragraph_indices': [0], 'covered_summary_edit_indices': [0],
-                    'summary_unchanged_consistent': True}
+                    'summary_unchanged_consistent': True,
+                    'claim_reviews': [{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],
+                        'detail':'Synthetic structural demonstration only; no factual label.'}]}
     app = Flask(__name__, static_folder=None)
     app.config['UPLOAD_FOLDER'] = str(output / 'uploads')
     app.register_blueprint(graph_bp, url_prefix='/api/graph')

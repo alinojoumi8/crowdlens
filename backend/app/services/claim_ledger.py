@@ -229,3 +229,25 @@ def resolve_summary_replacements(original, replacements, ledger):
                       'new_text': replacement.get('new_text'), 'claim_ids': replacement.get('claim_ids')})
     apply_summary_edits(original, edits, ledger)
     return edits
+
+
+def summary_edit_scope(original, section_text):
+    """Only a unique literal section-to-summary link authorizes automatic edits.
+
+    Abstract summaries have no inferred semantic boundaries. Keep their text
+    unchanged unless a separate trusted mapping is available in a future policy.
+    """
+    spans = []
+    if isinstance(section_text, str) and section_text.strip():
+        start = original.find(section_text)
+        if start >= 0 and original.find(section_text, start + 1) < 0:
+            spans.append({'start': start, 'end': start + len(section_text), 'text': section_text})
+    return {'basis': 'unique_exact_selected_section', 'editable_spans': spans,
+            'unmapped_summary_requires_review': not bool(spans)}
+
+
+def validate_summary_edit_scope(edits, scope):
+    spans = scope['editable_spans']
+    for edit in edits:
+        if not any(span['start'] <= edit['start'] < edit['end'] <= span['end'] for span in spans):
+            raise ValueError('summary_edit_outside_selected_section')
