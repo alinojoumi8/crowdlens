@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v3",
+  "cases": [
+    {
+      "id": "v3_station",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v3_graph_station",
+        "case_id": "v3_case_station",
+        "case_version_id": "v3_current_station"
+      },
+      "sources": [
+        {
+          "graph_id": "v3_graph_station",
+          "case_id": "v3_case_station",
+          "case_version_id": "v3_current_station",
+          "uuid": "station_source_1",
+          "document_id": "station_document_1",
+          "filename": "decision.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Larkfield community board decision: approve a ten-week portable weather-station demonstration with a $1,800 allocation ceiling. Permanent installation is excluded. No spending has been recorded.",
+          "fixture_text_sha256": "18a2281226eb900dce21607910c08606e26b3ae0795efac3c1e984bebda165cb"
+        },
+        {
+          "graph_id": "v3_graph_station",
+          "case_id": "v3_case_station",
+          "case_version_id": "v3_current_station",
+          "uuid": "station_source_2",
+          "document_id": "station_document_2",
+          "filename": "procurement.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Larkfield purchasing note: a $1,460 supplier quotation awaits approval. No purchase order exists. The $1,800 ceiling is not a paid amount.",
+          "fixture_text_sha256": "a8294b3de26d30a63b99f384ee381909eb48899a9495a5ce6bf983eb81aa0927"
+        },
+        {
+          "graph_id": "v3_graph_station",
+          "case_id": "v3_case_station",
+          "case_version_id": "superseded",
+          "uuid": "station_old",
+          "document_id": "station_old_document",
+          "filename": "decision.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Superseded fictional draft; all details are unapproved.",
+          "fixture_text_sha256": "ef645d23896bb20f4c27238b8d0f9fc4d282165053e2c0f3d529b1c11b71ac87"
+        },
+        {
+          "graph_id": "v3_graph_station",
+          "case_id": "unrelated_case",
+          "case_version_id": "v3_current_station",
+          "uuid": "station_foreign",
+          "document_id": "station_foreign_document",
+          "filename": "decision.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated case; different facts and participants.",
+          "fixture_text_sha256": "e887020c42ef813978a851b6001f41a3dc3d1fe1cce7d47b7039c0233d5df962"
+        }
+      ],
+      "summary": "The permanent weather station has been purchased for $6,500. The separate equipment inventory remains unchanged.",
+      "section": {
+        "title": "Weather station demonstration",
+        "description": "Review demonstration funding and procurement status; preserve permission limits, cost qualifiers and absence of recorded purchasing.",
+        "content": "The permanent weather station has been purchased for $6,500."
+      }
+    },
+    {
+      "id": "v3_heritage",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v3_graph_heritage",
+        "case_id": "v3_case_heritage",
+        "case_version_id": "v3_current_heritage"
+      },
+      "sources": [
+        {
+          "graph_id": "v3_graph_heritage",
+          "case_id": "v3_case_heritage",
+          "case_version_id": "v3_current_heritage",
+          "uuid": "heritage_source_1",
+          "document_id": "heritage_document_1",
+          "filename": "register.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Dunmere heritage workshop register signed by coordinator Peta Moss records 15 ticket-holding visitors and three requests for another workshop. It has no repeat-visitor identifier or earlier-workshop attendance figure.",
+          "fixture_text_sha256": "2e2a1d59877c2cf6859939d944b11bf9a8e839fbe4323053f1435baf6ff03938"
+        },
+        {
+          "graph_id": "v3_graph_heritage",
+          "case_id": "v3_case_heritage",
+          "case_version_id": "v3_current_heritage",
+          "uuid": "heritage_source_2",
+          "document_id": "heritage_document_2",
+          "filename": "email.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional volunteer Sal Ward reports 22 people including instructors and helpers, without a separate visitor count. The email does not correct or withdraw the register. No comparison workshop count or visitor survey is provided.",
+          "fixture_text_sha256": "6aef53d622bedf5944c297ae4009a37af74c2f9ee84c0a609fa04388092d85ef"
+        },
+        {
+          "graph_id": "v3_graph_heritage",
+          "case_id": "v3_case_heritage",
+          "case_version_id": "superseded",
+          "uuid": "heritage_old",
+          "document_id": "heritage_old_document",
+          "filename": "register.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Superseded fictional draft; all details are unapproved.",
+          "fixture_text_sha256": "ef645d23896bb20f4c27238b8d0f9fc4d282165053e2c0f3d529b1c11b71ac87"
+        },
+        {
+          "graph_id": "v3_graph_heritage",
+          "case_id": "unrelated_case",
+          "case_version_id": "v3_current_heritage",
+          "uuid": "heritage_foreign",
+          "document_id": "heritage_foreign_document",
+          "filename": "register.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated case; different facts and participants.",
+          "fixture_text_sha256": "e887020c42ef813978a851b6001f41a3dc3d1fe1cce7d47b7039c0233d5df962"
+        }
+      ],
+      "summary": "Attendance doubled to 22 visitors, and every visitor wanted additional workshops. The separate equipment inventory remains unchanged.",
+      "section": {
+        "title": "Heritage workshop attendance",
+        "description": "Review both attendance accounts and their population definitions without treating one as a correction; preserve limits on comparison and survey data.",
+        "content": "Attendance doubled to 22 visitors, and every visitor wanted additional workshops."
+      }
+    },
+    {
+      "id": "v3_lending",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v3_graph_lending",
+        "case_id": "v3_case_lending",
+        "case_version_id": "v3_current_lending"
+      },
+      "sources": [
+        {
+          "graph_id": "v3_graph_lending",
+          "case_id": "v3_case_lending",
+          "case_version_id": "v3_current_lending",
+          "uuid": "lending_source_1",
+          "document_id": "lending_document_1",
+          "filename": "consultation.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Maple Quay tool-library consultation: Ivo Lake could support an eight-week pilot if safe-storage training is demonstrated. Ren Hale requires weekend collection hours but states neither support nor opposition. Coordinator Uma Bell says no permanent lending decision has been taken and lending has not started.",
+          "fixture_text_sha256": "b81afa353e8350ceb3ab2edfc1d3f17a0f3e3e3bcec580e152b89246f90e85af"
+        },
+        {
+          "graph_id": "v3_graph_lending",
+          "case_id": "v3_case_lending",
+          "case_version_id": "v3_current_lending",
+          "uuid": "lending_source_2",
+          "document_id": "lending_document_2",
+          "filename": "agenda.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Maple Quay agenda: trustees will discuss the proposed eight-week pilot on 9 December. No vote has occurred. No demand or operating-cost measurements are available.",
+          "fixture_text_sha256": "072a68d3b49dc078b27ed6d2636ca85db707de60b004f1c132509b2539df62e1"
+        },
+        {
+          "graph_id": "v3_graph_lending",
+          "case_id": "v3_case_lending",
+          "case_version_id": "superseded",
+          "uuid": "lending_old",
+          "document_id": "lending_old_document",
+          "filename": "consultation.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Superseded fictional draft; all details are unapproved.",
+          "fixture_text_sha256": "ef645d23896bb20f4c27238b8d0f9fc4d282165053e2c0f3d529b1c11b71ac87"
+        },
+        {
+          "graph_id": "v3_graph_lending",
+          "case_id": "unrelated_case",
+          "case_version_id": "v3_current_lending",
+          "uuid": "lending_foreign",
+          "document_id": "lending_foreign_document",
+          "filename": "consultation.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated case; different facts and participants.",
+          "fixture_text_sha256": "e887020c42ef813978a851b6001f41a3dc3d1fe1cce7d47b7039c0233d5df962"
+        }
+      ],
+      "summary": "Everyone approved permanent tool lending, and lending has already begun. The separate equipment inventory remains unchanged.",
+      "section": {
+        "title": "Tool-library lending pilot",
+        "description": "Review the lending pilot, preserving speaker conditions, uncommitted requirements, planned-decision status and unavailable measurements.",
+        "content": "Everyone approved permanent tool lending, and lending has already begun."
+      }
+    },
+    {
+      "id": "v3_shade",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v3_graph_shade",
+        "case_id": "v3_case_shade",
+        "case_version_id": "v3_current_shade"
+      },
+      "sources": [
+        {
+          "graph_id": "v3_graph_shade",
+          "case_id": "v3_case_shade",
+          "case_version_id": "v3_current_shade",
+          "uuid": "shade_source_1",
+          "document_id": "shade_document_1",
+          "filename": "brief.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Stonebay gallery shade brief gives an early estimate of approximately $7,600, excluding installation and maintenance. The design is provisional. No glare measurement study, visitor survey or funding approval is included.",
+          "fixture_text_sha256": "f6a3e77edf9197437e7437ea03bb75f65db62bf903447e975c55bd913806a03d"
+        },
+        {
+          "graph_id": "v3_graph_shade",
+          "case_id": "v3_case_shade",
+          "case_version_id": "v3_current_shade",
+          "uuid": "shade_source_2",
+          "document_id": "shade_document_2",
+          "filename": "feedback.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Stonebay feedback: curator Orin Ash expects improved display visibility but supplies no measured glare reduction. Volunteer Tess Reed worries about blocking views and has not endorsed the design. Designer Nola Fern requests a site inspection before recommending installation.",
+          "fixture_text_sha256": "82622197cafc84c00f36eb52f8438feefe30d0d74733b35334ab3f4cf280f1ad"
+        },
+        {
+          "graph_id": "v3_graph_shade",
+          "case_id": "v3_case_shade",
+          "case_version_id": "superseded",
+          "uuid": "shade_old",
+          "document_id": "shade_old_document",
+          "filename": "brief.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Superseded fictional draft; all details are unapproved.",
+          "fixture_text_sha256": "ef645d23896bb20f4c27238b8d0f9fc4d282165053e2c0f3d529b1c11b71ac87"
+        },
+        {
+          "graph_id": "v3_graph_shade",
+          "case_id": "unrelated_case",
+          "case_version_id": "v3_current_shade",
+          "uuid": "shade_foreign",
+          "document_id": "shade_foreign_document",
+          "filename": "brief.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated case; different facts and participants.",
+          "fixture_text_sha256": "e887020c42ef813978a851b6001f41a3dc3d1fe1cce7d47b7039c0233d5df962"
+        }
+      ],
+      "summary": "The gallery shade will cost exactly $12,000, eliminate glare, and has unanimous support. The separate equipment inventory remains unchanged.",
+      "section": {
+        "title": "Gallery shade proposal",
+        "description": "Review shade costs and all attributed positions, preserving approximate amounts, exclusions, provisional design and absent measurements or approval.",
+        "content": "The gallery shade will cost exactly $12,000, eliminate glare, and has unanimous support."
+      }
+    }
+  ]
+}

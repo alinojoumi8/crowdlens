@@ -144,7 +144,15 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
             if sources[other]['document_id'] == current['document_id']
             and type(sources[other]['locator'].get('chunk_index')) is int
             and abs(sources[other]['locator']['chunk_index'] - chunk_index) == 1)
-    selected = list(dict.fromkeys(selected + neighbors))
+    # A relevant hit anchors the packet. Also inspect one original window from
+    # each admitted document: lexical silence is not evidence of irrelevance.
+    # Preserve no-hit behavior and the existing scope/30-window/60k limits.
+    ranked = list(dict.fromkeys(selected + neighbors))
+    representatives = {}
+    if selected:
+        for key in ranked + sorted(sources):
+            representatives.setdefault(sources[key]['document_id'], key)
+    selected = list(dict.fromkeys(list(representatives.values()) + ranked))
     if len(selected) > 30:
         limitations.append('adjacent_context_truncated')
     selected = selected[:30]
@@ -177,9 +185,14 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         used += len(window)
         packet.append({k: v for k, v in source.items() if k not in {'embedding', 'embedding_provider_id'}} |
                       {'window': window, 'window_start': start, 'window_end': end, 'window_hash': text_hash(window)})
+    admitted_documents = len({source['document_id'] for source in sources.values()})
+    represented_documents = len({source['document_id'] for source in packet})
+    if represented_documents < admitted_documents:
+        limitations.append('document_coverage_truncated' if selected else 'no_relevant_source_anchor')
     return {'sources': packet, 'limitations': list(dict.fromkeys(limitations)),
             'rankings': {'exact': exact[:30], 'lexical': lexical[:30], 'fused': fused[:30],
-                         'semantic_covered': len(vectors), 'admitted': len(sources), 'packet_characters': used}}
+                         'semantic_covered': len(vectors), 'admitted': len(sources), 'packet_characters': used,
+                         'admitted_documents': admitted_documents, 'represented_documents': represented_documents}}
 
 
 def verifier_sources(sources):

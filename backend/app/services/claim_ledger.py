@@ -205,3 +205,27 @@ def apply_summary_edits(original, edits, ledger):
         result = result[:start] + edit['new_text'] + result[end:]
         previous_start = start
     return result
+
+
+def resolve_summary_replacements(original, replacements, ledger):
+    """Resolve exact unique original spans; never guess stale/repeated targets.
+
+    Models supply text, not offsets. Existing deterministic edit validation stays
+    authoritative, including claim links, overlap and replacement-size bounds.
+    """
+    if not isinstance(original, str) or not isinstance(replacements, list) or len(replacements) > 30:
+        raise ValueError('invalid_summary_replacements')
+    edits = []
+    for replacement in replacements:
+        if not isinstance(replacement, dict):
+            raise ValueError('invalid_summary_replacement')
+        old = replacement.get('old_text')
+        if not isinstance(old, str) or not old or len(old) > 64000:
+            raise ValueError('invalid_summary_target')
+        start = original.find(old)
+        if start < 0 or original.find(old, start + 1) >= 0:
+            raise ValueError('missing_or_ambiguous_summary_target')
+        edits.append({'start': start, 'end': start + len(old), 'old_text': old,
+                      'new_text': replacement.get('new_text'), 'claim_ids': replacement.get('claim_ids')})
+    apply_summary_edits(original, edits, ledger)
+    return edits

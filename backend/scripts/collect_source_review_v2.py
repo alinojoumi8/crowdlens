@@ -14,12 +14,12 @@ from scripts.evidence_quality_support import FixtureStorage, artifact_hashes
 CORPUS = Path(__file__).resolve().parents[1] / 'evaluations/source-review-v2'
 
 
-def load_inputs():
-    manifest = json.loads((CORPUS/'manifest.json').read_text())
+def load_inputs(corpus=CORPUS):
+    manifest = json.loads((corpus/'manifest.json').read_text())
     for name, digest in manifest['files_sha256'].items():
-        if hashlib.sha256((CORPUS/name).read_bytes()).hexdigest() != digest:
+        if hashlib.sha256((corpus/name).read_bytes()).hexdigest() != digest:
             raise ValueError('frozen_input_hash_mismatch')
-    rows = json.loads((CORPUS/'cases.json').read_text())['cases']
+    rows = json.loads((corpus/'cases.json').read_text())['cases']
     for row in rows:
         for source in row['sources']:
             if hashlib.sha256(source['data'].encode()).hexdigest() != source['fixture_text_sha256']:
@@ -27,7 +27,7 @@ def load_inputs():
     return rows, manifest
 
 
-def collect(output):
+def collect(output, corpus=CORPUS):
     from app.config import Config
     from app.utils.llm_client import LLMClient
     from app.utils.draft_budget import DraftBudget
@@ -35,7 +35,7 @@ def collect(output):
     from app.services.proposal_store import ProposalStore
     from app.services.report_agent import ReportManager, Report, ReportStatus, ReportOutline, ReportSection
     from app.services.workflow_execution import WorkflowLedger, WorkflowHalt, execution_scope
-    rows, manifest = load_inputs()
+    rows, manifest = load_inputs(corpus)
     if output.exists():
         raise ValueError('output_exists_preserve_previous_attempts')
     if Config.LLM_DEFAULT_PROVIDER != 'minimax' or Config.LLM_MODEL_NAME != 'MiniMax-M3':
@@ -50,8 +50,8 @@ def collect(output):
             [('ledger',LEDGER_PROMPT),('draft',DRAFT_PROMPT),('audit',AUDIT_PROMPT)]},
         'attempts_per_case':1,'real_model_outputs':True,'quality_labels':None,'cost':None,'cases':[]}
     ledger = WorkflowLedger(str(output/'control.db'))
-    workflow=ledger.authorize(request_key='source-review-v2',provider=Config.LLM_DEFAULT_PROVIDER,
-        model=Config.LLM_MODEL_NAME,base_url=Config.LLM_BASE_URL,input_description='Four frozen fictional source-review-v2 cases; one unchanged proposal attempt each',
+    workflow=ledger.authorize(request_key=corpus.name,provider=Config.LLM_DEFAULT_PROVIDER,
+        model=Config.LLM_MODEL_NAME,base_url=Config.LLM_BASE_URL,input_description=f'{len(rows)} frozen fictional {corpus.name} cases; one unchanged proposal attempt each',
         input_fingerprint=manifest['files_sha256']['cases.json'],max_requests=12,max_seconds=900,confirmed=True)
     observations=[]
     halted_reason=None
@@ -99,7 +99,7 @@ def collect(output):
         result['ready_rate']={'numerator':sum(c['state']=='ready' for c in result['cases']),'denominator':len(rows)}
         result['collection_complete']=len(attempted)==len(rows)
         (output/'results.json').write_bytes(json_bytes(result))
-    result['review_export']=export_packets(output/'human-review',rows,observations,namespace='source-review-v2',candidate_origin='actual_minimax_proposal',real_model_output=True)
+    result['review_export']=export_packets(output/'human-review',rows,observations,namespace=corpus.name,candidate_origin='actual_minimax_proposal',real_model_output=True)
     reviewer=output/'human-review/reviewer'
     forms=[json.loads(line) for line in (reviewer/'blank-review-forms.jsonl').read_text().splitlines()]
     (output/'human-review/blank-import-result.json').write_bytes(json_bytes(import_reviews(reviewer,forms)))
@@ -113,9 +113,10 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--live-authorized',action='store_true',help='Explicit opt-in using previously authorised fictional data/provider scope')
+    parser.add_argument('--corpus',type=Path,default=CORPUS,help='Separate frozen corpus; original v2 inputs remain unchanged')
     args=parser.parse_args()
     if not args.live_authorized:parser.error('Live collection requires explicit opt-in; no provider call made')
-    result=collect(args.output)
+    result=collect(args.output,args.corpus)
     if not result['invariants_pass']:raise SystemExit(1)
 
 

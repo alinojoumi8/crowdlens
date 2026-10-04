@@ -34,7 +34,7 @@ def export_packets(directory, fixtures, observations, *, namespace='evidence-qua
                    for index, source in enumerate(observation['sources'])}
         sources = [{'source_id': aliases[source['evidence_id']], 'document_id': 'D' + str(index + 1).zfill(2),
                     'case_id': 'case-A', 'graph_id': 'graph-A', 'case_version_id': 'version-current',
-                    'origin': source['origin'], 'excerpt': source['excerpt'],
+                    'origin': source['origin'], 'excerpt': source['excerpt'], 'filename': source.get('filename'),
                     'source_sha256': source['source_hash'], 'locator': source['locator']}
                    for index, source in enumerate(observation['sources'])]
         claims = [{key: copy.deepcopy(claim.get(key)) for key in
@@ -50,6 +50,8 @@ def export_packets(directory, fixtures, observations, *, namespace='evidence-qua
         packet['citation_number_sources'] = {str(index+1): aliases.get(identifier, 'UNKNOWN') for index,identifier in enumerate(citations)}
         if 'candidate_summary_edits' in observation:
             packet['candidate_summary_edits'] = copy.deepcopy(observation['candidate_summary_edits'])
+        if 'candidate_summary_replacements' in observation:
+            packet['candidate_summary_replacements'] = copy.deepcopy(observation['candidate_summary_replacements'])
         content = json_bytes(packet)
         (reviewer / (packet_id + '.json')).write_bytes(content)
         digest = sha256(content)
