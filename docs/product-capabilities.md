@@ -319,3 +319,7 @@ does not declare later milestones or release readiness complete.
 The [integration-review addendum](audits/2026-10-02-h1-integration-review.md)
 records the subsequent preparation-readiness and stale-ensemble fixes. Final
 combined checks and any remaining gaps are in the current execution handoff.
+
+## Source coverage repair follow-up
+
+[Source coverage and summary repair](audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.

@@ -1,0 +1,512 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-source-review-v3",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "created_at": "2026-10-04T00:14:56.291316+00:00",
+  "status": "FROZEN_BEFORE_CANDIDATE_CONTENT_REVIEW",
+  "method": "Only these v3 packet tasks, complete original source texts, supplied source metadata and blank review forms were displayed before freezing these material facts. Candidate content has not been displayed or evaluated. Supplied filenames are evidence metadata. This reference assessment will not be revised after candidate review. No prior review artifacts or judgments were consulted to calibrate this assessment.",
+  "packets": [
+    {
+      "packet_id": "packet_14a5a90af7e4",
+      "packet_sha256": "1dec350afd057fc8134ee1e8c642db696de0d35d8ee3dbf9eb5a9a55208d74ed",
+      "task": "Review shade costs and all attributed positions, preserving approximate amounts, exclusions, provisional design and absent measurements or approval.",
+      "frozen_at": "2026-10-04T00:14:56.291316+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "P14-F01",
+          "text": "The Stonebay shade brief gives an early estimate of approximately $7,600, excluding installation and maintenance.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "brief.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F02",
+          "text": "The shade design is provisional.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "brief.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F03",
+          "text": "No glare measurement study is included in the shade brief.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "brief.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F04",
+          "text": "No visitor survey is included in the shade brief.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "brief.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F05",
+          "text": "No funding approval is included in the shade brief.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "brief.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F06",
+          "text": "Curator Orin Ash expects improved display visibility but supplies no measured glare reduction.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "feedback.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F07",
+          "text": "Volunteer Tess Reed worries about blocking views and has not endorsed the design.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "feedback.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P14-F08",
+          "text": "Designer Nola Fern requests a site inspection before recommending installation.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "feedback.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_1fd04b4fabe7",
+      "packet_sha256": "e08613bd3539ebbd1061ee5c332e1a920b8501f2ba7231b72f4c8aaba76f8179",
+      "task": "Review demonstration funding and procurement status; preserve permission limits, cost qualifiers and absence of recorded purchasing.",
+      "frozen_at": "2026-10-04T00:14:56.291316+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "P1F-F01",
+          "text": "The Larkfield community board approves a ten-week portable weather-station demonstration.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "decision.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P1F-F02",
+          "text": "The approved allocation ceiling is $1,800, and the purchasing note states this ceiling is not a paid amount.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "decision.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            },
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "procurement.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P1F-F03",
+          "text": "Permanent installation is excluded from the demonstration approval.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "decision.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P1F-F04",
+          "text": "No spending has been recorded.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "decision.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P1F-F05",
+          "text": "A $1,460 supplier quotation awaits approval.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "procurement.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P1F-F06",
+          "text": "No purchase order exists.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "procurement.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_33c45e4e3fba",
+      "packet_sha256": "cebbaef69a6d46dd6ac6819e791c1f50a99e04aa90d0be0a09c9b06b4b8fff81",
+      "task": "Review the lending pilot, preserving speaker conditions, uncommitted requirements, planned-decision status and unavailable measurements.",
+      "frozen_at": "2026-10-04T00:14:56.291316+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "P33-F01",
+          "text": "Ivo Lake could support an eight-week tool-library pilot if safe-storage training is demonstrated.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "consultation.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P33-F02",
+          "text": "Ren Hale requires weekend collection hours and states neither support nor opposition.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "consultation.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P33-F03",
+          "text": "Coordinator Uma Bell says no permanent lending decision has been taken.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "consultation.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P33-F04",
+          "text": "Coordinator Uma Bell says lending has not started.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "consultation.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P33-F05",
+          "text": "Trustees will discuss the proposed eight-week lending pilot on 9 December.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "agenda.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P33-F06",
+          "text": "No vote has occurred.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "agenda.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P33-F07",
+          "text": "No demand or operating-cost measurements are available.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "agenda.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_ec808a4e312f",
+      "packet_sha256": "90dcb44eea011fea5cb0cd438b919ef96b84a119617d21bc8915e0a15410b313",
+      "task": "Review both attendance accounts and their population definitions without treating one as a correction; preserve limits on comparison and survey data.",
+      "frozen_at": "2026-10-04T00:14:56.291316+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "PEC-F01",
+          "text": "The Dunmere heritage workshop register, signed by coordinator Peta Moss, records 15 ticket-holding visitors.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "register.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PEC-F02",
+          "text": "The register records three requests for another workshop.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "register.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PEC-F03",
+          "text": "The register has no repeat-visitor identifier.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "register.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PEC-F04",
+          "text": "The register has no earlier-workshop attendance figure, and the email provides no comparison workshop count.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "register.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            },
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "email.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PEC-F05",
+          "text": "Volunteer Sal Ward reports 22 people including instructors and helpers, without a separate visitor count.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "email.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PEC-F06",
+          "text": "Sal Ward's email does not correct or withdraw the register.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "email.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PEC-F07",
+          "text": "No visitor survey is provided in the email.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "email.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

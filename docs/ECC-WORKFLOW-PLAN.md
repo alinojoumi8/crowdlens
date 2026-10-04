@@ -271,3 +271,7 @@ The [semantic-review milestone](audits/2026-10-03-semantic-review.md) adds limit
 Held-out collection and browser review preparation are complete: [four actual-model drafts](evaluations/2026-10-03-source-review-v2.md), 0/4 ready, nine requests, unchanged application behavior. Independent human labels and measured reviewer effort remain PENDING; the user will review in the browser. Then run the separately authorized exact-candidate
 release/CI/deployment task. This scoped result does not mark original Milestones
 3–5 globally complete or transfer their previous release evidence.
+
+## Source coverage repair follow-up
+
+[Source coverage and summary repair](audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.

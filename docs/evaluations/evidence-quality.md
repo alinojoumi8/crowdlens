@@ -88,3 +88,7 @@ partial-review regression tests; these additions do not alter the original
 ## Actual held-out collection follow-up
 
 The [v2 source-review milestone](2026-10-03-source-review-v2.md) freezes separate inputs and preserves actual MiniMax-M3 proposal drafts: four attempted, four blocked, nine requests. The standalone browser review includes all current original documents, blank judgments, manual timing and partial JSONL export. Independent ratings and measured effort remain PENDING; this does not retroactively convert v1 scripted outputs into model-quality evidence. Application behavior is unchanged.
+
+## Source coverage repair follow-up
+
+[Source coverage and summary repair](../audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.

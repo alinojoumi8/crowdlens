@@ -347,3 +347,7 @@ CrowdLens is a modified fork of the original work by [666ghj](https://github.com
 - All Zep references replaced with Neo4j across the UI
 - Rebranded the product to CrowdLens, with updated UI, visual assets, and documentation
 - Preserved original author and contributor attribution and existing runtime identifiers
+
+## Source coverage repair follow-up
+
+[Source coverage and summary repair](docs/audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.

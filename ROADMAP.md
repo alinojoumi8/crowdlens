@@ -110,3 +110,7 @@ The project is AGPL-3.0 licensed. Useful contributions include verified runtime
 compatibility, recovery tests, source-quality evaluations, retrieval measurements,
 and documentation. See [GitHub Issues](https://github.com/alinojoumi8/crowdlens/issues)
 for tracked work and [the ECC workflow](docs/ECC-WORKFLOW-PLAN.md) for delivery steps.
+
+### Source coverage repair follow-up
+
+[Source coverage and summary repair](docs/audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.
