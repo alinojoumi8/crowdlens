@@ -75,3 +75,15 @@ def test_review_export_preserves_original_filename_metadata(tmp_path):
     export_packets(tmp_path,[fixture],[obs])
     packet=json.loads(next((tmp_path/'reviewer').glob('packet_*.json')).read_text())
     assert packet['sources'][0]['filename']=='original-notice.txt'
+
+
+def test_review_keeps_original_comparison_summary_separate(tmp_path):
+    from scripts.evidence_quality_reviews import export_packets
+    fixture={'id':'development','human_review_packet':True,'split':'development','section':{'description':'Review source.'}}
+    observation={'case_id':'development','sources':[],'claims':[],
+        'original_comparison_summary':'Original target. Other section retained.',
+        'after':{'section':'Draft','summary':'Revised target. Other section retained.'}}
+    export_packets(tmp_path,[fixture],[observation])
+    packet=json.loads(next((tmp_path/'reviewer').glob('packet_*.json')).read_text())
+    assert packet['original_comparison_summary']=='Original target. Other section retained.'
+    assert packet['candidate_summary']=='Revised target. Other section retained.'

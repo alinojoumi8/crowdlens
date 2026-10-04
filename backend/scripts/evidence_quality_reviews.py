@@ -52,6 +52,8 @@ def export_packets(directory, fixtures, observations, *, namespace='evidence-qua
             packet['candidate_summary_edits'] = copy.deepcopy(observation['candidate_summary_edits'])
         if 'candidate_summary_replacements' in observation:
             packet['candidate_summary_replacements'] = copy.deepcopy(observation['candidate_summary_replacements'])
+        if 'original_comparison_summary' in observation:
+            packet['original_comparison_summary'] = observation['original_comparison_summary']
         content = json_bytes(packet)
         (reviewer / (packet_id + '.json')).write_bytes(content)
         digest = sha256(content)

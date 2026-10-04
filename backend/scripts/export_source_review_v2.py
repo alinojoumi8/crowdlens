@@ -34,6 +34,7 @@ def export_saved(run, destination, corpus=CORPUS):
             for s in fixture['sources'] if all(s.get(k)==v for k,v in fixture['scope'].items()) and s['origin']=='source_document']
         observations.append({'case_id':item['case_id'],'sources':original_sources,'claims':record['ledger'],
             'after':{'section':section,'summary':record.get('after',{}).get('summary',record['before']['summary'])},
+            'original_comparison_summary':record['before']['summary'],
             'candidate_summary_edits':record.get('summary_edits',draft.get('summary_edits',[])),
             'candidate_summary_replacements':draft.get('summary_replacements',[])})
         states[item['case_id']]={'state':item['state'],'finding_codes':item['finding_codes'],
