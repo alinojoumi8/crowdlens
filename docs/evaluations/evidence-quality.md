@@ -92,3 +92,7 @@ The [v2 source-review milestone](2026-10-03-source-review-v2.md) freezes separat
 ## Source coverage repair follow-up
 
 [Source coverage and summary repair](../audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.
+
+## 2026-10-04 contract verification
+
+[Claim grounding and summary completion](../audits/2026-10-04-draft-contract-completion.md) passes 694 structural tests/build with independent code review. Fresh actual MiniMax v4/v5 both retain 0/4 ready outcomes, with 8/10 requests. Source-first Astra opinions remain AI; human truth labels and timing remain unmeasured. Full ledger review and server-owned summary scope improve contracts but do not establish semantic accuracy or factual certification. Preserve both frozen runs and use new verification inputs after separate development work.

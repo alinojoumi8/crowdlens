@@ -1,0 +1,27 @@
+[
+  {
+    "label": "earlier_original_reports",
+    "files": 50,
+    "mismatches": []
+  },
+  {
+    "label": "history_acceptance_runtime",
+    "files": 49,
+    "mismatches": []
+  },
+  {
+    "label": "docs/evaluations/results/2026-10-03-source-review-v2/private-artifact-hashes.json",
+    "files": 47,
+    "mismatches": []
+  },
+  {
+    "label": "docs/evaluations/results/2026-10-03-source-review-v3/private-artifact-hashes.json",
+    "files": 52,
+    "mismatches": []
+  },
+  {
+    "label": "v2_ai_review",
+    "files": 5,
+    "mismatches": []
+  }
+]

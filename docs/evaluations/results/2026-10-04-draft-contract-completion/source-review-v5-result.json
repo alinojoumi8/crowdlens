@@ -1,0 +1,526 @@
+{
+  "attempted_cases": 4,
+  "attempts_per_case": 1,
+  "cases": [
+    {
+      "allowed_source_ids": [
+        "episode:garden_source_1",
+        "episode:garden_source_2"
+      ],
+      "case_id": "v5_garden",
+      "elapsed_seconds": 8.491607400996145,
+      "error_code": null,
+      "finding_codes": [
+        "invalid_model_or_source_contract"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_6492bdcd5cac465997adc80d05c83bd7",
+      "selected_source_ids": [
+        "episode:garden_source_1",
+        "episode:garden_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 8364.7,
+            "input_tokens": 1237,
+            "model": "MiniMax-M3",
+            "output_tokens": 508,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 8491.6,
+        "remaining_ms": 171508.38
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:museum_source_1",
+        "episode:museum_source_2"
+      ],
+      "case_id": "v5_museum",
+      "elapsed_seconds": 18.360742554999888,
+      "error_code": null,
+      "finding_codes": [
+        "unsupported_paraphrase",
+        "summary_inconsistent",
+        "added_fact"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_773522e4c7d6458aaddcae81059daf2f",
+      "selected_source_ids": [
+        "episode:museum_source_1",
+        "episode:museum_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 6981.49,
+            "input_tokens": 1273,
+            "model": "MiniMax-M3",
+            "output_tokens": 552,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 3472.87,
+            "input_tokens": 1750,
+            "model": "MiniMax-M3",
+            "output_tokens": 276,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 7697.49,
+            "input_tokens": 2587,
+            "model": "MiniMax-M3",
+            "output_tokens": 570,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 18360.74,
+        "remaining_ms": 161639.25
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:pool_source_1",
+        "episode:pool_source_2"
+      ],
+      "case_id": "v5_pool",
+      "elapsed_seconds": 13.028433261992177,
+      "error_code": null,
+      "finding_codes": [
+        "premise_unverified",
+        "summary_inconsistent",
+        "summary_inconsistent"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_e3294111263c493d92be1cc05451c83a",
+      "selected_source_ids": [
+        "episode:pool_source_1",
+        "episode:pool_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 4121.61,
+            "input_tokens": 1236,
+            "model": "MiniMax-M3",
+            "output_tokens": 367,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 2788.06,
+            "input_tokens": 1734,
+            "model": "MiniMax-M3",
+            "output_tokens": 284,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 5901.24,
+            "input_tokens": 1989,
+            "model": "MiniMax-M3",
+            "output_tokens": 466,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 13028.43,
+        "remaining_ms": 166971.56
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:trail_source_1",
+        "episode:trail_source_2"
+      ],
+      "case_id": "v5_trail",
+      "elapsed_seconds": 23.633646051981486,
+      "error_code": null,
+      "finding_codes": [
+        "premise_unverified",
+        "added_fact",
+        "unsupported_paraphrase",
+        "summary_inconsistent",
+        "attribution_error"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_e87e32f3ba4645029bffad48ff8940b7",
+      "selected_source_ids": [
+        "episode:trail_source_1",
+        "episode:trail_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 7213.08,
+            "input_tokens": 1239,
+            "model": "MiniMax-M3",
+            "output_tokens": 485,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 4835.12,
+            "input_tokens": 1977,
+            "model": "MiniMax-M3",
+            "output_tokens": 314,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 11369.43,
+            "input_tokens": 2888,
+            "model": "MiniMax-M3",
+            "output_tokens": 771,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 23633.65,
+        "remaining_ms": 156366.34
+      }
+    }
+  ],
+  "code_revision": "1372e891317235fa9d08ad4e56acc86d50398734",
+  "collection_complete": true,
+  "corpus_manifest": {
+    "files_sha256": {
+      "cases.json": "3807006446b44add307a667037b186ebb7a7836e27c2cd81e771f8ca9a6f76df"
+    },
+    "independent_quality_labels": null,
+    "schema_version": 1,
+    "split": "heldout_no_tuning"
+  },
+  "cost": null,
+  "invariants_pass": true,
+  "model": "MiniMax-M3",
+  "prompt_sha256": {
+    "audit": "0c10477e276a0e21699b4c71b4f7c4108cf15841883cf1d7d2a6772fd58358ed",
+    "draft": "57387d1780366b5c058ef369db55185c20ccdb89cebb39abebf40ca13258b1d6",
+    "ledger": "bbcc796d453d820d5aa81ec7b703ee1ff69eead2582f4cf4d010a1bf5a512820"
+  },
+  "provider": "minimax",
+  "quality_labels": null,
+  "ready_rate": {
+    "denominator": 4,
+    "numerator": 0
+  },
+  "real_model_outputs": true,
+  "review_export": {
+    "completed_human_reviews": 0,
+    "packet_count": 3,
+    "status": "PENDING"
+  },
+  "schema_version": 1,
+  "workflow": {
+    "admission_closed": true,
+    "admitted": 10,
+    "attempts": [
+      {
+        "admitted_at": 1791115798.9509747,
+        "attempt_number": 1,
+        "elapsed_seconds": 8.343729019165039,
+        "epoch": 1,
+        "finished_at": 1791115807.294701,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_bc6ad044b53a4e8bb1eceea4c41a5a08",
+        "sequence": 1,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1237,
+          "output_tokens": 508,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115807.4585829,
+        "attempt_number": 1,
+        "elapsed_seconds": 6.961810350418091,
+        "epoch": 1,
+        "finished_at": 1791115814.4203918,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_34b5f82dc785463a868b824e3b23b0ff",
+        "sequence": 2,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1273,
+          "output_tokens": 552,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115814.4950495,
+        "attempt_number": 1,
+        "elapsed_seconds": 3.451084852218628,
+        "epoch": 1,
+        "finished_at": 1791115817.9461317,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_29fac0d8dd904c339d3c25685e8253c2",
+        "sequence": 3,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 1750,
+          "output_tokens": 276,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115818.0115762,
+        "attempt_number": 1,
+        "elapsed_seconds": 7.6760783195495605,
+        "epoch": 1,
+        "finished_at": 1791115825.6876514,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_cf14ed6903f04b86abe66d62be1aad76",
+        "sequence": 4,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 2587,
+          "output_tokens": 570,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115825.855118,
+        "attempt_number": 1,
+        "elapsed_seconds": 4.099012613296509,
+        "epoch": 1,
+        "finished_at": 1791115829.9541283,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_a64c2efe5d4949648ca5201a06f47dcc",
+        "sequence": 5,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1236,
+          "output_tokens": 367,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115830.0334423,
+        "attempt_number": 1,
+        "elapsed_seconds": 2.768678903579712,
+        "epoch": 1,
+        "finished_at": 1791115832.802119,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_c9aa153f804a476daceba5d14003c18d",
+        "sequence": 6,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1734,
+          "output_tokens": 284,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115832.8654308,
+        "attempt_number": 1,
+        "elapsed_seconds": 5.877551794052124,
+        "epoch": 1,
+        "finished_at": 1791115838.74298,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_99dd0b947e01441a86e04cbd8bc597bc",
+        "sequence": 7,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 730,
+          "input_tokens": 1989,
+          "output_tokens": 466,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115838.9207103,
+        "attempt_number": 1,
+        "elapsed_seconds": 7.190955400466919,
+        "epoch": 1,
+        "finished_at": 1791115846.111663,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_b53f57b201b14b22a58246ac202ee58d",
+        "sequence": 8,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1239,
+          "output_tokens": 485,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115846.1889853,
+        "attempt_number": 1,
+        "elapsed_seconds": 4.807966709136963,
+        "epoch": 1,
+        "finished_at": 1791115850.9969497,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_288ec97737b640298054d2c64a635091",
+        "sequence": 9,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1977,
+          "output_tokens": 314,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      },
+      {
+        "admitted_at": 1791115851.0676994,
+        "attempt_number": 1,
+        "elapsed_seconds": 11.347633838653564,
+        "epoch": 1,
+        "finished_at": 1791115862.415331,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_26200a7a76eb4205aee2e0d598379cfb",
+        "sequence": 10,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 2888,
+          "output_tokens": 771,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+      }
+    ],
+    "authorizations": [
+      {
+        "at": 1791115798.816919,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "imported_requests": 0,
+        "input_description": "4 frozen fictional source-review-v5 cases; one unchanged proposal attempt each",
+        "input_fingerprint": "3807006446b44add307a667037b186ebb7a7836e27c2cd81e771f8ca9a6f76df",
+        "max_requests": 12,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax"
+      }
+    ],
+    "billing_amount": null,
+    "created_at": 1791115798.8169208,
+    "deadline_at": 1791116698.9509747,
+    "elapsed_seconds": 63.55815553665161,
+    "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+    "epoch": 1,
+    "finished": 10,
+    "imported_requests": 0,
+    "in_flight": 0,
+    "initial_authorization": {
+      "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+      "imported_requests": 0,
+      "input_description": "4 frozen fictional source-review-v5 cases; one unchanged proposal attempt each",
+      "input_fingerprint": "3807006446b44add307a667037b186ebb7a7836e27c2cd81e771f8ca9a6f76df",
+      "max_requests": 12,
+      "max_seconds": 900,
+      "model": "MiniMax-M3",
+      "provider": "minimax"
+    },
+    "input_description": "4 frozen fictional source-review-v5 cases; one unchanged proposal attempt each",
+    "input_fingerprint": "3807006446b44add307a667037b186ebb7a7836e27c2cd81e771f8ca9a6f76df",
+    "max_requests": 12,
+    "max_seconds": 900,
+    "model": "MiniMax-M3",
+    "provider": "minimax",
+    "reason": "stopped",
+    "remaining_requests": 2,
+    "request_key": "source-review-v5",
+    "started_at": 1791115798.9509747,
+    "state": "stopped",
+    "stopped_at": 1791115862.4841566,
+    "unknown_usage_attempts": 0,
+    "usage_by_stage": {
+      "proposal": {
+        "attempts": 10,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 1910,
+        "input_tokens": 17910,
+        "output_tokens": 4593,
+        "unknown_usage_attempts": 0
+      }
+    },
+    "workflow_id": "wf_c1268eecb6874939b5fc1c56cea2ba76"
+  }
+}

@@ -1,0 +1,76 @@
+...............F.FFFF                                                    [100%]
+=================================== FAILURES ===================================
+___________ test_server_owned_summary_target_preserves_other_clauses ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-152/test_server_owned_summary_targ0')
+
+    def test_server_owned_summary_target_preserves_other_clauses(tmp_path):
+        draft={'paragraphs':[{'text':TEXT,'kind':'attributed_allegation','claim_ids':['claim_01']}],
+               'section_summary':{'text':TEXT,'claim_ids':['claim_01']}}
+        result,_=run(tmp_path,{'EVIDENCE_DRAFT_V1':draft})
+>       assert result['state']=='ready'
+E       AssertionError: assert 'blocked' == 'ready'
+E         
+E         - ready
+E         + blocked
+
+backend/tests/test_draft_contract_completion.py:96: AssertionError
+___________________ test_explicit_result_summary_audit[True] ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-152/test_explicit_result_summary_a0')
+consistent = True
+
+    @pytest.mark.parametrize('consistent',[True,False])
+    def test_explicit_result_summary_audit(tmp_path,consistent):
+        value=audit(consistent,reviewed());value['summary_consistent']=value.pop('summary_unchanged_consistent')
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+>       assert result['state']==('ready' if consistent else 'blocked')
+E       AssertionError: assert 'blocked' == 'ready'
+E         
+E         - ready
+E         + blocked
+
+backend/tests/test_draft_contract_completion.py:111: AssertionError
+__________________ test_explicit_result_summary_audit[False] ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-152/test_explicit_result_summary_a1')
+consistent = False
+
+    @pytest.mark.parametrize('consistent',[True,False])
+    def test_explicit_result_summary_audit(tmp_path,consistent):
+        value=audit(consistent,reviewed());value['summary_consistent']=value.pop('summary_unchanged_consistent')
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+        assert result['state']==('ready' if consistent else 'blocked')
+>       if not consistent:assert any(f['code']=='summary_inconsistent' for f in result['findings'])
+E       assert False
+E        +  where False = any(<generator object test_explicit_result_summary_audit.<locals>.<genexpr> at 0x7fd0bb977370>)
+
+backend/tests/test_draft_contract_completion.py:112: AssertionError
+_________________ test_conflicting_summary_audit_aliases_block _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-152/test_conflicting_summary_audit0')
+
+    def test_conflicting_summary_audit_aliases_block(tmp_path):
+        value=audit(True,reviewed());value['summary_consistent']=False
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:118: AssertionError
+________________ test_topic_query_excludes_generic_title_suffix ________________
+
+    def test_topic_query_excludes_generic_title_suffix():
+>       from app.services.evidence_drafting import draft_queries
+E       ImportError: cannot import name 'draft_queries' from 'app.services.evidence_drafting' (/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/evidence_drafting.py)
+
+backend/tests/test_draft_contract_completion.py:122: ImportError
+=========================== short test summary info ============================
+FAILED backend/tests/test_draft_contract_completion.py::test_server_owned_summary_target_preserves_other_clauses
+FAILED backend/tests/test_draft_contract_completion.py::test_explicit_result_summary_audit[True]
+FAILED backend/tests/test_draft_contract_completion.py::test_explicit_result_summary_audit[False]
+FAILED backend/tests/test_draft_contract_completion.py::test_conflicting_summary_audit_aliases_block
+FAILED backend/tests/test_draft_contract_completion.py::test_topic_query_excludes_generic_title_suffix
+5 failed, 16 passed in 1.34s
