@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-source-review-v6",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "created_at": "2026-10-05T04:34:34.965197+00:00",
+  "status": "FROZEN_BEFORE_CANDIDATE_CONTENT_REVIEW",
+  "method": "The four tasks and eight complete fictional originals, their supplied metadata, structural packet field names and blank forms were read before this source-only reference assessment was written. No candidate prose, summary or original comparison-summary content has been displayed. These facts and source hashes will remain unchanged during candidate review. Only the v6 reviewer-directory JSON packets and blank forms are within the input boundary.",
+  "packets": [
+    {
+      "packet_id": "packet_0958d6a0b53b",
+      "packet_sha256": "7ff0c8e3e3a924eed4358707247f1af3aa55794aff473c966289a95a11ae7164",
+      "task": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+      "frozen_at": "2026-10-05T04:34:34.965197+00:00",
+      "source_evidence": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        },
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "359e9599e32a86fc30fa51dc936294c623aed2c882ae9d2a3221f6030dc5a0ce",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ],
+      "reference_facts": [
+        {
+          "fact_id": "P095-F01",
+          "text": "The Marrowfield archive authorizes a portable document trolley trial for four weekday mornings.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P095-F02",
+          "text": "The trial has a $510 allocation ceiling, and the purchasing note states an allocation ceiling is not payment.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            },
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "359e9599e32a86fc30fa51dc936294c623aed2c882ae9d2a3221f6030dc5a0ce",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P095-F03",
+          "text": "Permanent shelving is excluded.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P095-F04",
+          "text": "No spending has been recorded.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P095-F05",
+          "text": "A $360 trolley quote remains awaiting approval.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "359e9599e32a86fc30fa51dc936294c623aed2c882ae9d2a3221f6030dc5a0ce",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P095-F06",
+          "text": "No purchase order has been issued.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "359e9599e32a86fc30fa51dc936294c623aed2c882ae9d2a3221f6030dc5a0ce",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_28e1b20f56b8",
+      "packet_sha256": "a2980e14a76dc165fa5d674fa52370d2d16ef10918fb25469fb4f9e744e3f643",
+      "task": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+      "frozen_at": "2026-10-05T04:34:34.965197+00:00",
+      "source_evidence": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "4edb3eb0e8199d966a1ad59c66fe9bcaa6a1fbd8c0551517987372da357b14db",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        },
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ],
+      "reference_facts": [
+        {
+          "fact_id": "P28E-F01",
+          "text": "The Larkmere hall booking note proposes borrowing a projector on November 12, pending lender confirmation.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "4edb3eb0e8199d966a1ad59c66fe9bcaa6a1fbd8c0551517987372da357b14db",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P28E-F02",
+          "text": "No reservation has been confirmed.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "4edb3eb0e8199d966a1ad59c66fe9bcaa6a1fbd8c0551517987372da357b14db",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P28E-F03",
+          "text": "The lender requested a pickup-time clarification.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P28E-F04",
+          "text": "The follow-up records no confirmation.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P28E-F05",
+          "text": "The follow-up records no delivery.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P28E-F06",
+          "text": "The follow-up records no payment.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_5b040749d729",
+      "packet_sha256": "07580ea17d8386b5441206e359733e05aea32f52f30144aa3d41305b654ba1ef",
+      "task": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+      "frozen_at": "2026-10-05T04:34:34.965197+00:00",
+      "source_evidence": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "d01bece9001b44187e9ac6e6174c121b7d096d4bc81d1d088a70e4d4ea241de0",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        },
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "44d0d0f4f44eae8142a43af01cc7af4aa518a83ae5bce0d6431d3192b8b36dc5",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ],
+      "reference_facts": [
+        {
+          "fact_id": "P5B0-F01",
+          "text": "The Amberford riverbank log records 46 public volunteers at the first cleanup session.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "d01bece9001b44187e9ac6e6174c121b7d096d4bc81d1d088a70e4d4ea241de0",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P5B0-F02",
+          "text": "Three coordinators participated separately in the first session and are excluded from its public-volunteer count.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "d01bece9001b44187e9ac6e6174c121b7d096d4bc81d1d088a70e4d4ea241de0",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P5B0-F03",
+          "text": "The second cleanup session had 31 public volunteers.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "44d0d0f4f44eae8142a43af01cc7af4aa518a83ae5bce0d6431d3192b8b36dc5",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P5B0-F04",
+          "text": "Coordinator attendance was not recorded for the second session.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "44d0d0f4f44eae8142a43af01cc7af4aa518a83ae5bce0d6431d3192b8b36dc5",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P5B0-F05",
+          "text": "Attendance does not constitute a vote or endorsement.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "44d0d0f4f44eae8142a43af01cc7af4aa518a83ae5bce0d6431d3192b8b36dc5",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_a9e0e1172d1a",
+      "packet_sha256": "cba7b77aae6b1afcaca67cd2bcd5179decf3591e6d8b765ac259f94f6cc92000",
+      "task": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+      "frozen_at": "2026-10-05T04:34:34.965197+00:00",
+      "source_evidence": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        },
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ],
+      "reference_facts": [
+        {
+          "fact_id": "PA9E-F01",
+          "text": "The Elmreach studio schedule permits two supervised glazing sessions.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PA9E-F02",
+          "text": "Those sessions are permitted only when a certified instructor is present.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PA9E-F03",
+          "text": "Unsupervised access is excluded.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "original.txt",
+              "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PA9E-F04",
+          "text": "Sora says the group could assist if accessible benches are confirmed.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PA9E-F05",
+          "text": "This is possible future assistance, not an existing commitment.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

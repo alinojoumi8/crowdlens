@@ -1,0 +1,30 @@
+{
+  "kind": "retained_actual_audit_revalidation_not_fresh_generation",
+  "cases": [
+    {
+      "case_id": "v6_archive",
+      "protocol": "target_reviews_v1",
+      "strict_audit_findings": [],
+      "new_provider_requests": 0
+    },
+    {
+      "case_id": "v6_cleanup",
+      "protocol": "target_reviews_v1",
+      "strict_audit_findings": [],
+      "new_provider_requests": 0
+    },
+    {
+      "case_id": "v6_pottery",
+      "protocol": "target_reviews_v1",
+      "strict_audit_findings": [],
+      "new_provider_requests": 0
+    },
+    {
+      "case_id": "v6_projector",
+      "protocol": "target_reviews_v1",
+      "strict_audit_findings": [],
+      "new_provider_requests": 0
+    }
+  ],
+  "new_provider_requests": 0
+}

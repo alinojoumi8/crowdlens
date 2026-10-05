@@ -1,0 +1,37 @@
+[
+  {
+    "manifest": "docs/evaluations/results/2026-10-03-source-review-v2/private-artifact-hashes.json",
+    "files": 47,
+    "mismatches": []
+  },
+  {
+    "manifest": "docs/evaluations/results/2026-10-03-source-review-v3/private-artifact-hashes.json",
+    "files": 52,
+    "mismatches": []
+  },
+  {
+    "manifest": "docs/evaluations/results/2026-10-04-draft-contract-completion/source-review-v4-hashes.json",
+    "files": 51,
+    "mismatches": []
+  },
+  {
+    "manifest": "docs/evaluations/results/2026-10-04-draft-contract-completion/source-review-v5-hashes.json",
+    "files": 59,
+    "mismatches": []
+  },
+  {
+    "manifest": "docs/evaluations/results/2026-10-04-draft-contract-completion/astra-ai-review-hashes.json",
+    "files": 3,
+    "mismatches": []
+  },
+  {
+    "manifest": "/home/ali/Documents/CrowdLens-reviews/2026-10-03-report-repair/receipts/preservation-baseline.json",
+    "files": 50,
+    "mismatches": []
+  },
+  {
+    "manifest": "/home/ali/Documents/CrowdLens-reviews/2026-10-03-report-repair/semantic-review/original-artifacts-before.json",
+    "files": 49,
+    "mismatches": []
+  }
+]
