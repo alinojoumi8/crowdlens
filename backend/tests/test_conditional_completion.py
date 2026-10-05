@@ -71,7 +71,7 @@ def test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged():
     assert render(p, [{**claim('A separate fact.'), 'claim_id':'other', 'kind':'source_statement', 'citation_ids':['another']}], [source()]) == (p, [])
 
 
-def generate_selected(tmp_path):
+def generate_selected(tmp_path, *, invalid_summary=False):
     import json
     from evidence_draft_samples import sample_report
     from app.services.proposal_store import ProposalStore
@@ -94,7 +94,7 @@ def generate_selected(tmp_path):
                     'attribution':'Sora' if i==0 else ''} for i,c in enumerate(choices)],'gaps':[]}
             elif phase == 'EVIDENCE_DRAFT_V1':
                 value = {'paragraphs':[{'text':'The group is committed.', 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
-                         'section_summary_claim_ids':[c['claim_id'] for c in context['ledger']]}
+                         'section_summary_claim_ids':['unknown'] if invalid_summary else [c['claim_id'] for c in context['ledger']]}
             else:
                 value = {'audit_protocol':'target_reviews_v1','summary_consistent':True,
                     'claim_reviews':[{'claim_id':c['claim_id'],'outcome':'supported','evidence_ids':c['citation_ids'],'detail':'Synthetic exact sentence comparison.'} for c in context['ledger']],
@@ -150,3 +150,27 @@ def test_finished_server_rendering_provenance_is_immutable(tmp_path):
     record, store, _ = generate_selected(tmp_path)
     with pytest.raises(ProposalError, match='immutable_proposal'):
         store.update(record['proposal_id'], {'ready'}, {'extract_provenance': {'contract':[]}})
+
+
+def test_abbreviation_cannot_detach_reported_offer_from_negation():
+    build, resolve, _ = helpers()
+    text = 'It is false that Dr. Sora said the group could assist if benches are confirmed.'
+    contract = build([source(text)], SCOPE)
+    assert len(contract) == 1 and contract[0]['text'] == text
+    from app.services.claim_ledger import validate_ledger
+    assert any(f['blocking'] for f in validate_ledger(
+        [claim('Sora said the group could assist if benches are confirmed.')], [source(text)], SCOPE))
+    resolved, _ = resolve([{**claim('Detached model words.'), 'source_sentence_id':contract[0]['source_sentence_id']}],contract)
+    assert resolved[0]['text'] == text
+
+
+def test_resolved_paragraphs_remain_exportable_when_summary_blocks(tmp_path):
+    from app.services.claim_ledger import render_paragraphs
+    record, store, _ = generate_selected(tmp_path, invalid_summary=True)
+    assert record['state'] == 'blocked'
+    assert any(f['code']=='invalid_summary_edits' for f in record['findings'])
+    section = render_paragraphs(record['paragraphs'],record['ledger'])
+    assert 'could assist if benches are confirmed' in section
+    assert 'The group is committed.' not in section
+    diagnostics = store.load_snapshot(record['proposal_id'],'diagnostics',record['diagnostics_digest'])
+    assert diagnostics['drafting']['parsed_response']['paragraphs'][0]['text'] == 'The group is committed.'

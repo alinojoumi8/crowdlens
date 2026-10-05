@@ -20,20 +20,6 @@ def conditional_offer(text):
         and re.search(r'\b(if|unless|provided|providing)\b', text, re.I))
 
 
-def complete_source_extract(text, window):
-    # Whole contiguous sentences only: a substring could omit the condition.
-    if not isinstance(text, str) or not text or text != text.strip():
-        return False
-    for match in re.finditer(re.escape(text), window):
-        start, end = match.span()
-        prefix = window[:start]
-        if (not prefix.strip() or (prefix[-1:].isspace() and prefix.rstrip().endswith(('.', '!', '?')))):
-            if (not window[end:].strip() or (text.endswith(('.', '!', '?')) and window[end:end + 1].isspace())):
-                return True
-    return False
-
-
-
 def canonical_digest(value):
     raw = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False)
     return hashlib.sha256(raw.encode('utf-8')).hexdigest()
@@ -118,7 +104,7 @@ def validate_ledger(ledger, sources, scope):
             if error:
                 findings.append(finding(error, identifier))
             elif conditional_offer(source['excerpt']) and not (
-                    complete_source_extract(claim.get('text'), source['excerpt'])
+                    claim.get('text') == source['excerpt'].strip()
                     and isinstance(claim.get('text'), str) and claim['text'] in source['window']):
                 findings.append(finding('conditional_source_requires_extract', identifier))
         quote = claim.get('quote', '')

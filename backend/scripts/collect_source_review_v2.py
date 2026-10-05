@@ -31,7 +31,7 @@ def collect(output, corpus=CORPUS, max_requests=12):
     from app.config import Config
     from app.utils.llm_client import LLMClient
     from app.utils.draft_budget import DraftBudget
-    from app.services.evidence_drafting import EvidenceDraftingService, LEDGER_PROMPT, DRAFT_PROMPT, AUDIT_PROMPT
+    from app.services.evidence_drafting import EvidenceDraftingService, LEDGER_PROMPT, DRAFT_PROMPT, AUDIT_PROMPT, POLICY
     from app.services.proposal_store import ProposalStore
     from app.services.report_agent import ReportManager, Report, ReportStatus, ReportOutline, ReportSection
     from app.services.workflow_execution import WorkflowLedger, WorkflowHalt, execution_scope
@@ -45,7 +45,8 @@ def collect(output, corpus=CORPUS, max_requests=12):
     output.mkdir(parents=True)
     revision = subprocess.check_output(['git','rev-parse','HEAD'],cwd=CORPUS,text=True).strip()
     result = {'schema_version':1,'code_revision':revision,'corpus_manifest':manifest,
-        'provider':Config.LLM_DEFAULT_PROVIDER,'model':Config.LLM_MODEL_NAME,
+        'provider':Config.LLM_DEFAULT_PROVIDER,'model':Config.LLM_MODEL_NAME, 'output_policy':POLICY,
+        'guarded_prose_origin':'server_rendered_complete_source_extracts',
         'prompt_sha256':{name:hashlib.sha256(text.encode()).hexdigest() for name,text in
             [('ledger',LEDGER_PROMPT),('draft',DRAFT_PROMPT),('audit',AUDIT_PROMPT)]},
         'attempts_per_case':1,'real_model_outputs':True,'quality_labels':None,'cost':None,'cases':[]}
@@ -99,7 +100,7 @@ def collect(output, corpus=CORPUS, max_requests=12):
         result['ready_rate']={'numerator':sum(c['state']=='ready' for c in result['cases']),'denominator':len(rows)}
         result['collection_complete']=len(attempted)==len(rows)
         (output/'results.json').write_bytes(json_bytes(result))
-    result['review_export']=export_packets(output/'human-review',rows,observations,namespace=corpus.name,candidate_origin='actual_minimax_proposal',real_model_output=True)
+    result['review_export']=export_packets(output/'human-review',rows,observations,namespace=corpus.name,candidate_origin='actual_provider_selection_with_server_rendered_source_extracts',real_model_output=True)
     reviewer=output/'human-review/reviewer'
     forms=[json.loads(line) for line in (reviewer/'blank-review-forms.jsonl').read_text().splitlines()]
     (output/'human-review/blank-import-result.json').write_bytes(json_bytes(import_reviews(reviewer,forms)))

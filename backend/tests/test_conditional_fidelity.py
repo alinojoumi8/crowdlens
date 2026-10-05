@@ -9,7 +9,7 @@ def source(text=SOURCE):
     return {**sample_source(), 'excerpt': text, 'window': text,
             'source_hash': text_hash(text), 'window_hash': text_hash(text), 'window_end': len(text)}
 
-def claim(text=SOURCE.split('. ')[0] + '.'):
+def claim(text=SOURCE):
     return {**sample_claim(), 'text': text, 'attribution': 'Sora'}
 
 @pytest.mark.parametrize('text', [

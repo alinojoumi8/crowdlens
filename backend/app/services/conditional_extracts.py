@@ -1,10 +1,9 @@
-"""Server-owned complete sentences for detected conditional source excerpts.
+"""Server-owned complete source excerpts for detected conditional source excerpts.
 
 Selection and rendering replace model wording; they never certify source truth.
 """
 import copy
-import re
-from .claim_ledger import canonical_digest, conditional_offer, complete_source_extract, validate_source, KINDS
+from .claim_ledger import canonical_digest, conditional_offer, validate_source, KINDS
 
 
 def build_extract_contract(sources, scope):
@@ -12,22 +11,23 @@ def build_extract_contract(sources, scope):
     for source in sources:
         if validate_source(source, scope) or not conditional_offer(source['excerpt']):
             continue
-        for match in re.finditer(r'\S.*?(?:[.!?](?=\s|$)|$)', source['excerpt'], re.S):
-            start, end = match.span()
-            text = match.group()
-            if (len(text) > 4000 or not source['window_start'] <= start < end <= source['window_end']
-                    or not complete_source_extract(text, source['excerpt'])):
-                continue
-            basis = {**scope, 'evidence_id': source['evidence_id'], 'source_hash': source['source_hash'],
-                     'window_hash': source['window_hash'], 'start': start, 'end': end}
-            identifier = 'sentence:' + canonical_digest(basis)
-            candidates[identifier] = {'source_sentence_id': identifier, 'evidence_id': source['evidence_id'],
-                                     'text': text, 'source_start': start, 'source_end': end}
+        # Do not infer sentence boundaries from punctuation: abbreviations can
+        # detach a speaker's words from a preceding negation or attribution.
+        start = len(source['excerpt']) - len(source['excerpt'].lstrip())
+        end = len(source['excerpt'].rstrip())
+        text = source['excerpt'][start:end]
+        if len(text) > 4000 or not source['window_start'] <= start < end <= source['window_end']:
+            continue
+        basis = {**scope, 'evidence_id': source['evidence_id'], 'source_hash': source['source_hash'],
+                 'window_hash': source['window_hash'], 'start': start, 'end': end}
+        identifier = 'sentence:' + canonical_digest(basis)
+        candidates[identifier] = {'source_sentence_id': identifier, 'evidence_id': source['evidence_id'],
+                                 'text': text, 'source_start': start, 'source_end': end}
     return list(candidates.values())
 
 
 def resolve_extract_claims(claims, contract):
-    """Resolve explicit sentence selection, never fuzzy-match a paraphrase."""
+    """Resolve explicit source-excerpt selection, never fuzzy-match a paraphrase."""
     candidates = {c['source_sentence_id']: c for c in contract}
     ledger, changes = copy.deepcopy(claims), []
     for claim in ledger:

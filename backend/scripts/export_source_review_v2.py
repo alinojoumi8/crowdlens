@@ -41,11 +41,11 @@ def export_saved(run, destination, corpus=CORPUS):
             'candidate_section_summary':draft.get('section_summary'),
             'candidate_summary_claim_ids':draft.get('section_summary_claim_ids')})
         states[item['case_id']]={'state':item['state'],'finding_codes':item['finding_codes'],
-            'candidate_origin':'actual_model_draft_response','summary_origin':'actual_draft_applied_to_comparison' if record.get('after') else 'authored_comparison_input',
+            'candidate_origin':('server_rendered_proposal_from_model_selections' if record.get('policy')=='evidence-draft-v7-server-source-sentences' else 'actual_model_draft_response'),'summary_origin':'actual_draft_applied_to_comparison' if record.get('after') else 'authored_comparison_input',
             'summary_edits_applied':bool(record.get('after') and record.get('summary_edits')),'complete_original_sources_provided':True,
             'retrieved_source_ids':[s['evidence_id'] for s in record['sources']],'diagnostics_digest':record['diagnostics_digest'],
             'output_policy':record.get('policy'),'server_rendering':record.get('extract_provenance')}
-    outcome=export_packets(destination,rows,observations,namespace=corpus.name+'-drafts',candidate_origin='actual_minimax_draft_response',real_model_output=True)
+    outcome=export_packets(destination,rows,observations,namespace=corpus.name+'-drafts',candidate_origin=('server_rendered_proposal_from_model_selections' if any(v.get('output_policy')=='evidence-draft-v7-server-source-sentences' for v in states.values()) else 'actual_minimax_draft_response'),real_model_output=True)
     mapping=json.loads((destination/'administrator/mapping.json').read_text())
     for item in mapping:item.update(states[item['fixture_id']])
     (destination/'administrator/mapping.json').write_bytes(json_bytes(mapping))
