@@ -1,0 +1,152 @@
+import copy
+import pytest
+from evidence_draft_samples import SCOPE
+from test_conditional_fidelity import source, claim
+
+
+def helpers():
+    from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+    return build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+
+
+def test_selected_sentence_owns_text_even_when_model_paraphrases():
+    build, resolve, paragraphs = helpers()
+    evidence = source('Fictional workshop note: Sora says the group could assist if benches are confirmed. This is possible assistance, not a commitment.')
+    contract = build([evidence], SCOPE)
+    raw = [{**claim('Sora says the group could assist if benches are confirmed.'),
+            'source_sentence_id': contract[0]['source_sentence_id']}]
+    before = copy.deepcopy(raw)
+    ledger, changes = resolve(raw, contract)
+    assert ledger[0]['text'] == contract[0]['text']
+    assert raw == before and changes[0]['claim_id'] == 'claim_01'
+    draft = [{'text': 'Sora confirms assistance.', 'kind': ledger[0]['kind'], 'claim_ids': ['claim_01']}]
+    rendered, records = paragraphs(draft, ledger, [evidence])
+    assert rendered[0]['text'] == ledger[0]['text']
+    assert draft[0]['text'] == 'Sora confirms assistance.'
+    assert records[0]['paragraph_index'] == 0
+
+@pytest.mark.parametrize('mutation', [
+    {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+    {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+    {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+    {'premise_claim_ids': ['other']},
+])
+def test_extract_selection_rejects_wrong_linkage(mutation):
+    build, resolve, _ = helpers()
+    contract = build([source()], SCOPE)
+    raw = [{**claim(), 'source_sentence_id': contract[0]['source_sentence_id'], **mutation}]
+    with pytest.raises(ValueError):
+        resolve(raw, contract)
+
+
+def test_clipped_condition_has_no_selectable_partial_sentence():
+    from app.services.evidence_verifier import text_hash
+    build, _, _ = helpers()
+    text = 'Sora says the group could assist if benches are confirmed ' + ('and volunteers review the plan ' * 100) + 'provided funding is secured.'
+    evidence = {**source(text), 'window': text[:1000], 'window_end': 1000, 'window_hash': text_hash(text[:1000])}
+    assert build([evidence], SCOPE) == []
+
+
+def test_duplicate_sentence_ids_and_source_scope_are_not_ambiguous():
+    build, _, _ = helpers()
+    assert build([{**source(), 'case_id': 'foreign'}], SCOPE) == []
+    assert build([source(), source()], SCOPE) == build([source()], SCOPE)
+
+@pytest.mark.parametrize('changes', [
+    {'kind': 'source_statement'}, {'claim_ids': ['missing']},
+    {'claim_ids': ['claim_01','claim_01']}, {'text': None}, {'claim_ids': [[]]},
+])
+def test_render_does_not_repair_bad_paragraph_contract(changes):
+    _, _, render = helpers()
+    raw = [{'text': 'Paraphrase.', 'kind': 'attributed_allegation', 'claim_ids': ['claim_01'], **changes}]
+    result, records = render(raw, [claim()], [source()])
+    assert result == raw and records == []
+
+
+def test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged():
+    _, resolve, render = helpers()
+    raw = [claim()]
+    assert resolve(raw, [])[0] == raw
+    p = [{'text': 'A separate fact.', 'kind': 'source_statement', 'claim_ids': ['other']}]
+    assert render(p, [{**claim('A separate fact.'), 'claim_id':'other', 'kind':'source_statement', 'citation_ids':['another']}], [source()]) == (p, [])
+
+
+def generate_selected(tmp_path):
+    import json
+    from evidence_draft_samples import sample_report
+    from app.services.proposal_store import ProposalStore
+    from app.services.evidence_drafting import EvidenceDraftingService
+    from app.utils.draft_budget import DraftBudget
+    text = 'Fictional hearing workshop note: Sora says the group could assist if benches are confirmed. This is possible assistance, not a commitment.'
+    class Storage:
+        def get_source_chunks(self, **scope):
+            return [{**SCOPE, 'uuid':'one','document_id':'doc','data':text,'page':1}]
+    class LLM:
+        model = 'synthetic-conditional-selection'
+        def chat_json(self, messages, **kwargs):
+            context = json.loads(messages[1]['content'])
+            phase = messages[0]['content'].splitlines()[0]
+            if phase == 'EVIDENCE_LEDGER_V1':
+                choices = context['conditional_extract_contract']
+                value = {'claims':[{**claim('Model wording.'), 'claim_id':f'claim_{i+1:02}',
+                    'source_sentence_id': c['source_sentence_id'], 'citation_ids':[c['evidence_id']],
+                    'kind':'attributed_allegation' if i==0 else 'source_statement',
+                    'attribution':'Sora' if i==0 else ''} for i,c in enumerate(choices)],'gaps':[]}
+            elif phase == 'EVIDENCE_DRAFT_V1':
+                value = {'paragraphs':[{'text':'The group is committed.', 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
+                         'section_summary_claim_ids':[c['claim_id'] for c in context['ledger']]}
+            else:
+                value = {'audit_protocol':'target_reviews_v1','summary_consistent':True,
+                    'claim_reviews':[{'claim_id':c['claim_id'],'outcome':'supported','evidence_ids':c['citation_ids'],'detail':'Synthetic exact sentence comparison.'} for c in context['ledger']],
+                    'paragraph_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic exact sentence.'} for i,p in enumerate(context['paragraphs'])],
+                    'summary_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic exact summary.'} for i,e in enumerate(context['summary_edits'])],
+                    'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Synthetic full coverage.'}]}
+            kwargs['response_callback'](json.dumps(value))
+            return value
+    store = ProposalStore(tmp_path)
+    record, lease = store.admit('report_root','selected','selected')
+    store.update(record['proposal_id'], {'queued'}, {'state':'running','scope':SCOPE,'section_index':1})
+    try:
+        result = EvidenceDraftingService(Storage(), LLM(), store).generate(record['proposal_id'], sample_report().to_dict(), budget=DraftBudget())
+    finally:
+        lease.close()
+    return result, store, Storage()
+
+
+def test_service_renders_selected_sentences_and_preserves_raw_responses(tmp_path):
+    record, store, _ = generate_selected(tmp_path)
+    assert record['state'] == 'ready'
+    assert 'The group is committed.' not in record['after']['section']
+    assert record['after']['summary'].endswith(' Other issues remain open.')
+    diagnostics = store.load_snapshot(record['proposal_id'], 'diagnostics', record['diagnostics_digest'])
+    assert diagnostics['drafting']['parsed_response']['paragraphs'][0]['text'] == 'The group is committed.'
+    assert record['extract_provenance']['paragraph_resolutions'][0]['model_text'] == 'The group is committed.'
+    assert record['extract_provenance']['ledger_resolutions'][0]['model_text'] == 'Model wording.'
+
+
+def test_acceptance_rechecks_sentence_selection_without_changing_parent(tmp_path, monkeypatch):
+    from app.services.report_agent import ReportManager
+    from app.services.report_revisions import ReportRevisionService
+    from evidence_draft_samples import sample_report
+    monkeypatch.setattr(ReportManager,'REPORTS_DIR',str(tmp_path))
+    ReportManager.save_report(sample_report())
+    original = {p.name:p.read_bytes() for p in (tmp_path/'report_root').iterdir()}
+    record, store, storage = generate_selected(tmp_path)
+    revised = ReportRevisionService(store, storage=storage).accept('report_root',record['proposal_id'],record['proposal_digest'])
+    assert revised.outline.sections[0].content == record['after']['section']
+    assert {p.name:p.read_bytes() for p in (tmp_path/'report_root').iterdir()} == original
+
+
+def test_new_provenance_is_sealed_without_changing_legacy_digests():
+    from app.services.proposal_store import proposal_digest
+    legacy = {'policy':'evidence-draft-v6-conditional-extract'}
+    assert proposal_digest(legacy) == proposal_digest({**legacy,'extract_provenance':{'changed':True}})
+    current = {'policy':'evidence-draft-v7-server-source-sentences','extract_provenance':{'contract':[]}}
+    assert proposal_digest(current) != proposal_digest({**current,'extract_provenance':{'contract':['changed']}})
+
+
+def test_finished_server_rendering_provenance_is_immutable(tmp_path):
+    from app.services.proposal_store import ProposalError
+    record, store, _ = generate_selected(tmp_path)
+    with pytest.raises(ProposalError, match='immutable_proposal'):
+        store.update(record['proposal_id'], {'ready'}, {'extract_provenance': {'contract':[]}})

@@ -112,13 +112,24 @@ class ReportRevisionService:
             frozen = self.store.load_snapshot(proposal_id, 'parent', record['parent_digest'])
             self.store.load_snapshot(proposal_id, 'sources', record['source_snapshot_digest'])
             ledger = self.store.load_snapshot(proposal_id, 'ledger', record['ledger_digest'])
-            if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract'):
+            if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract', 'evidence-draft-v7-server-source-sentences'):
                 from .claim_ledger import summary_edit_scope, validate_summary_edit_scope
                 contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'])
                 try:
                     validate_summary_edit_scope(record['summary_edits'], contract)
                 except (ValueError, TypeError, KeyError):
                     raise ProposalError('summary_scope_mismatch') from None
+            if record.get('policy') == 'evidence-draft-v7-server-source-sentences':
+                from .conditional_extracts import build_extract_contract, resolve_extract_claims
+                try:
+                    contract = build_extract_contract(record['sources'], record['scope'])
+                    if record.get('extract_provenance', {}).get('contract') != contract:
+                        raise ValueError('stale_source_sentence_contract')
+                    resolved, _ = resolve_extract_claims(ledger, contract)
+                    if resolved != ledger:
+                        raise ValueError('source_sentence_text_changed')
+                except (ValueError, TypeError, KeyError, AttributeError):
+                    raise ProposalError('invalid_proposal') from None
             findings = validate_ledger(ledger, record['sources'], record['scope']) + validate_paragraphs(record['paragraphs'], ledger, record['sources'])
             if (ledger != record['ledger'] or any(f['blocking'] for f in findings)
                     or render_paragraphs(record['paragraphs'], ledger) != record['after']['section']

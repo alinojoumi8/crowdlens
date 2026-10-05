@@ -27,7 +27,7 @@ def export_saved(run, destination, corpus=CORPUS):
         if not draft:continue
         # Render actual paragraphs using unchanged production rendering; validation
         # must succeed, but invalid summary patches remain unapplied and visible.
-        section=render_paragraphs(draft['paragraphs'],record['ledger'])
+        section=render_paragraphs(record.get('paragraphs', draft['paragraphs']),record['ledger'])
         fixture=fixtures[item['case_id']]
         original_sources=[{'evidence_id':'episode:'+s['uuid'],'excerpt':s['data'],
             'source_hash':s['fixture_text_sha256'],'origin':s['origin'],'filename':s.get('filename'),
@@ -43,7 +43,8 @@ def export_saved(run, destination, corpus=CORPUS):
         states[item['case_id']]={'state':item['state'],'finding_codes':item['finding_codes'],
             'candidate_origin':'actual_model_draft_response','summary_origin':'actual_draft_applied_to_comparison' if record.get('after') else 'authored_comparison_input',
             'summary_edits_applied':bool(record.get('after') and record.get('summary_edits')),'complete_original_sources_provided':True,
-            'retrieved_source_ids':[s['evidence_id'] for s in record['sources']],'diagnostics_digest':record['diagnostics_digest']}
+            'retrieved_source_ids':[s['evidence_id'] for s in record['sources']],'diagnostics_digest':record['diagnostics_digest'],
+            'output_policy':record.get('policy'),'server_rendering':record.get('extract_provenance')}
     outcome=export_packets(destination,rows,observations,namespace=corpus.name+'-drafts',candidate_origin='actual_minimax_draft_response',real_model_output=True)
     mapping=json.loads((destination/'administrator/mapping.json').read_text())
     for item in mapping:item.update(states[item['fixture_id']])

@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "corpus_version": "conditional-completion-development",
+  "cases": [
+    {
+      "id": "completion_dev_repair",
+      "split": "development",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "completion_dev_repair_graph_id",
+        "case_id": "completion_dev_repair_case_id",
+        "case_version_id": "completion_dev_repair_case_version_id"
+      },
+      "sources": [
+        {
+          "graph_id": "completion_dev_repair_graph_id",
+          "case_id": "completion_dev_repair_case_id",
+          "case_version_id": "completion_dev_repair_case_version_id",
+          "uuid": "repair_source_0",
+          "document_id": "repair_document_0",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Fernbank repair room permits four supervised assembly sessions only when a qualified facilitator is present. Unsupervised use is excluded.",
+          "fixture_text_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0"
+        },
+        {
+          "graph_id": "completion_dev_repair_graph_id",
+          "case_id": "completion_dev_repair_case_id",
+          "case_version_id": "completion_dev_repair_case_version_id",
+          "uuid": "repair_source_1",
+          "document_id": "repair_document_1",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5"
+        },
+        {
+          "graph_id": "completion_dev_repair_graph_id",
+          "case_id": "completion_dev_repair_case_id",
+          "case_version_id": "superseded",
+          "uuid": "repair_source_2",
+          "document_id": "repair_document_2",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Fernbank repair room permits four supervised assembly sessions only when a qualified facilitator is present. Unsupervised use is excluded.",
+          "fixture_text_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0"
+        },
+        {
+          "graph_id": "completion_dev_repair_graph_id",
+          "case_id": "foreign_case",
+          "case_version_id": "completion_dev_repair_case_version_id",
+          "uuid": "repair_source_3",
+          "document_id": "repair_document_3",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5"
+        }
+      ],
+      "summary": "The team has committed to assist and unsupervised use is approved. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "repair sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The team has committed to assist and unsupervised use is approved."
+      }
+    },
+    {
+      "id": "completion_dev_sorting",
+      "split": "development",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "completion_dev_sorting_graph_id",
+        "case_id": "completion_dev_sorting_case_id",
+        "case_version_id": "completion_dev_sorting_case_version_id"
+      },
+      "sources": [
+        {
+          "graph_id": "completion_dev_sorting_graph_id",
+          "case_id": "completion_dev_sorting_case_id",
+          "case_version_id": "completion_dev_sorting_case_version_id",
+          "uuid": "sorting_source_0",
+          "document_id": "sorting_document_0",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present. Overnight access is excluded.",
+          "fixture_text_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b"
+        },
+        {
+          "graph_id": "completion_dev_sorting_graph_id",
+          "case_id": "completion_dev_sorting_case_id",
+          "case_version_id": "completion_dev_sorting_case_version_id",
+          "uuid": "sorting_source_1",
+          "document_id": "sorting_document_1",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281"
+        },
+        {
+          "graph_id": "completion_dev_sorting_graph_id",
+          "case_id": "completion_dev_sorting_case_id",
+          "case_version_id": "superseded",
+          "uuid": "sorting_source_2",
+          "document_id": "sorting_document_2",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present. Overnight access is excluded.",
+          "fixture_text_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b"
+        },
+        {
+          "graph_id": "completion_dev_sorting_graph_id",
+          "case_id": "foreign_case",
+          "case_version_id": "completion_dev_sorting_case_version_id",
+          "uuid": "sorting_source_3",
+          "document_id": "sorting_document_3",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281"
+        }
+      ],
+      "summary": "The group has committed to assist and overnight access is approved. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "sorting sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The group has committed to assist and overnight access is approved."
+      }
+    }
+  ]
+}
