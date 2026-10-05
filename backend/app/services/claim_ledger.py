@@ -4,12 +4,34 @@ These checks establish structural linkage, never the truth of a source or infere
 """
 import hashlib
 import json
+import re
 
 from .evidence_verifier import text_hash
 
 SCOPE_KEYS = ('graph_id', 'case_id', 'case_version_id')
 KINDS = {'source_statement', 'attributed_allegation', 'analysis'}
 MAX_CLAIMS = 30
+
+
+def conditional_offer(text):
+    """Bounded English trigger, not a general entailment classifier."""
+    return isinstance(text, str) and bool(
+        re.search(r'\b(could|may|might)\b', text, re.I)
+        and re.search(r'\b(if|unless|provided|providing)\b', text, re.I))
+
+
+def complete_source_extract(text, window):
+    # Whole contiguous sentences only: a substring could omit the condition.
+    if not isinstance(text, str) or not text or text != text.strip():
+        return False
+    for match in re.finditer(re.escape(text), window):
+        start, end = match.span()
+        prefix = window[:start]
+        if (not prefix.strip() or (prefix[-1:].isspace() and prefix.rstrip().endswith(('.', '!', '?')))):
+            if (not window[end:].strip() or (text.endswith(('.', '!', '?')) and window[end:end + 1].isspace())):
+                return True
+    return False
+
 
 
 def canonical_digest(value):
@@ -95,13 +117,19 @@ def validate_ledger(ledger, sources, scope):
             error = validate_source(source, scope) if source else 'unknown_citation'
             if error:
                 findings.append(finding(error, identifier))
+            elif conditional_offer(source['window']) and not complete_source_extract(claim.get('text'), source['window']):
+                findings.append(finding('conditional_source_requires_extract', identifier))
         quote = claim.get('quote', '')
         if not isinstance(quote, str) or (quote and not any(
                 quote in by_source[c]['window'] for c in citations
                 if c in by_source and not validate_source(by_source[c], scope))):
             findings.append(finding('quote_absent', identifier))
 
-    colors, outcomes = {}, {}
+    colors, outcomes, conditional_claims = {}, {}, set()
+    for identifier, claim in claims.items():
+        if any(conditional_offer(by_source.get(c, {}).get('window'))
+               for c in (claim.get('citation_ids') if _strings(claim.get('citation_ids')) else [])):
+            conditional_claims.add(identifier)
 
     def visit(identifier):
         if identifier not in claims:
@@ -131,6 +159,10 @@ def validate_ledger(ledger, sources, scope):
                     if parent not in claims:
                         findings.append(finding('unknown_premise', identifier))
                     state.update(visit(parent))
+                    if parent in conditional_claims:
+                        conditional_claims.add(identifier)
+            if identifier in conditional_claims:
+                findings.append(finding('conditional_analysis_requires_review', identifier))
             for outcome in sorted(state - {'supported'}):
                 findings.append(finding('premise_' + str(outcome), identifier, blocking=False))
         elif not state:
@@ -146,10 +178,11 @@ def validate_ledger(ledger, sources, scope):
     return findings
 
 
-def validate_paragraphs(paragraphs, ledger):
+def validate_paragraphs(paragraphs, ledger, sources=None):
     if not isinstance(paragraphs, list) or not paragraphs or len(paragraphs) > 60:
         return [finding('invalid_paragraphs')]
     claims = {c['claim_id']: c for c in ledger}
+    conditional_sources = {s['evidence_id'] for s in sources or [] if conditional_offer(s.get('window'))}
     findings = []
     for index, paragraph in enumerate(paragraphs):
         def issue(code, **details):
@@ -158,6 +191,11 @@ def validate_paragraphs(paragraphs, ledger):
             issue('invalid_paragraph')
             continue
         text, identifiers = paragraph.get('text'), paragraph.get('claim_ids')
+        if isinstance(identifiers, list) and any(
+                isinstance(i, str) and i in claims and (conditional_offer(claims[i].get('text'))
+                or bool(set(claims[i].get('citation_ids', [])) & conditional_sources)) for i in identifiers):
+            if len(identifiers) != 1 or text != claims[identifiers[0]]['text']:
+                issue('conditional_paragraph_requires_extract')
         if not isinstance(text, str) or not text.strip() or len(text) > 8000:
             issue('invalid_paragraph_text')
         if not _strings(identifiers) or not identifiers or any(i not in claims for i in identifiers):
