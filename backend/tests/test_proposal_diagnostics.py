@@ -19,13 +19,13 @@ def diagnostics(tmp_path, result):
 
 
 def test_invalid_audit_retains_response_and_exact_field(tmp_path):
-    audit = {'findings': [], 'covered_paragraph_indices': [0],
-             'covered_summary_edit_indices': [0], 'summary_unchanged_consistent': 'true'}
+    from test_proposal_output_reliability import explicit_audit
+    audit = explicit_audit();audit['summary_consistent']='true'
     result, llm = run(tmp_path, {'EVIDENCE_AUDIT_V1': audit})
     assert result['state'] == 'blocked' and len(llm.calls) == 3
     finding = result['findings'][0]
     assert finding['code'] == 'invalid_audit'
-    assert finding['field'] == 'summary_unchanged_consistent'
+    assert finding['field'] == 'summary_consistent'
     assert finding['expected'] == 'boolean'
     saved = diagnostics(tmp_path, result)
     assert saved['auditing']['parsed_response'] == audit
@@ -41,7 +41,7 @@ def test_missing_summary_target_stays_blocked_with_precise_reason(tmp_path):
              'summary_unchanged_consistent': False}
     result, _ = run(tmp_path, {'EVIDENCE_DRAFT_V1': draft, 'EVIDENCE_AUDIT_V1': audit})
     assert result['state'] == 'blocked'
-    assert result['findings'][0]['field'] == 'findings[0].target_index'
+    assert result['findings'][0]['field'] == 'audit_protocol'
     assert diagnostics(tmp_path, result)['auditing']['parsed_response'] == audit
 
 

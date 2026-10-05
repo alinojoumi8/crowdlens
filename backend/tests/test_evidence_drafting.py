@@ -26,8 +26,10 @@ class FakeLLM:
                 'summary_edits': [{'start': 0, 'end': 24, 'old_text': 'The hearing is Thursday.',
                     'new_text': TEXT, 'claim_ids': ['claim_01']}]}
         else:
-            value = {'findings': [], 'covered_paragraph_indices': [0], 'covered_summary_edit_indices': [0],
-                     'summary_unchanged_consistent': True,
+            value = {'audit_protocol':'target_reviews_v1', 'summary_consistent':True,
+                     'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched source.'}],
+                     'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched source.'}],
+                     'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Synthetic source covered.'}],
                      'claim_reviews': [{'claim_id': 'claim_01', 'outcome': 'supported', 'evidence_ids': ['episode:one'],
                                         'detail': 'The cited source expressly records the postponement.'}]}
         return self.change.get(phase, value)
@@ -90,8 +92,10 @@ def test_scope_crosscheck():
 
 def test_unchanged_inconsistent_summary_blocks(tmp_path):
     draft = {'paragraphs': [{'text': TEXT, 'kind': 'attributed_allegation', 'claim_ids': ['claim_01']}], 'summary_edits': []}
-    audit = {'findings': [], 'covered_paragraph_indices': [0], 'covered_summary_edit_indices': [],
-             'summary_unchanged_consistent': False}
+    audit = {'audit_protocol':'target_reviews_v1','summary_consistent':False,
+             'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic source match.'}],
+             'summary_reviews':[], 'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Source covered.'}],
+             'claim_reviews':[{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],'detail':'Source match.'}]}
     result, _ = run(tmp_path, {'EVIDENCE_DRAFT_V1': draft, 'EVIDENCE_AUDIT_V1': audit})
     assert result['state'] == 'blocked'
     assert any(f['code'] == 'summary_inconsistent' for f in result['findings'])

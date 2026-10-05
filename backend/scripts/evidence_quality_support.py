@@ -64,8 +64,10 @@ class ScriptedDraft:
                                       'claim_ids': [claim['claim_id']]} for claim in payload['ledger']],
                       'summary_edits': []}
         elif prompt == AUDIT_PROMPT:
-            result = {'findings': [], 'covered_paragraph_indices': list(range(len(payload['paragraphs']))),
-                      'covered_summary_edit_indices': [], 'summary_unchanged_consistent': True,
+            result = {'audit_protocol':'target_reviews_v1', 'summary_consistent':True,
+                      'paragraph_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic structural judgment only.'} for i in range(len(payload['paragraphs']))],
+                      'summary_reviews':[],
+                      'document_reviews':[{'document_id':i,'outcome':'complete','detail':'Synthetic coverage judgment only.'} for i in payload['audit_contract']['reviewed_document_ids']],
                       'claim_reviews': [{'claim_id': c['claim_id'], 'outcome': 'supported',
                           'evidence_ids': c.get('citation_ids', []),
                           'detail': 'Synthetic positive model judgment for structural testing only; not a quality label.'}

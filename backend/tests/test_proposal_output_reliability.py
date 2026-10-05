@@ -104,3 +104,18 @@ def test_competing_error_list_is_never_ignored(tmp_path):
     audit=explicit_audit();audit['findings']=[{'code':'added_fact'}]
     result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit})
     assert result['state']=='blocked'
+
+
+def test_missing_protocol_never_discards_negative_target_reviews(tmp_path):
+    value=explicit_audit();value.pop('audit_protocol')
+    value.update(findings=[],covered_paragraph_indices=[0],covered_summary_edit_indices=[0])
+    value['paragraph_reviews'][0]['outcome']='unsupported'
+    result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+    assert result['state']=='blocked'
+
+
+def test_fresh_proposal_requires_new_audit_coverage(tmp_path):
+    value={'summary_consistent':True,'findings':[],'covered_paragraph_indices':[0],'covered_summary_edit_indices':[0],
+           'claim_reviews':explicit_audit()['claim_reviews']}
+    result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
+    assert result['state']=='blocked'

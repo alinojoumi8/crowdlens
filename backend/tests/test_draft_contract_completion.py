@@ -6,10 +6,12 @@ from test_evidence_drafting import run
 
 
 def audit(consistent=True, reviews=None):
-    value={'findings':[],'covered_paragraph_indices':[0],'covered_summary_edit_indices':[0],
-        'summary_unchanged_consistent':consistent}
-    if reviews is not None:value['claim_reviews']=reviews
-    return value
+    return {'audit_protocol':'target_reviews_v1','summary_consistent':consistent,
+        'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic source match.'}],
+        'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic source match.'}],
+        'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Synthetic source covered.'}],
+        'claim_reviews':reviews}
+
 
 
 def reviewed(outcome='supported',evidence=None):
@@ -106,14 +108,14 @@ def test_competing_summary_contracts_block(tmp_path):
 
 @pytest.mark.parametrize('consistent',[True,False])
 def test_explicit_result_summary_audit(tmp_path,consistent):
-    value=audit(consistent,reviewed());value['summary_consistent']=value.pop('summary_unchanged_consistent')
+    value=audit(consistent,reviewed())
     result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
     assert result['state']==('ready' if consistent else 'blocked')
     if not consistent:assert any(f['code']=='summary_inconsistent' for f in result['findings'])
 
 
 def test_conflicting_summary_audit_aliases_block(tmp_path):
-    value=audit(True,reviewed());value['summary_consistent']=False
+    value=audit(True,reviewed());value['summary_unchanged_consistent']=False
     result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
     assert result['state']=='blocked'
 

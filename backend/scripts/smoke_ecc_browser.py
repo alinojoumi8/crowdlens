@@ -173,8 +173,10 @@ def main():
                 return {'paragraphs': [{'text': TEXT, 'kind': 'attributed_allegation', 'claim_ids': ['claim_01']}],
                     'summary_edits': [{'start': 0, 'end': 24, 'old_text': 'The hearing is Thursday.',
                                       'new_text': TEXT, 'claim_ids': ['claim_01']}]}
-            return {'findings': [], 'covered_paragraph_indices': [0], 'covered_summary_edit_indices': [0],
-                    'summary_unchanged_consistent': True,
+            return {'audit_protocol':'target_reviews_v1', 'summary_consistent':True,
+                    'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched source.'}],
+                    'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched source.'}],
+                    'document_reviews':[{'document_id':'synthetic_doc','outcome':'complete','detail':'Synthetic source covered.'}],
                     'claim_reviews': [{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],
                         'detail':'Synthetic structural demonstration only; no factual label.'}]}
     app = Flask(__name__, static_folder=None)

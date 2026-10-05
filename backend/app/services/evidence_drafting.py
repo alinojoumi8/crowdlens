@@ -70,12 +70,16 @@ def normalize_target_audit(audit, paragraphs, edits, ledger, sources):
             'covered_summary_edit_indices':list(range(len(edits)))}
 
 
-def audit_findings(audit, paragraphs, edits, ledger, *, sources=None, require_grounding=False):
+def audit_findings(audit, paragraphs, edits, ledger, *, sources=None, require_grounding=False, require_target_reviews=False):
     def invalid(field, expected, value, code='invalid_audit'):
         return [{**finding(code), 'field': field, 'expected': expected,
                  'received_type': type(value).__name__, 'detail': f'{field} must be {expected}.'}]
     if not isinstance(audit, dict):
         return invalid('$', 'object', audit)
+    if 'audit_protocol' not in audit and any(k in audit for k in ('paragraph_reviews','summary_reviews','document_reviews')):
+        return invalid('audit_protocol', 'target_reviews_v1 for target judgments', audit)
+    if require_target_reviews and audit.get('audit_protocol') != 'target_reviews_v1':
+        return invalid('audit_protocol', 'target_reviews_v1', audit.get('audit_protocol'))
     if 'audit_protocol' in audit:
         try:
             audit = normalize_target_audit(audit, paragraphs, edits, ledger, sources or [])
@@ -396,7 +400,7 @@ class EvidenceDraftingService:
                                           'reviewed_claim_ids': [c['claim_id'] for c in ledger],
                                           'reviewed_document_ids': sorted({s['document_id'] for s in packet['sources']}),
                                           'valid_source_ids': [s['evidence_id'] for s in packet['sources']]}})
-            findings.extend(audit_findings(audit, paragraphs, edits, ledger, sources=packet['sources'], require_grounding=True))
+            findings.extend(audit_findings(audit, paragraphs, edits, ledger, sources=packet['sources'], require_grounding=True, require_target_reviews=True))
             return finish(findings, summary_unchanged=not edits)
         except ProposalError:
             raise
