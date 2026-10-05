@@ -71,7 +71,7 @@ def test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged():
     assert render(p, [{**claim('A separate fact.'), 'claim_id':'other', 'kind':'source_statement', 'citation_ids':['another']}], [source()]) == (p, [])
 
 
-def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illegal_duplicate=False):
+def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illegal_duplicate=False, guarded_count=1):
     import json
     from evidence_draft_samples import sample_report, sample_claim, TEXT
     from app.services.proposal_store import ProposalStore
@@ -80,7 +80,7 @@ def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illega
     text = 'Fictional hearing workshop note: Sora says the group could assist if benches are confirmed. This is possible assistance, not a commitment.'
     class Storage:
         def get_source_chunks(self, **scope):
-            return [{**SCOPE, 'uuid':'one','document_id':'doc','data':text,'page':1}] + ([{**SCOPE,'uuid':'two','document_id':'doc2','data':TEXT,'page':1}] if ordinary else [])
+            return [{**SCOPE, 'uuid':'one'+str(i) if guarded_count>1 else 'one','document_id':'doc','data':text,'page':1} for i in range(guarded_count)] + ([{**SCOPE,'uuid':'two','document_id':'doc2','data':TEXT,'page':1}] if ordinary else [])
     class LLM:
         model = 'synthetic-conditional-selection'
         def chat_json(self, messages, **kwargs):
@@ -189,3 +189,10 @@ def test_model_cannot_add_duplicate_guarded_source_claims(tmp_path):
     record, _, _ = generate_selected(tmp_path, ordinary=True, illegal_duplicate=True)
     assert record['state'] == 'blocked'
     assert record['findings'][0]['code'] == 'invalid_ledger'
+
+
+def test_all_guarded_claims_can_fill_entire_capacity_without_planner_slot(tmp_path):
+    record, _, _ = generate_selected(tmp_path, guarded_count=5)
+    assert record['state'] == 'ready'
+    assert len(record['ledger']) == 5
+    assert len(record['extract_provenance']['contract']) == 5

@@ -333,7 +333,8 @@ class EvidenceDraftingService:
             allowed = [f'claim_{i:02}' for i in range(1, claim_limit + 1)]
             extract_contract = build_extract_contract(packet['sources'], scope)
             guarded_ids = {s['evidence_id'] for s in packet['sources'] if conditional_offer(s['excerpt'])}
-            if len(extract_contract) != len(guarded_ids) or len(extract_contract) >= claim_limit:
+            ordinary_windows = [s for s in windows if s['evidence_id'] not in guarded_ids]
+            if len(extract_contract) != len(guarded_ids) or len(extract_contract) > claim_limit or (len(extract_contract) == claim_limit and ordinary_windows):
                 return finish([finding('conditional_excerpt_unavailable')])
             reserved = allowed[-len(extract_contract):] if extract_contract else []
             guarded_claims = [{'claim_id': identifier, 'kind': 'source_statement', 'text': '', 'attribution': '',
@@ -344,7 +345,6 @@ class EvidenceDraftingService:
                                   'contract': extract_contract, 'ledger_resolutions': [], 'paragraph_resolutions': []}
             context = dict(conditional_extract_contract=extract_contract, section_title=section['title'], section_description=section.get('description', ''),
                            before=before, sources=windows, scope=scope)
-            ordinary_windows = [s for s in windows if s['evidence_id'] not in guarded_ids]
             planner_context = {k:v for k,v in context.items() if k != 'conditional_extract_contract'}
             planner_context.update(sources=ordinary_windows, allowed_claim_ids=[i for i in allowed if i not in reserved],
                                    server_owned_claim_ids=reserved)
