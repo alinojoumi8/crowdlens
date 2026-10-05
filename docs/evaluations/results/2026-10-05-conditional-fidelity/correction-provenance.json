@@ -1,0 +1,13 @@
+{
+  "original_packet": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-source-review-v6/review-final/reviewer/packet_a9e0e1172d1a.json",
+  "original_sha256": "cba7b77aae6b1afcaca67cd2bcd5179decf3591e6d8b765ac259f94f6cc92000",
+  "correction_origin": "agent_prepared_source_extract",
+  "human_review_seconds": null,
+  "published": false,
+  "removed_claim_ids": [
+    "claim_06",
+    "claim_07",
+    "claim_08"
+  ],
+  "reason": "Remove reversed implication and dependent/redundant analysis; retain all original source facts as complete sentences."
+}

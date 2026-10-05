@@ -1,0 +1,98 @@
+{
+  "candidate_section": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present. [1]\n\nUnsupervised access is excluded. [1]\n\nFictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed. [2]\n\nThis is possible future assistance, not an existing commitment. [2]",
+  "candidate_section_summary": null,
+  "candidate_summary": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present. Unsupervised access is excluded. Fictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed. This is possible future assistance, not an existing commitment. An unrelated ventilation check is pending.",
+  "candidate_summary_claim_ids": [
+    "corrected_01",
+    "corrected_02",
+    "corrected_03",
+    "corrected_04"
+  ],
+  "candidate_summary_edits": [],
+  "candidate_summary_replacements": null,
+  "citation_number_sources": {
+    "1": "S01",
+    "2": "S02"
+  },
+  "claims": [
+    {
+      "claim_id": "corrected_01",
+      "kind": "source_statement",
+      "attribution": "",
+      "citation_ids": [
+        "S01"
+      ],
+      "premise_claim_ids": [],
+      "text": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present."
+    },
+    {
+      "claim_id": "corrected_02",
+      "kind": "source_statement",
+      "attribution": "",
+      "citation_ids": [
+        "S01"
+      ],
+      "premise_claim_ids": [],
+      "text": "Unsupervised access is excluded."
+    },
+    {
+      "claim_id": "corrected_03",
+      "kind": "attributed_allegation",
+      "attribution": "Sora",
+      "citation_ids": [
+        "S02"
+      ],
+      "premise_claim_ids": [],
+      "text": "Fictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed."
+    },
+    {
+      "claim_id": "corrected_04",
+      "kind": "source_statement",
+      "attribution": "",
+      "citation_ids": [
+        "S02"
+      ],
+      "premise_claim_ids": [],
+      "text": "This is possible future assistance, not an existing commitment."
+    }
+  ],
+  "notice": "Separate agent-prepared correction for independent AI review; not a new provider attempt, not accepted or published. Original v6 draft and AI ratings are unchanged.",
+  "original_comparison_summary": "Unsupervised glazing access is approved and participants have committed to assist. An unrelated ventilation check is pending.",
+  "packet_id": "elmreach_correction_01",
+  "schema_version": 1,
+  "sources": [
+    {
+      "case_id": "case-A",
+      "case_version_id": "version-current",
+      "document_id": "D01",
+      "excerpt": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present. Unsupervised access is excluded.",
+      "filename": "original.txt",
+      "graph_id": "graph-A",
+      "locator": {
+        "page": 1,
+        "paragraph": 1,
+        "scope": "complete_frozen_original_document"
+      },
+      "origin": "source_document",
+      "source_id": "S01",
+      "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319"
+    },
+    {
+      "case_id": "case-A",
+      "case_version_id": "version-current",
+      "document_id": "D02",
+      "excerpt": "Fictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed. This is possible future assistance, not an existing commitment.",
+      "filename": "followup.txt",
+      "graph_id": "graph-A",
+      "locator": {
+        "page": 1,
+        "paragraph": 1,
+        "scope": "complete_frozen_original_document"
+      },
+      "origin": "source_document",
+      "source_id": "S02",
+      "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285"
+    }
+  ],
+  "task": "Reconcile authorization, conditions, counts and evidence limits from the original records."
+}

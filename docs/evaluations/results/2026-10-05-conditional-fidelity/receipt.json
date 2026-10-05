@@ -1,0 +1,28 @@
+{
+  "tests": {
+    "backend": 662,
+    "node": 12,
+    "components": 54,
+    "total": 728,
+    "build": "passed"
+  },
+  "live_generation_revision": "a860d129043b71dafdb50dbfee17d56a562cd56c",
+  "live_requests": 3,
+  "ready": 0,
+  "attempted": 2,
+  "holdout_retries": 0,
+  "live_final_boundary_tightening": false,
+  "correction_origin": "agent_prepared_source_extract",
+  "human_review_seconds": null,
+  "published": false,
+  "browser_preview": "http://127.0.0.1:18806/",
+  "final_application_revision": "597078eb86f5601ad991793c8b7247ba1b42fa49",
+  "independent_code_review": "no_remaining_blocker",
+  "correction_ai_review": {
+    "supported_claims": 4,
+    "total_claims": 4,
+    "covered_material_facts": 5,
+    "total_material_facts": 5,
+    "human_review_seconds": null
+  }
+}

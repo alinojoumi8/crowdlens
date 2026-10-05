@@ -1,0 +1,420 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-conditional-fidelity-correction-review",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "reviewed_at": "2026-10-05T06:45:06.249493+00:00",
+  "review_seconds": null,
+  "human_review_seconds": null,
+  "packet_id": "elmreach_correction_01",
+  "packet_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/correction/elmreach-correction.json",
+  "packet_sha256": "4eb4440077f1b5e57cc8fab108f3358077992f7018aa1634657523894cf61d55",
+  "review_status": "COMPLETE_AI_SOURCE_REVIEW_NOT_ACCEPTANCE_OR_RELEASE_APPROVAL",
+  "source_first_reference_file": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/correction/correction-source-first-reference-facts.json",
+  "source_first_reference_sha256": "a878cca1b5e76e2cdcbd824daff855831b9a9c0dd5178bd6d43df532974ff682",
+  "source_first_frozen_at": "2026-10-05T06:39:40.359261+00:00",
+  "source_evidence": [
+    {
+      "source_id": "S01",
+      "filename": "original.txt",
+      "document_id": "D01",
+      "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+      "excerpt_utf8_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+      "locator": {
+        "page": 1,
+        "paragraph": 1,
+        "scope": "complete_frozen_original_document"
+      }
+    },
+    {
+      "source_id": "S02",
+      "filename": "followup.txt",
+      "document_id": "D02",
+      "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+      "excerpt_utf8_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+      "locator": {
+        "page": 1,
+        "paragraph": 1,
+        "scope": "complete_frozen_original_document"
+      }
+    }
+  ],
+  "reference_facts": [
+    {
+      "fact_id": "CORR-F01",
+      "text": "The Elmreach schedule permits two supervised glazing sessions.",
+      "sources": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F02",
+      "text": "The sessions are permitted only when a certified instructor is present.",
+      "sources": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F03",
+      "text": "Unsupervised access is excluded.",
+      "sources": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F04",
+      "text": "Sora says the group could assist if accessible benches are confirmed.",
+      "sources": [
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F05",
+      "text": "This is possible future assistance, not an existing commitment.",
+      "sources": [
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "corrected_01",
+      "text": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present.",
+      "support": "supported",
+      "attribution_correct": true,
+      "citation_support_correct": true,
+      "rationale": "S01 (original.txt, p. 1, para. 1) gives two supervised glazing sessions only when a certified instructor is present. The exact sentence preserves the count, supervision and explicit necessary staffing condition.",
+      "exact_extract_from_cited_source": true
+    },
+    {
+      "claim_id": "corrected_02",
+      "text": "Unsupervised access is excluded.",
+      "support": "supported",
+      "attribution_correct": true,
+      "citation_support_correct": true,
+      "rationale": "S01 (original.txt, p. 1, para. 1) explicitly excludes unsupervised access. The exact sentence preserves the authorization limit.",
+      "exact_extract_from_cited_source": true
+    },
+    {
+      "claim_id": "corrected_03",
+      "text": "Fictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed.",
+      "support": "supported",
+      "attribution_correct": true,
+      "citation_support_correct": true,
+      "rationale": "S02 (followup.txt, p. 1, para. 1) attributes to Sora that the group could assist if accessible benches are confirmed. The exact sentence preserves attribution, conditional possibility and the condition, without claiming that confirmation is necessary before every possible form of assistance.",
+      "exact_extract_from_cited_source": true
+    },
+    {
+      "claim_id": "corrected_04",
+      "text": "This is possible future assistance, not an existing commitment.",
+      "support": "supported",
+      "attribution_correct": true,
+      "citation_support_correct": true,
+      "rationale": "S02 (followup.txt, p. 1, para. 1) explicitly says this is possible future assistance, not an existing commitment. In the source and correction sequence, this refers to Sora's immediately preceding statement; no current commitment is invented.",
+      "exact_extract_from_cited_source": true
+    }
+  ],
+  "omitted_reference_fact_ids": [],
+  "conflicts_handled": true,
+  "whole_section_review": {
+    "all_text_inspected": true,
+    "additional_material_claims_outside_ledger": [],
+    "material_facts_covered": 5,
+    "assessment": "The four claims cover all five source facts, keeping the schedule's explicit only-when instructor requirement separate from Sora's conditional possible assistance. No unsupported universal-prerequisite inference or source conflict is introduced."
+  },
+  "summary_review": {
+    "selected_claim_ids": [
+      "corrected_01",
+      "corrected_02",
+      "corrected_03",
+      "corrected_04"
+    ],
+    "source_scoped_support": "supported",
+    "source_scoped_summary_matches_selected_claims": true,
+    "additional_unledgered_source_scoped_claims": [],
+    "unrelated_suffix": "An unrelated ventilation check is pending.",
+    "original_suffix_count": 1,
+    "candidate_suffix_count": 1,
+    "suffix_preserved_once": true,
+    "suffix_in_source_scoped_text": false,
+    "inherited_suffix_factual_status": "Unverified by the two originals; preservation of comparison context does not establish ventilation status.",
+    "normalized_edit_validation": "No span edits are supplied in this separate correction; no original revision application or acceptance is inferred.",
+    "accepted_or_published": false
+  },
+  "correction_counts": {
+    "claims": 4,
+    "supported": 4,
+    "unsupported": 0,
+    "ambiguous": 0,
+    "conflicting": 0,
+    "reference_facts": 5,
+    "omitted_facts": 0
+  },
+  "v7_guard_review": {
+    "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/run/results.json",
+    "results_sha256": "4d6f1773f85f9e3daafae8c9601cbfe697846e8924b1c2db821a4c22509f9ad5",
+    "attempted_cases_reported": 2,
+    "blocked_cases": 2,
+    "ready_rate_as_recorded": {
+      "denominator": 2,
+      "numerator": 0
+    },
+    "guard_items_reviewed": 3,
+    "semantically_supported_flagged_items": 3,
+    "actual_semantic_defects_found_in_flagged_items": 0,
+    "cases": [
+      {
+        "case_id": "v7_toolroom",
+        "proposal_id": "proposal_2fbaf0c50dd44b929ea5ad14e194b733",
+        "state": "blocked",
+        "findings": [
+          {
+            "code": "conditional_source_requires_extract",
+            "blocking": true,
+            "claim_id": "claim_03"
+          }
+        ],
+        "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/run/v7_toolroom/reports/.evidence-proposals/proposal_2fbaf0c50dd44b929ea5ad14e194b733/record.json",
+        "record_sha256": "c8987d1bbd2c3645e5dbddca4cb2a939bf648c358cdc786a09283d3857067798",
+        "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/run/v7_toolroom/reports/.evidence-proposals/proposal_2fbaf0c50dd44b929ea5ad14e194b733/diagnostics.json",
+        "diagnostics_sha256": "38c7b02aa82bb33304bf1634ced1eae596f38b615f392e1e4e1cc357308ff2b6",
+        "source_evidence": [
+          {
+            "evidence_id": "episode:toolroom_source_0",
+            "document_id": "toolroom_document_0",
+            "filename": "original.txt",
+            "source_hash": "b90cffb08cd3570fda66727cab4898882cdb2675396bd8994d91d42c98d31dcc",
+            "window_hash": "b90cffb08cd3570fda66727cab4898882cdb2675396bd8994d91d42c98d31dcc",
+            "excerpt_utf8_sha256": "b90cffb08cd3570fda66727cab4898882cdb2675396bd8994d91d42c98d31dcc",
+            "locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 148,
+              "offset_basis": "stored_chunk"
+            }
+          },
+          {
+            "evidence_id": "episode:toolroom_source_1",
+            "document_id": "toolroom_document_1",
+            "filename": "followup.txt",
+            "source_hash": "3237117b50a2dcdfbfb3e18c2370d237878ca994a64bb1a06db0ca7fb694c893",
+            "window_hash": "3237117b50a2dcdfbfb3e18c2370d237878ca994a64bb1a06db0ca7fb694c893",
+            "excerpt_utf8_sha256": "3237117b50a2dcdfbfb3e18c2370d237878ca994a64bb1a06db0ca7fb694c893",
+            "locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 170,
+              "offset_basis": "stored_chunk"
+            }
+          }
+        ],
+        "guard_item_reviews": [
+          {
+            "surface": "ledger",
+            "claim_id": "claim_03",
+            "finding_code": "conditional_source_requires_extract",
+            "source_evidence_id": "episode:toolroom_source_1",
+            "source_filename": "followup.txt",
+            "source_locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 170,
+              "offset_basis": "stored_chunk"
+            },
+            "source_text": "Fictional Cedarpoint participant note: Nila says the team might assist if adjustable tables are confirmed. This is possible future assistance, not an existing commitment.",
+            "blocked_text": "Nila says the team might assist if adjustable tables are confirmed.",
+            "support": "supported",
+            "attribution_correct": true,
+            "citation_support_correct": true,
+            "actual_conditional_semantic_defect_found": false,
+            "wording_difference": "The generated claim omits only the introductory label Fictional Cedarpoint participant note: from the source sentence. Nila says, might assist, if, and adjustable tables are confirmed remain unchanged.",
+            "rationale": "The shorter statement preserves speaker, possible assistance and the stated condition. It does not introduce only if, must, before any, an existing commitment or a stronger outcome. The record shows extraction-format rejection; semantic unsupportedness is not established."
+          }
+        ],
+        "assessment": "Blocked during the ledger path: one planning call is recorded, no drafting response is present, after is empty and accepted_report_id is null. The flagged claim is semantically faithful despite not retaining the complete source sentence label.",
+        "verdict": "Conservative exact-wording/extraction noncompliance was blocked; no semantic conditional-fidelity defect found in the flagged text."
+      },
+      {
+        "case_id": "v7_library",
+        "proposal_id": "proposal_455405324f0f47a6a9b1da07b8f1b9b5",
+        "state": "blocked",
+        "findings": [
+          {
+            "code": "conditional_paragraph_requires_extract",
+            "blocking": true,
+            "paragraph_index": 2
+          },
+          {
+            "code": "conditional_paragraph_requires_extract",
+            "blocking": true,
+            "paragraph_index": 3
+          }
+        ],
+        "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/run/v7_library/reports/.evidence-proposals/proposal_455405324f0f47a6a9b1da07b8f1b9b5/record.json",
+        "record_sha256": "8264b05372134433f718ffb3fd58ab8db846ab2889429671670acaebc16509ba",
+        "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/run/v7_library/reports/.evidence-proposals/proposal_455405324f0f47a6a9b1da07b8f1b9b5/diagnostics.json",
+        "diagnostics_sha256": "c2cc003290afe33c85ab88b4b74682d9eb471d060ed33765f95c68b33c88c245",
+        "source_evidence": [
+          {
+            "evidence_id": "episode:library_source_0",
+            "document_id": "library_document_0",
+            "filename": "original.txt",
+            "source_hash": "61aab7f6ebc77d6d94d672c6ee23e0b2789903962d91c21714facdefb2addff6",
+            "window_hash": "61aab7f6ebc77d6d94d672c6ee23e0b2789903962d91c21714facdefb2addff6",
+            "excerpt_utf8_sha256": "61aab7f6ebc77d6d94d672c6ee23e0b2789903962d91c21714facdefb2addff6",
+            "locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 138,
+              "offset_basis": "stored_chunk"
+            }
+          },
+          {
+            "evidence_id": "episode:library_source_1",
+            "document_id": "library_document_1",
+            "filename": "followup.txt",
+            "source_hash": "8575e51703ef82c0f8d5d958987757d7278675854ee2bcf2787c0ab5d41bb7ef",
+            "window_hash": "8575e51703ef82c0f8d5d958987757d7278675854ee2bcf2787c0ab5d41bb7ef",
+            "excerpt_utf8_sha256": "8575e51703ef82c0f8d5d958987757d7278675854ee2bcf2787c0ab5d41bb7ef",
+            "locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 175,
+              "offset_basis": "stored_chunk"
+            }
+          }
+        ],
+        "guard_item_reviews": [
+          {
+            "surface": "draft_paragraph",
+            "paragraph_index": 2,
+            "linked_claim_ids": [
+              "claim_03"
+            ],
+            "finding_code": "conditional_paragraph_requires_extract",
+            "source_evidence_id": "episode:library_source_1",
+            "source_filename": "followup.txt",
+            "source_locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 175,
+              "offset_basis": "stored_chunk"
+            },
+            "source_text": "Fictional Brackenport participant note: Omar says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+            "blocked_text": "Omar says the group may assist provided accessible carts are confirmed.",
+            "support": "supported",
+            "attribution_correct": true,
+            "citation_support_correct": true,
+            "actual_conditional_semantic_defect_found": false,
+            "wording_difference": "The paragraph drops Fictional Brackenport participant note: while preserving Omar says the group may assist provided accessible carts are confirmed.",
+            "rationale": "Omar attribution, may modality, provided condition and accessible-cart confirmation remain intact. Omitting the document-label prefix does not strengthen assistance into commitment or change the conditional relation."
+          },
+          {
+            "surface": "draft_paragraph",
+            "paragraph_index": 3,
+            "linked_claim_ids": [
+              "claim_04"
+            ],
+            "finding_code": "conditional_paragraph_requires_extract",
+            "source_evidence_id": "episode:library_source_1",
+            "source_filename": "followup.txt",
+            "source_locator": {
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0,
+              "char_start": 0,
+              "char_end": 175,
+              "offset_basis": "stored_chunk"
+            },
+            "source_text": "Fictional Brackenport participant note: Omar says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+            "blocked_text": "Fictional Brackenport participant note characterizes this as possible future assistance, not an existing commitment.",
+            "support": "supported",
+            "attribution_correct": true,
+            "citation_support_correct": true,
+            "actual_conditional_semantic_defect_found": false,
+            "wording_difference": "The source says This is possible future assistance, not an existing commitment. The paragraph explicitly attributes that characterization to the named participant note.",
+            "rationale": "The added attribution is supported by the document itself and preserves possible, future and not an existing commitment. This is a faithful paraphrase, although its text is not an exact source sentence."
+          }
+        ],
+        "assessment": "A planning and drafting call are recorded. The two blocking findings match zero-based paragraph indices 2 and 3 in the saved draft response. The persisted after object is empty and accepted_report_id is null; no ready final draft is inferred from this diagnostic text.",
+        "verdict": "Conservative exact-wording/extraction noncompliance was blocked; no semantic conditional-fidelity defect found in the flagged text."
+      }
+    ],
+    "conclusion": "The guard demonstrably blocked non-identical/extraction-noncompliant representations in both cases. The inspected flagged wording is source-supported and does not reproduce the earlier universal-prerequisite strengthening. These blocks therefore do not demonstrate successful prevention of factual/conditional semantic errors, nor successful model completion. They show the conservatism of the exact-wording contract.",
+    "limits": "Targeted review of recorded flagged items, not a comprehensive evaluation of all possible generations or guard behavior. No code inspection or provider rerun. Results alone were insufficient to assess wording; the saved source windows, ledger and draft diagnostics supplied the necessary evidence."
+  },
+  "preservation": "Correction input, frozen reference file, v7 JSON evidence and all original v6 artifacts were left unchanged. The old v6 packet and review files were not opened or modified in this task.",
+  "provenance_note": "The correction is separately agent-prepared, not a new provider attempt. Correction facts were frozen before its prose was displayed; v7 source windows were read before their flagged ledger/draft text. Exact source hashes are retained. A read-only database schema inventory was used only while locating evidence; no database payload or application code was used for these findings.",
+  "validation": {
+    "exact_claim_coverage": true,
+    "correction_packet_sha256_verified": true,
+    "source_hashes_match_complete_excerpt_utf8": true,
+    "frozen_reference_sha256_verified": true,
+    "ai_provenance_explicit": true,
+    "human_timing_unmeasured": true,
+    "summary_selection_and_suffix_checked": true
+  }
+}
