@@ -12,6 +12,6 @@
 - [x] Complete source-first Astra max AI review and validate provenance/hashes: 24/25 claims supported; 22/22 material facts covered; one conditional implication error remains.
 - [x] Update README, ROADMAP, ECC plan, capability and evaluation documentation; preserve original reports and reviews.
 - [x] Block detected conditional implication changes and prepare a separate source-extractive correction for independent AI review. Original flagged draft remains unpublished.
-- [ ] Improve completion rate on separate development fixtures: v7 is 0/2 ready, both extraction-blocked; no holdout retries.
+- [x] Improve conditional-source completion on separate development fixtures; see [completion tasks](2026-10-05-conditional-completion.md). Frozen v7 remains 0/2, with no retries.
 
 [Audit, evidence and limits](../audits/2026-10-05-output-reliability.md). Human labels/time remain unmeasured. No actual proposal acceptance, publication, main merge, push or deployment.

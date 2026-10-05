@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-source-review-v8",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "frozen_at": "2026-10-05T07:44:53.376375+00:00",
+  "review_seconds": null,
+  "human_review_seconds": null,
+  "input_path": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/evaluations/source-review-v8/cases.json",
+  "input_sha256": "2182fe6542ddb47a2c481541cd6b98bb734ca2f417221e329577306dc2118960",
+  "source_only_freeze": true,
+  "candidate_outputs_seen_before_freeze": false,
+  "method": "Derived solely from the task title/description and all current scoped original source_document texts. Candidate prose, comparisons, results, diagnostics and gates were not inspected before this freeze. Fictional supplied documents are the complete evidence boundary. Excluded source bodies are not evidence.",
+  "interpretation_limits": [
+    "A statement of possible assistance if a condition holds does not by itself establish that condition as a universal necessity for any future assistance.",
+    "No source establishes that an assistance condition has already been met or that assistance is presently committed.",
+    "Authorization conditions must remain attached to the permitted sessions; they do not assert that those sessions have already taken place."
+  ],
+  "cases": [
+    {
+      "case_id": "v8_puppets",
+      "scope": {
+        "graph_id": "v8_puppets_graph_id",
+        "case_id": "v8_puppets_case_id",
+        "case_version_id": "v8_puppets_case_version_id"
+      },
+      "task": {
+        "title": "puppets sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records."
+      },
+      "current_original_count": 2,
+      "excluded_source_count": 2,
+      "sources": [
+        {
+          "alias": "S01",
+          "uuid": "puppets_source_0",
+          "document_id": "puppets_document_0",
+          "filename": "original.txt",
+          "scope": {
+            "graph_id": "v8_puppets_graph_id",
+            "case_id": "v8_puppets_case_id",
+            "case_version_id": "v8_puppets_case_version_id"
+          },
+          "origin": "source_document",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0
+          },
+          "text": "Fictional Reedvale puppet room permits two supervised building sessions only when a workshop leader is present. Late-night access is excluded.",
+          "text_sha256": "d27a00e9aa20069becd4dc3a3d2aed92e5cd6b39b225766a6e08c9fadbe7980b"
+        },
+        {
+          "alias": "S02",
+          "uuid": "puppets_source_1",
+          "document_id": "puppets_document_1",
+          "filename": "followup.txt",
+          "scope": {
+            "graph_id": "v8_puppets_graph_id",
+            "case_id": "v8_puppets_case_id",
+            "case_version_id": "v8_puppets_case_version_id"
+          },
+          "origin": "source_document",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0
+          },
+          "text": "Fictional Reedvale participant note: Mavi says the team might assist if reachable workstations are confirmed and the coordinator agrees. This is possible future assistance, not an existing commitment.",
+          "text_sha256": "af619727ff620af8400359a6ef13b84c4480249a89230723a5ebc9ec83037c40"
+        }
+      ],
+      "material_reference_facts": [
+        {
+          "fact_id": "v8_puppets-F01",
+          "text": "The fictional Reedvale puppet room permits two supervised building sessions.",
+          "source_aliases": [
+            "S01"
+          ],
+          "locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_puppets-F02",
+          "text": "The permission for those sessions holds only when a workshop leader is present; this is an explicit necessary authorization condition.",
+          "source_aliases": [
+            "S01"
+          ],
+          "locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_puppets-F03",
+          "text": "Late-night access is excluded.",
+          "source_aliases": [
+            "S01"
+          ],
+          "locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_puppets-F04",
+          "text": "Mavi says the team might assist if reachable workstations are confirmed and the coordinator agrees. Preserve both conjunctive conditions, the tentative modal, Mavi as the speaker, and the team as the possible assisting actor.",
+          "source_aliases": [
+            "S02"
+          ],
+          "locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_puppets-F05",
+          "text": "The participant note expressly describes possible future assistance, not an existing commitment.",
+          "source_aliases": [
+            "S02"
+          ],
+          "locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "v8_maps",
+      "scope": {
+        "graph_id": "v8_maps_graph_id",
+        "case_id": "v8_maps_case_id",
+        "case_version_id": "v8_maps_case_version_id"
+      },
+      "task": {
+        "title": "maps sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records."
+      },
+      "current_original_count": 2,
+      "excluded_source_count": 2,
+      "sources": [
+        {
+          "alias": "S01",
+          "uuid": "maps_source_0",
+          "document_id": "maps_document_0",
+          "filename": "original.txt",
+          "scope": {
+            "graph_id": "v8_maps_graph_id",
+            "case_id": "v8_maps_case_id",
+            "case_version_id": "v8_maps_case_version_id"
+          },
+          "origin": "source_document",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0
+          },
+          "text": "Fictional Birchhaven map room permits five afternoon sorting sessions only when a staff custodian is present. Weekend access is excluded.",
+          "text_sha256": "9017fee8d693cb3c72fd754a82f89e9a4fe2dca5d4cfd480fca6bf74fa705f04"
+        },
+        {
+          "alias": "S02",
+          "uuid": "maps_source_1",
+          "document_id": "maps_document_1",
+          "filename": "followup.txt",
+          "scope": {
+            "graph_id": "v8_maps_graph_id",
+            "case_id": "v8_maps_case_id",
+            "case_version_id": "v8_maps_case_version_id"
+          },
+          "origin": "source_document",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0
+          },
+          "text": "Fictional Birchhaven participant note: If accessible carts are confirmed, Nori says the group could assist. This is possible future assistance, not an existing commitment.",
+          "text_sha256": "ec0f6d92bb8bc8c2cb01d473fd7624f8c365093b073fc36a93c99ae98251cf82"
+        }
+      ],
+      "material_reference_facts": [
+        {
+          "fact_id": "v8_maps-F01",
+          "text": "The fictional Birchhaven map room permits five afternoon sorting sessions.",
+          "source_aliases": [
+            "S01"
+          ],
+          "locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_maps-F02",
+          "text": "The permission for those sessions holds only when a staff custodian is present; this is an explicit necessary authorization condition.",
+          "source_aliases": [
+            "S01"
+          ],
+          "locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_maps-F03",
+          "text": "Weekend access is excluded.",
+          "source_aliases": [
+            "S01"
+          ],
+          "locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_maps-F04",
+          "text": "If accessible carts are confirmed, Nori says the group could assist. Preserve the fronted condition, the tentative modal, Nori as the speaker, and the group as the possible assisting actor.",
+          "source_aliases": [
+            "S02"
+          ],
+          "locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        },
+        {
+          "fact_id": "v8_maps-F05",
+          "text": "The participant note expressly describes possible future assistance, not an existing commitment.",
+          "source_aliases": [
+            "S02"
+          ],
+          "locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

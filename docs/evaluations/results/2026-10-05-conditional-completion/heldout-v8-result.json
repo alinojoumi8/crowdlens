@@ -1,0 +1,217 @@
+{
+  "attempted_cases": 2,
+  "attempts_per_case": 1,
+  "cases": [
+    {
+      "allowed_source_ids": [
+        "episode:puppets_source_0",
+        "episode:puppets_source_1"
+      ],
+      "case_id": "v8_puppets",
+      "elapsed_seconds": 14.715424153022468,
+      "error_code": null,
+      "finding_codes": [
+        "undrafted_claim",
+        "undrafted_claim",
+        "undrafted_claim",
+        "undrafted_claim"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_0c4d94e3bb074fe2ab0941e726a3bceb",
+      "selected_source_ids": [
+        "episode:puppets_source_0",
+        "episode:puppets_source_1"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 11718.37,
+            "input_tokens": 1107,
+            "model": "MiniMax-M3",
+            "output_tokens": 256,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 1553.1,
+            "input_tokens": 1969,
+            "model": "MiniMax-M3",
+            "output_tokens": 119,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 14715.39,
+        "remaining_ms": 165284.6
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:maps_source_0",
+        "episode:maps_source_1"
+      ],
+      "case_id": "v8_maps",
+      "elapsed_seconds": 0.07875696202972904,
+      "error_code": null,
+      "finding_codes": [
+        "no_original_evidence"
+      ],
+      "original_source_scope_valid": false,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_28225e6db31940e8bca1d54866979ab1",
+      "selected_source_ids": [],
+      "state": "blocked",
+      "usage": {
+        "calls": [],
+        "cost": null,
+        "elapsed_ms": 78.76,
+        "remaining_ms": 179921.23
+      }
+    }
+  ],
+  "code_revision": "84f18eaa786539b059e2d6f9d12a6def37aff6ae",
+  "collection_complete": true,
+  "corpus_manifest": {
+    "files_sha256": {
+      "cases.json": "2182fe6542ddb47a2c481541cd6b98bb734ca2f417221e329577306dc2118960"
+    },
+    "independent_quality_labels": null,
+    "schema_version": 1,
+    "split": "heldout_no_tuning"
+  },
+  "cost": null,
+  "guarded_prose_origin": "server_rendered_complete_source_extracts",
+  "invariants_pass": false,
+  "model": "MiniMax-M3",
+  "output_policy": "evidence-draft-v8-server-conditional-ledger",
+  "prompt_sha256": {
+    "audit": "5d6d1bd12c7d5a450720dc28768b49fade68441fd65e9661b65428ec8636951c",
+    "draft": "7bc1b555610585e20fecbca65e91dc512fc29e7865b223085fa4edef1a64f308",
+    "ledger": "0e6cc78c81b5a48944ef337aa0e86bce4a0a57a48746e2581f12ee678e0a76b2"
+  },
+  "provider": "minimax",
+  "quality_labels": null,
+  "ready_rate": {
+    "denominator": 2,
+    "numerator": 0
+  },
+  "real_model_outputs": true,
+  "review_export": {
+    "completed_human_reviews": 0,
+    "packet_count": 0,
+    "status": "PENDING"
+  },
+  "schema_version": 1,
+  "workflow": {
+    "admission_closed": true,
+    "admitted": 2,
+    "attempts": [
+      {
+        "admitted_at": 1791186318.3576558,
+        "attempt_number": 1,
+        "elapsed_seconds": 11.69640040397644,
+        "epoch": 1,
+        "finished_at": 1791186330.0540533,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_9a99a25d3fb746b7a223dac3d9e7b353",
+        "sequence": 1,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 1107,
+          "output_tokens": 256,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_d5d9f082ac654611b25350309e29a270"
+      },
+      {
+        "admitted_at": 1791186330.133596,
+        "attempt_number": 1,
+        "elapsed_seconds": 1.5334982872009277,
+        "epoch": 1,
+        "finished_at": 1791186331.6670914,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_0b8dfc05d5df4bb5a69174633f5c6991",
+        "sequence": 2,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 1969,
+          "output_tokens": 119,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_d5d9f082ac654611b25350309e29a270"
+      }
+    ],
+    "authorizations": [
+      {
+        "at": 1791186313.7005873,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "imported_requests": 0,
+        "input_description": "2 frozen fictional source-review-v8 cases; one unchanged proposal attempt each",
+        "input_fingerprint": "2182fe6542ddb47a2c481541cd6b98bb734ca2f417221e329577306dc2118960",
+        "max_requests": 24,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax"
+      }
+    ],
+    "billing_amount": null,
+    "created_at": 1791186313.7005894,
+    "deadline_at": 1791187218.3576558,
+    "elapsed_seconds": 13.519212007522583,
+    "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+    "epoch": 1,
+    "finished": 2,
+    "imported_requests": 0,
+    "in_flight": 0,
+    "initial_authorization": {
+      "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+      "imported_requests": 0,
+      "input_description": "2 frozen fictional source-review-v8 cases; one unchanged proposal attempt each",
+      "input_fingerprint": "2182fe6542ddb47a2c481541cd6b98bb734ca2f417221e329577306dc2118960",
+      "max_requests": 24,
+      "max_seconds": 900,
+      "model": "MiniMax-M3",
+      "provider": "minimax"
+    },
+    "input_description": "2 frozen fictional source-review-v8 cases; one unchanged proposal attempt each",
+    "input_fingerprint": "2182fe6542ddb47a2c481541cd6b98bb734ca2f417221e329577306dc2118960",
+    "max_requests": 24,
+    "max_seconds": 900,
+    "model": "MiniMax-M3",
+    "provider": "minimax",
+    "reason": "stopped",
+    "remaining_requests": 22,
+    "request_key": "source-review-v8",
+    "started_at": 1791186318.3576558,
+    "state": "stopped",
+    "stopped_at": 1791186331.8585382,
+    "unknown_usage_attempts": 0,
+    "usage_by_stage": {
+      "proposal": {
+        "attempts": 2,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 256,
+        "input_tokens": 3076,
+        "output_tokens": 375,
+        "unknown_usage_attempts": 0
+      }
+    },
+    "workflow_id": "wf_d5d9f082ac654611b25350309e29a270"
+  }
+}

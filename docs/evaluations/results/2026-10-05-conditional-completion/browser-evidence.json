@@ -1,0 +1,18 @@
+{
+  "url": "http://127.0.0.1:18809/report/report_completion_dev_repair",
+  "proposal_id": "proposal_28dfbab0b8ba4d9785fd4c3529dc88a0",
+  "run": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-04",
+  "case": "completion_dev_repair",
+  "collection_revision": "7bc274f496b026343f903eeb3d5620ce577b8d73",
+  "served_revision": "84f18eaa786539b059e2d6f9d12a6def37aff6ae",
+  "read_only": true,
+  "provider_calls_disabled": true,
+  "proposal_url": "http://127.0.0.1:18809/report/report_completion_dev_repair?proposal=proposal_28dfbab0b8ba4d9785fd4c3529dc88a0&section=1",
+  "inspected_visible_elements": [
+    "proposed section",
+    "proposed summary",
+    "claim ledger",
+    "two original sources"
+  ],
+  "accept_or_save_clicked": false
+}

@@ -1,0 +1,31 @@
+{
+  "final_application_revision": "84f18eaa786539b059e2d6f9d12a6def37aff6ae",
+  "checks": {
+    "backend": 686,
+    "node": 12,
+    "components": 54,
+    "total": 752,
+    "production_build": "passed"
+  },
+  "development": {
+    "ready": 2,
+    "attempts": 8,
+    "requests": 14,
+    "tuned": true
+  },
+  "heldout_v8": {
+    "ready": 0,
+    "attempts": 2,
+    "requests": 2,
+    "reruns": 0,
+    "reason_codes": [
+      "undrafted_claim",
+      "no_original_evidence"
+    ]
+  },
+  "human_review_seconds": null,
+  "published": false,
+  "accepted_actual_proposals": 0,
+  "read_only_browser_preview": true,
+  "provider_cost": null
+}

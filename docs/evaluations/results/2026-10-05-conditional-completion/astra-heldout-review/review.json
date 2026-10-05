@@ -1,0 +1,474 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-source-review-v8",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "reviewed_at": "2026-10-05T07:49:45.134481+00:00",
+  "review_seconds": null,
+  "human_review_seconds": null,
+  "evidence_kind": "source_bound_AI_review_of_single_frozen_heldout_v8_collection",
+  "release_approval": false,
+  "source_first_reference_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/astra-heldout-review/source-first-v8-reference-facts.json",
+  "source_first_reference_sha256": "ab6f501d1cf5a6e347f574c7c467d0e63f84523f6b518d6b6633fb443f821a22",
+  "corpus_path": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/evaluations/source-review-v8/cases.json",
+  "corpus_sha256": "2182fe6542ddb47a2c481541cd6b98bb734ca2f417221e329577306dc2118960",
+  "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/heldout-v8-run/results.json",
+  "results_sha256": "1ceeb423eab55b4c1d44415356ceefcf50b39a03f3f6c15d33d105eff645c081",
+  "code_revision_recorded": "84f18eaa786539b059e2d6f9d12a6def37aff6ae",
+  "provider_model_recorded": "MiniMax-M3",
+  "prompt_sha256_recorded": {
+    "audit": "5d6d1bd12c7d5a450720dc28768b49fade68441fd65e9661b65428ec8636951c",
+    "draft": "7bc1b555610585e20fecbca65e91dc512fc29e7865b223085fa4edef1a64f308",
+    "ledger": "0e6cc78c81b5a48944ef337aa0e86bce4a0a57a48746e2581f12ee678e0a76b2"
+  },
+  "completion_verified": {
+    "collection_complete": true,
+    "workflow_state": "stopped",
+    "in_flight": 0
+  },
+  "counts": {
+    "attempted_cases": 2,
+    "ready": 0,
+    "blocked": 2,
+    "ready_rate_numerator": 0,
+    "ready_rate_denominator": 2,
+    "cases_with_model_calls": 1,
+    "provider_calls": 2,
+    "current_originals": 4,
+    "frozen_material_facts": 10,
+    "persisted_ledger_claims": 5,
+    "MiniMax_authored_ledger_claims": 4,
+    "server_materialized_ledger_claims": 1,
+    "supported_ledger_claims": 5,
+    "unsupported_ledger_claims": 0,
+    "ambiguous_ledger_claims": 0,
+    "conflicting_ledger_claims": 0,
+    "raw_draft_paragraphs": 2,
+    "server_materialized_paragraphs": 2,
+    "distinct_server_materialized_paragraph_texts": 1,
+    "assembled_after_outputs": 0,
+    "audit_outputs": 0,
+    "accepted_reports": 0,
+    "completed_human_reviews": 0
+  },
+  "cases": [
+    {
+      "case_id": "v8_puppets",
+      "proposal_id": "proposal_0c4d94e3bb074fe2ab0941e726a3bceb",
+      "state": "blocked",
+      "accepted_report_id": null,
+      "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/heldout-v8-run/v8_puppets/reports/.evidence-proposals/proposal_0c4d94e3bb074fe2ab0941e726a3bceb/record.json",
+      "record_sha256": "d877ede1113451aaff2d4facecac3da3c3c2640ab90545c32fabff34142506c0",
+      "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/heldout-v8-run/v8_puppets/reports/.evidence-proposals/proposal_0c4d94e3bb074fe2ab0941e726a3bceb/diagnostics.json",
+      "diagnostics_sha256": "64582920e0f2a589c60f92f1201ce072a82080b653a106ecf37db3e3d3f9c772",
+      "source_digest": "ef60134dc6502d7273790d390377a5b50c86c15fae1a43311b70494e9fccb33e",
+      "source_snapshot_digest": "8fdf92b0baac0d2f2215fd29f2b6527570cfc1f3d04554486e35231302e3545d",
+      "ledger_digest": "63aa6170a9b32b2624094aebcce685c8a63f8e1fbea602b67a18306196b62f03",
+      "source_hashes": {
+        "puppets_source_0": "d27a00e9aa20069becd4dc3a3d2aed92e5cd6b39b225766a6e08c9fadbe7980b",
+        "puppets_source_1": "af619727ff620af8400359a6ef13b84c4480249a89230723a5ebc9ec83037c40"
+      },
+      "source_reference_count": 2,
+      "selected_source_ids": [
+        "episode:puppets_source_0",
+        "episode:puppets_source_1"
+      ],
+      "raw_stage_hashes": {
+        "planning": [
+          "bfa6965f23d420986da53e5b644f1813abb3b29021c65330d45c7ea19ec2fb38"
+        ],
+        "drafting": [
+          "93f05b29fb463976828f2f241a33b61815f4f97aedf4d7fb262bdb9ff52a35ad"
+        ]
+      },
+      "observed_provider_calls": 2,
+      "finding_codes": [
+        "undrafted_claim",
+        "undrafted_claim",
+        "undrafted_claim",
+        "undrafted_claim"
+      ],
+      "claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The Reedvale puppet room permits two supervised building sessions.",
+          "citation_ids": [
+            "episode:puppets_source_0"
+          ],
+          "source_sentence_id": null,
+          "origin": "MiniMax_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifier_preservation": "preserved_in_complete_ledger_via_claim_03",
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "v8_puppets-F01"
+          ],
+          "rationale": "Original.txt permits two supervised building sessions. This is supported as the permission/count component of the ledger, whose claim_03 supplies the explicit leader condition; it must not be presented as unconditional permission by itself."
+        },
+        {
+          "claim_id": "claim_02",
+          "kind": "source_statement",
+          "text": "The permitted building sessions must be supervised.",
+          "citation_ids": [
+            "episode:puppets_source_0"
+          ],
+          "source_sentence_id": null,
+          "origin": "MiniMax_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifier_preservation": "preserved",
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "v8_puppets-F01"
+          ],
+          "rationale": "Original.txt expressly describes the authorized sessions as supervised; the necessity is limited to the permitted sessions."
+        },
+        {
+          "claim_id": "claim_03",
+          "kind": "source_statement",
+          "text": "The permitted building sessions may occur only when a workshop leader is present.",
+          "citation_ids": [
+            "episode:puppets_source_0"
+          ],
+          "source_sentence_id": null,
+          "origin": "MiniMax_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifier_preservation": "preserved",
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "v8_puppets-F02"
+          ],
+          "rationale": "Original.txt explicitly uses only when a workshop leader is present. The claim preserves that necessary authorization condition for these sessions."
+        },
+        {
+          "claim_id": "claim_04",
+          "kind": "source_statement",
+          "text": "Late-night access to the Reedvale puppet room is excluded.",
+          "citation_ids": [
+            "episode:puppets_source_0"
+          ],
+          "source_sentence_id": null,
+          "origin": "MiniMax_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifier_preservation": "preserved",
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "v8_puppets-F03"
+          ],
+          "rationale": "Original.txt explicitly excludes late-night access."
+        },
+        {
+          "claim_id": "claim_10",
+          "kind": "source_statement",
+          "text": "Fictional Reedvale participant note: Mavi says the team might assist if reachable workstations are confirmed and the coordinator agrees. This is possible future assistance, not an existing commitment.",
+          "citation_ids": [
+            "episode:puppets_source_1"
+          ],
+          "source_sentence_id": "sentence:c553c433830098a52ff7022dc60a1936b906c431ee988504381f5d89c4c0927a",
+          "origin": "server_materialized_complete_source_excerpt",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifier_preservation": "preserved",
+          "source_aliases": [
+            "S02"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "v8_puppets-F04",
+            "v8_puppets-F05"
+          ],
+          "rationale": "Exact complete followup.txt text preserves Mavi as speaker, team as actor, might, both conjunctive conditions, and possible-future/not-existing-commitment wording. This canonical claim is absent from raw MiniMax planning and is materialized by the server."
+        }
+      ],
+      "final_output_assessment": {
+        "rendered_final_section_assessed": false,
+        "rendered_final_summary_assessed": false,
+        "complete_final_section_omissions": null,
+        "summary_consistency": null,
+        "inherited_suffix_preserved_once": null,
+        "reason": "No assembled after section or summary exists; intermediate artifacts are assessed separately. No acceptance or publication occurred."
+      },
+      "human_review_seconds": null,
+      "review_seconds": null,
+      "source_scope_assessment": {
+        "current_scope_matches": true,
+        "source_text_hashes_verified": true,
+        "all_current_originals_represented": true
+      },
+      "ledger_assessment": {
+        "claim_count": 5,
+        "supported": 5,
+        "unsupported": 0,
+        "ambiguous": 0,
+        "conflicting": 0,
+        "MiniMax_authored_claims": 4,
+        "server_materialized_claims": 1,
+        "material_facts_covered": 5,
+        "material_facts_total": 5,
+        "omitted_fact_ids": [],
+        "conditional_fidelity": "Explicit only-when authorization preserved in claim_03. Assistance conditions and tentativeness preserved verbatim in server claim_10. No assertion that assistance conditions have been met."
+      },
+      "MiniMax_drafting_assessment": {
+        "paragraph_count": 2,
+        "referenced_claim_ids": [
+          "claim_10",
+          "claim_10"
+        ],
+        "omitted_ledger_claim_ids": [
+          "claim_01",
+          "claim_02",
+          "claim_03",
+          "claim_04"
+        ],
+        "support": "supported",
+        "attribution_correct": true,
+        "citation_support_correct": true,
+        "rationale": "The two raw draft paragraphs reproduce the two sentences of S02 in sequence and correctly refer to claim_10; they omit all S01 authorization/count/exclusion content. Supported prose is not complete drafting.",
+        "source_fact_coverage": {
+          "covered": [
+            "v8_puppets-F04",
+            "v8_puppets-F05"
+          ],
+          "omitted": [
+            "v8_puppets-F01",
+            "v8_puppets-F02",
+            "v8_puppets-F03"
+          ]
+        },
+        "section_summary_claim_ids": [
+          "claim_04",
+          "claim_10",
+          "claim_01",
+          "claim_02",
+          "claim_03"
+        ],
+        "summary_selector_assessment": "All five ledger IDs are selected, but four IDs are absent from draft paragraphs. The selector list is not a rendered summary."
+      },
+      "server_paragraph_assessment": {
+        "paragraph_count": 2,
+        "text_support": "supported",
+        "exact_source_copy_verified": true,
+        "source_statement_attribution_correct": true,
+        "both_assistance_conditions_preserved": true,
+        "not_existing_commitment_preserved": true,
+        "duplicate_full_excerpt": true,
+        "duplicate_excerpt_count": 2,
+        "material_fact_count": 2,
+        "material_fact_total": 5,
+        "omitted_fact_ids": [
+          "v8_puppets-F01",
+          "v8_puppets-F02",
+          "v8_puppets-F03"
+        ],
+        "rationale": "Each of two MiniMax sentence fragments tagged claim_10 is replaced by the same complete 200-character S02 excerpt. The persisted paragraphs thus repeat the full participant note twice and do not contain S01. This is observed in record.paragraphs and paragraph_resolutions, not inferred final report behavior."
+      },
+      "additional_planning_gap_claims": [
+        {
+          "text": "No documented team commitment to assist is present in the supplied source window.",
+          "support": "supported",
+          "source_aliases": [
+            "S02"
+          ],
+          "rationale": "S02 expressly disclaims an existing commitment."
+        },
+        {
+          "text": "No documented approval of late-night access is present in the supplied source window; the available record excludes it.",
+          "support": "supported",
+          "source_aliases": [
+            "S01"
+          ],
+          "rationale": "S01 excludes late-night access rather than approving it."
+        }
+      ],
+      "comparison_target_assessment": {
+        "original_section": "The team has committed to assist and late-night access is approved.",
+        "source_conflicts": [
+          "Existing commitment conflicts with S02.",
+          "Approved late-night access conflicts with S01."
+        ],
+        "original_suffix": "An unrelated ventilation check is pending.",
+        "original_suffix_occurrences": 1,
+        "target_used_as_evidence": false,
+        "note": "The comparison target remains uncorrected because after is empty. Its unrelated suffix is inherited context outside current-source evidence."
+      },
+      "audit_assessment": {
+        "present": false,
+        "reason": "No audit diagnostics or additional model call is recorded after drafting was blocked."
+      }
+    },
+    {
+      "case_id": "v8_maps",
+      "proposal_id": "proposal_28225e6db31940e8bca1d54866979ab1",
+      "state": "blocked",
+      "accepted_report_id": null,
+      "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/heldout-v8-run/v8_maps/reports/.evidence-proposals/proposal_28225e6db31940e8bca1d54866979ab1/record.json",
+      "record_sha256": "75402b9af83b62dfc3c06879db4b82796665603914afa9d17afcd5ea89dbc5c8",
+      "diagnostics_path": null,
+      "diagnostics_sha256": null,
+      "source_digest": "29fc8959b68b89d5c705157c0fc767d0cd515305006448463ea09e141ccd480a",
+      "source_snapshot_digest": "51c34f073fcdeb70bddc8649ccd93aa947d9cb83f6d9d0de7792dcf6bf2eb4bc",
+      "ledger_digest": null,
+      "source_hashes": {
+        "maps_source_0": "9017fee8d693cb3c72fd754a82f89e9a4fe2dca5d4cfd480fca6bf74fa705f04",
+        "maps_source_1": "ec0f6d92bb8bc8c2cb01d473fd7624f8c365093b073fc36a93c99ae98251cf82"
+      },
+      "source_reference_count": 2,
+      "selected_source_ids": [],
+      "raw_stage_hashes": {},
+      "observed_provider_calls": 0,
+      "finding_codes": [
+        "no_original_evidence"
+      ],
+      "claims": [],
+      "final_output_assessment": {
+        "rendered_final_section_assessed": false,
+        "rendered_final_summary_assessed": false,
+        "complete_final_section_omissions": null,
+        "summary_consistency": null,
+        "inherited_suffix_preserved_once": null,
+        "reason": "No assembled after section or summary exists; intermediate artifacts are assessed separately. No acceptance or publication occurred."
+      },
+      "human_review_seconds": null,
+      "review_seconds": null,
+      "source_scope_assessment": {
+        "current_scope_matches": null,
+        "source_text_hashes_verified": null,
+        "all_current_originals_represented": false,
+        "reason": "The frozen corpus supplies two current originals, but this run represents zero documents and selects no sources. Empty selection is not proof of cross-scope contamination."
+      },
+      "ledger_assessment": {
+        "claim_count": 0,
+        "supported": 0,
+        "unsupported": 0,
+        "ambiguous": 0,
+        "conflicting": 0,
+        "MiniMax_authored_claims": 0,
+        "server_materialized_claims": 0,
+        "material_facts_covered": null,
+        "material_facts_total": 5,
+        "omitted_fact_ids": null,
+        "conditional_fidelity": null,
+        "reason": "Blocked at retrieval with no_original_evidence/no_relevant_source_anchor; no ledger or draft exists."
+      },
+      "MiniMax_drafting_assessment": {
+        "present": false,
+        "support": null,
+        "reason": "No provider call or diagnostics exists for this attempt."
+      },
+      "server_paragraph_assessment": {
+        "present": false,
+        "support": null,
+        "material_fact_count": null,
+        "omitted_fact_ids": null
+      },
+      "comparison_target_assessment": {
+        "original_section": "The group has committed to assist and weekend access is approved.",
+        "source_conflicts": [
+          "Existing commitment conflicts with S02.",
+          "Approved weekend access conflicts with S01."
+        ],
+        "original_suffix": "An unrelated ventilation check is pending.",
+        "original_suffix_occurrences": 1,
+        "target_used_as_evidence": false,
+        "note": "No candidate correction exists. The fronted assistance condition was not tested by an actual model/server output in this attempt."
+      },
+      "audit_assessment": {
+        "present": false,
+        "reason": "No provider calls or audit output."
+      }
+    }
+  ],
+  "prioritized_findings": [
+    {
+      "priority": 1,
+      "case_id": "v8_puppets",
+      "finding": "MiniMax drafts only claim_10 and omits claims_01 through claim_04, leaving three of five material facts absent from persisted paragraphs.",
+      "next_step": "Address complete ordinary-claim drafting on development data; keep this frozen heldout attempt blocked and unchanged."
+    },
+    {
+      "priority": 1,
+      "case_id": "v8_maps",
+      "finding": "No source anchor was selected despite two supplied current originals; no model or conditional-rendering output was produced.",
+      "next_step": "Investigate retrieval on separate development inputs. Do not score absent output as semantically correct or rerun this frozen case."
+    },
+    {
+      "priority": 2,
+      "case_id": "v8_puppets",
+      "finding": "Two references to claim_10 expand to two identical complete excerpts. Conditional fidelity is preserved, but duplication remains in the persisted draft.",
+      "next_step": "Exercise repeated guarded references in development and ensure complete excerpts appear once while ordinary claims remain represented."
+    }
+  ],
+  "limits": [
+    "This is an independent AI reviewer opinion about supplied fictional documents, not human review, adjudicated truth, factual certification or release approval.",
+    "Five supported ledger claims do not amount to a successful report: both attempted cases remain in the denominator and both are blocked.",
+    "Canonical guarded claim_10 is copied by the server, not authored or selected in the raw MiniMax planning response. MiniMax drafting references it twice.",
+    "No assembled after section/summary or audit response exists. Final omission, summary consistency and suffix-preservation fields remain null; observed intermediate omissions and duplication are reported separately.",
+    "The input documents and collection outputs were not edited, no providers were called by this review, and no report was accepted or published."
+  ],
+  "validation": {
+    "exact_claim_id_coverage": true,
+    "raw_completion_hashes_match": true,
+    "puppets_selected_source_hashes_match_frozen_originals": true,
+    "canonical_guard_exact_source_copy": true,
+    "duplicate_paragraphs_verified": true,
+    "source_first_freeze_unchanged": true,
+    "results_and_records_hashed": true
+  }
+}

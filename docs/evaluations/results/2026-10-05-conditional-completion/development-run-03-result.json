@@ -1,0 +1,278 @@
+{
+  "attempted_cases": 2,
+  "attempts_per_case": 1,
+  "cases": [
+    {
+      "allowed_source_ids": [
+        "episode:repair_source_0",
+        "episode:repair_source_1"
+      ],
+      "case_id": "completion_dev_repair",
+      "elapsed_seconds": 5.268421292013954,
+      "error_code": null,
+      "finding_codes": [
+        "invalid_ledger"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_73b6e77b50344ed3a5970251ffd00250",
+      "selected_source_ids": [
+        "episode:repair_source_0",
+        "episode:repair_source_1"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 5134.57,
+            "input_tokens": 1016,
+            "model": "MiniMax-M3",
+            "output_tokens": 406,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 5268.42,
+        "remaining_ms": 174731.57
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:sorting_source_0",
+        "episode:sorting_source_1"
+      ],
+      "case_id": "completion_dev_sorting",
+      "elapsed_seconds": 16.364657991041895,
+      "error_code": null,
+      "finding_codes": [],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_8dd519c635a942838b8c9066d45dcee2",
+      "selected_source_ids": [
+        "episode:sorting_source_0",
+        "episode:sorting_source_1"
+      ],
+      "state": "ready",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 5154.44,
+            "input_tokens": 744,
+            "model": "MiniMax-M3",
+            "output_tokens": 257,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 3299.9,
+            "input_tokens": 1856,
+            "model": "MiniMax-M3",
+            "output_tokens": 183,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 7667.98,
+            "input_tokens": 2824,
+            "model": "MiniMax-M3",
+            "output_tokens": 538,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 16364.65,
+        "remaining_ms": 163635.34
+      }
+    }
+  ],
+  "code_revision": "a707d66acbcb819376eac8455d6e3aba979be98e",
+  "collection_complete": true,
+  "corpus_manifest": {
+    "files_sha256": {
+      "cases.json": "648566c65740c414635f2593ce32d511abb70ea6f31a808aa94ad68d57e1fb48"
+    },
+    "independent_quality_labels": null,
+    "schema_version": 1,
+    "split": "development_not_quality_holdout"
+  },
+  "cost": null,
+  "guarded_prose_origin": "server_rendered_complete_source_extracts",
+  "invariants_pass": true,
+  "model": "MiniMax-M3",
+  "output_policy": "evidence-draft-v8-server-conditional-ledger",
+  "prompt_sha256": {
+    "audit": "5d6d1bd12c7d5a450720dc28768b49fade68441fd65e9661b65428ec8636951c",
+    "draft": "7bc1b555610585e20fecbca65e91dc512fc29e7865b223085fa4edef1a64f308",
+    "ledger": "d0c3a7c956c29b13d73cfd32bcb8ba17dbe52ba909d7e6e218cf8c24ed724b95"
+  },
+  "provider": "minimax",
+  "quality_labels": null,
+  "ready_rate": {
+    "denominator": 2,
+    "numerator": 1
+  },
+  "real_model_outputs": true,
+  "review_export": {
+    "completed_human_reviews": 0,
+    "packet_count": 1,
+    "status": "PENDING"
+  },
+  "schema_version": 1,
+  "workflow": {
+    "admission_closed": true,
+    "admitted": 4,
+    "attempts": [
+      {
+        "admitted_at": 1791185933.3342388,
+        "attempt_number": 1,
+        "elapsed_seconds": 5.106284856796265,
+        "epoch": 1,
+        "finished_at": 1791185938.4405205,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_1213742a9d4447d69d91268195f5706f",
+        "sequence": 1,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1016,
+          "output_tokens": 406,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_e4b3c5f7ee564f608925572173dfa616"
+      },
+      {
+        "admitted_at": 1791185938.6317806,
+        "attempt_number": 1,
+        "elapsed_seconds": 5.130670547485352,
+        "epoch": 1,
+        "finished_at": 1791185943.7624485,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_5a00d0e27e8b48d3a335cd77c2861aa3",
+        "sequence": 2,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 416,
+          "input_tokens": 744,
+          "output_tokens": 257,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_e4b3c5f7ee564f608925572173dfa616"
+      },
+      {
+        "admitted_at": 1791185943.8462155,
+        "attempt_number": 1,
+        "elapsed_seconds": 3.2787532806396484,
+        "epoch": 1,
+        "finished_at": 1791185947.1249657,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_93f840c5b6314d0abf03352b394b9e2e",
+        "sequence": 3,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 1856,
+          "output_tokens": 183,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_e4b3c5f7ee564f608925572173dfa616"
+      },
+      {
+        "admitted_at": 1791185947.2076154,
+        "attempt_number": 1,
+        "elapsed_seconds": 7.648523807525635,
+        "epoch": 1,
+        "finished_at": 1791185954.8561368,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_e37a6bcea61b425ea981fe4cf6d35227",
+        "sequence": 4,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 2824,
+          "output_tokens": 538,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_e4b3c5f7ee564f608925572173dfa616"
+      }
+    ],
+    "authorizations": [
+      {
+        "at": 1791185933.2034173,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "imported_requests": 0,
+        "input_description": "2 frozen fictional conditional-completion-development cases; one unchanged proposal attempt each",
+        "input_fingerprint": "648566c65740c414635f2593ce32d511abb70ea6f31a808aa94ad68d57e1fb48",
+        "max_requests": 24,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax"
+      }
+    ],
+    "billing_amount": null,
+    "created_at": 1791185933.2034197,
+    "deadline_at": 1791186833.3342388,
+    "elapsed_seconds": 21.607518434524536,
+    "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+    "epoch": 1,
+    "finished": 4,
+    "imported_requests": 0,
+    "in_flight": 0,
+    "initial_authorization": {
+      "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+      "imported_requests": 0,
+      "input_description": "2 frozen fictional conditional-completion-development cases; one unchanged proposal attempt each",
+      "input_fingerprint": "648566c65740c414635f2593ce32d511abb70ea6f31a808aa94ad68d57e1fb48",
+      "max_requests": 24,
+      "max_seconds": 900,
+      "model": "MiniMax-M3",
+      "provider": "minimax"
+    },
+    "input_description": "2 frozen fictional conditional-completion-development cases; one unchanged proposal attempt each",
+    "input_fingerprint": "648566c65740c414635f2593ce32d511abb70ea6f31a808aa94ad68d57e1fb48",
+    "max_requests": 24,
+    "max_seconds": 900,
+    "model": "MiniMax-M3",
+    "provider": "minimax",
+    "reason": "stopped",
+    "remaining_requests": 20,
+    "request_key": "conditional-completion-development",
+    "started_at": 1791185933.3342388,
+    "state": "stopped",
+    "stopped_at": 1791185954.9229164,
+    "unknown_usage_attempts": 0,
+    "usage_by_stage": {
+      "proposal": {
+        "attempts": 4,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 804,
+        "input_tokens": 6440,
+        "output_tokens": 1384,
+        "unknown_usage_attempts": 0
+      }
+    },
+    "workflow_id": "wf_e4b3c5f7ee564f608925572173dfa616"
+  }
+}

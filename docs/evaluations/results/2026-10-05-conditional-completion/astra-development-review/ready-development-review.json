@@ -1,0 +1,1008 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-ready-conditional-completion-development-review",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "reviewed_at": "2026-10-05T07:54:58.529015+00:00",
+  "review_seconds": null,
+  "human_review_seconds": null,
+  "evidence_kind": "development_not_holdout",
+  "release_approval": false,
+  "completed_human_reviews": 0,
+  "source_first_reference_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/astra-development-review/source-first-reference-facts.json",
+  "source_first_reference_sha256": "fff07b1f07c2f297458a9cc5041af0b96f89b5bbef4d447855d4d89faa2c6870",
+  "source_corpus_path": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/evaluations/conditional-completion-development/cases.json",
+  "source_corpus_sha256": "648566c65740c414635f2593ce32d511abb70ea6f31a808aa94ad68d57e1fb48",
+  "scope": "Independent source review of only the two ready development outputs specifically requested. All eight development attempts remain in the denominator. Prior blocked reviews are preserved rather than overwritten.",
+  "denominator": {
+    "attempts": 8,
+    "ready": 2,
+    "blocked": 6,
+    "runs": [
+      {
+        "run": "development-run-01",
+        "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-01/results.json",
+        "results_sha256": "1410bd1f0ae76d1aab173926b1b999d837eea69bc674c71a16f6237112ccd5d4",
+        "code_revision": "76c1bf03b3af49b51dad755bcfdea91d6f9aa7f9",
+        "ready": 0,
+        "attempts": 2,
+        "attempt_outcomes": [
+          {
+            "case_id": "completion_dev_repair",
+            "proposal_id": "proposal_2d5c12322c074272b3fd00cc0c91b0f3",
+            "state": "blocked",
+            "finding_codes": [
+              "invalid_claim_text",
+              "invalid_claim_text",
+              "invalid_claim_text",
+              "conditional_source_requires_extract",
+              "invalid_claim_text",
+              "conditional_source_requires_extract"
+            ]
+          },
+          {
+            "case_id": "completion_dev_sorting",
+            "proposal_id": "proposal_71b9a26317e544898fa0d8edb5dd3118",
+            "state": "blocked",
+            "finding_codes": [
+              "invalid_claim_text",
+              "invalid_claim_text",
+              "conditional_source_requires_extract",
+              "invalid_claim_text",
+              "conditional_source_requires_extract"
+            ]
+          }
+        ]
+      },
+      {
+        "run": "development-run-02",
+        "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-02/results.json",
+        "results_sha256": "bc0ddd42954bef02ae6427d615f271f8e506c8b6e6427a936905fb2f56efbfdc",
+        "code_revision": "a713cad121378869812c8d42516c0a8b46247435",
+        "ready": 0,
+        "attempts": 2,
+        "attempt_outcomes": [
+          {
+            "case_id": "completion_dev_repair",
+            "proposal_id": "proposal_7c11b4c040b04d1cae2e4e88571c0ba5",
+            "state": "blocked",
+            "finding_codes": [
+              "conditional_source_requires_extract",
+              "conditional_source_requires_extract"
+            ]
+          },
+          {
+            "case_id": "completion_dev_sorting",
+            "proposal_id": "proposal_f62bddcc59734461b241b49b4312a698",
+            "state": "blocked",
+            "finding_codes": [
+              "conditional_source_requires_extract",
+              "conditional_source_requires_extract",
+              "conditional_source_requires_extract",
+              "conditional_analysis_requires_review",
+              "premise_unverified"
+            ]
+          }
+        ]
+      },
+      {
+        "run": "development-run-03",
+        "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-03/results.json",
+        "results_sha256": "9d80788c0b2d904bd6f36a3d1de6a1a14f38df9d0fcb16aa6df5832d50a7ee5b",
+        "code_revision": "a707d66acbcb819376eac8455d6e3aba979be98e",
+        "ready": 1,
+        "attempts": 2,
+        "attempt_outcomes": [
+          {
+            "case_id": "completion_dev_repair",
+            "proposal_id": "proposal_73b6e77b50344ed3a5970251ffd00250",
+            "state": "blocked",
+            "finding_codes": [
+              "invalid_ledger"
+            ]
+          },
+          {
+            "case_id": "completion_dev_sorting",
+            "proposal_id": "proposal_8dd519c635a942838b8c9066d45dcee2",
+            "state": "ready",
+            "finding_codes": []
+          }
+        ]
+      },
+      {
+        "run": "development-run-04",
+        "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-04/results.json",
+        "results_sha256": "4af4ccb7c88407778d0f22ad922a0cd048e5423614a95d15ae4f10fb320375dc",
+        "code_revision": "7bc274f496b026343f903eeb3d5620ce577b8d73",
+        "ready": 1,
+        "attempts": 2,
+        "attempt_outcomes": [
+          {
+            "case_id": "completion_dev_repair",
+            "proposal_id": "proposal_28dfbab0b8ba4d9785fd4c3529dc88a0",
+            "state": "ready",
+            "finding_codes": []
+          },
+          {
+            "case_id": "completion_dev_sorting",
+            "proposal_id": "proposal_0410bb922fd74366bae04b620d6af2ff",
+            "state": "blocked",
+            "finding_codes": [
+              "invalid_claim_grounding"
+            ]
+          }
+        ]
+      }
+    ],
+    "interpretation": "Repeated development cases and tuned revisions; the selected ready outputs do not constitute a heldout quality estimate."
+  },
+  "reviewed_counts": {
+    "ready_outputs": 2,
+    "ledger_claims": 7,
+    "supported_ledger_claims": 7,
+    "unsupported_ledger_claims": 0,
+    "ambiguous_ledger_claims": 0,
+    "conflicting_ledger_claims": 0,
+    "MiniMax_ordinary_ledger_claims": 5,
+    "canonical_server_guarded_claims": 2,
+    "actual_MiniMax_drafting_outputs": 2,
+    "actual_MiniMax_audit_outputs": 2,
+    "final_candidate_sections": 2,
+    "final_candidate_summaries": 2,
+    "material_facts": 10,
+    "material_facts_covered_in_sections": 10,
+    "material_facts_covered_in_scoped_summaries": 10,
+    "inherited_suffixes_preserved_once": 2,
+    "accepted_reports": 0
+  },
+  "cases": [
+    {
+      "run": "development-run-03",
+      "case_id": "completion_dev_sorting",
+      "proposal_id": "proposal_8dd519c635a942838b8c9066d45dcee2",
+      "state": "ready",
+      "accepted_report_id": null,
+      "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-03/completion_dev_sorting/reports/.evidence-proposals/proposal_8dd519c635a942838b8c9066d45dcee2/record.json",
+      "record_sha256": "59fc11aca8dcf5676e2920c40ef104e82425494be0cbb7319e7ade03259c64bb",
+      "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-03/completion_dev_sorting/reports/.evidence-proposals/proposal_8dd519c635a942838b8c9066d45dcee2/diagnostics.json",
+      "diagnostics_sha256": "e3ea407ca2ab5cc659e4f5b93b207610889bb2b59beb284db05f505f71fb3811",
+      "code_revision": "a707d66acbcb819376eac8455d6e3aba979be98e",
+      "policy": "evidence-draft-v8-server-conditional-ledger",
+      "source_digest": "08bed60d15665e773040e83f82044000ad0a090cabd3a1d7de9ab8c6f265d760",
+      "source_snapshot_digest": "7aa5e0642b325b24d89d15b7f5ba3c323519fb4278d85fadfa98be54fd14d39c",
+      "ledger_digest": "08f89e59323aed3db080c02ffc2d4d29eef3134d95493cbed851e993cfbb8ffb",
+      "source_evidence": [
+        {
+          "alias": "S01",
+          "evidence_id": "episode:sorting_source_0",
+          "document_id": "sorting_document_0",
+          "filename": "original.txt",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0,
+            "char_start": 0,
+            "char_end": 144,
+            "offset_basis": "stored_chunk"
+          },
+          "source_text_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b",
+          "source_text": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present. Overnight access is excluded."
+        },
+        {
+          "alias": "S02",
+          "evidence_id": "episode:sorting_source_1",
+          "document_id": "sorting_document_1",
+          "filename": "followup.txt",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0,
+            "char_start": 0,
+            "char_end": 175,
+            "offset_basis": "stored_chunk"
+          },
+          "source_text_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281",
+          "source_text": "Fictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment."
+        }
+      ],
+      "source_scope_validated": true,
+      "claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present.",
+          "citation_ids": [
+            "episode:sorting_source_0"
+          ],
+          "premise_claim_ids": [],
+          "source_sentence_id": null,
+          "origin": "MiniMax_ordinary_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "SORT-F01",
+            "SORT-F02"
+          ],
+          "rationale": "Exact first sentence of original.txt preserves three evening sorting sessions and only when a staff coordinator is present."
+        },
+        {
+          "claim_id": "claim_02",
+          "kind": "source_statement",
+          "text": "Overnight access is excluded at the Fictional Willowmere reading room.",
+          "citation_ids": [
+            "episode:sorting_source_0"
+          ],
+          "premise_claim_ids": [],
+          "source_sentence_id": null,
+          "origin": "MiniMax_ordinary_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "SORT-F03"
+          ],
+          "rationale": "Original.txt explicitly excludes overnight access; the added room name preserves the document scope."
+        },
+        {
+          "claim_id": "claim_03",
+          "kind": "source_statement",
+          "text": "The Fictional Willowmere reading room permit covers evening sorting sessions (not overnight access) and is conditional on a staff coordinator being present.",
+          "citation_ids": [
+            "episode:sorting_source_0"
+          ],
+          "premise_claim_ids": [
+            "claim_01",
+            "claim_02"
+          ],
+          "source_sentence_id": null,
+          "origin": "MiniMax_ordinary_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "SORT-F01",
+            "SORT-F02",
+            "SORT-F03"
+          ],
+          "rationale": "Faithful synthesis of the authorized evening sessions, overnight exclusion and explicit necessary coordinator condition. It is redundant with claims 01–02, but does not add unsupported content."
+        },
+        {
+          "claim_id": "claim_10",
+          "kind": "source_statement",
+          "text": "Fictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+          "citation_ids": [
+            "episode:sorting_source_1"
+          ],
+          "premise_claim_ids": [],
+          "source_sentence_id": "sentence:86f1380609c19216c44f73c423c3e626a1cd8dceeb70f5f651d01c3bfc515ed1",
+          "origin": "server_materialized_canonical_complete_excerpt",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S02"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "SORT-F04",
+            "SORT-F05"
+          ],
+          "rationale": "Exact full followup.txt excerpt preserves Leena as speaker, group as possible assisting actor, may, provided accessible carts are confirmed, and possible future assistance rather than an existing commitment."
+        }
+      ],
+      "counts": {
+        "ledger_claims": 4,
+        "supported": 4,
+        "unsupported": 0,
+        "ambiguous": 0,
+        "conflicting": 0,
+        "MiniMax_ordinary_claims": 3,
+        "server_guarded_claims": 1,
+        "paragraphs": 4,
+        "material_facts_covered": 5,
+        "material_facts_total": 5,
+        "source_documents_complete": 2
+      },
+      "raw_stage_hashes": {
+        "planning": [
+          "c8310ec16296f0a19fa432ac3700e3296016739ece341e70e149b6d578351ba9"
+        ],
+        "drafting": [
+          "d0346fb76735b5ece29118df67bb2c4bb5b1e95f46b1ccfa64c96ecf43966ae4"
+        ],
+        "auditing": [
+          "f976f52e6756e7d369740dc5bc7dac097515d8125622f033a7fba02f7f7157dc"
+        ]
+      },
+      "provenance_assessment": {
+        "raw_planning_claim_ids": [
+          "claim_01",
+          "claim_02",
+          "claim_03"
+        ],
+        "canonical_guard_claim_id": "claim_10",
+        "guard_present_in_raw_planning": false,
+        "guard_origin": "server_materialized_complete_source_excerpts",
+        "guard_matches_full_original": true,
+        "raw_drafting_reproduces_all_persisted_paragraphs": true,
+        "guard_occurrences_in_raw_draft": 1,
+        "server_paragraph_replacements": 0,
+        "rationale": "The server inserts claim_10 from the original into the ledger. MiniMax then copies that already supplied excerpt once in its raw draft, alongside its ordinary claims. The saved paragraph text already matches the raw draft; citation and summary assembly are server output. This is not independent MiniMax authorship of guarded conditional prose."
+      },
+      "paragraph_reviews": [
+        {
+          "paragraph_index": 0,
+          "claim_ids": [
+            "claim_01"
+          ],
+          "text_sha256": "fa38f533b93a10cdf2eb48e6247ea805ed4cd4ac6deb40e26ad51c66e92865a4",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        },
+        {
+          "paragraph_index": 1,
+          "claim_ids": [
+            "claim_02"
+          ],
+          "text_sha256": "9ddced51af1bdf3a40e8d7ee9686c1134dc993c6c7947ca75c0cc61cd542b707",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        },
+        {
+          "paragraph_index": 2,
+          "claim_ids": [
+            "claim_03"
+          ],
+          "text_sha256": "2f910179022e1463e2c1ed62c62454383e9d21b5fd6d5f27d2b11adf82f59053",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        },
+        {
+          "paragraph_index": 3,
+          "claim_ids": [
+            "claim_10"
+          ],
+          "text_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        }
+      ],
+      "full_section_assessment": {
+        "text": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present. [1]\n\nOvernight access is excluded at the Fictional Willowmere reading room. [1]\n\nThe Fictional Willowmere reading room permit covers evening sorting sessions (not overnight access) and is conditional on a staff coordinator being present. [1]\n\nFictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment. [2]",
+        "text_sha256": "7b762d0249be7f9eebbb327c5b0678c50246dee0dbd9d4fe4d310f3c0ac43240",
+        "material_omissions": [],
+        "all_material_facts_covered": true,
+        "conditions_preserved": true,
+        "speaker_and_group_actor_preserved": true,
+        "new_unledgered_material_claims": [],
+        "redundancy": "Claim_03 repeats the permit condition and overnight exclusion already in claims 01–02; this adds length without new material evidence.",
+        "citation_markers_match_record_source_order": true
+      },
+      "material_fact_coverage": [
+        {
+          "fact_id": "SORT-F01",
+          "text": "The Willowmere reading room permits three evening sorting sessions.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_01",
+            "claim_03"
+          ],
+          "paragraph_indices": [
+            0,
+            2
+          ]
+        },
+        {
+          "fact_id": "SORT-F02",
+          "text": "Those sessions are permitted only when a staff coordinator is present.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_01",
+            "claim_03"
+          ],
+          "paragraph_indices": [
+            0,
+            2
+          ]
+        },
+        {
+          "fact_id": "SORT-F03",
+          "text": "Overnight access is excluded.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_02",
+            "claim_03"
+          ],
+          "paragraph_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "fact_id": "SORT-F04",
+          "text": "Leena says the group may assist provided accessible carts are confirmed.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_10"
+          ],
+          "paragraph_indices": [
+            3
+          ]
+        },
+        {
+          "fact_id": "SORT-F05",
+          "text": "This is possible future assistance, not an existing commitment.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_10"
+          ],
+          "paragraph_indices": [
+            3
+          ]
+        }
+      ],
+      "summary_assessment": {
+        "before": "The group has committed to assist and overnight access is approved. An unrelated ventilation check is pending.",
+        "before_sha256": "bb19b33e21b1c84d18bb028f3adbf0128b06c80c05a1216dbbf60b22d3b9c72f",
+        "after": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present. Overnight access is excluded at the Fictional Willowmere reading room. The Fictional Willowmere reading room permit covers evening sorting sessions (not overnight access) and is conditional on a staff coordinator being present. Fictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment. An unrelated ventilation check is pending.",
+        "after_sha256": "4dead1d0ab4af3626ad68cc20fa1309d660f80fcf17be059d17ab54aa013d6dc",
+        "new_scoped_text": "Fictional Willowmere reading room permits three evening sorting sessions only when a staff coordinator is present. Overnight access is excluded at the Fictional Willowmere reading room. The Fictional Willowmere reading room permit covers evening sorting sessions (not overnight access) and is conditional on a staff coordinator being present. Fictional Willowmere participant note: Leena says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+        "new_scoped_text_sha256": "0f67acb02235b0024b991884e0d245f5a69a81dcdc43f8e874d63c155803abb3",
+        "selected_claim_ids": [
+          "claim_01",
+          "claim_02",
+          "claim_03",
+          "claim_10"
+        ],
+        "source_support": "supported",
+        "consistent_with_complete_section": true,
+        "all_material_facts_covered": true,
+        "material_omissions": [],
+        "summary_spans_apply_to_original_target": true,
+        "inherited_suffix": "An unrelated ventilation check is pending.",
+        "inherited_suffix_preserved_exactly_once": true,
+        "inherited_suffix_source_support": null,
+        "inherited_suffix_reason": "Outside the selected source scope; preserved from the original comparison summary, not newly generated or independently verified.",
+        "additional_claims_outside_ledger": [
+          {
+            "text": "An unrelated ventilation check is pending.",
+            "origin": "inherited_unrelated_suffix",
+            "support": null,
+            "count": 1
+          }
+        ]
+      },
+      "comparison_target_assessment": {
+        "before_section": "The group has committed to assist and overnight access is approved.",
+        "before_section_sha256": "75c808c92ee388f2c1f803b920ab67c04711158a6f8fd8f50e01243c3c65f47a",
+        "target_used_as_evidence": false,
+        "conflicts_handled": true,
+        "rationale": "The candidate replaces the unsupported existing-commitment assertion with the source's possible-future non-commitment account and replaces approved excluded access/use with the explicit exclusion. Authorization counts and only-when conditions remain visible. The parent report is still unchanged because the proposal has not been accepted."
+      },
+      "MiniMax_audit_assessment": {
+        "actual_audit_present": true,
+        "structured_claim_ids": [
+          "claim_01",
+          "claim_02",
+          "claim_03",
+          "claim_10"
+        ],
+        "claim_outcomes": {
+          "claim_01": "supported",
+          "claim_02": "supported",
+          "claim_03": "supported",
+          "claim_10": "supported"
+        },
+        "summary_consistent_reported": true,
+        "document_outcomes": {
+          "sorting_document_0": "complete",
+          "sorting_document_1": "complete"
+        },
+        "independent_support_and_completeness_judgments_agree": true,
+        "rationale_issues": [
+          {
+            "target": "summary_reviews[0].detail",
+            "issue": "Mentions claim_04/claim_10 even though claim_04 does not exist in this ledger. The supported content is claim_10; the structured review IDs are otherwise exact.",
+            "severity": "minor_audit_rationale_inaccuracy"
+          },
+          {
+            "target": "document_reviews[1].detail",
+            "issue": "Leena's conditional possible future assistance compresses speaker and group actor. The actual claim and final paragraph correctly retain Leena says the group; no report attribution error results.",
+            "severity": "audit_wording_caution"
+          }
+        ],
+        "certification": false
+      },
+      "planning_gap_assessment": [
+        {
+          "text": "The previous prose asserted a group commitment to assist and approved overnight access, but the only supplied source window permits only three evening sorting sessions with a staff coordinator present and excludes overnight access; no source supports a group commitment to assist, an approval of overnight access, or any pending unrelated ventilation check.",
+          "assessment": "No substantive contradiction with the complete current originals. The absence of documented commitment or access approval is supported. Any ventilation reference concerns unverified inherited context, not a new source-grounded assertion.",
+          "support": "supported_with_scope_caveat",
+          "note": "Planning gap wording is diagnostic prose; it is not inserted into the final section or new summary span."
+        }
+      ],
+      "review_seconds": null,
+      "human_review_seconds": null
+    },
+    {
+      "run": "development-run-04",
+      "case_id": "completion_dev_repair",
+      "proposal_id": "proposal_28dfbab0b8ba4d9785fd4c3529dc88a0",
+      "state": "ready",
+      "accepted_report_id": null,
+      "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-04/completion_dev_repair/reports/.evidence-proposals/proposal_28dfbab0b8ba4d9785fd4c3529dc88a0/record.json",
+      "record_sha256": "47aa1eb86795176d4f9011536bf6f74d004bd3e7fa40843f0fcf878f0ca848c2",
+      "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-04/completion_dev_repair/reports/.evidence-proposals/proposal_28dfbab0b8ba4d9785fd4c3529dc88a0/diagnostics.json",
+      "diagnostics_sha256": "6197c03ab5938d6a673cd5b87b38a20d57e5e4242d7d1666f03d5629e2f4ab79",
+      "code_revision": "7bc274f496b026343f903eeb3d5620ce577b8d73",
+      "policy": "evidence-draft-v8-server-conditional-ledger",
+      "source_digest": "25d2233716d087865d9cccb850ae7af4ce7767dc6d1b9bf2f25069860b06bcc0",
+      "source_snapshot_digest": "6a51b72ac7b4207567fce2c2b1a96e05f080f0c1f4e4bcce454cbc2ea50d318b",
+      "ledger_digest": "677eaad57b2d3e70190e4ea9b0a3180823ce1a3bf5e37dec808af17bce3ad3d2",
+      "source_evidence": [
+        {
+          "alias": "S01",
+          "evidence_id": "episode:repair_source_0",
+          "document_id": "repair_document_0",
+          "filename": "original.txt",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0,
+            "char_start": 0,
+            "char_end": 148,
+            "offset_basis": "stored_chunk"
+          },
+          "source_text_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0",
+          "source_text": "Fictional Fernbank repair room permits four supervised assembly sessions only when a qualified facilitator is present. Unsupervised use is excluded."
+        },
+        {
+          "alias": "S02",
+          "evidence_id": "episode:repair_source_1",
+          "document_id": "repair_document_1",
+          "filename": "followup.txt",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "chunk_index": 0,
+            "char_start": 0,
+            "char_end": 172,
+            "offset_basis": "stored_chunk"
+          },
+          "source_text_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5",
+          "source_text": "Fictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment."
+        }
+      ],
+      "source_scope_validated": true,
+      "claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "Fictional Fernbank repair room allows four supervised assembly sessions only when a qualified facilitator is present.",
+          "citation_ids": [
+            "episode:repair_source_0"
+          ],
+          "premise_claim_ids": [],
+          "source_sentence_id": null,
+          "origin": "MiniMax_ordinary_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "REPAIR-F01",
+            "REPAIR-F02"
+          ],
+          "rationale": "Allows faithfully paraphrases permits; the count of four, supervised assembly sessions, and only-when qualified-facilitator condition are preserved."
+        },
+        {
+          "claim_id": "claim_02",
+          "kind": "source_statement",
+          "text": "Unsupervised use of the Fictional Fernbank repair room is excluded.",
+          "citation_ids": [
+            "episode:repair_source_0"
+          ],
+          "premise_claim_ids": [],
+          "source_sentence_id": null,
+          "origin": "MiniMax_ordinary_planning",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S01"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S01",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "REPAIR-F03"
+          ],
+          "rationale": "Original.txt explicitly excludes unsupervised use; the added room name preserves the document scope."
+        },
+        {
+          "claim_id": "claim_10",
+          "kind": "source_statement",
+          "text": "Fictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment.",
+          "citation_ids": [
+            "episode:repair_source_1"
+          ],
+          "premise_claim_ids": [],
+          "source_sentence_id": "sentence:95fcf347ec90873eb9e0e04f7655cefcfbb38fc8709fa4c1bb77e50195faaa4e",
+          "origin": "server_materialized_canonical_complete_excerpt",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "qualifiers_preserved": true,
+          "source_aliases": [
+            "S02"
+          ],
+          "source_locators": [
+            {
+              "source_alias": "S02",
+              "page": 1,
+              "paragraph": 1,
+              "chunk_index": 0
+            }
+          ],
+          "reference_fact_ids": [
+            "REPAIR-F04",
+            "REPAIR-F05"
+          ],
+          "rationale": "Exact full followup.txt excerpt preserves Tavi as speaker, team as possible assisting actor, could, if adjustable worktables are confirmed, and possible future assistance rather than an existing commitment."
+        }
+      ],
+      "counts": {
+        "ledger_claims": 3,
+        "supported": 3,
+        "unsupported": 0,
+        "ambiguous": 0,
+        "conflicting": 0,
+        "MiniMax_ordinary_claims": 2,
+        "server_guarded_claims": 1,
+        "paragraphs": 3,
+        "material_facts_covered": 5,
+        "material_facts_total": 5,
+        "source_documents_complete": 2
+      },
+      "raw_stage_hashes": {
+        "planning": [
+          "1d5c6bdbccc359166179924d0f0a77f3a4be28f6a3dc4bcb6ee7576e4ff62330"
+        ],
+        "drafting": [
+          "51253ae593c8003349874a12fb3fa40fad3cb1fb3b5583de99d7294ecd28357f"
+        ],
+        "auditing": [
+          "9754f021e92462bca3a29a64792a23d7e11c29d88fa6fc915257d7cd11794fc5"
+        ]
+      },
+      "provenance_assessment": {
+        "raw_planning_claim_ids": [
+          "claim_01",
+          "claim_02"
+        ],
+        "canonical_guard_claim_id": "claim_10",
+        "guard_present_in_raw_planning": false,
+        "guard_origin": "server_materialized_complete_source_excerpts",
+        "guard_matches_full_original": true,
+        "raw_drafting_reproduces_all_persisted_paragraphs": true,
+        "guard_occurrences_in_raw_draft": 1,
+        "server_paragraph_replacements": 0,
+        "rationale": "The server inserts claim_10 from the original into the ledger. MiniMax then copies that already supplied excerpt once in its raw draft, alongside its ordinary claims. The saved paragraph text already matches the raw draft; citation and summary assembly are server output. This is not independent MiniMax authorship of guarded conditional prose."
+      },
+      "paragraph_reviews": [
+        {
+          "paragraph_index": 0,
+          "claim_ids": [
+            "claim_01"
+          ],
+          "text_sha256": "74d5469ced7f12cdbbbf72d1ff6b75a8b225978eeac9f5208779c92f9f540cff",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        },
+        {
+          "paragraph_index": 1,
+          "claim_ids": [
+            "claim_02"
+          ],
+          "text_sha256": "c620ebd2ebddd1dc7917c2b53c14f8d661a98653748427a3dc1d93a1784f1f50",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        },
+        {
+          "paragraph_index": 2,
+          "claim_ids": [
+            "claim_10"
+          ],
+          "text_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5",
+          "support": "supported",
+          "attribution_correct": true,
+          "citation_support_correct": true,
+          "unledgered_material_claims": []
+        }
+      ],
+      "full_section_assessment": {
+        "text": "Fictional Fernbank repair room allows four supervised assembly sessions only when a qualified facilitator is present. [1]\n\nUnsupervised use of the Fictional Fernbank repair room is excluded. [1]\n\nFictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment. [2]",
+        "text_sha256": "d88a34e4f81bf3c1a0f2777dddaa08fce201109d86b3ee05bfa1f8d34838e7a8",
+        "material_omissions": [],
+        "all_material_facts_covered": true,
+        "conditions_preserved": true,
+        "speaker_and_group_actor_preserved": true,
+        "new_unledgered_material_claims": [],
+        "redundancy": null,
+        "citation_markers_match_record_source_order": true
+      },
+      "material_fact_coverage": [
+        {
+          "fact_id": "REPAIR-F01",
+          "text": "The Fernbank repair room permits four supervised assembly sessions.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_01"
+          ],
+          "paragraph_indices": [
+            0
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F02",
+          "text": "Those sessions are permitted only when a qualified facilitator is present.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_01"
+          ],
+          "paragraph_indices": [
+            0
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F03",
+          "text": "Unsupervised use is excluded.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_02"
+          ],
+          "paragraph_indices": [
+            1
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F04",
+          "text": "Tavi says the team could assist if adjustable worktables are confirmed.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_10"
+          ],
+          "paragraph_indices": [
+            2
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F05",
+          "text": "This is possible future assistance, not an existing commitment.",
+          "section_covered": true,
+          "selected_summary_covered": true,
+          "claim_ids": [
+            "claim_10"
+          ],
+          "paragraph_indices": [
+            2
+          ]
+        }
+      ],
+      "summary_assessment": {
+        "before": "The team has committed to assist and unsupervised use is approved. An unrelated ventilation check is pending.",
+        "before_sha256": "9e526ecda572ceeca6d6bfd1b0ece3e5ac8a3d9fb5ddd88c4184ca92d9681df2",
+        "after": "Fictional Fernbank repair room allows four supervised assembly sessions only when a qualified facilitator is present. Unsupervised use of the Fictional Fernbank repair room is excluded. Fictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment. An unrelated ventilation check is pending.",
+        "after_sha256": "0def9d309910b38599fb811b0c57bcc31ade394e3d5906aba860cab17522917a",
+        "new_scoped_text": "Fictional Fernbank repair room allows four supervised assembly sessions only when a qualified facilitator is present. Unsupervised use of the Fictional Fernbank repair room is excluded. Fictional Fernbank participant note: Tavi says the team could assist if adjustable worktables are confirmed. This is possible future assistance, not an existing commitment.",
+        "new_scoped_text_sha256": "02d3c672bf043bca9c77f1308cfaea2a680e90e0ca031c524aefdc7331758080",
+        "selected_claim_ids": [
+          "claim_01",
+          "claim_02",
+          "claim_10"
+        ],
+        "source_support": "supported",
+        "consistent_with_complete_section": true,
+        "all_material_facts_covered": true,
+        "material_omissions": [],
+        "summary_spans_apply_to_original_target": true,
+        "inherited_suffix": "An unrelated ventilation check is pending.",
+        "inherited_suffix_preserved_exactly_once": true,
+        "inherited_suffix_source_support": null,
+        "inherited_suffix_reason": "Outside the selected source scope; preserved from the original comparison summary, not newly generated or independently verified.",
+        "additional_claims_outside_ledger": [
+          {
+            "text": "An unrelated ventilation check is pending.",
+            "origin": "inherited_unrelated_suffix",
+            "support": null,
+            "count": 1
+          }
+        ]
+      },
+      "comparison_target_assessment": {
+        "before_section": "The team has committed to assist and unsupervised use is approved.",
+        "before_section_sha256": "0833c8e6b37cfc895a5db19b64166135f9937c07ac39c98f9015a7e48b3db2a9",
+        "target_used_as_evidence": false,
+        "conflicts_handled": true,
+        "rationale": "The candidate replaces the unsupported existing-commitment assertion with the source's possible-future non-commitment account and replaces approved excluded access/use with the explicit exclusion. Authorization counts and only-when conditions remain visible. The parent report is still unchanged because the proposal has not been accepted."
+      },
+      "MiniMax_audit_assessment": {
+        "actual_audit_present": true,
+        "structured_claim_ids": [
+          "claim_01",
+          "claim_02",
+          "claim_10"
+        ],
+        "claim_outcomes": {
+          "claim_01": "supported",
+          "claim_02": "supported",
+          "claim_10": "supported"
+        },
+        "summary_consistent_reported": true,
+        "document_outcomes": {
+          "repair_document_0": "complete",
+          "repair_document_1": "complete"
+        },
+        "independent_support_and_completeness_judgments_agree": true,
+        "rationale_issues": [
+          {
+            "target": "paragraph_reviews[0].detail",
+            "issue": "Calls the wording verbatim although MiniMax replaces permits with allows. The paraphrase is semantically supported; the audit should distinguish exact copying from faithful paraphrase.",
+            "severity": "minor_audit_rationale_inaccuracy"
+          },
+          {
+            "target": "document_reviews[1].detail",
+            "issue": "Tavi's conditional offer is looser than Tavi says the team could assist. The actual claim and final paragraph retain the source wording and do not assert a personal or existing commitment.",
+            "severity": "audit_wording_caution"
+          }
+        ],
+        "certification": false
+      },
+      "planning_gap_assessment": [
+        {
+          "text": "No source documentation of an approved authorization for unsupervised use of the repair room.",
+          "assessment": "No substantive contradiction with the complete current originals. The absence of documented commitment or access approval is supported. Any ventilation reference concerns unverified inherited context, not a new source-grounded assertion.",
+          "support": "supported_with_scope_caveat",
+          "note": "Planning gap wording is diagnostic prose; it is not inserted into the final section or new summary span."
+        },
+        {
+          "text": "No source documentation of a signed commitment by the team to assist.",
+          "assessment": "No substantive contradiction with the complete current originals. The absence of documented commitment or access approval is supported. Any ventilation reference concerns unverified inherited context, not a new source-grounded assertion.",
+          "support": "supported_with_scope_caveat",
+          "note": "Any reference to a signed commitment narrows the absence claim; the sources expressly disclaim an existing commitment more generally."
+        }
+      ],
+      "review_seconds": null,
+      "human_review_seconds": null
+    }
+  ],
+  "findings": [
+    {
+      "severity": "minor",
+      "case_id": "completion_dev_sorting",
+      "surface": "candidate section and summary",
+      "finding": "Claim_03 restates the authorization/exclusion facts already in claims 01–02. It is supported but redundant."
+    },
+    {
+      "severity": "minor",
+      "case_id": "completion_dev_sorting",
+      "surface": "MiniMax audit rationale",
+      "finding": "The summary-review explanation refers to nonexistent claim_04 alongside claim_10; structured target reviews and actual supported text remain correct."
+    },
+    {
+      "severity": "minor",
+      "case_id": "completion_dev_repair",
+      "surface": "MiniMax audit rationale",
+      "finding": "The audit describes a permits-to-allows paraphrase as verbatim. Semantic support is sound; exact-copy provenance should be described precisely."
+    }
+  ],
+  "prioritized_next_steps": [
+    "Retain all six blocked development attempts and both blocked v8 heldout attempts; do not replace reliability evidence with the selected ready examples.",
+    "Use development cases to improve drafting completeness, source retrieval and handling of repeated guarded references identified by the separate v8 review.",
+    "Tighten free-text audit rationale precision and reduce supported repetition; preserve the server-copy versus model-authored distinction."
+  ],
+  "limits": [
+    "Independent AI opinion about four supplied fictional originals, not human review, factual certification or publication/release approval.",
+    "These two outputs were selected because they reached ready across four development runs with changing revisions; 2/8 remains the development readiness denominator.",
+    "The guarded assistance statements originate in server-copied source excerpts, although MiniMax faithfully repeats them in raw drafting and audits them.",
+    "The inherited ventilation sentence is preserved outside the scoped edit and is not supported or refuted by the current source set.",
+    "No provider was called, no original or prior review was changed, and neither proposal was accepted or published. The separate frozen v8 0/2 result is untouched."
+  ],
+  "validation": {
+    "exact_ledger_claim_coverage": true,
+    "source_hashes_match_frozen_originals": true,
+    "all_raw_completion_hashes_verified": true,
+    "raw_draft_matches_persisted_paragraphs": true,
+    "server_guard_exact_original_text": true,
+    "actual_rendered_sections_match_paragraphs_and_record_citation_order": true,
+    "actual_summary_matches_selected_ledger_text_plus_original_suffix": true,
+    "suffix_preserved_once_outside_scoped_edits": true,
+    "source_first_freeze_unchanged": true,
+    "prior_review_artifacts_unchanged": true,
+    "v8_review_artifacts_unchanged": true
+  }
+}
