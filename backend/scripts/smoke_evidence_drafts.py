@@ -63,10 +63,13 @@ def main():
                     'attribution':'Alex','citation_ids':['episode:one'],'premise_claim_ids':[],'quote':''}],'gaps':[]}
             if phase == 'EVIDENCE_DRAFT_V1':
                 return {'paragraphs':[{'text':text,'kind':'attributed_allegation','claim_ids':['claim_01']}],
-                    'section_summary':{'text':text,'claim_ids':['claim_01']}}
-            return {'findings':[],'covered_paragraph_indices':[0],'covered_summary_edit_indices':[0],'summary_consistent':True,
+                    'section_summary_claim_ids':['claim_01']}
+            return {'audit_protocol':'target_reviews_v1','summary_consistent':True,
                 'claim_reviews':[{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],
-                    'detail':'Synthetic structural demonstration only; no factual label.'}]}
+                    'detail':'Synthetic structural demonstration only; no factual label.'}],
+                'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched paragraph.'}],
+                'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic claim-based summary.'}],
+                'document_reviews':[{'document_id':'synthetic_doc','outcome':'complete','detail':'Synthetic one-source coverage.'}]}
     from flask import Flask, jsonify, send_from_directory
     from werkzeug.serving import make_server
     from app.api import report_bp

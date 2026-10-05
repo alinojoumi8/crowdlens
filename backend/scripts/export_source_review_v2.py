@@ -38,7 +38,8 @@ def export_saved(run, destination, corpus=CORPUS):
             'original_comparison_summary':record['before']['summary'],
             'candidate_summary_edits':record.get('summary_edits',draft.get('summary_edits',[])),
             'candidate_summary_replacements':draft.get('summary_replacements',[]),
-            'candidate_section_summary':draft.get('section_summary')})
+            'candidate_section_summary':draft.get('section_summary'),
+            'candidate_summary_claim_ids':draft.get('section_summary_claim_ids')})
         states[item['case_id']]={'state':item['state'],'finding_codes':item['finding_codes'],
             'candidate_origin':'actual_model_draft_response','summary_origin':'actual_draft_applied_to_comparison' if record.get('after') else 'authored_comparison_input',
             'summary_edits_applied':bool(record.get('after') and record.get('summary_edits')),'complete_original_sources_provided':True,

@@ -50,6 +50,8 @@ def export_packets(directory, fixtures, observations, *, namespace='evidence-qua
         packet['citation_number_sources'] = {str(index+1): aliases.get(identifier, 'UNKNOWN') for index,identifier in enumerate(citations)}
         if 'candidate_summary_edits' in observation:
             packet['candidate_summary_edits'] = copy.deepcopy(observation['candidate_summary_edits'])
+        if 'candidate_summary_claim_ids' in observation:
+            packet['candidate_summary_claim_ids'] = copy.deepcopy(observation['candidate_summary_claim_ids'])
         if 'candidate_section_summary' in observation:
             packet['candidate_section_summary'] = copy.deepcopy(observation['candidate_section_summary'])
         if 'candidate_summary_replacements' in observation:

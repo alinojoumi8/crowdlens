@@ -27,7 +27,7 @@ def load_inputs(corpus=CORPUS):
     return rows, manifest
 
 
-def collect(output, corpus=CORPUS):
+def collect(output, corpus=CORPUS, max_requests=12):
     from app.config import Config
     from app.utils.llm_client import LLMClient
     from app.utils.draft_budget import DraftBudget
@@ -52,7 +52,7 @@ def collect(output, corpus=CORPUS):
     ledger = WorkflowLedger(str(output/'control.db'))
     workflow=ledger.authorize(request_key=corpus.name,provider=Config.LLM_DEFAULT_PROVIDER,
         model=Config.LLM_MODEL_NAME,base_url=Config.LLM_BASE_URL,input_description=f'{len(rows)} frozen fictional {corpus.name} cases; one unchanged proposal attempt each',
-        input_fingerprint=manifest['files_sha256']['cases.json'],max_requests=12,max_seconds=900,confirmed=True)
+        input_fingerprint=manifest['files_sha256']['cases.json'],max_requests=max_requests,max_seconds=900,confirmed=True)
     observations=[]
     halted_reason=None
     try:
@@ -104,7 +104,7 @@ def collect(output, corpus=CORPUS):
     forms=[json.loads(line) for line in (reviewer/'blank-review-forms.jsonl').read_text().splitlines()]
     (output/'human-review/blank-import-result.json').write_bytes(json_bytes(import_reviews(reviewer,forms)))
     result['ready_rate']={'numerator':sum(c['state']=='ready' for c in result['cases']),'denominator':len(rows)}
-    result['invariants_pass']=len(result['cases'])==len(rows) and all(c['parent_unchanged'] and c['original_source_scope_valid'] for c in result['cases'] if c['state']!='not_attempted') and result['workflow']['admitted']<=12
+    result['invariants_pass']=len(result['cases'])==len(rows) and all(c['parent_unchanged'] and c['original_source_scope_valid'] for c in result['cases'] if c['state']!='not_attempted') and result['workflow']['admitted']<=max_requests
     (output/'results.json').write_bytes(json_bytes(result))
     return result
 
@@ -114,9 +114,11 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--live-authorized',action='store_true',help='Explicit opt-in using previously authorised fictional data/provider scope')
     parser.add_argument('--corpus',type=Path,default=CORPUS,help='Separate frozen corpus; original v2 inputs remain unchanged')
+    parser.add_argument('--max-requests',type=int,default=12,help='Explicit aggregate request cap, including syntax correction')
     args=parser.parse_args()
+    if not 1 <= args.max_requests <= 120:parser.error('max-requests must be between 1 and 120')
     if not args.live_authorized:parser.error('Live collection requires explicit opt-in; no provider call made')
-    result=collect(args.output,args.corpus)
+    result=collect(args.output,args.corpus,args.max_requests)
     if not result['invariants_pass']:raise SystemExit(1)
 
 
