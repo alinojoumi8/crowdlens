@@ -71,36 +71,34 @@ def test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged():
     assert render(p, [{**claim('A separate fact.'), 'claim_id':'other', 'kind':'source_statement', 'citation_ids':['another']}], [source()]) == (p, [])
 
 
-def generate_selected(tmp_path, *, invalid_summary=False):
+def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illegal_duplicate=False):
     import json
-    from evidence_draft_samples import sample_report
+    from evidence_draft_samples import sample_report, sample_claim, TEXT
     from app.services.proposal_store import ProposalStore
     from app.services.evidence_drafting import EvidenceDraftingService
     from app.utils.draft_budget import DraftBudget
     text = 'Fictional hearing workshop note: Sora says the group could assist if benches are confirmed. This is possible assistance, not a commitment.'
     class Storage:
         def get_source_chunks(self, **scope):
-            return [{**SCOPE, 'uuid':'one','document_id':'doc','data':text,'page':1}]
+            return [{**SCOPE, 'uuid':'one','document_id':'doc','data':text,'page':1}] + ([{**SCOPE,'uuid':'two','document_id':'doc2','data':TEXT,'page':1}] if ordinary else [])
     class LLM:
         model = 'synthetic-conditional-selection'
         def chat_json(self, messages, **kwargs):
             context = json.loads(messages[1]['content'])
             phase = messages[0]['content'].splitlines()[0]
             if phase == 'EVIDENCE_LEDGER_V1':
-                choices = context['conditional_extract_contract']
-                value = {'claims':[{**claim('Model wording.'), 'claim_id':f'claim_{i+1:02}',
-                    'source_sentence_id': c['source_sentence_id'], 'citation_ids':[c['evidence_id']],
-                    'kind':'attributed_allegation' if i==0 else 'source_statement',
-                    'attribution':'Sora' if i==0 else ''} for i,c in enumerate(choices)],'gaps':[]}
+                assert ordinary and 'conditional_extract_contract' not in context
+                assert [s['evidence_id'] for s in context['sources']] == ['episode:two']
+                value = {'claims':[{**sample_claim(), 'citation_ids':['episode:one'] if illegal_duplicate else ['episode:two']}],'gaps':[]}
             elif phase == 'EVIDENCE_DRAFT_V1':
-                value = {'paragraphs':[{'text':'The group is committed.', 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
+                value = {'paragraphs':[{'text':'The group is committed.' if 'source_sentence_id' in c else c['text'], 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
                          'section_summary_claim_ids':['unknown'] if invalid_summary else [c['claim_id'] for c in context['ledger']]}
             else:
                 value = {'audit_protocol':'target_reviews_v1','summary_consistent':True,
                     'claim_reviews':[{'claim_id':c['claim_id'],'outcome':'supported','evidence_ids':c['citation_ids'],'detail':'Synthetic exact sentence comparison.'} for c in context['ledger']],
                     'paragraph_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic exact sentence.'} for i,p in enumerate(context['paragraphs'])],
                     'summary_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic exact summary.'} for i,e in enumerate(context['summary_edits'])],
-                    'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Synthetic full coverage.'}]}
+                    'document_reviews':[{'document_id':i,'outcome':'complete','detail':'Synthetic full coverage.'} for i in context['audit_contract']['reviewed_document_ids']]}
             kwargs['response_callback'](json.dumps(value))
             return value
     store = ProposalStore(tmp_path)
@@ -121,7 +119,8 @@ def test_service_renders_selected_sentences_and_preserves_raw_responses(tmp_path
     diagnostics = store.load_snapshot(record['proposal_id'], 'diagnostics', record['diagnostics_digest'])
     assert diagnostics['drafting']['parsed_response']['paragraphs'][0]['text'] == 'The group is committed.'
     assert record['extract_provenance']['paragraph_resolutions'][0]['model_text'] == 'The group is committed.'
-    assert record['extract_provenance']['ledger_resolutions'][0]['model_text'] == 'Model wording.'
+    assert record['extract_provenance']['ledger_resolutions'][0]['model_text'] == ''
+    assert record['extract_provenance']['origin'] == 'server_materialized_complete_source_excerpts'
 
 
 def test_acceptance_rechecks_sentence_selection_without_changing_parent(tmp_path, monkeypatch):
@@ -174,3 +173,19 @@ def test_resolved_paragraphs_remain_exportable_when_summary_blocks(tmp_path):
     assert 'The group is committed.' not in section
     diagnostics = store.load_snapshot(record['proposal_id'],'diagnostics',record['diagnostics_digest'])
     assert diagnostics['drafting']['parsed_response']['paragraphs'][0]['text'] == 'The group is committed.'
+
+
+def test_planner_handles_only_ordinary_sources_when_guarded_excerpts_exist(tmp_path):
+    record, store, _ = generate_selected(tmp_path, ordinary=True)
+    assert record['state'] == 'ready'
+    assert len(record['ledger']) == 2
+    assert record['ledger'][0]['citation_ids'] == ['episode:two']
+    assert record['ledger'][1]['text'].startswith('Fictional hearing workshop note:')
+    diagnostics = store.load_snapshot(record['proposal_id'],'diagnostics',record['diagnostics_digest'])
+    assert len(diagnostics['planning']['parsed_response']['claims']) == 1
+
+
+def test_model_cannot_add_duplicate_guarded_source_claims(tmp_path):
+    record, _, _ = generate_selected(tmp_path, ordinary=True, illegal_duplicate=True)
+    assert record['state'] == 'blocked'
+    assert record['findings'][0]['code'] == 'invalid_ledger'
