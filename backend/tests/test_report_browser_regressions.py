@@ -72,12 +72,34 @@ def react_agent(monkeypatch, responses):
     calls = []
     def chat(**kwargs):
         calls.append(kwargs)
-        return next(remaining)
+        response = next(remaining)
+        if isinstance(response, Exception):
+            raise response
+        return response
     agent.llm = SimpleNamespace(chat=chat)
     return agent, calls
 
 
 TOOL = '<tool_call>{"name":"quick_search","parameters":{"query":"pilot"}}</tool_call>'
+
+
+def test_thinking_only_answer_gets_one_bounded_continuation(monkeypatch):
+    from app.utils.llm_client import EmptyLLMResponseError
+    agent, calls = react_agent(monkeypatch, [TOOL, EmptyLLMResponseError("empty"), "Final Answer: Source-grounded prose."])
+    section = ReportSection(title="Source facts")
+    outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+    assert agent._generate_section_react_once(section, outline, []) == "Source-grounded prose."
+    assert len(calls) == 3
+
+
+def test_repeated_empty_answer_stops_without_publishing(monkeypatch):
+    from app.utils.llm_client import EmptyLLMResponseError
+    agent, calls = react_agent(monkeypatch, [TOOL, EmptyLLMResponseError("empty"), EmptyLLMResponseError("empty again")])
+    section = ReportSection(title="Source facts")
+    outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+    with pytest.raises(EmptyLLMResponseError):
+        agent._generate_section_react_once(section, outline, [])
+    assert len(calls) == 3
 
 
 def test_process_note_is_not_adopted_as_completed_section(monkeypatch):

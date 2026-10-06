@@ -23,6 +23,10 @@ from ..services.workflow_execution import transport_attempt
 logger = get_logger('mirofish.llm_client')
 
 
+class EmptyLLMResponseError(ValueError):
+    """Provider completed a request without usable answer text."""
+
+
 class LLMClient:
     """LLM Client"""
 
@@ -111,7 +115,14 @@ class LLMClient:
         ]
         content = "\n".join(text_parts).strip()
         if not content:
-            raise ValueError("Anthropic-compatible LLM returned no text content")
+            # Keep diagnostics structural: never expose private prompts or thinking.
+            block_types = sorted({str(item.get("type", "unknown")) for item in data.get("content", [])})
+            raise EmptyLLMResponseError(
+                "Anthropic-compatible LLM returned no text content "
+                f"(stop_reason={data.get('stop_reason', 'unknown')}, "
+                f"block_types={','.join(block_types) or 'none'}). "
+                "Completed sections are preserved; retry the unfinished operation."
+            )
         return content
 
     def _post_anthropic_with_retry(

@@ -21,7 +21,7 @@ from datetime import datetime
 from enum import Enum
 
 from ..config import Config
-from ..utils.llm_client import LLMClient
+from ..utils.llm_client import LLMClient, EmptyLLMResponseError
 from ..utils.logger import get_logger
 from ..utils.timing import PhaseTimer
 from .report_revisions import guard_report_mutation, guard_report_generation
@@ -1870,6 +1870,7 @@ class ReportAgent:
         max_iterations = 5  # Maximum iterations
         min_tool_calls = min(self.MAX_TOOL_CALLS_PER_SECTION, 1 if self.report_depth == "fast" else 3)
         conflict_retries = 0  # Consecutive conflicts where tool calls and Final Answer appear simultaneously
+        empty_response_retries = 0
         used_tools = set()  # Record tool names already called
         all_tools = set(self.tools.keys())
 
@@ -1893,11 +1894,23 @@ class ReportAgent:
                 )
             
             # Call LLM
-            response = self.llm.chat(
-                messages=messages,
-                temperature=0.5,
-                max_tokens=4096
-            )
+            try:
+                response = self.llm.chat(
+                    messages=messages,
+                    temperature=0.5,
+                    max_tokens=4096
+                )
+            except EmptyLLMResponseError:
+                # One counted continuation within the existing iteration bound.
+                # Never treat private reasoning as section prose or retry other failures.
+                if empty_response_retries or iteration == max_iterations - 1:
+                    raise
+                empty_response_retries += 1
+                messages.append({"role": "user", "content":
+                    "Your last response contained no answer text. Return either a textual "
+                    "<tool_call> block for an available tool or completed section prose "
+                    "after 'Final Answer:'. Preserve the source evidence and uncertainty."})
+                continue
 
             # Check if LLM return is None (API exception or empty content)
             if response is None:
