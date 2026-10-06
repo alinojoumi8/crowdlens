@@ -14,6 +14,14 @@
     <template v-if="status">
       <p><strong>{{ status.state }}</strong> · {{ status.admitted }}/{{ status.max_requests }} requests · {{ status.in_flight }} in flight or delivery unknown · {{ Math.round(status.elapsed_seconds) }} seconds elapsed</p>
       <p v-if="status.admission_closed" role="status">New calls are blocked: {{ status.reason }}. Partial output is retained. Recovery requires an explicit allowance authorization and a manual action.</p>
+      <div v-if="status.admission_closed" class="allowance-inputs">
+        <p>Renew for {{ status.provider }} · {{ status.model }}. Existing output is retained; renewal does not start or retry any generation.</p>
+        <label>Total request ceiling <input v-model.number="renewRequests" type="number" :min="status.admitted + 1" max="100000" /></label>
+        <label>Minutes from renewal <input v-model.number="renewMinutes" type="number" min="1" max="1440" /></label>
+        <label v-if="status.in_flight"><input v-model="acknowledgeUnknown" type="checkbox" /> I acknowledge that outstanding requests may still finish and be billed.</label>
+        <button :disabled="busy || renewRequests <= status.admitted || (status.in_flight > 0 && !acknowledgeUnknown)" @click="renew">Renew workflow allowance</button>
+        <p>These totals include {{ status.admitted }} requests already used. Renewal may incur provider charges; the request ceiling is not a monetary ceiling.</p>
+      </div>
       <button class="workflow-stop" :disabled="busy || status.state === 'stopped' || status.state === 'runtime_limit'" @click="stop">Stop workflow</button>
       <p>Stop blocks new calls. In-flight provider requests may still finish and be billed.</p>
     </template>
@@ -24,12 +32,14 @@
 
 <script setup>
 import { ref, computed, useId, watch, onMounted, onUnmounted } from 'vue'
-import { getExecutionConfiguration, authorizeWorkflow, resolveWorkflow, getWorkflow, stopWorkflow } from '../api/execution'
+import { getExecutionConfiguration, authorizeWorkflow, resolveWorkflow, getWorkflow, stopWorkflow, reauthorizeWorkflow } from '../api/execution'
 const props = defineProps({ authorize: Boolean, inputDescription: String, inputFingerprint: String, resource: String, pendingId: String })
 const authorizationHelpId = useId()
 const emit = defineEmits(['authorized', 'stopped'])
 const configuration = ref(null), status = ref(null), workflowId = ref(null), error = ref(''), busy = ref(false)
 const maxRequests = ref(60), maxMinutes = ref(30)
+const renewRequests = ref(60), renewMinutes = ref(30), acknowledgeUnknown = ref(false)
+let renewalKey = crypto.randomUUID()
 let timer, generation = 0, authorizationKey = crypto.randomUUID()
 const readableError = code => ({
   secondary_provider_allowance_unsupported: 'Authorization is blocked because optional Jev provider modes are enabled. Turn off JEV_INTERVIEW_MODE, JEV_RERANK_MODE and JEV_EVIDENCE_MODE in the server configuration and restart the server.',
@@ -61,6 +71,7 @@ const refresh = async () => {
     if (workflowId.value) {
       const response = await getWorkflow(workflowId.value)
       if (token !== generation) return
+      if (!status.value?.admission_closed && response.data.admission_closed) renewRequests.value = Math.max(response.data.max_requests, response.data.admitted + 1)
       status.value = response.data
     }
   } catch (exc) { if (token === generation) error.value = errorMessage(exc) }
@@ -79,13 +90,28 @@ const confirmAuthorization = async () => {
     emit('authorized', workflowId.value)
   } catch (exc) { if(token === generation) error.value = errorMessage(exc) } finally { busy.value = false }
 }
+const renew = async () => {
+  if (busy.value || !status.value?.admission_closed) return
+  const token = ++generation, id = workflowId.value
+  busy.value = true; error.value = ''
+  try {
+    const response = await reauthorizeWorkflow(id, {
+      max_requests: renewRequests.value, max_seconds: renewMinutes.value * 60,
+      confirmed: true, acknowledge_unknown: acknowledgeUnknown.value, request_key: renewalKey
+    })
+    if (token !== generation) return
+    status.value = response.data; renewalKey = crypto.randomUUID(); acknowledgeUnknown.value = false
+  } catch (exc) { if (token === generation) error.value = errorMessage(exc) }
+  finally { busy.value = false }
+}
 const stop = async () => {
   const token = generation, id = workflowId.value
   busy.value = true; error.value = ''
   try { const response = await stopWorkflow(id); if(token !== generation) return; status.value = response.data; emit('stopped') }
   catch (exc) { if(token === generation) error.value = errorMessage(exc) } finally { busy.value = false }
 }
-watch(() => props.resource, () => { generation++; workflowId.value = null; status.value = null; refresh() })
+watch([renewRequests, renewMinutes, acknowledgeUnknown], () => { renewalKey = crypto.randomUUID() })
+watch(() => props.resource, () => { generation++; workflowId.value = null; status.value = null; renewalKey = crypto.randomUUID(); acknowledgeUnknown.value = false; refresh() })
 watch(() => [props.inputDescription,props.inputFingerprint], () => {
   generation++; workflowId.value = null; status.value = null; authorizationKey = crypto.randomUUID(); emit('authorized', null)
 })

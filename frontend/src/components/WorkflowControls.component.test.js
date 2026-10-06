@@ -1,11 +1,11 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, expect, it, vi } from 'vitest'
 import WorkflowControls from './WorkflowControls.vue'
-import { authorizeWorkflow, getExecutionConfiguration } from '../api/execution'
+import { authorizeWorkflow, getExecutionConfiguration, getWorkflow, reauthorizeWorkflow } from '../api/execution'
 vi.mock('../api/execution', () => ({
   getExecutionConfiguration: vi.fn().mockResolvedValue({success:true,data:{provider:'synthetic',model:'synthetic',controls_available:true,configured:true}}),
   authorizeWorkflow: vi.fn(), resolveWorkflow:vi.fn().mockResolvedValue({data:{workflow_id:null}}),
-  getWorkflow:vi.fn(), stopWorkflow:vi.fn()
+  getWorkflow:vi.fn(), stopWorkflow:vi.fn(), reauthorizeWorkflow:vi.fn()
 }))
 let wrapper
 afterEach(() => { wrapper?.unmount(); vi.clearAllMocks() })
@@ -37,4 +37,24 @@ it('shows the actionable server reason for HTTP 400 instead of the status messag
   await flushPromises()
   expect(wrapper.get('[role="alert"]').text()).toContain('optional Jev provider modes are enabled')
   expect(wrapper.text()).not.toContain('Request failed with status code 400')
+})
+
+it('renews an expired allowance only on an explicit click without starting generation', async () => {
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_old',state:'runtime_limit',admission_closed:true,admitted:39,max_requests:60,in_flight:0,provider:'minimax',model:'MiniMax-M3'}})
+  reauthorizeWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_old',state:'authorized',admission_closed:false,admitted:39,max_requests:60,in_flight:0}})
+  wrapper=mount(WorkflowControls,{props:{pendingId:'wf_old'}})
+  await flushPromises()
+  expect(reauthorizeWorkflow).not.toHaveBeenCalled()
+  await wrapper.findAll('button').find(button=>button.text()==='Renew workflow allowance').trigger('click')
+  await flushPromises()
+  expect(reauthorizeWorkflow).toHaveBeenCalledWith('wf_old',expect.objectContaining({confirmed:true,max_requests:60,max_seconds:1800,acknowledge_unknown:false}))
+  expect(wrapper.text()).not.toContain('Renew workflow allowance')
+  expect(wrapper.emitted('authorized')).toBeUndefined()
+})
+it('requires acknowledgment before renewing outstanding provider requests',async()=>{
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_unknown',state:'runtime_limit',admission_closed:true,admitted:3,max_requests:60,in_flight:1}})
+  wrapper=mount(WorkflowControls,{props:{pendingId:'wf_unknown'}})
+  await flushPromises()
+  expect(wrapper.findAll('button').find(button=>button.text()==='Renew workflow allowance').attributes('disabled')).toBeDefined()
+  expect(reauthorizeWorkflow).not.toHaveBeenCalled()
 })

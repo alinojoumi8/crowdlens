@@ -135,6 +135,7 @@ it('shows a usable Stop control and preserves the stopped state', async () => {
 })
 
 it('passes the selected round cap and economic settings when running an ensemble', async () => {
+  getRunStatus.mockResolvedValueOnce({success:true,data:{runner_status:'completed'}})
   wrapper = mount(Step3Simulation, {
     props: {
       simulationId: 'sim_test',
@@ -154,4 +155,26 @@ it('passes the selected round cap and economic settings when running an ensemble
     economy: { enabled: true, initial_balance_cents: 2500, currency: 'CAD', max_decisions_per_tick: 8 },
     enable_graph_memory_update: true
   })
+})
+
+it('does not offer an ensemble before the first simulation completes', async () => {
+  getRunStatus.mockResolvedValueOnce({success:true,data:{runner_status:'idle'}})
+  wrapper = mount(Step3Simulation, {props:{simulationId:'sim_test',ensembleRuns:5}})
+  await flushPromises()
+  expect(wrapper.get('button.ensemble').attributes('disabled')).toBeDefined()
+  expect(wrapper.text()).toContain('Complete the first simulation')
+  expect(runEnsemble).not.toHaveBeenCalled()
+})
+it('retains completed run state and explains a rejected ensemble admission', async () => {
+  getRunStatus.mockResolvedValueOnce({success:true,data:{runner_status:'completed',twitter_actions_count:4}})
+  runEnsemble.mockRejectedValueOnce(new Error('runtime_limit'))
+  wrapper = mount(Step3Simulation, {props:{simulationId:'sim_test',ensembleRuns:5}})
+  await flushPromises()
+  await wrapper.get('button.ensemble').trigger('click')
+  await flushPromises()
+  expect(wrapper.get('[role="alert"]').text()).toContain('workflow time allowance expired')
+  expect(wrapper.get('button.ensemble').attributes('disabled')).toBeUndefined()
+  expect(wrapper.find('button.stop').exists()).toBe(false)
+  expect(wrapper.emitted('update-status').flat().at(-1)).toBe('completed')
+  expect(wrapper.get('[aria-describedby="simulation-next-help"]').attributes('disabled')).toBeUndefined()
 })

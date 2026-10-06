@@ -111,7 +111,7 @@
         </div>
 
         <!-- Ensemble (multi-seed) run progress -->
-        <div v-if="ensemble.active || ensemble.done" class="platform-status ensemble-card" :class="{ active: ensemble.active, completed: ensemble.done }">
+        <div v-if="ensemble.active || ensemble.done || ensemble.message" class="platform-status ensemble-card" :class="{ active: ensemble.active, completed: ensemble.done }">
           <div class="platform-header">
             <span class="platform-name">Ensemble</span>
             <span v-if="ensemble.done" class="status-badge">
@@ -142,7 +142,7 @@
         <button
           v-if="canRunEnsemble"
           class="action-btn ensemble"
-          :disabled="ensemble.active || isGeneratingReport || isStarting || phase === 1"
+          :disabled="ensemble.active || isGeneratingReport || isStarting || phase !== 2 || runStatus.runner_status !== 'completed'"
           :title="`Re-run the simulation ${ensembleRuns} times with different seeds and aggregate the grounded forecast into a confidence-bearing distribution`"
           @click="doRunEnsemble"
         >
@@ -165,6 +165,8 @@
     </div>
 
     <p id="simulation-next-help" class="next-help" role="status">{{ nextActionHelp }}</p>
+    <p v-if="ensemble.message" class="start-error" :role="ensemble.active || ensemble.done ? 'status' : 'alert'">{{ ensemble.message }}</p>
+    <p v-if="canRunEnsemble && runStatus.runner_status !== 'completed' && !ensemble.active" class="next-help">Complete the first simulation before running a seeded ensemble.</p>
     <p v-if="startError" class="start-error" role="alert">{{ startError }}</p>
     <details v-if="effectiveConfig" class="run-settings"><summary>Run settings and limits</summary>
     <p class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
@@ -800,7 +802,9 @@ const stopEnsemblePolling = () => {
 // This replaces the single stochastic run as the forecast basis: the backend persists
 // ensemble_signal.json, which the report's forecast prefers over any single run.
 const doRunEnsemble = async () => {
-  if (!props.simulationId || ensemble.value.active || isStarting.value || phase.value === 1) return
+  if (!props.simulationId || ensemble.value.active || isStarting.value || phase.value !== 2 || runStatus.value.runner_status !== 'completed') return
+  const priorPhase = phase.value
+  const priorStatus = runStatus.value.runner_status
   stopPolling()
 
   ensemble.value = {
@@ -833,9 +837,13 @@ const doRunEnsemble = async () => {
     }
   } catch (err) {
     ensemble.value.active = false
-    ensemble.value.message = `Ensemble failed: ${err.message}`
+    const reason = err.response?.data?.error || err.message
+    ensemble.value.message = reason === 'runtime_limit'
+      ? 'Ensemble did not start: the workflow time allowance expired. Renew the allowance above, then retry manually.'
+      : `Ensemble did not start: ${reason}`
+    phase.value = priorPhase
     addLog(`✗ Ensemble failed to start: ${err.message}`)
-    emit('update-status', 'error')
+    emit('update-status', priorStatus)
   }
 }
 
@@ -878,7 +886,9 @@ const fetchEnsembleStatus = async () => {
     } else if (task.status === 'failed') {
       stopEnsemblePolling()
       ensemble.value.active = false
-      ensemble.value.message = `Ensemble failed: ${task.error || 'Unknown error'}`
+      ensemble.value.message = `Ensemble failed: ${task.error || 'Unknown error'}. Partial activity is retained.`
+      await fetchRunStatus()
+      phase.value = 2
       addLog(`✗ Ensemble failed: ${task.error || 'Unknown error'}`)
       emit('update-status', 'error')
     }
