@@ -125,6 +125,10 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+### Scanned PDF evidence
+
+PDF extraction preserves page markers. Image pages with little native text use local Tesseract OCR (`tesseract` with English language data on the backend host). If OCR is unavailable or fails, ingestion reports the affected page rather than silently discarding scanned evidence. OCR text can contain recognition errors; check quotations against the original PDF during report review.
+
 ### Authorization fails before a website or PDF upload
 
 Workflow authorization currently covers the configured primary AI provider and local Ollama embeddings. Optional Jev modes must be off for this workflow. If the UI reports that optional Jev provider modes are enabled, restart the backend with:
