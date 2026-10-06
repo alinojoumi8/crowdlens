@@ -1,5 +1,10 @@
 <template>
   <div class="simulation-panel">
+    <header class="simulation-guide">
+      <h1>Explore simulated reactions</h1>
+      <p>Watch activity, check the run status, then generate a report for review. Simulated posts and responses are not observed public opinion.</p>
+      <p class="run-summary" role="status"><strong>{{ runStateLabel }}</strong> · {{ progressGuidance }}</p>
+    </header>
     <!-- Top Control Bar -->
     <div class="control-bar">
       <div class="status-group">
@@ -9,7 +14,7 @@
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
             </svg>
-            <span class="platform-name">Info Plaza</span>
+            <span class="platform-name">Public feed</span>
             <span v-if="runStatus.twitter_completed" class="status-badge">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -26,7 +31,7 @@
               <span class="stat-value mono">{{ twitterElapsedTime }}</span>
             </span>
             <span class="stat">
-              <span class="stat-label">MODEL ACTIONS</span>
+              <span class="stat-label">Generated actions</span>
               <span class="stat-value mono">{{ runStatus.platform_activity?.twitter?.model_actions ?? 0 }}</span>
             </span>
           </div>
@@ -50,7 +55,7 @@
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
-            <span class="platform-name">Topic Community</span>
+            <span class="platform-name">Discussion community</span>
             <span v-if="runStatus.reddit_completed" class="status-badge">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -67,7 +72,7 @@
               <span class="stat-value mono">{{ redditElapsedTime }}</span>
             </span>
             <span class="stat">
-              <span class="stat-label">MODEL ACTIONS</span>
+              <span class="stat-label">Generated actions</span>
               <span class="stat-value mono">{{ runStatus.platform_activity?.reddit?.model_actions ?? 0 }}</span>
             </span>
           </div>
@@ -91,16 +96,16 @@
 
         <div class="platform-status runtime" :class="{ active: runStatus.runner_status === 'running', completed: runStatus.runner_status === 'completed' }">
           <div class="platform-header">
-            <span class="platform-name">Runtime</span>
+            <span class="platform-name">Run status</span>
           </div>
           <div class="platform-stats">
             <span class="stat">
-              <span class="stat-label">WALL</span>
+              <span class="stat-label">Elapsed time</span>
               <span class="stat-value mono">{{ formatWallDuration(runTiming?.total_seconds || runTiming?.duration_seconds) }}</span>
             </span>
             <span class="stat">
               <span class="stat-label">STATUS</span>
-              <span class="stat-value mono">{{ runStatus.runner_status || 'idle' }}</span>
+              <span class="stat-value mono">{{ runStateLabel }}</span>
             </span>
           </div>
         </div>
@@ -148,17 +153,22 @@
         </button>
         <button
           class="action-btn primary"
+          aria-describedby="simulation-next-help"
           :disabled="phase !== 2 || isGeneratingReport"
           @click="handleNextStep"
         >
           <span v-if="isGeneratingReport" class="loading-spinner-small"></span>
-          {{ isGeneratingReport ? 'Starting...' : 'Start Generating Report' }}
+          {{ isGeneratingReport ? 'Starting...' : 'Generate review report' }}
           <span v-if="!isGeneratingReport" class="arrow-icon">→</span>
         </button>
       </div>
     </div>
 
-    <p v-if="effectiveConfig" class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
+    <p id="simulation-next-help" class="next-help" role="status">{{ nextActionHelp }}</p>
+    <p v-if="startError" class="start-error" role="alert">{{ startError }}</p>
+    <details v-if="effectiveConfig" class="run-settings"><summary>Run settings and limits</summary>
+    <p class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
+    </details>
     <p v-if="runStatus.activity_summary" class="activity-accounting" role="status">{{ runStatus.activity_summary.model_actions }} model actions · {{ runStatus.activity_summary.unique_posts }} unique posts ({{ runStatus.activity_summary.initial_posts }} initial, {{ runStatus.activity_summary.scheduled_posts }} scheduled) · {{ runStatus.activity_summary.logged_entries }} logged entries · {{ runStatus.activity_summary.unknown_origin_actions }} unknown-origin actions</p>
     <p v-if="['stopped','failed'].includes(runStatus.runner_status)" class="effective-settings" role="status">Simulation {{ runStatus.runner_status }}: {{ runStatus.error || 'operator stop' }}. Partial activity is retained. Generation requires an available workflow allowance.</p>
 
@@ -324,7 +334,7 @@
 
         <div v-if="allActions.length === 0" class="waiting-state">
           <div class="pulse-ring"></div>
-          <span>Waiting for agent actions...</span>
+          <span>{{ phase === 0 ? 'No activity yet. Start the simulation when you are ready.' : phase === 1 ? 'Waiting for simulated activity…' : 'This run has no recorded activity.' }}</span>
         </div>
       </div>
     </div>
@@ -530,6 +540,22 @@ const ensemble = ref({
 })
 
 // Computed
+const runStateLabel = computed(() => {
+  if (isStarting.value) return 'Starting'
+  return ({ idle: 'Not started', running: 'Running', starting: 'Starting', stopping: 'Stopping', completed: 'Completed', stopped: 'Stopped', failed: 'Failed' })[runStatus.value.runner_status] || 'Not started'
+})
+const progressGuidance = computed(() => {
+  if (['stopped', 'failed'].includes(runStatus.value.runner_status)) return 'The run ended early. Partial activity is retained; review it before generating a report.'
+  if (phase.value === 2) return 'Activity is ready to inspect. The next step is a report for review.'
+  if (phase.value === 1 || isStarting.value) return 'Generated activity will appear below. You can stop the workflow to block new calls.'
+  return 'Review the settings, then start when a workflow allowance is available.'
+})
+const nextActionHelp = computed(() => {
+  if (isGeneratingReport.value) return 'Starting report generation. Please wait.'
+  if (phase.value !== 2) return 'Report generation becomes available after the simulation ends.'
+  if (['stopped', 'failed'].includes(runStatus.value.runner_status)) return 'A report will use partial activity from this run. Generation still requires an available workflow allowance.'
+  return 'Inspect the simulated activity, then generate a report. Generation requires an available workflow allowance.'
+})
 const selectedPlatforms = computed(() => {
   const platform = effectiveConfig.value?.prediction_settings?.platform || 'parallel'
   return platform === 'parallel' ? ['twitter', 'reddit'] : [platform]
@@ -1207,7 +1233,7 @@ onUnmounted(() => {
   background: #FAFAFA;
   border: 1px solid #EAEAEA;
   opacity: 1;
-  transition: all 0.3s;
+  transition: background-color 0.3s, border-color 0.3s;
   min-width: 140px;
   position: relative;
   cursor: pointer;
@@ -1704,7 +1730,7 @@ onUnmounted(() => {
   border: 1px solid #EAEAEA;
   box-shadow: 0 2px 10px rgba(0,0,0,0.02);
   position: relative;
-  transition: all 0.2s;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .timeline-card:hover {
@@ -1949,5 +1975,37 @@ onUnmounted(() => {
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-right: 6px;
+}
+/* Guided simulation progress */
+.simulation-guide { padding: 16px 24px; border-bottom: 1px solid #e5e7eb; background: #f8fafc; }
+.simulation-guide h1 { font-size: 22px; margin: 0 0 8px; text-wrap: balance; }
+.simulation-guide p { font: 14px/1.5 system-ui, sans-serif; margin: 6px 0; color: #475569; }
+.run-summary strong { color: #172b42; }
+.control-bar { height: auto; flex-wrap: wrap; gap: 16px; }
+.status-group, .action-controls { flex-wrap: wrap; min-width: 0; }
+.next-help, .start-error { padding: 10px 24px; margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #475569; }
+.start-error { background: #fff4ed; color: #873e1c; }
+.run-settings { padding: 8px 24px; border-bottom: 1px solid #e5e7eb; }
+.run-settings summary { cursor: pointer; min-height: 40px; line-height: 40px; font-weight: 600; }
+.run-settings .effective-settings { margin: 0; }
+.action-btn, .diagnostics-export-btn { min-height: 44px; }
+.simulation-panel :is(button, summary):focus-visible { outline: 2px solid #c73500; outline-offset: 3px; }
+.stat-value { font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .simulation-panel { overflow-y: auto; }
+  .simulation-guide, .control-bar, .next-help, .start-error, .run-settings { padding-left: 16px; padding-right: 16px; flex-shrink: 0; }
+  .status-group { width: 100%; }
+  .platform-status { flex: 1 1 100%; min-width: 0; }
+  .action-controls { width: 100%; }
+  .action-controls .action-btn { flex: 1 1 100%; }
+  .main-content-area { min-height: 300px; flex: 0 0 auto; overflow: visible; }
+  .timeline-feed { min-height: 0; padding: 16px; }
+  .timeline-axis, .timeline-marker { display: none; }
+  .timeline-item.twitter, .timeline-item.reddit { padding: 0; }
+  .timeline-item.twitter .timeline-card, .timeline-item.reddit .timeline-card { width: 100%; margin: 0; box-sizing: border-box; }
+  .timeline-card { min-width: 0; overflow-wrap: anywhere; padding: 16px; }
+  .card-header, .header-meta { flex-wrap: wrap; gap: 8px; }
+  .timeline-header, .timeline-stats { flex-wrap: wrap; }
+  .diagnostics-grid, .diagnostics-lists { display: grid; grid-template-columns: 1fr 1fr; }
 }
 </style>

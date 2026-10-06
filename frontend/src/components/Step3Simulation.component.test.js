@@ -41,7 +41,7 @@ it('retains detail accounting when a basic terminal poll omits the fields', asyn
   await flushPromises()
   await vi.advanceTimersByTimeAsync(2000)
   await flushPromises()
-  expect(wrapper.get('.platform-status.twitter').text()).toContain('MODEL ACTIONS2')
+  expect(wrapper.get('.platform-status.twitter').text()).toContain('Generated actions2')
   expect(wrapper.get('.activity-accounting').text()).toContain('9 unique posts')
 })
 
@@ -72,7 +72,7 @@ it('shows the selected platform and duration-derived bound before Start', async 
   await flushPromises()
   expect(wrapper.find('.platform-status.reddit').exists()).toBe(false)
   expect(wrapper.get('.effective-settings').text()).toContain('effective rounds 2')
-  expect(wrapper.get('.platform-status.runtime').text()).toContain('idle')
+  expect(wrapper.get('.platform-status.runtime').text()).toContain('Not started')
 })
 
 it('distinguishes model actions and unique posts from input entries', async () => {
@@ -83,7 +83,7 @@ it('distinguishes model actions and unique posts from input entries', async () =
   } })
   wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test' } })
   await flushPromises()
-  expect(wrapper.get('.platform-status.twitter').text()).toContain('MODEL ACTIONS2')
+  expect(wrapper.get('.platform-status.twitter').text()).toContain('Generated actions2')
   expect(wrapper.get('.activity-accounting').text()).toContain('9 unique posts')
   expect(wrapper.get('.activity-accounting').text()).toContain('4 initial')
   expect(wrapper.get('.activity-accounting').text()).toContain('4 scheduled')
