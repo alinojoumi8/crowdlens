@@ -125,6 +125,16 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+### Authorization fails before a website or PDF upload
+
+Workflow authorization currently covers the configured primary AI provider and local Ollama embeddings. Optional Jev modes must be off for this workflow. If the UI reports that optional Jev provider modes are enabled, restart the backend with:
+
+```bash
+JEV_INTERVIEW_MODE=off JEV_RERANK_MODE=off JEV_EVIDENCE_MODE=off uv run python run.py
+```
+
+Run this from `backend/` with the usual application environment loaded. These process overrides preserve `.env` settings for separate Jev evaluations. The UI checks configuration before authorization and displays the server's error reason when a request fails. After restarting, refresh the page and authorize your selected sources again.
+
 ## Configuration
 
 All settings are in `.env` (copy from `.env.example`):

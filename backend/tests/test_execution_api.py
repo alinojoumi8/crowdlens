@@ -273,3 +273,19 @@ def test_recovery_response_does_not_rebind_existing_related_resources(controlled
     assert response.status_code==200
     assert ledger.resolve('simulation:shared')==first and ledger.resolve('graph:shared')==first
     assert ledger.status(second)['admitted']==0
+
+
+@pytest.mark.parametrize('mode', ['JEV_INTERVIEW_MODE', 'JEV_RERANK_MODE', 'JEV_EVIDENCE_MODE'])
+def test_configuration_explains_secondary_provider_blocker(controlled, monkeypatch, mode):
+    client, ledger, runtime, calls = controlled
+    for name in ('JEV_INTERVIEW_MODE', 'JEV_RERANK_MODE', 'JEV_EVIDENCE_MODE'):
+        monkeypatch.setattr(Config, name, 'off')
+    monkeypatch.setattr(Config, mode, 'shadow')
+    assert client.get('/api/execution/configuration').json['data']['authorization_blocker'] == 'secondary_provider_allowance_unsupported'
+    response = client.post('/api/execution/authorize', json=terms())
+    assert response.status_code == 400
+    assert response.json['error'] == 'secondary_provider_allowance_unsupported'
+    assert calls == []
+    monkeypatch.setattr(Config, mode, 'off')
+    assert client.get('/api/execution/configuration').json['data']['authorization_blocker'] is None
+    assert client.post('/api/execution/authorize', json=terms()).status_code == 201

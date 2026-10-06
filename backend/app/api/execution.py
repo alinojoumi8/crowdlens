@@ -61,12 +61,21 @@ def install_workflow_controls(app):
             cancel_owned(wid, 'stopped', record['epoch'])
             return record
 
+    def authorization_blocker():
+        embedding_host = urlparse(Config.EMBEDDING_BASE_URL).hostname
+        if Config.EMBEDDING_PROVIDER != 'ollama' or embedding_host not in {'127.0.0.1', 'localhost', '::1', 'host.docker.internal', 'ollama'}:
+            return 'remote_embedding_allowance_unsupported'
+        if any(getattr(Config, name, 'off') != 'off' for name in
+               ('JEV_INTERVIEW_MODE', 'JEV_RERANK_MODE', 'JEV_EVIDENCE_MODE')):
+            return 'secondary_provider_allowance_unsupported'
+        return None
+
     @bp.route('/configuration')
     def configuration():
         identity = configured_identity()
         return jsonify(success=True, data=dict(provider=identity['provider'], model=identity['model'],
             controls_available=ledger is not None, configured=bool(Config.LLM_API_KEY),
-            embeddings=Config.EMBEDDING_PROVIDER))
+            embeddings=Config.EMBEDDING_PROVIDER, authorization_blocker=authorization_blocker()))
 
     @bp.route('/authorize', methods=['POST'])
     def authorize():
@@ -76,12 +85,9 @@ def install_workflow_controls(app):
         identity = configured_identity()
         if data.get('provider') != identity['provider'] or data.get('model') != identity['model']:
             return jsonify(success=False, error='provider_identity_changed'), 409
-        embedding_host = urlparse(Config.EMBEDDING_BASE_URL).hostname
-        if Config.EMBEDDING_PROVIDER != 'ollama' or embedding_host not in {'127.0.0.1', 'localhost', '::1', 'host.docker.internal', 'ollama'}:
-            return jsonify(success=False, error='remote_embedding_allowance_unsupported'), 400
-        if any(getattr(Config, name, 'off') != 'off' for name in
-               ('JEV_INTERVIEW_MODE', 'JEV_RERANK_MODE', 'JEV_EVIDENCE_MODE')):
-            return jsonify(success=False, error='secondary_provider_allowance_unsupported'), 400
+        blocker = authorization_blocker()
+        if blocker:
+            return jsonify(success=False, error=blocker), 400
         try:
             resources = data.get('resources', [])
             if not isinstance(resources, list):
