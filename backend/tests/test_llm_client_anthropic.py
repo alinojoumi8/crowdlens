@@ -49,7 +49,7 @@ def capture_logger(name):
     return target_logger, handler, previous_level
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
 def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model_name):
     captured = {}
 
@@ -80,6 +80,9 @@ def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model
     )
 
     assert result == "OK"
+    if model_name == "MiniMax-M3.1-Flash-Preview":
+        assert captured["json"]["max_tokens"] == 32768
+        assert captured["json"]["output_config"] == {"effort":"high"}
     assert captured["url"] == "https://api.minimax.io/anthropic/v1/messages"
     assert captured["headers"]["x-api-key"] == "test-key"
     assert captured["headers"]["anthropic-version"] == "2023-06-01"

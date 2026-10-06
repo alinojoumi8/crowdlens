@@ -4,6 +4,8 @@ Unified OpenAI format API calls
 Supports Ollama num_ctx parameter to prevent prompt truncation
 """
 
+from .model_limits import anthropic_output_settings
+
 import json
 import os
 import re
@@ -75,7 +77,7 @@ class LLMClient:
 
         body: Dict[str, Any] = {
             "model": self.model,
-            "max_tokens": max_tokens,
+            **anthropic_output_settings(self.model, max_tokens),
             "messages": chat_messages,
         }
         if system_messages:

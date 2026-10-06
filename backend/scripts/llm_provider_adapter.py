@@ -26,6 +26,7 @@ from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from openai import AsyncStream, Stream
 from pydantic import BaseModel
 from app.services.workflow_execution import current_scope, transport_attempt, WorkflowHalt
+from app.utils.model_limits import anthropic_output_settings
 
 
 ANTHROPIC_COMPATIBLE_PROVIDERS = {"anthropic", "minimax", "kimi"}
@@ -248,7 +249,7 @@ class AnthropicMessagesModel(BaseModelBackend):
 
         body: Dict[str, Any] = {
             "model": str(self.model_type),
-            "max_tokens": max_tokens,
+            **anthropic_output_settings(self.model_type, max_tokens),
             "messages": chat_messages,
         }
         if system:
