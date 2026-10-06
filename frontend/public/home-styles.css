@@ -597,3 +597,28 @@
   .home-container .dashboard-section { gap: 32px !important; padding-top: 32px !important; }
   .home-container .console-header { flex-wrap: wrap; gap: 8px; }
 }
+
+/* Guided homepage setup */
+.home-container .main-title { text-wrap: balance; }
+.home-container .hero-desc { text-wrap: pretty; }
+.home-container .setup-heading { font: 600 1rem/1.4 system-ui, sans-serif; margin: 12px 0 16px; }
+.home-container .console-header { font: 600 1rem/1.4 system-ui, sans-serif !important; color: #242424 !important; }
+.home-container .setup-help { color: #505050; font-size: .9rem; line-height: 1.5; margin: 14px 0; }
+.home-container .start-scenario:disabled { background: #e5e5e5 !important; color: #606060 !important; cursor: not-allowed !important; }
+.home-container .source-picker { min-height: 44px; }
+@media (max-width: 1024px) {
+  .home-container .hero-section { flex-direction: row !important; gap: 20px; }
+  .home-container .hero-left { margin-bottom: 0; }
+  .home-container .hero-right { width: auto; flex: 0 0 100px !important; }
+  .home-container .logo-container img { max-width: 100px !important; }
+  .home-container .dashboard-section .right-panel { order: -1; }
+}
+@media (max-width: 600px) {
+  .home-container .main-content { padding: 24px 20px !important; }
+  .home-container .hero-right { display: none !important; }
+  .home-container .main-title { font-size: 2rem !important; }
+  .home-container .hero-section { margin-bottom: 24px !important; }
+  .home-container .dashboard-section { padding-top: 20px !important; }
+  .home-container .console-box { padding: 4px !important; }
+  .home-container .console-box > div { padding-left: 12px !important; padding-right: 12px !important; }
+}

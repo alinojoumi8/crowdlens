@@ -6,8 +6,9 @@
       <div class="allowance-inputs">
         <label>Maximum requests <input v-model.number="maxRequests" type="number" min="1" max="100000" /></label>
         <label>Maximum minutes <input v-model.number="maxMinutes" type="number" min="1" max="1440" /></label>
-        <button :disabled="busy || !inputDescription || !inputFingerprint || !configuration?.controls_available || !configuration?.configured || !!workflowId" @click="confirmAuthorization">Authorize this workflow</button>
+        <button :aria-describedby="authorizationHelpId" :disabled="busy || !inputDescription || !inputFingerprint || !configuration?.controls_available || !configuration?.configured || !!workflowId" @click="confirmAuthorization">Authorize this workflow</button>
       </div>
+      <p :id="authorizationHelpId" role="status">{{ authorizationHelp }}</p>
       <p>These are total limits across all generation stages and retries. Authorization may incur provider charges. Token usage and unknown attempts will be recorded; a request limit is not a monetary ceiling.</p>
     </template>
     <template v-if="status">
@@ -22,13 +23,23 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, useId, watch, onMounted, onUnmounted } from 'vue'
 import { getExecutionConfiguration, authorizeWorkflow, resolveWorkflow, getWorkflow, stopWorkflow } from '../api/execution'
 const props = defineProps({ authorize: Boolean, inputDescription: String, inputFingerprint: String, resource: String, pendingId: String })
+const authorizationHelpId = useId()
 const emit = defineEmits(['authorized', 'stopped'])
 const configuration = ref(null), status = ref(null), workflowId = ref(null), error = ref(''), busy = ref(false)
 const maxRequests = ref(60), maxMinutes = ref(30)
 let timer, generation = 0, authorizationKey = crypto.randomUUID()
+const authorizationHelp = computed(() => {
+  if (busy.value) return 'Submitting your request…'
+  if (workflowId.value) return 'Workflow authorized.'
+  if (!configuration.value) return error.value ? 'Provider settings could not be loaded. Try refreshing the page.' : 'Loading provider settings…'
+  if (!configuration.value.controls_available || !configuration.value.configured) return 'Authorization is unavailable until the AI provider and workflow controls are configured.'
+  if (!props.inputDescription) return 'Add sources and describe your scenario before authorizing.'
+  if (!props.inputFingerprint) return 'Preparing your sources for authorization…'
+  return 'Review the provider and limits, then authorize this workflow.'
+})
 const refresh = async () => {
   const token = generation
   try {
@@ -83,7 +94,7 @@ onUnmounted(() => { generation++; clearInterval(timer) })
 .allowance-inputs { display: flex; flex-wrap: wrap; gap: .8rem; align-items: end; }
 .allowance-inputs label { display: grid; gap: .2rem; }
 input { width: 9rem; padding: .3rem; }
-button { min-height: 36px; padding: .4rem .8rem; cursor: pointer; }
+button { min-height: 44px; padding: .4rem .8rem; cursor: pointer; }
 button:disabled { cursor: default; opacity: .6; }
 .workflow-stop { background: #772b24; border: 1px solid #772b24; color: white; }
 </style>
