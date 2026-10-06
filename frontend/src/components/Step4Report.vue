@@ -8,7 +8,7 @@
           <!-- Report Header -->
           <div class="report-header-block">
             <div class="report-meta">
-              <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Prediction Report' }}</span>
+              <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Scenario Analysis Report' }}</span>
               <span class="report-id">ID: {{ reportId || 'REF-2024-X92' }}</span>
             </div>
             <nav v-if="reportRevision.parent_report_id" class="revision-navigation" aria-label="Report revision history">
@@ -19,6 +19,7 @@
               <span>Forecasts and unselected sections are inherited.</span>
             </nav>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
+            <p class="report-reading-guide">Review the summary, compare proposed changes in each section, and check the original sources. Generated analysis is not a verified forecast.</p>
             <p class="sub-title">{{ reportOutline.summary }}</p>
             <ReportReview :assessment="currentReview" />
             <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
@@ -134,7 +135,7 @@
                     :disabled="reportRevision.immutable || regeneratingSection === idx + 1"
                     @click.stop="regenerateSection(idx + 1, { disable_interviews: true })"
                   >
-                    No interviews
+                    Rerun without interviews
                   </button>
                 </div>
                 <svg 
@@ -154,7 +155,7 @@
               
               <div class="section-body" v-show="!collapsedSections.has(idx)">
                 <details v-if="section.claim_ledger?.length" class="saved-ledger">
-                  <summary>Saved claim ledger · {{ section.claim_ledger.length }} statements</summary>
+                  <summary>Saved claims and sources · {{ section.claim_ledger.length }} statements</summary>
                   <details v-for="claim in section.claim_ledger" :key="claim.claim_id">
                     <summary>{{ claim.kind.replaceAll('_', ' ') }} — {{ claim.text }}</summary>
                     <p v-if="claim.attribution">Attributed to {{ claim.attribution }}</p>
@@ -256,6 +257,8 @@
             <span class="quality-note">{{ graphQualitySummary }}</span>
           </div>
 
+          <details class="advanced-actions"><summary>Report tools and recovery</summary>
+          <p class="tools-help">Rerunning generates new output. Source-search tools require a linked graph; report generation requires a linked simulation. Unavailable actions remain disabled.</p>
           <div class="operator-actions">
             <span class="operator-mode mono">Mode {{ reportModeLabel }}</span>
             <button v-if="canResumeReport" class="operator-btn operator-btn-primary" :disabled="isResuming" @click="resumeFailedReport({})">
@@ -283,6 +286,8 @@
               {{ isBenchmarking ? 'Benchmarking...' : 'Benchmark embeddings' }}
             </button>
           </div>
+
+          </details>
 
           <div v-if="benchmarkResult" class="benchmark-panel">
             <div class="benchmark-header">
@@ -2790,14 +2795,16 @@ watch(() => props.reportId, (newId) => {
 
 /* Left Panel - Report Style */
 .left-panel.report-style {
-  width: 45%;
-  min-width: 450px;
+  width: 64%;
+  flex: 0 0 64%;
+  box-sizing: border-box;
+  min-width: 0;
   background: #FFFFFF;
   border-right: 1px solid #E5E7EB;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: 30px 50px 60px 50px;
+  padding: 28px 32px 48px;
 }
 
 .left-panel::-webkit-scrollbar {
@@ -3359,6 +3366,7 @@ watch(() => props.reportId, (newId) => {
 
 /* Right Panel */
 .right-panel {
+  min-width: 0;
   flex: 1;
   background: #FFFFFF;
   overflow-y: auto;
@@ -6010,4 +6018,25 @@ watch(() => props.reportId, (newId) => {
 .log-msg.error { color: #EF5350; }
 .log-msg.warning { color: #FFA726; }
 .log-msg.success { color: #66BB6A; }
+/* Report reading and responsive review */
+.report-reading-guide, .tools-help { font: 14px/1.6 system-ui, sans-serif; color: #52647a; overflow-wrap: anywhere; }
+.advanced-actions { margin: 12px 20px; border: 1px solid #dce3eb; padding: 12px; }
+.advanced-actions > summary { cursor: pointer; min-height: 40px; font-weight: 600; }
+.report-meta, .section-header-row { flex-wrap: wrap; }
+.report-id { overflow-wrap: anywhere; }
+.main-title { text-wrap: balance; }
+.report-panel button { min-height: 44px; }
+.report-panel :is(button, a, summary):focus-visible { outline: 2px solid #c73500; outline-offset: 3px; }
+@media (max-width: 1100px) {
+  .main-split-layout { flex-direction: column; overflow-y: auto; }
+  .left-panel.report-style { flex: none; width: 100%; min-width: 0; box-sizing: border-box; overflow: visible; padding: 24px; }
+  .right-panel { flex: none; overflow: visible; min-width: 0; }
+}
+@media (max-width: 600px) {
+  .left-panel.report-style { padding: 20px 16px; }
+  .main-title { font-size: 28px; }
+  .section-title { overflow-wrap: anywhere; }
+  .workflow-metrics { flex-wrap: wrap; }
+  .section-actions { flex-wrap: wrap; }
+}
 </style>

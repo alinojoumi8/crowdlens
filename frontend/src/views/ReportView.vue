@@ -352,4 +352,9 @@ onMounted(() => {
 .panel-wrapper.left {
   border-right: 1px solid #EAEAEA;
 }
+@media (max-width: 700px) {
+  .app-header { height: auto; min-height: 60px; flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+  .header-right { flex-wrap: wrap; }
+  .switch-btn { min-height: 44px; }
+}
 </style>
