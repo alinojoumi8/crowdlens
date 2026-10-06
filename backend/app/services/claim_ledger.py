@@ -7,6 +7,7 @@ import json
 import re
 
 from .evidence_verifier import text_hash
+from .pdf_source_pages import exact_extract_range
 
 SCOPE_KEYS = ('graph_id', 'case_id', 'case_version_id')
 KINDS = {'source_statement', 'attributed_allegation', 'analysis'}
@@ -104,7 +105,8 @@ def validate_ledger(ledger, sources, scope):
             if error:
                 findings.append(finding(error, identifier))
             elif conditional_offer(source['excerpt']) and not (
-                    claim.get('text') == source['excerpt'].strip()
+                    exact_extract_range(source) is not None
+                    and claim.get('text') == source['excerpt'][slice(*exact_extract_range(source))]
                     and isinstance(claim.get('text'), str) and claim['text'] in source['window']):
                 findings.append(finding('conditional_source_requires_extract', identifier))
         quote = claim.get('quote', '')

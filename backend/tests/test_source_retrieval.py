@@ -7,6 +7,42 @@ def episode(identifier, text=TEXT, **kw):
     return {**SCOPE, 'uuid': str(identifier), 'document_id': 'doc', 'data': text, 'page': 1, **kw}
 
 
+def test_long_pdf_chunk_retrieves_complete_page_with_original_offsets():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.services.claim_ledger import validate_source
+    text = '[PDF page 7]\n' + 'Administrative material. ' * 190 + '\n[PDF page 8]\nSora could assist if benches are confirmed.\n[PDF page 9]\nContinued context.'
+    packet = retrieve_sources(freeze_sources([episode('pdf', text)], SCOPE),
+        ['Sora benches confirmed'], budget=DraftBudget())
+    result = packet['sources'][0]
+    assert result['window'] == '[PDF page 8]\nSora could assist if benches are confirmed.\n'
+    assert result['locator']['page'] == 8
+    assert text[result['window_start']:result['window_end']] == result['window']
+    assert result['excerpt'] == text and validate_source(result, SCOPE) is None
+    assert any(l.startswith('pdf_page_context_bounded') for l in packet['limitations'])
+
+
+def test_quote_across_pdf_page_boundary_is_not_cut():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    quote = 'Sora could assist\n[PDF page 9]\nif funding is secured.'
+    text = '[PDF page 8]\n' + quote + '\n[PDF page 10]\nEnd.'
+    packet = retrieve_sources(freeze_sources([episode('pdf', text)], SCOPE),
+        ['"'+quote+'"'], budget=DraftBudget())
+    assert quote in packet['sources'][0]['window']
+
+
+def test_fragment_hit_reranks_only_a_relevant_complete_page():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    text = 'hearing evidence schedule '*50 + '\n[PDF page 2]\nThe hearing evidence schedule remains disputed.\n[PDF page 3]\nTail.'
+    packet = retrieve_sources(freeze_sources([episode('pdf', text)], SCOPE),
+        ['hearing evidence schedule'], budget=DraftBudget())
+    # An explicit literal hit in the fragment is retained, rather than hidden.
+    assert packet['sources'][0]['window_start'] == 0
+    packet = retrieve_sources(freeze_sources([episode('pdf', text)], SCOPE),
+        ['schedule evidence hearing'], budget=DraftBudget())
+    assert packet['sources'][0]['locator']['page'] == 2
+    assert any(l.startswith('pdf_complete_page_reranked') for l in packet['limitations'])
+
+
 def test_scope_digest_and_exact_window():
     from app.services.source_retrieval import freeze_sources, retrieve_sources
     from app.services.claim_ledger import validate_source

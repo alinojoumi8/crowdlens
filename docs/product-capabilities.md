@@ -335,3 +335,8 @@ combined checks and any remaining gaps are in the current execution handoff.
 Conditional-offer correction (2026-10-05): exact source extraction and acceptance guards prevent detected offer conditions being rewritten as prerequisites; 728 tests/build pass. Fresh v7 attempts were 0/2 ready (both conservatively blocked). A separate Elmreach correction received source-first AI support for all four claims; original evidence remains frozen. See [audit](audits/2026-10-05-conditional-fidelity.md).
 
 Conditional completion (2026-10-05): server-owned complete source excerpts avoid guarded paraphrase false positives; 752 tests/build and independent code review pass. Two ready development drafts received source-first AI support (7/7 claims, 10/10 material facts); all eight development attempts remain counted. Frozen v8 stays 0/2 ready due ordinary draft omissions and no source anchor. No publication or release-readiness claim. See [audit](audits/2026-10-05-conditional-completion.md).
+
+
+### Complete PDF page retrieval (2026-10-06)
+
+[Implementation and live verification](tasks/2026-10-06-pdf-page-retrieval.md) adds bounded complete-page windows with original chunk hashes/offsets and exact server-owned page extracts under proposal policy v9. Page and omitted-fragment limits stay visible; page completeness does not establish semantic or document completeness. Final check passes 706 backend and 73 frontend tests plus the build. The private-record browser retry passes the former conditional-excerpt gate, then blocks four model quotation mismatches; Keep original retains the unchanged parent. No child revision or factual certification was produced. Next: ordinary claim/quotation reliability and independent source review.

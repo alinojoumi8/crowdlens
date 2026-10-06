@@ -129,6 +129,8 @@ Open `http://localhost:3000`.
 
 PDF extraction preserves page markers. Image pages with little native text use local Tesseract OCR (`tesseract` with English language data on the backend host). If OCR is unavailable or fails, ingestion reports the affected page rather than silently discarding scanned evidence. OCR text can contain recognition errors; check quotations against the original PDF during report review.
 
+Source-backed proposals can select a complete marked PDF page within a larger stored graph chunk. Page windows retain the original chunk hash, exact offsets, and PDF page number. Eligible conditional material is copied verbatim by the server; oversized or incomplete page windows remain blocked. Retrieval discloses when fragment matches are omitted or adjacent pages may contain continued attribution or conditions. A complete extracted page does not establish complete context, exhaustive document coverage, or factual accuracy; compare adjacent original pages before accepting a revision.
+
 ### Authorization fails before a website or PDF upload
 
 Workflow authorization currently covers the configured primary AI provider and local Ollama embeddings. Optional Jev modes must be off for this workflow. If the UI reports that optional Jev provider modes are enabled, restart the backend with:

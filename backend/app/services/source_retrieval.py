@@ -5,6 +5,7 @@ from collections import Counter
 from .claim_ledger import SCOPE_KEYS, canonical_digest
 from .evidence_verifier import text_hash
 from .source_tracing import SourceIndex, tokens
+from .pdf_source_pages import page_window, complete_pages
 
 
 def lexical_anchor(text, query_terms):
@@ -167,6 +168,20 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         window_size = max(2000, length + 400)
         start = max(0, at - 200)
         end = min(len(text), start + window_size)
+        page = page_window(text, at)
+        if not page and not matches:
+            # Rank complete pages themselves when the chunk's best hit falls
+            # in a fragment. Explicit literal quotes never take this fallback.
+            candidates = [(len(query_terms & set(tokens(text[a:b]))), number, a, b)
+                          for number, a, b in complete_pages(text) if b - a <= 4000]
+            candidates = [c for c in candidates if c[0] >= min(3, len(query_terms)) and c[0] > 0]
+            if candidates:
+                _, number, a, b = max(candidates, key=lambda c: (c[0], -c[2]))
+                page = (number, a, b)
+                at = a
+                limitations.append('pdf_complete_page_reranked: fragment matches may remain outside selected pages')
+        if page and length <= page[2] - at:
+            _, start, end = page
         # Expand both boundaries until every intersecting requested quote is whole.
         previous = None
         while previous != (start, end):
@@ -182,9 +197,14 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         if any(offset < start or offset + size > end for offset, size in matches):
             limitations.append('requested_quotes_outside_windows')
         window = text[start:end]
+        locator = dict(source['locator'])
+        if page and (start, end) == page[1:]:
+            locator.update(page=page[0], char_start=start, char_end=end)
+            limitations.append('pdf_page_context_bounded: adjacent pages may contain continued attribution or conditions')
         used += len(window)
         packet.append({k: v for k, v in source.items() if k not in {'embedding', 'embedding_provider_id'}} |
-                      {'window': window, 'window_start': start, 'window_end': end, 'window_hash': text_hash(window)})
+                      {'window': window, 'window_start': start, 'window_end': end, 'window_hash': text_hash(window),
+                       'locator': locator})
     admitted_documents = len({source['document_id'] for source in sources.values()})
     represented_documents = len({source['document_id'] for source in packet})
     if represented_documents < admitted_documents:

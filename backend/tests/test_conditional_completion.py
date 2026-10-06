@@ -9,6 +9,35 @@ def helpers():
     return build_extract_contract, resolve_extract_claims, render_extract_paragraphs
 
 
+def test_complete_pdf_page_resolves_exactly_without_allowing_paraphrase():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.services.claim_ledger import validate_ledger
+    from app.utils.draft_budget import DraftBudget
+    text = '[PDF page 1]\n' + 'Background. ' * 400 + '\n[PDF page 2]\nSora could assist if benches are confirmed. No commitment is made.\n[PDF page 3]\nFollowing context.'
+    corpus = freeze_sources([{**SCOPE, 'uuid':'pdf', 'document_id':'doc', 'data':text}], SCOPE)
+    evidence = retrieve_sources(corpus, ['Sora benches confirmed'], budget=DraftBudget())['sources'][0]
+    build, resolve, _ = helpers()
+    contract = build([evidence], SCOPE)
+    assert len(contract) == 1 and contract[0]['text'].startswith('[PDF page 2]')
+    raw = [{**claim(), 'kind':'source_statement', 'citation_ids':[evidence['evidence_id']],
+            'source_sentence_id':contract[0]['source_sentence_id']}]
+    ledger, _ = resolve(raw, contract)
+    assert validate_ledger(ledger, [evidence], SCOPE) == []
+    ledger[0]['text'] = 'Sora commits to assist.'
+    assert any(f['code'] == 'conditional_source_requires_extract' for f in validate_ledger(ledger, [evidence], SCOPE))
+
+
+@pytest.mark.parametrize('middle', ['No page end marker. ' * 260, 'Long conditional page ' * 260])
+def test_incomplete_or_oversized_pdf_page_stays_blocked(middle):
+    from app.services.evidence_verifier import text_hash
+    build, _, _ = helpers()
+    text = '[PDF page 1]\nSora could assist if funding is secured. ' + middle
+    if middle.startswith('Long'):
+        text += '\n[PDF page 2]\nFollowing.'
+    evidence = {**source(text), 'window':text[:2000], 'window_end':min(2000,len(text)), 'window_hash':text_hash(text[:2000])}
+    assert build([evidence], SCOPE) == []
+
+
 def test_selected_sentence_owns_text_even_when_model_paraphrases():
     build, resolve, paragraphs = helpers()
     evidence = source('Fictional workshop note: Sora says the group could assist if benches are confirmed. This is possible assistance, not a commitment.')

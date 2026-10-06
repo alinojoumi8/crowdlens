@@ -4,6 +4,7 @@ Selection and rendering replace model wording; they never certify source truth.
 """
 import copy
 from .claim_ledger import canonical_digest, conditional_offer, validate_source, KINDS
+from .pdf_source_pages import exact_extract_range
 
 
 def build_extract_contract(sources, scope):
@@ -13,8 +14,10 @@ def build_extract_contract(sources, scope):
             continue
         # Do not infer sentence boundaries from punctuation: abbreviations can
         # detach a speaker's words from a preceding negation or attribution.
-        start = len(source['excerpt']) - len(source['excerpt'].lstrip())
-        end = len(source['excerpt'].rstrip())
+        selected = exact_extract_range(source)
+        if selected is None:
+            continue
+        start, end = selected
         text = source['excerpt'][start:end]
         if len(text) > 4000 or not source['window_start'] <= start < end <= source['window_end']:
             continue
@@ -22,7 +25,8 @@ def build_extract_contract(sources, scope):
                  'window_hash': source['window_hash'], 'start': start, 'end': end}
         identifier = 'sentence:' + canonical_digest(basis)
         candidates[identifier] = {'source_sentence_id': identifier, 'evidence_id': source['evidence_id'],
-                                 'text': text, 'source_start': start, 'source_end': end}
+                                 'text': text, 'source_start': start, 'source_end': end,
+                                 'extract_kind': 'complete_source_excerpt' if text == source['excerpt'].strip() else 'complete_pdf_page'}
     return list(candidates.values())
 
 
