@@ -59,6 +59,17 @@ def test_accept_rechecks_full_ledger_coverage(root):
     assert not (root / record['revision_report_id']).exists()
 
 
+def test_accept_rechecks_source_accounting(root):
+    from app.services.proposal_store import proposal_digest
+    record, service = ready(root)
+    record['extract_provenance']['source_exclusions'] = [{'evidence_id':'foreign','reason':'Outside the task.'}]
+    record['proposal_digest'] = proposal_digest(record)
+    service.store._file(record['proposal_id'], 'record').write_text(json.dumps(record))
+    with pytest.raises(ProposalError, match='invalid_proposal'):
+        service.accept('report_root', record['proposal_id'], record['proposal_digest'])
+    assert not (root / record['revision_report_id']).exists()
+
+
 def test_crash_after_publication_recovers_without_parent_or_sources(root, monkeypatch):
     record, service = ready(root)
     original = service.store.update

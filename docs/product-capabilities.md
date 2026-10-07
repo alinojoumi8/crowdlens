@@ -349,3 +349,7 @@ Conditional completion (2026-10-05): server-owned complete source excerpts avoid
 ### Complete claim rendering (2026-10-06)
 
 Policy v11 appends each omitted ledger claim verbatim to a structurally valid draft, retaining its kind, citation linkage, and digest-protected provenance. The ordinary source-first audit still controls readiness. Invalid drafts and paragraph-cap overflow remain blocked; acceptance independently rechecks all ledger IDs. See [verification receipt](tasks/2026-10-06-claim-coverage.md).
+
+### Retrieved-source accounting (2026-10-06)
+
+Policy v12 requires explicit accounting for every admitted source window, with one shared quotation/coverage correction and digest-protected exclusion reasons. Invalid ledgers fail before coverage checks. Both material claims and claimed irrelevance face the same source-first audit, and acceptance rechecks the coverage contract. This is bounded packet coverage, not exhaustive PDF coverage. See [verification receipt](tasks/2026-10-06-source-accounting.md).

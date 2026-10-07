@@ -55,7 +55,7 @@ class ScriptedDraft:
                            'request_max_retries': kwargs.get('request_max_retries'),
                            'request_timeout': kwargs.get('request_timeout')})
         assert kwargs['request_max_retries'] == 0
-        assert 0 < kwargs['request_timeout'] <= 60
+        assert 0 < kwargs['request_timeout'] <= (90 if prompt == AUDIT_PROMPT else 60)
         assert kwargs['temperature'] == 0
         if prompt == LEDGER_PROMPT:
             result = {'claims': copy.deepcopy(self.fixture['stub_claims']), 'gaps': self.fixture['stub_gaps']}
