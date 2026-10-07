@@ -22,13 +22,14 @@ def test_invalid_audit_retains_response_and_exact_field(tmp_path):
     from test_proposal_output_reliability import explicit_audit
     audit = explicit_audit();audit['summary_consistent']='true'
     result, llm = run(tmp_path, {'EVIDENCE_AUDIT_V1': audit})
-    assert result['state'] == 'blocked' and len(llm.calls) == 3
+    assert result['state'] == 'blocked' and len(llm.calls) == 4
     finding = result['findings'][0]
     assert finding['code'] == 'invalid_audit'
     assert finding['field'] == 'summary_consistent'
     assert finding['expected'] == 'boolean'
     saved = diagnostics(tmp_path, result)
     assert saved['auditing']['parsed_response'] == audit
+    assert len(saved['auditing']['attempts']) == 2
     assert result['diagnostics_digest']
 
 
