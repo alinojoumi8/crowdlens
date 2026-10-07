@@ -131,6 +131,8 @@ PDF extraction preserves page markers. Image pages with little native text use l
 
 Source-backed proposals can select a complete marked PDF page within a larger stored graph chunk. Page windows retain the original chunk hash, exact offsets, and PDF page number. Eligible conditional material is copied verbatim by the server; oversized or incomplete page windows remain blocked. Retrieval discloses when fragment matches are omitted or adjacent pages may contain continued attribution or conditions. A complete extracted page does not establish complete context, exhaustive document coverage, or factual accuracy; compare adjacent original pages before accepting a revision.
 
+Quotation recovery maps a unique whitespace-only variant back to exact source text and records the original offsets. It never changes wording, punctuation, case, dates, numbers, or negation. A genuine quotation mismatch permits one counted ledger correction within the workflow budget; repeated mismatches remain blocked. Corrected claims still require the normal coverage and source-first audit checks before a proposal can be saved.
+
 ### Authorization fails before a website or PDF upload
 
 Workflow authorization currently covers the configured primary AI provider and local Ollama embeddings. Optional Jev modes must be off for this workflow. If the UI reports that optional Jev provider modes are enabled, restart the backend with:

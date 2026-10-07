@@ -340,3 +340,8 @@ Conditional completion (2026-10-05): server-owned complete source excerpts avoid
 ### Complete PDF page retrieval (2026-10-06)
 
 [Implementation and live verification](tasks/2026-10-06-pdf-page-retrieval.md) adds bounded complete-page windows with original chunk hashes/offsets and exact server-owned page extracts under proposal policy v9. Page and omitted-fragment limits stay visible; page completeness does not establish semantic or document completeness. Final check passes 706 backend and 73 frontend tests plus the build. The private-record browser retry passes the former conditional-excerpt gate, then blocks four model quotation mismatches; Keep original retains the unchanged parent. No child revision or factual certification was produced. Next: ordinary claim/quotation reliability and independent source review.
+
+
+### Exact quotation recovery (2026-10-06)
+
+[Implementation and verification](tasks/2026-10-06-claim-quotation-recovery.md) adds unique whitespace-only source-quote projection and one counted substantive ledger correction under proposal policy v10. Original character offsets, raw failures, source-first audits and fail-closed coverage gates remain intact. Final check: 713 backend and 73 frontend tests plus build. Retained replay resolves three whitespace mismatches while blocking one genuine mismatch. The fresh private-record browser proposal passes claim/quote linkage after correction, then blocks 19 omitted claims; no semantic audit or revision acceptance occurred. Next: complete claim-to-paragraph rendering, followed by source audit and independent factual review.

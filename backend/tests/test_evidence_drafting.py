@@ -58,6 +58,33 @@ def test_ledger_before_prose_and_summary_preservation(tmp_path):
     assert result['ledger'][0]['checks'] == []
 
 
+def test_one_quote_correction_still_requires_the_normal_audit(tmp_path, monkeypatch):
+    import json
+    original = FakeLLM.chat_json
+    count = 0
+    def chat(self, messages, **kwargs):
+        nonlocal count
+        if messages[0]['content'].startswith('EVIDENCE_LEDGER_V1'):
+            count += 1
+            if count == 1:
+                self.calls.append('EVIDENCE_LEDGER_V1')
+                return {'claims':[{**sample_claim(), 'quote':'Alex signed an approval.'}], 'gaps':[]}
+            assert 'ledger_correction' in json.loads(messages[1]['content'])
+        return original(self, messages, **kwargs)
+    monkeypatch.setattr(FakeLLM, 'chat_json', chat)
+    result, llm = run(tmp_path)
+    assert result['state'] == 'ready' and count == 2
+    assert llm.calls == ['EVIDENCE_LEDGER_V1', 'EVIDENCE_LEDGER_V1', 'EVIDENCE_DRAFT_V1', 'EVIDENCE_AUDIT_V1']
+    diagnostics = llm.store.load_snapshot(result['proposal_id'], 'diagnostics', result['diagnostics_digest'])
+    assert diagnostics['planning']['parsed_response']['claims'][0]['quote'] == 'Alex signed an approval.'
+
+
+def test_repeated_bad_quote_stops_before_drafting(tmp_path):
+    result, llm = run(tmp_path, {'EVIDENCE_LEDGER_V1': {'claims':[{**sample_claim(), 'quote':'Invented approval.'}], 'gaps':[]}})
+    assert result['state'] == 'blocked' and len(llm.calls) == 2
+    assert any(f['code'] == 'quote_absent' for f in result['findings'])
+
+
 @pytest.mark.parametrize('claims', [[], None, [{'claim_id': 'invented'}], [{**sample_claim(), 'citation_ids': ['fake']}]] )
 def test_invalid_ledger_never_requests_prose(tmp_path, claims):
     result, llm = run(tmp_path, {'EVIDENCE_LEDGER_V1': {'claims': claims}})
