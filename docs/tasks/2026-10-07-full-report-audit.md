@@ -16,7 +16,9 @@ Future bounded report packets now prioritize document openings and explicit moti
 - Root and frontend npm audits: zero vulnerabilities after Vue 3.5.42, source-map-js 1.2.2 and shell-quote 1.11.0 updates.
 - Browser reloaded the corrected five-section report after restarting the patched backend; saved status remains `needs_review`.
 - Persisted original exactly matches its frozen parent snapshot; all five candidate sections are populated, numeric probabilities are unchanged and the deterministic forecast block is present.
-- A third metered full-source audit is pending at this checkpoint; no result is inferred from earlier corrections.
+- Third metered full-source audit: all five sections and 49 chunks reviewed; summary consistent, zero blocking findings, four review cautions. All four were independently checked against actual source text and corrected: contempt timetable scope, return-hearing history, the omitted interim extension and acknowledgment attribution. Model-provided source IDs were not treated as reliable without lookup. There was no further provider call after these deterministic corrections; the candidate remains `needs_review`.
+- Three audit requests were metered under the existing workflow authorization (177 → 180 total, no retries). The original and numeric outputs were rechecked after final corrections.
+- Draft integration PR: https://github.com/alinojoumi8/crowdlens/pull/3. Current cloud checks must be read on the final pushed head; this receipt does not predeclare their result.
 - Branch-history secret scan flagged 72 generic-key matches: 59 request/file SHA-256 digests, eight request UUIDs and five public container-image signing fingerprints. All findings were inspected; none was a confirmed credential. No broad scanner allowlist was added.
 
 ## Integration boundary
