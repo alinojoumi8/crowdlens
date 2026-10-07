@@ -44,6 +44,21 @@ def test_accept_is_immutable_and_preserves_parent_and_other_text(root):
             method(loaded, **kwargs)
 
 
+def test_accept_rechecks_full_ledger_coverage(root):
+    from app.services.proposal_store import proposal_digest
+    record, service = ready(root)
+    identifier = record['proposal_id']
+    ledger = record['ledger'] + [{**record['ledger'][0], 'claim_id':'claim_02'}]
+    record['ledger'] = ledger
+    record['ledger_digest'] = service.store.save_snapshot(identifier, 'ledger', ledger)
+    record['proposal_digest'] = proposal_digest(record)
+    # Simulate a digest-consistent incomplete candidate, beyond the generation gate.
+    service.store._file(identifier, 'record').write_text(json.dumps(record))
+    with pytest.raises(ProposalError, match='invalid_proposal'):
+        service.accept('report_root', identifier, record['proposal_digest'])
+    assert not (root / record['revision_report_id']).exists()
+
+
 def test_crash_after_publication_recovers_without_parent_or_sources(root, monkeypatch):
     record, service = ready(root)
     original = service.store.update

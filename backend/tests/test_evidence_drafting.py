@@ -85,6 +85,45 @@ def test_repeated_bad_quote_stops_before_drafting(tmp_path):
     assert any(f['code'] == 'quote_absent' for f in result['findings'])
 
 
+def test_missing_claim_is_materialized_and_still_audited(tmp_path, monkeypatch):
+    import json
+    original = FakeLLM.chat_json
+    second = {**sample_claim(), 'claim_id': 'claim_02'}
+    def chat(self, messages, **kwargs):
+        phase = messages[0]['content'].splitlines()[0]
+        if phase == 'EVIDENCE_AUDIT_V1':
+            context = json.loads(messages[1]['content'])
+            assert context['paragraphs'][1] == {'text': second['text'], 'kind': second['kind'], 'claim_ids': ['claim_02']}
+            result = original(self, messages, **kwargs)
+            result['claim_reviews'].append({'claim_id':'claim_02', 'outcome':'unsupported', 'evidence_ids':['episode:one'], 'detail':'Synthetic adverse review must remain blocking.'})
+            result['paragraph_reviews'].append({'target_index':1,'outcome':'unsupported','detail':'Synthetic adverse review.'})
+            return result
+        return original(self, messages, **kwargs)
+    monkeypatch.setattr(FakeLLM, 'chat_json', chat)
+    result, llm = run(tmp_path, {'EVIDENCE_LEDGER_V1': {'claims':[sample_claim(), second], 'gaps':[]}})
+    assert result['state'] == 'blocked'
+    assert len(llm.calls) == 3
+    assert not any(f['code'] == 'undrafted_claim' for f in result['findings'])
+    assert result['extract_provenance']['coverage_resolutions'][0]['claim_id'] == 'claim_02'
+
+
+@pytest.mark.parametrize('paragraphs', [[], [{'text':TEXT,'kind':'analysis','claim_ids':['claim_01']}], [{'text':TEXT,'kind':'attributed_allegation','claim_ids':['invented']}]])
+def test_coverage_never_repairs_invalid_drafts(paragraphs):
+    from app.services.claim_coverage import complete_claim_coverage
+    assert complete_claim_coverage(paragraphs, [sample_claim()], []) == (paragraphs, [])
+
+
+def test_coverage_respects_paragraph_limit_and_input_snapshot():
+    from app.services.claim_coverage import complete_claim_coverage
+    import copy
+    paragraphs = [{'text':TEXT,'kind':'attributed_allegation','claim_ids':['claim_01']}] * 60
+    ledger = [sample_claim(), {**sample_claim(), 'claim_id':'claim_02'}]
+    assert complete_claim_coverage(paragraphs, ledger, []) == (paragraphs, [])
+    original = copy.deepcopy(paragraphs[:1])
+    completed, resolutions = complete_claim_coverage(original, ledger, [])
+    assert len(original) == 1 and len(completed) == 2 and len(resolutions) == 1
+
+
 @pytest.mark.parametrize('claims', [[], None, [{'claim_id': 'invented'}], [{**sample_claim(), 'citation_ids': ['fake']}]] )
 def test_invalid_ledger_never_requests_prose(tmp_path, claims):
     result, llm = run(tmp_path, {'EVIDENCE_LEDGER_V1': {'claims': claims}})

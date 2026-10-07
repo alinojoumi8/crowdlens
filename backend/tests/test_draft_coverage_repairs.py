@@ -64,7 +64,11 @@ def test_planned_claim_cannot_disappear_from_draft(tmp_path):
     second={**sample_claim(),'claim_id':'claim_02','text':'Alex describes a postponement.'}
     result,_=run(tmp_path,{'EVIDENCE_LEDGER_V1':{'claims':[sample_claim(),second],'gaps':[]}})
     assert result['state']=='blocked'
-    assert any(f['code']=='undrafted_claim' and f['claim_id']=='claim_02' for f in result['findings'])
+    assert result['paragraphs'][1]['text'] == second['text']
+    assert result['paragraphs'][1]['claim_ids'] == ['claim_02']
+    # The fake auditor reviews only the first claim; incomplete audit stays blocked.
+    assert result['findings']
+    assert not any(f['code']=='undrafted_claim' for f in result['findings'])
 
 
 def test_review_export_preserves_original_filename_metadata(tmp_path):

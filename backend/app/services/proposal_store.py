@@ -43,7 +43,7 @@ def now():
 
 def proposal_digest(record):
     payload = {key: record.get(key) for key in CONTENT_FIELDS}
-    if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery'):
+    if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage'):
         payload['extract_provenance'] = record.get('extract_provenance')
     return canonical_digest(payload)
 
@@ -221,7 +221,7 @@ class ProposalStore:
             if old not in expected_states or (new != old and new not in TRANSITIONS[old]):
                 raise ProposalError('state_conflict')
             if old not in ACTIVE and (any(key in CONTENT_FIELDS for key in changes)
-                    or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery') and 'extract_provenance' in changes)):
+                    or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage') and 'extract_provenance' in changes)):
                 raise ProposalError('immutable_proposal')
             if new in {'running', 'ready'} and time.time() >= record['deadline_at']:
                 raise ProposalError('deadline_exceeded')

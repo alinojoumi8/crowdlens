@@ -345,3 +345,7 @@ Conditional completion (2026-10-05): server-owned complete source excerpts avoid
 ### Exact quotation recovery (2026-10-06)
 
 [Implementation and verification](tasks/2026-10-06-claim-quotation-recovery.md) adds unique whitespace-only source-quote projection and one counted substantive ledger correction under proposal policy v10. Original character offsets, raw failures, source-first audits and fail-closed coverage gates remain intact. Final check: 713 backend and 73 frontend tests plus build. Retained replay resolves three whitespace mismatches while blocking one genuine mismatch. The fresh private-record browser proposal passes claim/quote linkage after correction, then blocks 19 omitted claims; no semantic audit or revision acceptance occurred. Next: complete claim-to-paragraph rendering, followed by source audit and independent factual review.
+
+### Complete claim rendering (2026-10-06)
+
+Policy v11 appends each omitted ledger claim verbatim to a structurally valid draft, retaining its kind, citation linkage, and digest-protected provenance. The ordinary source-first audit still controls readiness. Invalid drafts and paragraph-cap overflow remain blocked; acceptance independently rechecks all ledger IDs. See [verification receipt](tasks/2026-10-06-claim-coverage.md).
