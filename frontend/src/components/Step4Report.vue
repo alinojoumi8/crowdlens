@@ -3714,6 +3714,11 @@ watch(() => props.reportId, (newId) => {
   background: var(--wf-done-dot);
 }
 
+.wf-step-content {
+  min-width: 0;
+  flex: 1;
+}
+
 .wf-step-title-row {
   display: flex;
   align-items: baseline;

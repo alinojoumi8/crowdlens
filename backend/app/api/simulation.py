@@ -859,6 +859,7 @@ def run_ensemble():
             storage = current_app.extensions.get('neo4j_storage')
 
         task_manager = TaskManager()
+        SimulationRunner.close_completed_run_for_ensemble(simulation_id)
         task_id = task_manager.create_task('ensemble_run', metadata={'simulation_id': simulation_id},
             resources=[{'key':'ensemble:'+simulation_id, 'root':SimulationRunner.RUN_STATE_DIR},
                        {'key':'simulation-runtime:'+simulation_id, 'root':SimulationRunner.RUN_STATE_DIR}])

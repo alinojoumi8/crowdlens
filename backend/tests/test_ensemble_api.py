@@ -171,3 +171,37 @@ def test_ensemble_cannot_replace_an_active_single_run(client, monkeypatch, tmp_p
     assert response.status_code == 409
     assert response.get_json()['error'] == 'resource_has_active_task'
     assert not dispatched
+
+
+def test_ensemble_releases_completed_local_interview_owner(client, monkeypatch, tmp_path):
+    from types import SimpleNamespace
+    from app.services.task_execution import TaskRuntime
+    from app.services.simulation_runner import SimulationRunner, RunnerStatus
+    runtime = TaskRuntime(None)
+    monkeypatch.setattr(TaskManager, '_runtime', runtime)
+    monkeypatch.setattr(TaskManager, '_repository', None)
+    monkeypatch.setattr(simulation_api, '_check_simulation_prepared', lambda sid: (True, {}))
+    dispatched, closed = [], []
+    monkeypatch.setattr(TaskManager, 'start_task', lambda *args, **kwargs: dispatched.append(args))
+    tasks = TaskManager()
+    old = tasks.create_task('simulation_run', resources=[{'key': 'simulation-runtime:sim_done_live', 'root': str(tmp_path)}])
+    attempt = runtime.handles[old]
+    state = SimpleNamespace(runner_status=RunnerStatus.COMPLETED, execution={'task_id':old, 'attempt_id':attempt.attempt_id})
+    monkeypatch.setattr(SimulationRunner, 'get_run_state', lambda sid: state)
+    class Process:
+        returncode = None
+        def poll(self): return self.returncode
+        def wait(self, timeout): self.returncode = 0
+    process = Process()
+    class Monitor:
+        def join(self, timeout):
+            with attempt.bind(): tasks.complete_task(old, {'simulation_id':'sim_done_live'})
+    monkeypatch.setattr(SimulationRunner, '_processes', {'sim_done_live':process})
+    monkeypatch.setattr(SimulationRunner, '_monitor_threads', {'sim_done_live':Monitor()})
+    monkeypatch.setattr(SimulationRunner, 'close_simulation_env', lambda sid, **kwargs: closed.append(sid))
+    response = client.post('/api/simulation/run-ensemble', json={'simulation_id':'sim_done_live'})
+    assert response.status_code == 200
+    assert closed == ['sim_done_live'] and process.poll() == 0
+    assert runtime.get(old)['status'] == 'completed'
+    assert state.runner_status == RunnerStatus.COMPLETED
+    assert len(dispatched) == 1
