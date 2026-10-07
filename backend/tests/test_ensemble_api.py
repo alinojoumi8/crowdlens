@@ -129,3 +129,45 @@ def test_ensemble_forwards_economy_and_round_cap(client, monkeypatch):
     assert finished.wait(2)
     assert calls["max_rounds"] == 17
     assert calls["economy"] == {"enabled": True}
+
+
+def test_ensemble_failure_reconciles_runtime_and_allows_manual_retry(client, monkeypatch, tmp_path):
+    import json
+    from app.services.task_execution import TaskRuntime
+    from app.services.simulation_runner import SimulationRunner
+    runtime = TaskRuntime(None)
+    monkeypatch.setattr(TaskManager, '_runtime', runtime)
+    monkeypatch.setattr(TaskManager, '_repository', None)
+    monkeypatch.setattr(SimulationRunner, 'RUN_STATE_DIR', str(tmp_path))
+    monkeypatch.setattr(simulation_api, '_check_simulation_prepared', lambda sid: (True, {}))
+    monkeypatch.setattr(TaskManager, 'start_task', lambda *args, **kwargs: None)
+    response = client.post('/api/simulation/run-ensemble', json={'simulation_id': 'sim_recovery'})
+    assert response.status_code == 200
+    identifier = response.get_json()['data']['task_id']
+    attempt = runtime.handles[identifier]
+    folder = tmp_path / 'sim_recovery'
+    folder.mkdir()
+    state = {'simulation_id': 'sim_recovery', 'runner_status': 'running',
+             'execution': {'task_id': identifier, 'attempt_id': attempt.attempt_id}}
+    (folder / 'run_state.json').write_text(json.dumps(state))
+    with attempt.bind():
+        TaskManager().fail_task(identifier, 'synthetic_failure')
+    assert runtime.reconcile()['repair_failed'] == 0
+    assert not runtime.get(identifier)['recovery']['pending']
+    assert json.loads((folder / 'run_state.json').read_text())['runner_status'] == 'stopped'
+    assert client.post('/api/simulation/run-ensemble', json={'simulation_id': 'sim_recovery'}).status_code == 200
+
+
+def test_ensemble_cannot_replace_an_active_single_run(client, monkeypatch, tmp_path):
+    from app.services.task_execution import TaskRuntime
+    runtime = TaskRuntime(None)
+    monkeypatch.setattr(TaskManager, '_runtime', runtime)
+    monkeypatch.setattr(TaskManager, '_repository', None)
+    monkeypatch.setattr(simulation_api, '_check_simulation_prepared', lambda sid: (True, {}))
+    dispatched = []
+    monkeypatch.setattr(TaskManager, 'start_task', lambda *args, **kwargs: dispatched.append(args))
+    TaskManager().create_task('simulation_run', resources=[{'key': 'simulation-runtime:sim_busy', 'root': str(tmp_path)}])
+    response = client.post('/api/simulation/run-ensemble', json={'simulation_id': 'sim_busy'})
+    assert response.status_code == 409
+    assert response.get_json()['error'] == 'resource_has_active_task'
+    assert not dispatched

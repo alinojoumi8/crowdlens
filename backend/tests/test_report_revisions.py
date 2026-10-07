@@ -204,3 +204,28 @@ def test_concurrent_storage_probes_do_not_switch_report_roots(tmp_path, monkeypa
         results = list(pool.map(lambda _: ReportManager._get_reports_dir(), range(2)))
     assert results == [str(primary), str(primary)]
     assert not fallback.exists()
+
+
+def test_accepted_revision_export_preserves_frozen_forecast(root, monkeypatch):
+    from copy import deepcopy
+    import test_evidence_drafting
+    from app.services.forecasting import forecast_to_markdown
+    parent = sample_report()
+    parent.forecast = {'forecast_mode': 'legal_case', 'confidence': 'low',
+        'probabilities': [{'outcome': 'Scenario A', 'probability': .465,
+                           'rationale': 'Synthetic scenario only.'}],
+        'limitations': 'Uncalibrated scenario.'}
+    parent.markdown_content = forecast_to_markdown(parent.forecast) + '\n\n' + parent.outline.to_markdown()
+    ReportManager.save_report(parent)
+    monkeypatch.setattr(test_evidence_drafting, 'sample_report', lambda: deepcopy(parent))
+    record, service = ready(root)
+    original = {p.name: p.read_bytes() for p in (root / parent.report_id).iterdir()}
+    revision = service.accept(parent.report_id, record['proposal_id'], record['proposal_digest'])
+    expected = forecast_to_markdown(parent.forecast)
+    exported = (root / revision.report_id / 'full_report.md').read_text()
+    assert exported.startswith(expected + '\n\n')
+    assert exported.count('## Forecast Probability Summary') == 1
+    assert '46.5%' in exported
+    assert revision.forecast == parent.forecast
+    assert {p.name: p.read_bytes() for p in (root / parent.report_id).iterdir()} == original
+    assert service.accept(parent.report_id, record['proposal_id'], record['proposal_digest']) == revision

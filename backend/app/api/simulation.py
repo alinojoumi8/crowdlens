@@ -860,7 +860,8 @@ def run_ensemble():
 
         task_manager = TaskManager()
         task_id = task_manager.create_task('ensemble_run', metadata={'simulation_id': simulation_id},
-            resources=[{'key':'ensemble:'+simulation_id}])
+            resources=[{'key':'ensemble:'+simulation_id, 'root':SimulationRunner.RUN_STATE_DIR},
+                       {'key':'simulation-runtime:'+simulation_id, 'root':SimulationRunner.RUN_STATE_DIR}])
 
         def run_ensemble_task():
             from ..models.task import TaskStatus
