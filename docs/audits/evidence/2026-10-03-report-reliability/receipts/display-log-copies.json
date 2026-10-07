@@ -1,0 +1,22 @@
+{
+  "task2-bounded-correction-before.log": {
+    "original_sha256": "4f461d89154dc464f4a0b11206badfddd5f04ef9e9281ee7d9cc4cec523ea95e",
+    "display_copy_sha256": "4f461d89154dc464f4a0b11206badfddd5f04ef9e9281ee7d9cc4cec523ea95e",
+    "normalization": "Trailing whitespace removed from display lines only; original private check logs unchanged."
+  },
+  "history-final-candidate-check.log": {
+    "original_sha256": "e89bb72d14f12af2049bc838494b58ef777322821eaf295be0fabf300284829b",
+    "display_copy_sha256": "e89bb72d14f12af2049bc838494b58ef777322821eaf295be0fabf300284829b",
+    "normalization": "Trailing whitespace removed from display lines only; original private check logs unchanged."
+  },
+  "history-corrupt-record-before.log": {
+    "original_sha256": "66421a6baed18b241dc0ae7581530cd4b5a660caa5d8d901c14aaac692190e90",
+    "display_copy_sha256": "064867fc202ddcd5accab0e111418dc94faf14829b7d5370b766bb210c901bce",
+    "normalization": "Trailing whitespace removed from display lines only; original private check logs unchanged."
+  },
+  "history-and-final-answer-before.log": {
+    "original_sha256": "2e609ba169416563c2645def0c12ac8b80f217c6640ec280c886acd6bcc96d72",
+    "display_copy_sha256": "67749495144425bb455daccb6e60a963aeda5c0a5d9f7f636b5d2bc145a945a3",
+    "normalization": "Trailing whitespace removed from display lines only; original private check logs unchanged."
+  }
+}

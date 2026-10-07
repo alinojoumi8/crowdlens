@@ -1,0 +1,14 @@
+{
+  "read_only_endpoint": "http://127.0.0.1:11434/api/tags",
+  "checked_at": "2026-10-02T20:20:37Z",
+  "models": [
+    {
+      "name": "nomic-embed-text:latest",
+      "digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "family": "nomic-bert",
+      "parameter_size": "137M"
+    }
+  ],
+  "model_calls": 0,
+  "downloads": 0
+}

@@ -140,11 +140,14 @@ def create_app(config_class=Config):
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(market_bp, url_prefix='/api/market')
+    from .api.execution import install_workflow_controls
+    install_workflow_controls(app)
 
     # Health check
     @app.route('/health')
     def health():
-        return {'status': 'ok', 'service': 'CrowdLens Backend'}
+        from .utils.build_identity import runtime_identity
+        return {'status': 'ok', 'service': 'CrowdLens Backend', 'build': runtime_identity()}
 
     if should_log_startup:
         logger.info("CrowdLens Backend startup complete")

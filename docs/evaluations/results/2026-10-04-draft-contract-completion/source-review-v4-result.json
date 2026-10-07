@@ -1,0 +1,456 @@
+{
+  "attempted_cases": 4,
+  "attempts_per_case": 1,
+  "cases": [
+    {
+      "allowed_source_ids": [
+        "episode:robot_source_1",
+        "episode:robot_source_2"
+      ],
+      "case_id": "v4_robot",
+      "elapsed_seconds": 14.28768143101479,
+      "error_code": null,
+      "finding_codes": [
+        "premise_unverified",
+        "summary_inconsistent"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_33241b9a721041e992e42b17fa245116",
+      "selected_source_ids": [
+        "episode:robot_source_1",
+        "episode:robot_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 5787.54,
+            "input_tokens": 1243,
+            "model": "MiniMax-M3",
+            "output_tokens": 650,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 3301.24,
+            "input_tokens": 2242,
+            "model": "MiniMax-M3",
+            "output_tokens": 468,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 4973.62,
+            "input_tokens": 3029,
+            "model": "MiniMax-M3",
+            "output_tokens": 606,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 14287.68,
+        "remaining_ms": 165712.31
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:concert_source_1",
+        "episode:concert_source_2"
+      ],
+      "case_id": "v4_concert",
+      "elapsed_seconds": 24.032484554016264,
+      "error_code": null,
+      "finding_codes": [
+        "premise_unverified",
+        "premise_unverified",
+        "summary_inconsistent"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_ac496decd0a74f898d9902a19b101d83",
+      "selected_source_ids": [
+        "episode:concert_source_1",
+        "episode:concert_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 9319.69,
+            "input_tokens": 1269,
+            "model": "MiniMax-M3",
+            "output_tokens": 868,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 6039.98,
+            "input_tokens": 2709,
+            "model": "MiniMax-M3",
+            "output_tokens": 596,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 8450.95,
+            "input_tokens": 3999,
+            "model": "MiniMax-M3",
+            "output_tokens": 718,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 24032.46,
+        "remaining_ms": 155967.53
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:observatory_source_1",
+        "episode:observatory_source_2"
+      ],
+      "case_id": "v4_observatory",
+      "elapsed_seconds": 15.148000875022262,
+      "error_code": null,
+      "finding_codes": [
+        "premise_unverified",
+        "invalid_summary_edits"
+      ],
+      "original_source_scope_valid": true,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_526953db904144c68e40b68cdd080b07",
+      "selected_source_ids": [
+        "episode:observatory_source_1",
+        "episode:observatory_source_2"
+      ],
+      "state": "blocked",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 10115.27,
+            "input_tokens": 1265,
+            "model": "MiniMax-M3",
+            "output_tokens": 633,
+            "provider": "anthropic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 4845.64,
+            "input_tokens": 2390,
+            "model": "MiniMax-M3",
+            "output_tokens": 437,
+            "provider": "anthropic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 15148.0,
+        "remaining_ms": 164851.99
+      }
+    },
+    {
+      "allowed_source_ids": [
+        "episode:orchard_source_1",
+        "episode:orchard_source_2"
+      ],
+      "case_id": "v4_orchard",
+      "elapsed_seconds": 0.08325870300177485,
+      "error_code": null,
+      "finding_codes": [
+        "no_original_evidence"
+      ],
+      "original_source_scope_valid": false,
+      "parent_unchanged": true,
+      "proposal_id": "proposal_496c5c2285ec4d978c6e4d4d6ea13601",
+      "selected_source_ids": [],
+      "state": "blocked",
+      "usage": {
+        "calls": [],
+        "cost": null,
+        "elapsed_ms": 83.26,
+        "remaining_ms": 179916.73
+      }
+    }
+  ],
+  "code_revision": "ea7e1e1b8b8b8b717853cbff76a842725400389e",
+  "collection_complete": true,
+  "corpus_manifest": {
+    "files_sha256": {
+      "cases.json": "c38ccac7e872f81e3f981c7db31d603d5834aa069a7e0c21ce45b93f49f30bbf"
+    },
+    "independent_quality_labels": null,
+    "schema_version": 1,
+    "split": "heldout_no_tuning"
+  },
+  "cost": null,
+  "invariants_pass": false,
+  "model": "MiniMax-M3",
+  "prompt_sha256": {
+    "audit": "31758cc964276d8b277692d5e4a0d2a51eeab1188dba209d9e6924a0de8ecc48",
+    "draft": "ab66e9a9ad843b08984c48d207a5031289aecad3fec7c814216ebcf286e030b7",
+    "ledger": "bbcc796d453d820d5aa81ec7b703ee1ff69eead2582f4cf4d010a1bf5a512820"
+  },
+  "provider": "minimax",
+  "quality_labels": null,
+  "ready_rate": {
+    "denominator": 4,
+    "numerator": 0
+  },
+  "real_model_outputs": true,
+  "review_export": {
+    "completed_human_reviews": 0,
+    "packet_count": 2,
+    "status": "PENDING"
+  },
+  "schema_version": 1,
+  "workflow": {
+    "admission_closed": true,
+    "admitted": 8,
+    "attempts": [
+      {
+        "admitted_at": 1791115094.3226616,
+        "attempt_number": 1,
+        "elapsed_seconds": 5.762016534805298,
+        "epoch": 1,
+        "finished_at": 1791115100.0846753,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_8ccd041c5fff4ced969b6067797fa48f",
+        "sequence": 1,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 1243,
+          "output_tokens": 650,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115100.1675484,
+        "attempt_number": 1,
+        "elapsed_seconds": 3.2793288230895996,
+        "epoch": 1,
+        "finished_at": 1791115103.4468741,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_1ae70639dd4842b19289de655ed2e979",
+        "sequence": 2,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 2242,
+          "output_tokens": 468,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115103.5112364,
+        "attempt_number": 1,
+        "elapsed_seconds": 4.9529807567596436,
+        "epoch": 1,
+        "finished_at": 1791115108.4642153,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_028be0ba0d83411e9302c912da9a4ca2",
+        "sequence": 3,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 3029,
+          "output_tokens": 606,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115108.63299,
+        "attempt_number": 1,
+        "elapsed_seconds": 9.296702861785889,
+        "epoch": 1,
+        "finished_at": 1791115117.92969,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_1928e355897945b18dc9a749a7a181eb",
+        "sequence": 4,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 1269,
+          "output_tokens": 868,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115118.0136712,
+        "attempt_number": 1,
+        "elapsed_seconds": 6.018690586090088,
+        "epoch": 1,
+        "finished_at": 1791115124.032359,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_3f2e7e4ec1cf4265aeee8ead8489b1de",
+        "sequence": 5,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 2709,
+          "output_tokens": 596,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115124.0985746,
+        "attempt_number": 1,
+        "elapsed_seconds": 8.430009126663208,
+        "epoch": 1,
+        "finished_at": 1791115132.5285816,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_7716e8d47fbb477ca5b4a5356e4aa396",
+        "sequence": 6,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 132,
+          "input_tokens": 3999,
+          "output_tokens": 718,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115132.7099984,
+        "attempt_number": 1,
+        "elapsed_seconds": 10.093423128128052,
+        "epoch": 1,
+        "finished_at": 1791115142.8034186,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_8b90ad978f9d452f8d7cb8a83a3e7852",
+        "sequence": 7,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 134,
+          "input_tokens": 1265,
+          "output_tokens": 633,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      },
+      {
+        "admitted_at": 1791115142.880849,
+        "attempt_number": 1,
+        "elapsed_seconds": 4.823883295059204,
+        "epoch": 1,
+        "finished_at": 1791115147.7047293,
+        "http_status": 200,
+        "model": "MiniMax-M3",
+        "owner_attempt": null,
+        "request_id": "req_a2d0be85bb7642709e5e3df8a60edc6f",
+        "sequence": 8,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": null,
+        "usage": {
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 128,
+          "input_tokens": 2390,
+          "output_tokens": 437,
+          "service_tier": "standard"
+        },
+        "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+      }
+    ],
+    "authorizations": [
+      {
+        "at": 1791115094.1905477,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "imported_requests": 0,
+        "input_description": "4 frozen fictional source-review-v4 cases; one unchanged proposal attempt each",
+        "input_fingerprint": "c38ccac7e872f81e3f981c7db31d603d5834aa069a7e0c21ce45b93f49f30bbf",
+        "max_requests": 12,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax"
+      }
+    ],
+    "billing_amount": null,
+    "created_at": 1791115094.1905491,
+    "deadline_at": 1791115994.3226616,
+    "elapsed_seconds": 53.608566761016846,
+    "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+    "epoch": 1,
+    "finished": 8,
+    "imported_requests": 0,
+    "in_flight": 0,
+    "initial_authorization": {
+      "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+      "imported_requests": 0,
+      "input_description": "4 frozen fictional source-review-v4 cases; one unchanged proposal attempt each",
+      "input_fingerprint": "c38ccac7e872f81e3f981c7db31d603d5834aa069a7e0c21ce45b93f49f30bbf",
+      "max_requests": 12,
+      "max_seconds": 900,
+      "model": "MiniMax-M3",
+      "provider": "minimax"
+    },
+    "input_description": "4 frozen fictional source-review-v4 cases; one unchanged proposal attempt each",
+    "input_fingerprint": "c38ccac7e872f81e3f981c7db31d603d5834aa069a7e0c21ce45b93f49f30bbf",
+    "max_requests": 12,
+    "max_seconds": 900,
+    "model": "MiniMax-M3",
+    "provider": "minimax",
+    "reason": "stopped",
+    "remaining_requests": 4,
+    "request_key": "source-review-v4",
+    "started_at": 1791115094.3226616,
+    "state": "stopped",
+    "stopped_at": 1791115147.9012635,
+    "unknown_usage_attempts": 0,
+    "usage_by_stage": {
+      "proposal": {
+        "attempts": 8,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 1042,
+        "input_tokens": 18146,
+        "output_tokens": 4976,
+        "unknown_usage_attempts": 0
+      }
+    },
+    "workflow_id": "wf_f9e79f226a7d4e47ab9a2ed584ae43a9"
+  }
+}

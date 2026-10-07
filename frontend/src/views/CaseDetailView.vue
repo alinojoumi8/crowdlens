@@ -73,9 +73,10 @@
           <span>Prediction goal (optional override)</span>
           <textarea v-model="addRequirement" rows="2" :placeholder="caseData?.simulation_requirement || 'Prediction goal'"></textarea>
         </label>
+        <WorkflowControls authorize :input-description="authorizationInput" :input-fingerprint="inputFingerprint" @authorized="workflowId = $event" />
         <div class="modal-actions">
           <button class="btn-ghost" @click="showAdd = false">Cancel</button>
-          <button class="btn-primary" :disabled="!addFiles.length" @click="startAddVersion">Build version</button>
+          <button class="btn-primary" :disabled="!addFiles.length || !workflowId" @click="startAddVersion">Build version</button>
         </div>
       </div>
     </div>
@@ -83,10 +84,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCase } from '../api/graph'
 import { setPendingUpload } from '../store/pendingUpload'
+import WorkflowControls from '../components/WorkflowControls.vue'
+import { workflowInputFingerprint } from '../utils/workflowInput'
 
 const props = defineProps({ caseId: String })
 const router = useRouter()
@@ -98,6 +101,19 @@ const error = ref('')
 const showAdd = ref(false)
 const addFiles = ref([])
 const addRequirement = ref('')
+const workflowId = ref(null), inputFingerprint = ref('')
+const effectiveRequirement = computed(() => addRequirement.value.trim() || caseData.value?.simulation_requirement || '')
+const authorizationInput = computed(() => addFiles.value.length && effectiveRequirement.value
+  ? `${addFiles.value.map(file => `${file.name} (${file.size} bytes)`).join(', ')}; ${effectiveRequirement.value}`.slice(0,500) : '')
+let inputGeneration = 0
+watch([addFiles,effectiveRequirement],async () => {
+  const token = ++inputGeneration
+  workflowId.value = null; inputFingerprint.value = ''
+  try {
+    const fingerprint = await workflowInputFingerprint(addFiles.value,effectiveRequirement.value)
+    if (token === inputGeneration) inputFingerprint.value = fingerprint
+  } catch (exc) { if (token === inputGeneration) error.value = 'Could not fingerprint input: ' + exc.message }
+},{deep:true})
 
 const versions = computed(() => caseData.value?.versions || [])
 const canCompare = computed(() => versions.value.filter(v => v.prediction_snapshots?.length).length >= 2)
@@ -148,9 +164,9 @@ const openReport = (reportId) => router.push({ name: 'Report', params: { reportI
 const onFiles = (e) => { addFiles.value = Array.from(e.target.files || []) }
 
 const startAddVersion = () => {
-  if (!addFiles.value.length) return
+  if (!addFiles.value.length || !workflowId.value) return
   const requirement = addRequirement.value.trim() || caseData.value?.simulation_requirement || ''
-  setPendingUpload(addFiles.value, requirement, [], props.caseId)
+  setPendingUpload(addFiles.value, requirement, [], props.caseId, workflowId.value)
   showAdd.value = false
   router.push({ name: 'Process', params: { projectId: 'new' } })
 }

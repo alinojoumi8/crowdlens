@@ -2,10 +2,12 @@ import service, { requestWithRetry } from './index'
 
 /**
  * Start report generation
- * @param {Object} data - { simulation_id, force_regenerate? }
+ * @param {Object} data - { simulation_id, force_regenerate?, request_key? }
  */
 export const generateReport = (data) => {
-  return requestWithRetry(() => service.post('/api/report/generate', data), 3, 1000)
+  // One logical request survives transport retries. A new manual invocation gets a new key.
+  const payload = { ...data, request_key: data.request_key ?? crypto.randomUUID() }
+  return requestWithRetry(() => service.post('/api/report/generate', payload), 3, 1000)
 }
 
 /**
@@ -57,11 +59,7 @@ export const getReport = (reportId) => {
  * @param {Object} data - { disable_interviews?, strict_antirepetition? }
  */
 export const regenerateReportSection = (reportId, sectionIndex, data = {}) => {
-  return requestWithRetry(
-    () => service.post(`/api/report/${reportId}/section/${sectionIndex}/regenerate`, data),
-    1,
-    1000
-  )
+  return service.post(`/api/report/${reportId}/section/${sectionIndex}/regenerate`, data)
 }
 
 /**
@@ -70,11 +68,7 @@ export const regenerateReportSection = (reportId, sectionIndex, data = {}) => {
  * @param {Object} data - { disable_interviews?, strict_antirepetition? }
  */
 export const resumeReport = (reportId, data = {}) => {
-  return requestWithRetry(
-    () => service.post(`/api/report/${reportId}/resume`, data),
-    2,
-    1000
-  )
+  return service.post(`/api/report/${reportId}/resume`, data)
 }
 
 /**
@@ -82,7 +76,7 @@ export const resumeReport = (reportId, data = {}) => {
  * @param {Object} data - { simulation_id, message, chat_history? }
  */
 export const chatWithReport = (data) => {
-  return requestWithRetry(() => service.post('/api/report/chat', data), 3, 1000)
+  return service.post('/api/report/chat', data)
 }
 
 // Explicit retries preserve the creation key and the displayed proposal digest.

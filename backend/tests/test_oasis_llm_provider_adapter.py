@@ -20,7 +20,7 @@ class FakeResponse:
         return self.payload
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
 def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch, model_name):
     monkeypatch.setenv("LLM_DEFAULT_PROVIDER", "minimax")
     monkeypatch.setenv("LLM_API_KEY", "test-key")
@@ -36,7 +36,7 @@ def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch, model_
     assert config.model == model_name
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
 def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
     monkeypatch, model_name,
 ):
@@ -78,6 +78,9 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
         ]
     )
 
+    if model_name == "MiniMax-M3.1-Flash-Preview":
+        assert captured["json"]["max_tokens"] == 32768
+        assert captured["json"]["output_config"] == {"effort":"high"}
     assert isinstance(result, ChatCompletion)
     assert result.choices[0].message.content == "Interview answer."
     assert captured["url"] == "https://api.minimax.io/anthropic/v1/messages"
@@ -88,7 +91,7 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
     assert captured["json"]["messages"] == [
         {"role": "user", "content": "What is your position?"}
     ]
-    assert captured["json"]["max_tokens"] == 4096
+    assert captured["json"]["max_tokens"] == (32768 if model_name == "MiniMax-M3.1-Flash-Preview" else 4096)
 
 
 def test_create_oasis_model_routes_openai_compatible_to_camel_factory(

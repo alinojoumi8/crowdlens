@@ -1,0 +1,144 @@
+{
+  "data": {
+    "completed_at": "2026-10-03T05:49:17.566734",
+    "current_round": 2,
+    "error": null,
+    "execution": {
+      "attempt_id": "12040dcb4c63452389a64c0a6727692d",
+      "run_id": "3a36d48980a34931a3a14ef580867c6d",
+      "task_id": "aeb1576d-5b8c-4b44-bc4b-fdbabbe33813",
+      "workflow_epoch": 1,
+      "workflow_id": "wf_00a49d682ed94067984ce6637a300f75"
+    },
+    "process_pid": 3052615,
+    "progress_percent": 100.0,
+    "reddit_actions_count": 0,
+    "reddit_completed": false,
+    "reddit_current_round": 0,
+    "reddit_running": false,
+    "reddit_simulated_hours": 0,
+    "runner_status": "completed",
+    "simulated_hours": 0,
+    "simulation_id": "sim_9ac5f4ad6a6c",
+    "started_at": "2026-10-03T05:49:01.134132",
+    "timing": {
+      "run": {
+        "active_phases": [],
+        "completed_at": "2026-10-03T05:49:17.566734",
+        "duration_seconds": 16.4326,
+        "error": null,
+        "metadata": {},
+        "name": "run",
+        "phase_totals": {
+          "run": 16.4326
+        },
+        "phases": [
+          {
+            "completed_at": "2026-10-03T05:49:17.566734",
+            "duration_seconds": 16.4326,
+            "label": "run",
+            "metadata": {},
+            "name": "run",
+            "started_at": "2026-10-03T05:49:01.134132",
+            "status": "completed"
+          }
+        ],
+        "started_at": "2026-10-03T05:49:01.134132",
+        "status": "completed",
+        "total_seconds": 16.4326
+      },
+      "startup": {
+        "active_phases": [],
+        "completed_at": "2026-10-03T05:49:01.176781",
+        "error": null,
+        "metadata": {
+          "economy_enabled": false,
+          "max_rounds": 72,
+          "memory_mode": "off",
+          "platform": "twitter",
+          "process_pid": 3052615,
+          "scenario_id": "baseline",
+          "simulation_id": "sim_9ac5f4ad6a6c"
+        },
+        "name": "simulation_start",
+        "phase_totals": {
+          "apply_overrides": 0.0009,
+          "graph_memory_setup": 0.0,
+          "initialize_run_state": 0.0001,
+          "launch_process": 0.0015,
+          "load_config": 0.0003,
+          "select_script": 0.0
+        },
+        "phases": [
+          {
+            "completed_at": "2026-10-03T05:49:01.133169",
+            "duration_seconds": 0.0003,
+            "label": "Load simulation config",
+            "metadata": {},
+            "name": "load_config",
+            "started_at": "2026-10-03T05:49:01.132864",
+            "status": "completed"
+          },
+          {
+            "completed_at": "2026-10-03T05:49:01.134099",
+            "duration_seconds": 0.0009,
+            "label": "Apply run overrides",
+            "metadata": {},
+            "name": "apply_overrides",
+            "started_at": "2026-10-03T05:49:01.133189",
+            "status": "completed"
+          },
+          {
+            "completed_at": "2026-10-03T05:49:01.134221",
+            "duration_seconds": 0.0001,
+            "label": "Initialize run state",
+            "metadata": {},
+            "name": "initialize_run_state",
+            "started_at": "2026-10-03T05:49:01.134123",
+            "status": "completed"
+          },
+          {
+            "completed_at": "2026-10-03T05:49:01.174924",
+            "duration_seconds": 0.0,
+            "label": "Configure graph memory",
+            "metadata": {},
+            "name": "graph_memory_setup",
+            "started_at": "2026-10-03T05:49:01.174906",
+            "status": "completed"
+          },
+          {
+            "completed_at": "2026-10-03T05:49:01.174988",
+            "duration_seconds": 0.0,
+            "label": "Select simulation script",
+            "metadata": {},
+            "name": "select_script",
+            "started_at": "2026-10-03T05:49:01.174956",
+            "status": "completed"
+          },
+          {
+            "completed_at": "2026-10-03T05:49:01.176758",
+            "duration_seconds": 0.0015,
+            "label": "Launch simulation process",
+            "metadata": {},
+            "name": "launch_process",
+            "started_at": "2026-10-03T05:49:01.175300",
+            "status": "completed"
+          }
+        ],
+        "started_at": "2026-10-03T05:49:01.131983",
+        "status": "completed",
+        "total_seconds": 0.0448
+      }
+    },
+    "total_actions_count": 18,
+    "total_rounds": 2,
+    "total_simulation_hours": 2,
+    "twitter_actions_count": 18,
+    "twitter_completed": true,
+    "twitter_current_round": 2,
+    "twitter_running": false,
+    "twitter_simulated_hours": 0,
+    "updated_at": "2026-10-03T05:49:17.566446"
+  },
+  "success": true
+}

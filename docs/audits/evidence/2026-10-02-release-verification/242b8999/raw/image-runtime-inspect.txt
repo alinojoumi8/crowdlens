@@ -1,0 +1,256 @@
+[
+    {
+        "Id": "b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396",
+        "Created": "2026-10-02T20:33:02.479213424Z",
+        "Path": "npm",
+        "Args": [
+            "run",
+            "dev"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 1512240,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-02T20:33:02.682338059Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+        "ResolvConfPath": "/var/lib/docker/containers/b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396/hostname",
+        "HostsPath": "/var/lib/docker/containers/b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396/hosts",
+        "LogPath": "/var/lib/docker/containers/b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396/b9bbec01a101872882987eb745a943ddd9c42187b1b53e26080e9648f1bc5396-json.log",
+        "Name": "/crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "crowdlens-ecc-release-final-242b8999-2737e1-net",
+            "PortBindings": {
+                "3000/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": ""
+                    }
+                ],
+                "5001/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": ""
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "Tmpfs": {
+                "/app/backend/uploads": "rw,size=256m"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 4294967296,
+            "NanoCpus": 2000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 8589934592,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "b9bbec01a101",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "3000/tcp": {},
+                "5001/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "LLM_MODEL_NAME=synthetic-no-generation",
+                "OPENAI_API_BASE_URL=http://127.0.0.1:9/v1",
+                "NEO4J_URI=bolt://neo4j:7687",
+                "JEV_RERANK_MODE=off",
+                "FLASK_PORT=5001",
+                "LLM_API_KEY=synthetic-local-only",
+                "LLM_DEFAULT_PROVIDER=ollama",
+                "EMBEDDING_BASE_URL=http://127.0.0.1:9",
+                "JEV_EVIDENCE_MODE=off",
+                "MARKET_DATA_PROVIDER=none",
+                "CROWDLENS_BUILD_REVISION=242b8999044e33c8c3217df857c06401f3efbba3",
+                "LLM_BASE_URL=http://127.0.0.1:9/v1",
+                "EMBEDDING_AUTO_PULL=False",
+                "JEV_INTERVIEW_MODE=off",
+                "NEO4J_USER=neo4j",
+                "NEO4J_PASSWORD=crowdlens-synthetic-m2-password",
+                "FLASK_DEBUG=False",
+                "FLASK_HOST=0.0.0.0",
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+                "PYTHON_VERSION=3.11.17",
+                "PYTHON_SHA256=bfb74ad39efae27cda510f134ab408e00f9992c56851cfc0b1cdb5646da11599",
+                "UV_FROZEN=true"
+            ],
+            "Cmd": [
+                "npm",
+                "run",
+                "dev"
+            ],
+            "Image": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": null,
+            "Labels": {
+                "org.opencontainers.image.revision": "242b8999044e33c8c3217df857c06401f3efbba3"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "1082b39fc427d2fa087ccae6a832d75243e1ac5dd378abacfad686c5922c974e",
+            "SandboxKey": "/var/run/docker/netns/1082b39fc427",
+            "Ports": {
+                "3000/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "32784"
+                    }
+                ],
+                "5001/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "32785"
+                    }
+                ]
+            },
+            "Networks": {
+                "crowdlens-ecc-release-final-242b8999-2737e1-net": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "bd86b6625a7dfc437a33d2aeaf76cc30e6b9ad9d6372ad49edb2b42611c7394b",
+                    "EndpointID": "9b3fb5617b3f2ebf100e6ef037fb36b089e3395c05261a4efc124f63bb098d03",
+                    "Gateway": "172.23.0.1",
+                    "IPAddress": "172.23.0.3",
+                    "MacAddress": "1a:69:dd:92:9a:d8",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+                        "b9bbec01a101"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:7b608480745638e97fa832c09b1585655197e1f1dcad66af0d5ff5502bc5836e",
+            "size": 3546,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

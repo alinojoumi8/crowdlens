@@ -1,0 +1,224 @@
+[
+    {
+        "Id": "076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475",
+        "Created": "2026-10-02T20:31:05.260337415Z",
+        "Path": "python",
+        "Args": [
+            "-c",
+            "import time;time.sleep(30)"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 1507320,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-02T20:31:05.511118703Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca",
+        "ResolvConfPath": "/var/lib/docker/containers/076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475/hostname",
+        "HostsPath": "/var/lib/docker/containers/076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475/hosts",
+        "LogPath": "/var/lib/docker/containers/076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475/076073f442aa5019d2f91b2c0a30a51c7541bb65194d48c04dd362129a4a4475-json.log",
+        "Name": "/crowdlens-ecc-release-netprobe-54a3b8a4-app",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "crowdlens-ecc-release-netprobe-54a3b8a4",
+            "PortBindings": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": ""
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "076073f442aa",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+                "PYTHON_VERSION=3.11.17",
+                "PYTHON_SHA256=bfb74ad39efae27cda510f134ab408e00f9992c56851cfc0b1cdb5646da11599"
+            ],
+            "Cmd": [
+                "python",
+                "-c",
+                "import time;time.sleep(30)"
+            ],
+            "Image": "python:3.11-bookworm@sha256:3fd8382c50bae84184460a6e1a8ff4eeac0e3ca6a560691cb56bd84d2b6ec9ca",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "SandboxID": "a2515a0b857f9fb524eacf487f45c466fb4f161cb3cd0deb5a5ab9e6533c8d44",
+            "SandboxKey": "/var/run/docker/netns/a2515a0b857f",
+            "Ports": {
+                "8080/tcp": null
+            },
+            "Networks": {
+                "crowdlens-ecc-release-netprobe-54a3b8a4": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "aceaddd80865e01056d2e9d1880f02eb2b343536ca4da750605cf94a691e7235",
+                    "EndpointID": "3ced27be8500da65c4fcdb8bd0b7602588bf88810410e224d0ff81726aaa91b2",
+                    "Gateway": "",
+                    "IPAddress": "172.23.0.2",
+                    "MacAddress": "26:48:95:51:4e:a3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "crowdlens-ecc-release-netprobe-54a3b8a4-app",
+                        "076073f442aa"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:9fd630803ec3446920ed6b64d20150bd724c1751e71817293a4230522c1a384a",
+            "size": 2325,
+            "annotations": {
+                "com.docker.official-images.bashbrew.arch": "amd64",
+                "org.opencontainers.image.base.digest": "sha256:672aaedcfec98774308e902ae592697bc34b05d58f62104015cf3511f58e318a",
+                "org.opencontainers.image.base.name": "buildpack-deps:bookworm",
+                "org.opencontainers.image.created": "2026-10-01T21:45:24Z",
+                "org.opencontainers.image.revision": "cede844ace77284e32c03b61ebc35cdfc945e862",
+                "org.opencontainers.image.source": "https://github.com/docker-library/python.git#cede844ace77284e32c03b61ebc35cdfc945e862:3.11/bookworm",
+                "org.opencontainers.image.url": "https://hub.docker.com/_/python",
+                "org.opencontainers.image.version": "3.11.17-bookworm"
+            },
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

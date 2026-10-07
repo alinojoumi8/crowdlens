@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v4",
+  "cases": [
+    {
+      "id": "v4_robot",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v4_graph_robot",
+        "case_id": "v4_case_robot",
+        "case_version_id": "v4_current_robot"
+      },
+      "sources": [
+        {
+          "graph_id": "v4_graph_robot",
+          "case_id": "v4_case_robot",
+          "case_version_id": "v4_current_robot",
+          "uuid": "robot_source_1",
+          "document_id": "robot_document_1",
+          "filename": "resolution.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Fernwick youth-centre resolution approves a two-Saturday movable robotics demonstration with a $950 allocation ceiling. Permanent installations are excluded. No expenditure has been recorded.",
+          "fixture_text_sha256": "99c73dc762438675f08008373e96ae74ef8e1341f03c9a3eb0255a10b06f94f0"
+        },
+        {
+          "graph_id": "v4_graph_robot",
+          "case_id": "v4_case_robot",
+          "case_version_id": "v4_current_robot",
+          "uuid": "robot_source_2",
+          "document_id": "robot_document_2",
+          "filename": "order-note.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Fernwick order note: a $720 supplier quotation is awaiting approval. No purchase order has been issued. The $950 ceiling is not a paid amount.",
+          "fixture_text_sha256": "2dbdeb06933a9a2a5c6ffba025cdaf9973d9bd786e368d33744628615d2cacee"
+        },
+        {
+          "graph_id": "v4_graph_robot",
+          "case_id": "v4_case_robot",
+          "case_version_id": "superseded",
+          "uuid": "robot_old",
+          "document_id": "robot_old",
+          "filename": "resolution.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded old source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "d6d1e10648ce683f76572a37913f8a2237f03057308eeb7dec13aa380f971c8d"
+        },
+        {
+          "graph_id": "v4_graph_robot",
+          "case_id": "unrelated_case",
+          "case_version_id": "v4_current_robot",
+          "uuid": "robot_foreign",
+          "document_id": "robot_foreign",
+          "filename": "resolution.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded foreign source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "55488d7390a8dc99adb1265db039a57edb272877262fc9031d1da2b3212c5a1d"
+        }
+      ],
+      "summary": "A permanent robotics installation has been purchased for $5,000. An unrelated storage inspection is pending.",
+      "section": {
+        "title": "Robotics demonstration",
+        "description": "Review trial approval, spending and procurement qualifiers without inferring undocumented signature or purchase status.",
+        "content": "A permanent robotics installation has been purchased for $5,000."
+      }
+    },
+    {
+      "id": "v4_concert",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v4_graph_concert",
+        "case_id": "v4_case_concert",
+        "case_version_id": "v4_current_concert"
+      },
+      "sources": [
+        {
+          "graph_id": "v4_graph_concert",
+          "case_id": "v4_case_concert",
+          "case_version_id": "v4_current_concert",
+          "uuid": "concert_source_1",
+          "document_id": "concert_document_1",
+          "filename": "visitor-log.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Bellhaven choir concert visitor log signed by organiser Leif Brook records 31 ticket-holding visitors and four requests for another concert. It has no repeat-attendance identifier and no count for an earlier concert.",
+          "fixture_text_sha256": "f13a3c0dc0ef8c79355f2ce19be41fd053d61ffe30ca84dc294e231ebb0fd2ee"
+        },
+        {
+          "graph_id": "v4_graph_concert",
+          "case_id": "v4_case_concert",
+          "case_version_id": "v4_current_concert",
+          "uuid": "concert_source_2",
+          "document_id": "concert_document_2",
+          "filename": "staff-note.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional helper Dina Oak reports 39 people including singers and helpers, without a separate visitor count. Her note does not correct or withdraw the visitor log. No earlier-concert count or visitor-demand survey is supplied.",
+          "fixture_text_sha256": "3237b5c7e0e367e5c66e970127d263bf48abee9a0bea62a7c080e5b0c4789379"
+        },
+        {
+          "graph_id": "v4_graph_concert",
+          "case_id": "v4_case_concert",
+          "case_version_id": "superseded",
+          "uuid": "concert_old",
+          "document_id": "concert_old",
+          "filename": "visitor-log.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded old source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "d6d1e10648ce683f76572a37913f8a2237f03057308eeb7dec13aa380f971c8d"
+        },
+        {
+          "graph_id": "v4_graph_concert",
+          "case_id": "unrelated_case",
+          "case_version_id": "v4_current_concert",
+          "uuid": "concert_foreign",
+          "document_id": "concert_foreign",
+          "filename": "visitor-log.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded foreign source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "55488d7390a8dc99adb1265db039a57edb272877262fc9031d1da2b3212c5a1d"
+        }
+      ],
+      "summary": "Attendance doubled to 39 visitors, and everyone requested another concert. An unrelated storage inspection is pending.",
+      "section": {
+        "title": "Choir concert attendance",
+        "description": "Review both attendance populations and the unresolved account status; preserve missing comparison and repeat-attendance data.",
+        "content": "Attendance doubled to 39 visitors, and everyone requested another concert."
+      }
+    },
+    {
+      "id": "v4_observatory",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v4_graph_observatory",
+        "case_id": "v4_case_observatory",
+        "case_version_id": "v4_current_observatory"
+      },
+      "sources": [
+        {
+          "graph_id": "v4_graph_observatory",
+          "case_id": "v4_case_observatory",
+          "case_version_id": "v4_current_observatory",
+          "uuid": "observatory_source_1",
+          "document_id": "observatory_document_1",
+          "filename": "discussion.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Rivermoss observatory discussion: Bea Crest could support four Saturday viewing sessions if a supervised access demonstration is successful. Jon Elm requires an accessible booking route but expresses neither support nor opposition. Coordinator Sol Heath says no permanent access decision has been taken and sessions have not begun.",
+          "fixture_text_sha256": "f9cd1affc3e5418c035be086a544704a01791fb14bbdc4f9868846adbeb23bac"
+        },
+        {
+          "graph_id": "v4_graph_observatory",
+          "case_id": "v4_case_observatory",
+          "case_version_id": "v4_current_observatory",
+          "uuid": "observatory_source_2",
+          "document_id": "observatory_document_2",
+          "filename": "schedule.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Rivermoss schedule: the committee will discuss four proposed Saturday sessions on 12 January. No vote has occurred. No visitor-demand or operating-cost measurements are available.",
+          "fixture_text_sha256": "d0bb4ae2b610dd9d33f748b4611e714a1b23bb029732479fc99ade0c080216e4"
+        },
+        {
+          "graph_id": "v4_graph_observatory",
+          "case_id": "v4_case_observatory",
+          "case_version_id": "superseded",
+          "uuid": "observatory_old",
+          "document_id": "observatory_old",
+          "filename": "discussion.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded old source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "d6d1e10648ce683f76572a37913f8a2237f03057308eeb7dec13aa380f971c8d"
+        },
+        {
+          "graph_id": "v4_graph_observatory",
+          "case_id": "unrelated_case",
+          "case_version_id": "v4_current_observatory",
+          "uuid": "observatory_foreign",
+          "document_id": "observatory_foreign",
+          "filename": "discussion.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded foreign source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "55488d7390a8dc99adb1265db039a57edb272877262fc9031d1da2b3212c5a1d"
+        }
+      ],
+      "summary": "Everyone has approved permanent telescope access and sessions have already started. An unrelated storage inspection is pending.",
+      "section": {
+        "title": "Observatory viewing trial",
+        "description": "Review each speaker position, retaining possible support and conditions, requirements without endorsement and pending trial status.",
+        "content": "Everyone has approved permanent telescope access and sessions have already started."
+      }
+    },
+    {
+      "id": "v4_orchard",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v4_graph_orchard",
+        "case_id": "v4_case_orchard",
+        "case_version_id": "v4_current_orchard"
+      },
+      "sources": [
+        {
+          "graph_id": "v4_graph_orchard",
+          "case_id": "v4_case_orchard",
+          "case_version_id": "v4_current_orchard",
+          "uuid": "orchard_source_1",
+          "document_id": "orchard_document_1",
+          "filename": "design.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Alderfen orchard-signage design brief gives an early estimate of approximately $4,300 excluding permits and maintenance. The design is provisional. No navigation timing study, visitor survey or funding approval is supplied.",
+          "fixture_text_sha256": "0a0cd0bfff54f4a969cb4dc17cd52c7bd95493930b7469f8378d71d22255b36c"
+        },
+        {
+          "graph_id": "v4_graph_orchard",
+          "case_id": "v4_case_orchard",
+          "case_version_id": "v4_current_orchard",
+          "uuid": "orchard_source_2",
+          "document_id": "orchard_document_2",
+          "filename": "comments.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Alderfen comments: gardener Mira Dale expects easier navigation but provides no measured time saving. Volunteer Ari Fern worries about obstructing views and has not endorsed the design. Designer Kai Vale requests a site inspection before recommending installation.",
+          "fixture_text_sha256": "524f245cd866f24f655ff0cb96fa611676a6fbbd81719dc6e02f71d1e1ba1feb"
+        },
+        {
+          "graph_id": "v4_graph_orchard",
+          "case_id": "v4_case_orchard",
+          "case_version_id": "superseded",
+          "uuid": "orchard_old",
+          "document_id": "orchard_old",
+          "filename": "design.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded old source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "d6d1e10648ce683f76572a37913f8a2237f03057308eeb7dec13aa380f971c8d"
+        },
+        {
+          "graph_id": "v4_graph_orchard",
+          "case_id": "unrelated_case",
+          "case_version_id": "v4_current_orchard",
+          "uuid": "orchard_foreign",
+          "document_id": "orchard_foreign",
+          "filename": "design.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional excluded foreign source. Unapproved alternative figures and unrelated assertions.",
+          "fixture_text_sha256": "55488d7390a8dc99adb1265db039a57edb272877262fc9031d1da2b3212c5a1d"
+        }
+      ],
+      "summary": "The orchard signs will cost exactly $8,000, remove all navigation delays and have unanimous support. An unrelated storage inspection is pending.",
+      "section": {
+        "title": "Orchard signage proposal",
+        "description": "Review cost qualifiers, provisional status and every attributed position without turning expectations into measured results or endorsement.",
+        "content": "The orchard signs will cost exactly $8,000, remove all navigation delays and have unanimous support."
+      }
+    }
+  ]
+}

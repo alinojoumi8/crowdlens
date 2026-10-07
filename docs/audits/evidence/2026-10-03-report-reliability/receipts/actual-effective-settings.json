@@ -1,0 +1,356 @@
+{
+  "data": {
+    "active_scenario_id": "baseline",
+    "agent_configs": [
+      {
+        "active_hours": [
+          7,
+          8,
+          9,
+          12,
+          13,
+          17,
+          18,
+          19,
+          20
+        ],
+        "activity_level": 0.55,
+        "agent_id": 0,
+        "comments_per_hour": 1.2,
+        "entity_name": "Maya Chen",
+        "entity_type": "Cyclist",
+        "entity_uuid": "11717c53-6591-4cba-ae44-c031439031b0",
+        "influence_weight": 0.6,
+        "posts_per_hour": 0.4,
+        "response_delay_max": 180,
+        "response_delay_min": 30,
+        "sentiment_bias": 0.33,
+        "stance": "mixed",
+        "stance_rationale": "Maya Chen stated she supports the Cedarbrook pilot if the intersections are protected.; Daniel Brooks responded to cycling safety concerns by noting the pilot is reversible and will publish cyclist counts before any permanent change."
+      },
+      {
+        "active_hours": [
+          9,
+          10,
+          11,
+          12,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "activity_level": 0.45,
+        "agent_id": 1,
+        "comments_per_hour": 0.8,
+        "entity_name": "Leo Martin",
+        "entity_type": "ShopOwner",
+        "entity_uuid": "0dfd0c55-a50d-479b-9a45-ddbbe637873c",
+        "influence_weight": 0.7,
+        "posts_per_hour": 0.25,
+        "response_delay_max": 360,
+        "response_delay_min": 90,
+        "sentiment_bias": -1.0,
+        "stance": "opposing",
+        "stance_rationale": "Leo Martin expressed concern about losing short-stay parking under the Cedarbrook proposal."
+      },
+      {
+        "active_hours": [
+          8,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15,
+          16,
+          19,
+          20
+        ],
+        "activity_level": 0.5,
+        "agent_id": 2,
+        "comments_per_hour": 1.0,
+        "entity_name": "Priya Shah",
+        "entity_type": "AccessibilityAdvocate",
+        "entity_uuid": "107c5949-3940-4624-8dd5-5d3e7fc99e25",
+        "influence_weight": 0.75,
+        "posts_per_hour": 0.3,
+        "response_delay_max": 300,
+        "response_delay_min": 60,
+        "sentiment_bias": -1.0,
+        "stance": "opposing",
+        "stance_rationale": "Daniel Brooks responded to Priya Shah's accessibility concerns by committing to publish accessibility complaint counts before any permanent change."
+      },
+      {
+        "active_hours": [
+          8,
+          9,
+          10,
+          11,
+          14,
+          15,
+          16,
+          17
+        ],
+        "activity_level": 0.4,
+        "agent_id": 3,
+        "comments_per_hour": 0.6,
+        "entity_name": "Daniel Brooks",
+        "entity_type": "TransportPlanner",
+        "entity_uuid": "dd1063be-6245-4405-b27c-2654631ceab4",
+        "influence_weight": 0.9,
+        "posts_per_hour": 0.2,
+        "response_delay_max": 480,
+        "response_delay_min": 120,
+        "sentiment_bias": -1.0,
+        "stance": "opposing",
+        "stance_rationale": "Daniel Brooks responded to Priya Shah's accessibility concerns by committing to publish accessibility complaint counts before any permanent change."
+      }
+    ],
+    "decision_config": {
+      "calibration": "provisional",
+      "configured": false,
+      "features": {
+        "evidence": {
+          "available": false,
+          "mode": "off",
+          "policy_version": "evidence-v3",
+          "reason": "disabled"
+        },
+        "interview": {
+          "available": false,
+          "mode": "off",
+          "policy_version": "interview-v3",
+          "reason": "disabled"
+        },
+        "rerank": {
+          "available": false,
+          "mode": "off",
+          "policy_version": "rerank-v1",
+          "reason": "disabled"
+        }
+      },
+      "model": "jev-1.13.0",
+      "thresholds": {
+        "evidence_min_confidence": 0.8,
+        "interview_min_score": 0.5
+      },
+      "timeout_seconds": 3.0
+    },
+    "economy": {
+      "currency": "USD",
+      "enabled": false,
+      "initial_balance_cents": 1000000,
+      "max_decisions_per_tick": 50,
+      "rounds_per_tick": 24,
+      "schema_version": 1
+    },
+    "effective_settings": {
+      "active_agents_per_round": 1,
+      "available_platforms": [
+        "twitter",
+        "reddit"
+      ],
+      "duration_rounds": 2,
+      "hour_fields_are_compatibility_aliases": true,
+      "platform": "twitter",
+      "requested_round_cap": 72,
+      "round_limit": 2
+    },
+    "ensemble_runs": 1,
+    "event_config": {
+      "hot_topics": [
+        "eight-week bike-lane pilot",
+        "Main Street",
+        "parking lane conversion",
+        "loading bays",
+        "intersection protection",
+        "accessibility",
+        "pickup spaces",
+        "pedestrian path",
+        "reversible pilot",
+        "measurement-based decision"
+      ],
+      "initial_posts": [
+        {
+          "content": "I support the Cedarbrook eight-week pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe. A protected lane on Main Street could make my commute viable again, and I would value clear intersection treatment during the trial.",
+          "poster_agent_id": 0,
+          "poster_type": "Cyclist"
+        },
+        {
+          "content": "I am concerned about losing short-stay parking on Main Street, but I could support the Cedarbrook trial if loading access remains reliable and customer visits are measured during the eight-week pilot. Two signed loading bays are a start; I would like clarity on delivery windows.",
+          "poster_agent_id": 1,
+          "poster_type": "ShopOwner"
+        },
+        {
+          "content": "Accessible pickup spaces and a clear pedestrian path must remain during the Cedarbrook pilot. A bike lane alone does not answer those needs. I would like to see how accessibility is protected alongside the bike-lane design before the eight weeks begin.",
+          "poster_agent_id": 2,
+          "poster_type": "AccessibilityAdvocate"
+        },
+        {
+          "content": "The Cedarbrook bike-lane pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering any permanent change. The eight-week timeline exists to gather those measurements, not to predetermine an outcome.",
+          "poster_agent_id": 3,
+          "poster_type": "TransportPlanner"
+        }
+      ],
+      "narrative_direction": "The four named participants are expected to converge on a conditional-support framing: pilot proceeds with emphasis on intersection protection (Maya), maintained loading and measured visits (Leo), preserved accessibility features (Priya), and reversible measurement-based evaluation with published counts before any permanence decision (Daniel). Opinions should sharpen around measurement design rather than ideological opposition. Upside case: all four align on protected design, clear loading/accessibility provisions, and credible measurement metrics. Downside case: Leo demands stronger delivery guarantees or visit monitoring, Priya flags accessibility gaps, slowing rollout or prompting design revisions. Base case: conditional cooperation across all four with concrete guardrails, no permanence decision and no fabricated data.",
+      "scenario_pack": "baseline",
+      "scheduled_events": [
+        {
+          "content": "Round 1 opens with the four participants restating their positions: Maya (Cyclist) presses for protected intersections, Leo (ShopOwner) raises loading-bay reliability and customer-visit measurement, Priya (AccessibilityAdvocate) flags accessible pickup and pedestrian path, Daniel (TransportPlanner) reaffirms reversibility and published counts. No survey, crash, revenue or permanence data is introduced.",
+          "event_type": "news",
+          "expected_effect": "Locks in the conditional-support framing. Establishes the base case as most likely: cooperation on guardrails with no permanence commitment. Reduces probability of premature polarization.",
+          "hour": 1,
+          "poster_agent_id": 3,
+          "poster_type": "TransportPlanner",
+          "round": 1,
+          "title": "Pilot design discussion: intersection protection and loading bays"
+        },
+        {
+          "content": "Leo (ShopOwner) asks Daniel (TransportPlanner) for written delivery-window rules at the two signed loading bays, framing it as a condition for not opposing the trial. Daniel indicates windows can be clarified without changing the reversible pilot structure.",
+          "event_type": "shock",
+          "expected_effect": "Slight upward pressure on downside case if delivery clarity is not formalized, but base case holds: a procedural clarification, not a redesign. Keeps probability weight on conditional cooperation.",
+          "hour": 4,
+          "poster_agent_id": 1,
+          "poster_type": "ShopOwner",
+          "round": 1,
+          "title": "Shop owner requests clearer delivery-window specification"
+        },
+        {
+          "content": "Round 2: Daniel (TransportPlanner) confirms the published counts will cover cyclists, deliveries, customer visits and accessibility complaints, gathered over the eight weeks. Maya (Cyclist) accepts the measurement-based approach if intersection protection is in place. Leo (ShopOwner) accepts conditional on reliable loading and the customer-visit count being shared. Priya (AccessibilityAdvocate) accepts conditional on accessible pickup and pedestrian path being preserved. No decision is made on permanence.",
+          "event_type": "news",
+          "expected_effect": "Strengthens base case. All four participants move from conditional concern to conditional acceptance. Upside case probability rises modestly if the agreed measurement scope is publicly readable and not later expanded. Downside case probability recedes.",
+          "hour": 1,
+          "poster_agent_id": 3,
+          "poster_type": "TransportPlanner",
+          "round": 2,
+          "title": "Measurement scope agreed, no permanence decision"
+        },
+        {
+          "content": "Priya (AccessibilityAdvocate) raises a specific design question: width and obstruction rules for the pedestrian path adjacent to the bike lane. Maya (Cyclist) supports adequate pedestrian width. Daniel (TransportPlanner) notes this can be addressed within the reversible pilot design without changing scope.",
+          "event_type": "shock",
+          "expected_effect": "Mild downside pressure if the pedestrian-path detail is left vague, but the TransportPlanner response keeps it inside base case. Reinforces that the pilot remains reversible and scope-bounded; no permanence drift.",
+          "hour": 4,
+          "poster_agent_id": 2,
+          "poster_type": "AccessibilityAdvocate",
+          "round": 2,
+          "title": "Accessibility advocate emphasizes pedestrian-path design detail"
+        }
+      ]
+    },
+    "forecast_horizon": "medium_term",
+    "forecast_mode": "general",
+    "generated_at": "2026-10-03T14:56:36.552518",
+    "generation_reasoning": "Effective time config after user controls: 2 hours; 60 minutes per round; 1-1 active agents per round. Generated timing suggestions are superseded by these effective values. | Event config: The source document provides four named statements and explicitly forbids inventing surveys, crash statistics, revenue changes or a permanent decision. The simulation must therefore explore how these four participants might discuss the pilot across two rounds without manufacturing evidence. Initial posts mirror the source statements verbatim in tone and condition, ensuring no new facts are fabricated. Scheduled events stay inside the source-defined envelope: intersection protection, loading bays, accessibility features, reversible design, and measurement-based evaluation. No outcome implies permanence. The upside case is convergence on guardrails with clear measurement scope; the downside case is friction over loading windows or accessibility design details; the base case is conditional cooperation across all four, consistent with the source framing. The TransportPlanner anchors procedural credibility, the Cyclist anchors safety, the ShopOwner anchors operational viability, and the AccessibilityAdvocate anchors inclusion, which is the structure implied by the four original statements. | Agent config: Successfully generated 4 | Initial posts assigned: 4 posts assigned publishers",
+    "graph_id": "a4f570c2-385a-4c5a-a441-acf564cf4fa9",
+    "llm_base_url": "https://api.minimax.io/anthropic",
+    "llm_model": "MiniMax-M3",
+    "memory_mode": "off",
+    "prediction_settings": {
+      "active_agents_per_hour": 1,
+      "active_agents_per_round": 1,
+      "agent_count": 4,
+      "ensemble_runs": 1,
+      "entity_types_exclude": [],
+      "entity_types_include": [
+        "AccessibilityAdvocate",
+        "Cyclist",
+        "ShopOwner",
+        "TransportPlanner"
+      ],
+      "max_rounds": 72,
+      "memory_mode": "off",
+      "minutes_per_round": 60,
+      "platform": "twitter",
+      "prediction_target": {
+        "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties."
+      },
+      "preset": "standard_litigation_prediction",
+      "profile_parallelism": 1,
+      "report_depth": "fast",
+      "report_mode": "prediction",
+      "scenario_pack": "baseline",
+      "seed": 42,
+      "simulation_duration": 2
+    },
+    "prediction_target": {
+      "outcomes": [
+        "Base case materializes",
+        "Upside case materializes",
+        "Downside case materializes"
+      ],
+      "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties."
+    },
+    "project_id": "proj_cab56063dd57",
+    "reddit_config": {
+      "echo_chamber_strength": 0.6,
+      "platform": "reddit",
+      "popularity_weight": 0.4,
+      "recency_weight": 0.3,
+      "relevance_weight": 0.3,
+      "viral_threshold": 15
+    },
+    "report_depth": "fast",
+    "report_mode": "prediction",
+    "scenario_pack": "baseline",
+    "seed": 42,
+    "simulation_id": "sim_2757a283087d",
+    "simulation_requirement": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+    "time_config": {
+      "agents_per_hour_max": 1,
+      "agents_per_hour_min": 1,
+      "minutes_per_round": 60,
+      "morning_activity_multiplier": 0.4,
+      "morning_hours": [
+        7,
+        8,
+        9
+      ],
+      "off_peak_activity_multiplier": 0.05,
+      "off_peak_hours": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        22,
+        23
+      ],
+      "peak_activity_multiplier": 1.5,
+      "peak_hours": [
+        9,
+        10,
+        14,
+        15,
+        18,
+        19,
+        20
+      ],
+      "total_simulation_hours": 2,
+      "work_activity_multiplier": 0.7,
+      "work_hours": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    "twitter_config": {
+      "echo_chamber_strength": 0.5,
+      "platform": "twitter",
+      "popularity_weight": 0.3,
+      "recency_weight": 0.4,
+      "relevance_weight": 0.3,
+      "viral_threshold": 10
+    }
+  },
+  "success": true
+}

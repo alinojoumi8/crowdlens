@@ -1,0 +1,54 @@
+{
+  "actual_model": "MiniMax-M3",
+  "planned_cases": 4,
+  "attempted_cases": 4,
+  "ready_cases": 0,
+  "blocked_cases": 4,
+  "requests": 9,
+  "request_limit": 12,
+  "in_flight": 0,
+  "workflow_state": "stopped",
+  "elapsed_seconds": 34.14836812019348,
+  "usage_by_stage": {
+    "proposal": {
+      "attempts": 9,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 1164,
+      "input_tokens": 10144,
+      "output_tokens": 3247,
+      "unknown_usage_attempts": 0
+    }
+  },
+  "billing_amount": null,
+  "quality_labels": null,
+  "human_review_status": "PENDING",
+  "original_results_sha256": "1f67b48c5106f40d111a939f0c828f608f741cee0b60446bfa7df522bbd4ae64",
+  "original_preservation": {
+    "checked_files": 99,
+    "all_unchanged": true
+  },
+  "launch_identity": {
+    "launch_head": "c826f854d94e89148493527478d72ab97da98176",
+    "launch_dirty_evaluation_paths": [
+      "backend/scripts/collect_source_review_v2.py",
+      "backend/scripts/evidence_quality_reviews.py",
+      "backend/tests/test_source_review_v2.py"
+    ],
+    "subsequent_commit": "98a8cc465ebe524b06ab315fb705a7e00ca7b441",
+    "files_sha256": {
+      "backend/scripts/collect_source_review_v2.py": "073b84ffd534c821d10b8ed338dcaaf0d88c87098a2f65aa2af7bff94696fd54",
+      "backend/scripts/evidence_quality_reviews.py": "4d3c2c4630388d2df60dd61c10733035cc9b8dc099e1f8e7628920323276d1a0",
+      "backend/tests/test_source_review_v2.py": "2f22b3029e2e3517df43943388d01daf066a908421d32dfc9444d4e580b14c90"
+    },
+    "note": "Collector launched before evaluation files were committed; unchanged file bytes were committed shortly afterward. Application source and prompts were unchanged. Do not call this a clean-commit launch."
+  },
+  "verification": {
+    "backend_tests": 597,
+    "node_tests": 12,
+    "component_tests": 54,
+    "build": "passed",
+    "final_ui_focused_tests": 5,
+    "browser_download_file_verified": false,
+    "browser_copy_fallback_verified": true
+  }
+}

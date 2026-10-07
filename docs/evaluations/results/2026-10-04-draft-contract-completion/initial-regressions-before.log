@@ -1,0 +1,187 @@
+FFF.FFFFFFFFF.                                                           [100%]
+=================================== FAILURES ===================================
+______________ test_inconsistent_summary_blocks_even_when_edited _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_inconsistent_summary_bloc0')
+
+    def test_inconsistent_summary_blocks_even_when_edited(tmp_path):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(False,reviewed())})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:22: AssertionError
+______________ test_edit_cannot_rewrite_unrelated_summary_clause _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_edit_cannot_rewrite_unrel0')
+
+    def test_edit_cannot_rewrite_unrelated_summary_clause(tmp_path):
+        draft={'paragraphs':[{'text':TEXT,'kind':'attributed_allegation','claim_ids':['claim_01']}],
+            'summary_replacements':[{'old_text':'The hearing is Thursday. Other issues remain open.',
+            'new_text':TEXT+' Nothing else needs review.','claim_ids':['claim_01']}]}
+        result,_=run(tmp_path,{'EVIDENCE_DRAFT_V1':draft})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:31: AssertionError
+___________ test_summary_scope_requires_unique_explicit_section_link ___________
+
+    def test_summary_scope_requires_unique_explicit_section_link():
+>       from app.services.claim_ledger import summary_edit_scope
+E       ImportError: cannot import name 'summary_edit_scope' from 'app.services.claim_ledger' (/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/claim_ledger.py)
+
+backend/tests/test_draft_contract_completion.py:36: ImportError
+_________ test_incomplete_or_invalid_claim_source_reviews_block[None] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_incomplete_or_invalid_cla0')
+reviews = None
+
+    @pytest.mark.parametrize('reviews',[None,[],reviewed(evidence=['invented']),reviewed(evidence=[]),reviewed()+reviewed()])
+    def test_incomplete_or_invalid_claim_source_reviews_block(tmp_path,reviews):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviews)})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:52: AssertionError
+_______ test_incomplete_or_invalid_claim_source_reviews_block[reviews1] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_incomplete_or_invalid_cla1')
+reviews = []
+
+    @pytest.mark.parametrize('reviews',[None,[],reviewed(evidence=['invented']),reviewed(evidence=[]),reviewed()+reviewed()])
+    def test_incomplete_or_invalid_claim_source_reviews_block(tmp_path,reviews):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviews)})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:52: AssertionError
+_______ test_incomplete_or_invalid_claim_source_reviews_block[reviews2] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_incomplete_or_invalid_cla2')
+reviews = [{'claim_id': 'claim_01', 'detail': 'Source records a postponement; no unstated conclusion is inferred.', 'evidence_ids': ['invented'], 'outcome': 'supported'}]
+
+    @pytest.mark.parametrize('reviews',[None,[],reviewed(evidence=['invented']),reviewed(evidence=[]),reviewed()+reviewed()])
+    def test_incomplete_or_invalid_claim_source_reviews_block(tmp_path,reviews):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviews)})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:52: AssertionError
+_______ test_incomplete_or_invalid_claim_source_reviews_block[reviews3] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_incomplete_or_invalid_cla3')
+reviews = [{'claim_id': 'claim_01', 'detail': 'Source records a postponement; no unstated conclusion is inferred.', 'evidence_ids': [], 'outcome': 'supported'}]
+
+    @pytest.mark.parametrize('reviews',[None,[],reviewed(evidence=['invented']),reviewed(evidence=[]),reviewed()+reviewed()])
+    def test_incomplete_or_invalid_claim_source_reviews_block(tmp_path,reviews):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviews)})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:52: AssertionError
+_______ test_incomplete_or_invalid_claim_source_reviews_block[reviews4] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_incomplete_or_invalid_cla4')
+reviews = [{'claim_id': 'claim_01', 'detail': 'Source records a postponement; no unstated conclusion is inferred.', 'evidence_id...records a postponement; no unstated conclusion is inferred.', 'evidence_ids': ['episode:one'], 'outcome': 'supported'}]
+
+    @pytest.mark.parametrize('reviews',[None,[],reviewed(evidence=['invented']),reviewed(evidence=[]),reviewed()+reviewed()])
+    def test_incomplete_or_invalid_claim_source_reviews_block(tmp_path,reviews):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviews)})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:52: AssertionError
+________ test_claim_qualification_audit_cannot_be_ignored[unsupported] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_claim_qualification_audit0')
+outcome = 'unsupported'
+
+    @pytest.mark.parametrize('outcome',['unsupported','ambiguous','conflicting','unverified'])
+    def test_claim_qualification_audit_cannot_be_ignored(tmp_path,outcome):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviewed(outcome))})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:59: AssertionError
+_________ test_claim_qualification_audit_cannot_be_ignored[ambiguous] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_claim_qualification_audit1')
+outcome = 'ambiguous'
+
+    @pytest.mark.parametrize('outcome',['unsupported','ambiguous','conflicting','unverified'])
+    def test_claim_qualification_audit_cannot_be_ignored(tmp_path,outcome):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviewed(outcome))})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:59: AssertionError
+________ test_claim_qualification_audit_cannot_be_ignored[conflicting] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_claim_qualification_audit2')
+outcome = 'conflicting'
+
+    @pytest.mark.parametrize('outcome',['unsupported','ambiguous','conflicting','unverified'])
+    def test_claim_qualification_audit_cannot_be_ignored(tmp_path,outcome):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviewed(outcome))})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:59: AssertionError
+_________ test_claim_qualification_audit_cannot_be_ignored[unverified] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-145/test_claim_qualification_audit3')
+outcome = 'unverified'
+
+    @pytest.mark.parametrize('outcome',['unsupported','ambiguous','conflicting','unverified'])
+    def test_claim_qualification_audit_cannot_be_ignored(tmp_path,outcome):
+        result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':audit(True,reviewed(outcome))})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_contract_completion.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED backend/tests/test_draft_contract_completion.py::test_inconsistent_summary_blocks_even_when_edited
+FAILED backend/tests/test_draft_contract_completion.py::test_edit_cannot_rewrite_unrelated_summary_clause
+FAILED backend/tests/test_draft_contract_completion.py::test_summary_scope_requires_unique_explicit_section_link
+FAILED backend/tests/test_draft_contract_completion.py::test_incomplete_or_invalid_claim_source_reviews_block[None]
+FAILED backend/tests/test_draft_contract_completion.py::test_incomplete_or_invalid_claim_source_reviews_block[reviews1]
+FAILED backend/tests/test_draft_contract_completion.py::test_incomplete_or_invalid_claim_source_reviews_block[reviews2]
+FAILED backend/tests/test_draft_contract_completion.py::test_incomplete_or_invalid_claim_source_reviews_block[reviews3]
+FAILED backend/tests/test_draft_contract_completion.py::test_incomplete_or_invalid_claim_source_reviews_block[reviews4]
+FAILED backend/tests/test_draft_contract_completion.py::test_claim_qualification_audit_cannot_be_ignored[unsupported]
+FAILED backend/tests/test_draft_contract_completion.py::test_claim_qualification_audit_cannot_be_ignored[ambiguous]
+FAILED backend/tests/test_draft_contract_completion.py::test_claim_qualification_audit_cannot_be_ignored[conflicting]
+FAILED backend/tests/test_draft_contract_completion.py::test_claim_qualification_audit_cannot_be_ignored[unverified]
+12 failed, 2 passed in 1.19s

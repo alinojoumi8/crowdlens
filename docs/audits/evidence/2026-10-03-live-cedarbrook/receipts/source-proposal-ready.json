@@ -1,0 +1,298 @@
+{
+  "data": {
+    "accepted_report_id": null,
+    "after": {
+      "section": "The Cedarbrook scenario is fictional: Cedarbrook and the named people are invented, and the source explicitly states it is not a real municipal proposal or a prediction. [1]\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street in which one parking lane would become a bike lane, with deliveries using two signed loading bays, and the city has not decided whether the pilot will become permanent. [1]\n\nMaya Chen, a resident who cycles to work, supports the pilot conditional on protected intersections and currently avoids Main Street because traffic feels unsafe. [1]\n\nLeo Martin, a Main Street shop owner, is concerned about losing short-stay parking but could support a trial if loading access remains reliable and customer visits are measured. [1]\n\nPriya Shah, a resident with limited mobility, requires that accessible pickup spaces and a clear pedestrian path remain and notes a bike lane alone does not answer those needs. [1]\n\nDaniel Brooks, the city's transport planner, states the pilot is reversible and that the city will publish counts of cyclists, deliveries, customer visits, and accessibility complaints before considering a permanent change. [1]\n\nThe four participant statements are qualitative, do not represent all residents, and the source contains no survey, crash count, business revenue measurement, or final decision; the source explicitly instructs not to invent those facts and treats simulated conversations as generated output, not new documentary evidence. [1]",
+      "summary": "A small four-agent, two-round simulation suggests the Cedarbrook bike-lane pilot discussion will remain constructive and reversible, with conditional support from cyclists and accessibility advocates, partial opposition from a shop owner over short-stay parking, and the city transport planner positioned to guide a measurement-based, reversible decision \u2014 base-case probability of a safe, reversible pilot outcome estimated at 55\u201365%."
+    },
+    "before": {
+      "section": "The injected scenario is a deliberately bounded rehearsal of the Cedarbrook bike-lane pilot. Four named participants and a fixed discussion architecture form the input variables, and the simulation is permitted to produce only certain categories of output.\n\n**The Four Named Participants**\n\nThe simulation seeds one institutional voice and three community voices, each carrying a defined stake. Daniel Brooks is positioned as the city's transport planner working for the City of Cedarbrook, framing him as the convener and data steward of the pilot:\n\n> \"Daniel Brooks commented publicly on the bike-lane pilot on behalf of the city, describing it as reversible and outlining data to be published.\"\n\nMaya Chen is the cyclist/resident voice, whose support is conditioned rather than unconditional:\n\n> \"Maya Chen expressed support for the bike-lane pilot conditional on protected intersections.\"\n\nPriya Shah enters as the accessibility advocate, anchoring the pedestrian and pickup-access dimension of the discussion:\n\n> \"Priya Shah commented publicly on the bike-lane pilot, emphasizing that accessible pickup spaces and pedestrian paths must remain.\"\n\nLeo Martin is the Main Street shop owner, the partial-opposition vector of the simulation:\n\n> \"Leo Martin is a Main Street shop owner who operates his business on Main Street.\"\n\n> \"Leo Martin opposes the bike-lane pilot in its current form due to concerns about losing short-stay parking.\"\n\nThese four roles \u2014 planner, cyclist, accessibility advocate, shop owner \u2014 were chosen so that any plausible outcome of a real Cedarbrook forum would have to reconcile their different currencies (safety data, parking turnover, accessibility, reversibility) rather than collapse into a single interest group.\n\n**The Fixed Discussion Architecture**\n\nThe pilot is staged as an eight-week reversible test on Cedarbrook, discussed on a single platform across two rounds. The two-round ceiling means agents have only one exchange cycle to sharpen or shift their initial positions, which constrains how much movement is plausible in the simulation. The eight-week test window, combined with Daniel Brooks's framing of the pilot as reversible, establishes that any decision emerging from the forum is by construction provisional, with data to be published during the test rather than a closed verdict:\n\n> \"Daniel Brooks commented publicly on the bike-lane pilot on behalf of the city, describing it as reversible and outlining data to be published.\"\n\n**Permitted Topic Scope and Explicit Prohibitions**\n\nThe simulation is scoped to four admissible topic axes \u2014 safety, parking/loading, accessibility, and reversible, measurement-based decisions. This is reflected in the way each agent's injected position already falls inside those axes: Maya Chen on cyclist safety at intersections, Leo Martin on parking/loading, Priya Shah on accessibility, Daniel Brooks on reversibility and measurement.\n\nEqually important are the explicit prohibitions. The simulation is not permitted to invent surveys, crash statistics, revenue changes, or a permanent decision. Generated reactions are treated as simulated possibilities rather than measured findings. The downstream report sections must therefore express outcomes as probability ranges with stated sensitivities, and must not cite numeric safety, crash, or revenue figures as if they had been observed in the simulation. The base-case probability of a safe, reversible pilot outcome \u2014 estimated at 55\u201365% \u2014 sits within this constraint, being a derived probability rather than a measured result.\n\n**Implication for the Forecast**\n\nBecause the inputs are fixed and the prohibitions are strict, the variability in the forecast comes almost entirely from how the four agents weight and trade off the four permitted axes across the two rounds, not from new empirical facts. The base, upside, and downside cases are conditional on these injected conditions holding, with reversibility acting as a safety valve that caps the downside and the absence of revenue and crash data keeping the upside from being overstated.",
+      "summary": "A small four-agent, two-round simulation suggests the Cedarbrook bike-lane pilot discussion will remain constructive and reversible, with conditional support from cyclists and accessibility advocates, partial opposition from a shop owner over short-stay parking, and the city transport planner positioned to guide a measurement-based, reversible decision \u2014 base-case probability of a safe, reversible pilot outcome estimated at 55\u201365%."
+    },
+    "created_at": "2026-10-03T09:30:33.048397+00:00",
+    "deadline_at": 1791020013.0484242,
+    "findings": [],
+    "ledger": [
+      {
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_01",
+        "kind": "source_statement",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "The Cedarbrook scenario is fictional: Cedarbrook and the named people are invented, and it is not a real municipal proposal or a prediction."
+      },
+      {
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_02",
+        "kind": "source_statement",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street in which one parking lane would become a bike lane, with deliveries using two signed loading bays, and the city has not decided whether the pilot will become permanent."
+      },
+      {
+        "attribution": "Maya Chen",
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_03",
+        "kind": "attributed_allegation",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "Maya Chen, a resident who cycles to work, supports the pilot conditional on protected intersections and currently avoids Main Street because traffic feels unsafe."
+      },
+      {
+        "attribution": "Leo Martin",
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_04",
+        "kind": "attributed_allegation",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "Leo Martin, a Main Street shop owner, is concerned about losing short-stay parking but could support a trial if loading access remains reliable and customer visits are measured."
+      },
+      {
+        "attribution": "Priya Shah",
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_05",
+        "kind": "attributed_allegation",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "Priya Shah, a resident with limited mobility, requires that accessible pickup spaces and a clear pedestrian path remain and notes a bike lane alone does not answer those needs."
+      },
+      {
+        "attribution": "Daniel Brooks",
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_06",
+        "kind": "attributed_allegation",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "Daniel Brooks, the city's transport planner, states the pilot is reversible and that the city will publish counts of cyclists, deliveries, customer visits, and accessibility complaints before considering a permanent change."
+      },
+      {
+        "checks": [],
+        "citation_ids": [
+          "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+        ],
+        "claim_id": "claim_07",
+        "kind": "source_statement",
+        "premise_claim_ids": [],
+        "quote": "",
+        "schema_version": 1,
+        "scope": {
+          "case_id": "case_a1b28cf9ada0",
+          "case_version_id": "casever_88fa1e1ffa14",
+          "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+        },
+        "text": "The four participant statements are qualitative, do not represent all residents, and the source contains no survey, crash count, business revenue measurement, or final decision; the source explicitly instructs not to invent those facts and treats simulated conversations as generated output, not new documentary evidence."
+      }
+    ],
+    "ledger_digest": "cd8ce70d61a24f2f4dbaa0b8449273fb4cbbd7827f2c23e0b6ba22ded19c2b08",
+    "limitations": [
+      "model_audit_is_not_factual_certification",
+      "Evidence gap: The 55\u201365% base-case probability of a safe, reversible pilot outcome cited in the prior section is not grounded in any supplied source window and should be treated as an unsupported derived figure, if retained at all.",
+      "Evidence gap: Details of the single platform, two discussion rounds, and the four explicit permitted topic axes (safety, parking/loading, accessibility, reversible measurement-based decisions) are not stated in the supplied source window and would require additional source evidence to support as fixed injected variables."
+    ],
+    "model": "MiniMax-M3",
+    "paragraphs": [
+      {
+        "claim_ids": [
+          "claim_01"
+        ],
+        "kind": "source_statement",
+        "text": "The Cedarbrook scenario is fictional: Cedarbrook and the named people are invented, and the source explicitly states it is not a real municipal proposal or a prediction."
+      },
+      {
+        "claim_ids": [
+          "claim_02"
+        ],
+        "kind": "source_statement",
+        "text": "Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street in which one parking lane would become a bike lane, with deliveries using two signed loading bays, and the city has not decided whether the pilot will become permanent."
+      },
+      {
+        "claim_ids": [
+          "claim_03"
+        ],
+        "kind": "attributed_allegation",
+        "text": "Maya Chen, a resident who cycles to work, supports the pilot conditional on protected intersections and currently avoids Main Street because traffic feels unsafe."
+      },
+      {
+        "claim_ids": [
+          "claim_04"
+        ],
+        "kind": "attributed_allegation",
+        "text": "Leo Martin, a Main Street shop owner, is concerned about losing short-stay parking but could support a trial if loading access remains reliable and customer visits are measured."
+      },
+      {
+        "claim_ids": [
+          "claim_05"
+        ],
+        "kind": "attributed_allegation",
+        "text": "Priya Shah, a resident with limited mobility, requires that accessible pickup spaces and a clear pedestrian path remain and notes a bike lane alone does not answer those needs."
+      },
+      {
+        "claim_ids": [
+          "claim_06"
+        ],
+        "kind": "attributed_allegation",
+        "text": "Daniel Brooks, the city's transport planner, states the pilot is reversible and that the city will publish counts of cyclists, deliveries, customer visits, and accessibility complaints before considering a permanent change."
+      },
+      {
+        "claim_ids": [
+          "claim_07"
+        ],
+        "kind": "source_statement",
+        "text": "The four participant statements are qualitative, do not represent all residents, and the source contains no survey, crash count, business revenue measurement, or final decision; the source explicitly instructs not to invent those facts and treats simulated conversations as generated output, not new documentary evidence."
+      }
+    ],
+    "parent_digest": "9d9d36151120f99c8f1f3ddb511775653a456123ac117aa3963e3e569e81bfa2",
+    "parent_report_id": "report_38eb8454832e",
+    "phase": "review",
+    "policy": "evidence-draft-v1",
+    "proposal_digest": "279009979192e2bf1ffbe9db11c5cb8dff4dab400994617bd653cd88e8cfc29c",
+    "proposal_id": "proposal_95c5c62d4d1a4f10b03dc7c814ee5f51",
+    "request_digest": "7bef911825d879d77603553860c57950690717f8b100ebaf3b6e2455fdae6658",
+    "request_key_hash": "b4ef47a4086250b0bc88b9b66fb4dab7b8fb21dff549587217e14fb2b549f0dd",
+    "retrieval": {
+      "admitted": 1,
+      "exact": [],
+      "fused": [
+        "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+      ],
+      "lexical": [
+        "episode:27522570-3b8b-4967-aef0-de05ca05bf66"
+      ],
+      "packet_characters": 1468,
+      "semantic_covered": 1
+    },
+    "revision_report_id": "report_561a7739a24d480bb5a0ac086eec2cdf",
+    "schema_version": 1,
+    "scope": {
+      "case_id": "case_a1b28cf9ada0",
+      "case_version_id": "casever_88fa1e1ffa14",
+      "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+    },
+    "section_index": 1,
+    "source_digest": "b3f731b626eeacdbe550c2c02ca6b447891a3ad1c3ae2bde7693f3bc1835cd54",
+    "source_snapshot_digest": "e9fb58c0f6cc9d4c1cbe5e27d7af9f301ac1ba4ac182a74817f6f4f297a0b9cd",
+    "sources": [
+      {
+        "case_id": "case_a1b28cf9ada0",
+        "case_version_id": "casever_88fa1e1ffa14",
+        "document_id": "doc_fbceaeb1c8f7",
+        "episode_id": "27522570-3b8b-4967-aef0-de05ca05bf66",
+        "evidence_id": "episode:27522570-3b8b-4967-aef0-de05ca05bf66",
+        "excerpt": "# Cedarbrook bike-lane pilot \u2014 fictional browser test\n\nThis is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\n\nFour participants provided these statements:\n- Maya Chen, a resident who cycles to work: \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\"\n- Leo Martin, a Main Street shop owner: \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\"\n- Priya Shah, a resident with limited mobility: \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\"\n- Daniel Brooks, the city's transport planner: \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\"\n\nThe four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.",
+        "filename": "cedarbrook-bike-lane.md",
+        "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489",
+        "locator": {
+          "char_end": 1468,
+          "char_start": 0,
+          "chunk_index": 0,
+          "offset_basis": "stored_chunk",
+          "page": null,
+          "paragraph": null
+        },
+        "origin": "source_document",
+        "source_hash": "b55863a69d8458a232fd2a35fa35458b400576037f1e2efbe5992e493b7cf64d",
+        "window": "# Cedarbrook bike-lane pilot \u2014 fictional browser test\n\nThis is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\n\nFour participants provided these statements:\n- Maya Chen, a resident who cycles to work: \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\"\n- Leo Martin, a Main Street shop owner: \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\"\n- Priya Shah, a resident with limited mobility: \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\"\n- Daniel Brooks, the city's transport planner: \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\"\n\nThe four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.",
+        "window_end": 1468,
+        "window_hash": "b55863a69d8458a232fd2a35fa35458b400576037f1e2efbe5992e493b7cf64d",
+        "window_start": 0
+      }
+    ],
+    "state": "ready",
+    "summary_edits": [],
+    "summary_unchanged": true,
+    "task_id": "6ca70dc5-bb1d-4dc8-83a3-92262a445c83",
+    "timing": {
+      "auditing": 3506.87,
+      "drafting": 5053.88,
+      "planning": 7405.93,
+      "retrieving": 364.42
+    },
+    "updated_at": "2026-10-03T09:30:49.572974+00:00",
+    "usage": {
+      "calls": [
+        {
+          "attempt_count": 1,
+          "elapsed_ms": 7368.11,
+          "input_tokens": 2145,
+          "model": "MiniMax-M3",
+          "output_tokens": 770,
+          "provider": "anthropic"
+        },
+        {
+          "attempt_count": 1,
+          "elapsed_ms": 5033.06,
+          "input_tokens": 3145,
+          "model": "MiniMax-M3",
+          "output_tokens": 484,
+          "provider": "anthropic"
+        },
+        {
+          "attempt_count": 1,
+          "elapsed_ms": 3485.07,
+          "input_tokens": 3928,
+          "model": "MiniMax-M3",
+          "output_tokens": 41,
+          "provider": "anthropic"
+        }
+      ],
+      "cost": null,
+      "elapsed_ms": 16499.18,
+      "remaining_ms": 163480.23
+    }
+  },
+  "success": true
+}

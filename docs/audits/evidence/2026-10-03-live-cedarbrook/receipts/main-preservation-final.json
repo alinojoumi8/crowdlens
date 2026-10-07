@@ -1,0 +1,19 @@
+{
+  "main_commit": "34275b75223dee82087ff6ac937c4fc6e4af9323",
+  "status": " M README.md\n M ROADMAP.md\n M docs/architecture.md\n?? docs/ECC-WORKFLOW-PLAN.md\n?? docs/product-capabilities.md\n",
+  "expected_overlay_sha256": {
+    "README.md": "0d61daeda861e8d3eeb7876bd4d50b24a10f633b86f28075e1419d6b4499b191",
+    "ROADMAP.md": "921a711b1f5def202957d5861bf069bf1d1a0fc71618bfc3788c5e955abc7f8e",
+    "docs/architecture.md": "7d8692aa5feeed0b13c7f7935d43e983cd4961c13a025fe4e373da90e001fea4",
+    "docs/ECC-WORKFLOW-PLAN.md": "f2ba4d3a249fde184e4dd567734661a79c6e22c7f1f2479351d8a56760d1808d",
+    "docs/product-capabilities.md": "841a5be76d90943c52dd8bf85614a82246c0cf932715390b22c6278485b58299"
+  },
+  "current_overlay_sha256": {
+    "README.md": "0d61daeda861e8d3eeb7876bd4d50b24a10f633b86f28075e1419d6b4499b191",
+    "ROADMAP.md": "921a711b1f5def202957d5861bf069bf1d1a0fc71618bfc3788c5e955abc7f8e",
+    "docs/architecture.md": "7d8692aa5feeed0b13c7f7935d43e983cd4961c13a025fe4e373da90e001fea4",
+    "docs/ECC-WORKFLOW-PLAN.md": "f2ba4d3a249fde184e4dd567734661a79c6e22c7f1f2479351d8a56760d1808d",
+    "docs/product-capabilities.md": "841a5be76d90943c52dd8bf85614a82246c0cf932715390b22c6278485b58299"
+  },
+  "unchanged": true
+}

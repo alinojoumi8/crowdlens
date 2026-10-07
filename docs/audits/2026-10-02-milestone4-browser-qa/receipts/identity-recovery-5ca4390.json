@@ -1,0 +1,59 @@
+{
+  "source": {
+    "declared_revision": null,
+    "source_sha256": "42f07d59571896bb88ec5f72292841991f1f316da92a6b4e8bbf3cbf66bfc11c",
+    "scope": "runtime-source-v1"
+  },
+  "git_head": "5ca4390a924b5124959e7844d05d19dc49179933",
+  "frontend": {
+    "home-styles.css": "33a9a3cf3d347d56df1ccd733e5b1d3b48a195b766b3d4778080082acc214e41",
+    "icon.png": "2b2c19d0400056000bb88636410c71c39ec3bc6b9cc871d6b022adf8cddb6e7a",
+    "crowdlens-mark.svg": "7cedfca9c1a7a143eacb45238d11475a4dd62bc1bbd83112c11108b2fe3f7679",
+    "crowdlens-icon.svg": "62b1e7f9470a0e69ef164feba1438a4a6bf71034ae4054415c5abb836fa868b7",
+    "index.html": "c04c999f2d9cbbdd9f4d403171980cd7ca72fa3deb5357ef7f464b369bfe80c5",
+    "assets/InteractionView-ByVH7bwX.css": "cf0ea8cbc86b1d37c1cf3dd079924b74f0e3a18ff498895f65b34146364fca7b",
+    "assets/SafeMarkdown-CIyw23dV.js": "579cbb0b72d02be145fcf27152b0dd3d1e18d6e4cedf772ecd03681cce6f69bd",
+    "assets/index-ibF_rNad.css": "c1041d9ae5f21011e60bb9eb184511e1772a7e0d184cc71ca94e2410115e44fd",
+    "assets/CaseDetailView-Gbj8iRpf.js": "7196d10091c94f936a9731b0a978917997dd7cfc13d12386d4a60fb063b38a30",
+    "assets/SimulationRunView-Cj0SbMbq.css": "844ed5e2658ea8bed5ee704f547ea76d6d4ae97101d1787f358e85d4fa16a684",
+    "assets/SimulationView-v4ajHxY3.css": "b57c27140b621638c66e9543f2acdbcb2473cc487e8a65bff67eaafbf14e30bb",
+    "assets/Step2EnvSetup-0zt_Ufc0.css": "32e835c16882541392d85a720be334444c58f16a1e7de01d6181aea0118068a1",
+    "assets/SimulationRunView-BuOay49y.js": "d34526bc7508fc44c05d77b26da120d2f5d9d21d8f519f66d98906a752ecadcd",
+    "assets/graph-Cma-AEcX.js": "7cbddfe0a645199f1914dcbb2633ac66919c7c0cf90e8560ae8437ca072e28ba",
+    "assets/GraphPanel-Bx73uTCP.css": "08117969ebd0f59a2ee27ad11a743f49a8dc48d5b45ffe83de6e168ec5ac33d8",
+    "assets/SimulationView-NYxUYv4g.js": "58835b8a77a8ee139133ad9eb4b18448d3372bab67ba1ab2f7089bc3532a6753",
+    "assets/economySettings-M8O0gDiO.js": "b2f4cc8b62b57bb6d21e9527ae0e7c894cb668a441ebf6b118afd6c46682babe",
+    "assets/Home-CIdhYbE1.css": "0d4bd644e302b0764c3cd55c37c7272d8a65e52af71df177dc2485bd79d1756b",
+    "assets/pendingUpload-DuFNXON4.js": "f8a0c5c7e53bc538cf7bc205a112e020a3239457b5f6450fcc781ef1612b4283",
+    "assets/CaseDetailView-snTT7t4x.css": "20709a693327396768d8c66d8973c0c3d15ebe898f0675eb2575ed3b78518ffd",
+    "assets/InteractionView-Iyd9krrf.js": "b3c934b3fbdadb92b8fb968a4e349f4101894031946ff97342af0a401e9158a8",
+    "assets/GraphPanel-73EATsCz.js": "890101c9c0e738dcbb776ef334d3c0c92faf8cdf2810cee9c7ea90ff834a19d4",
+    "assets/ReportView-B-Sk-v6K.css": "fd952d77109633c658054bed73fd117194dd2fb3a7474b76a23529f36dd88277",
+    "assets/_plugin-vue_export-helper-CUmsg1Cw.js": "c58fa04c692928bc6df56463863551e6005e3f44c4334117a80e06704df38533",
+    "assets/report-BhwVWeSg.js": "05476f696c7949241fbbd64d945acbec8fb0760af986d2558e9f3ccaef2cda90",
+    "assets/MainView-BU36wCcT.css": "79c050dba316cb4b130218b6836c791294624a89e5e1da3b01d64fa3f098a203",
+    "assets/CaseCompareView-COpOAnvG.css": "3a04aae6634bfecd55960575ceb1e1d751677cb2db673cc4392e14e0ab54cfc7",
+    "assets/ReportView-BTVQE2Pz.js": "873a316e5fbc7611b8d2149e6df8e0e6b56e5bbf15f77518a5eee46e42b2ffb3",
+    "assets/index-DWIr_Qsm.js": "8c8d84df6bb382c2a5c207911f289b3d3393817d03e3fd3102d452ca3113ceb0",
+    "assets/CasesView-DmqA_Wrg.js": "14ba5936a396aa531aee978e48064279a4e30e983e8364e292defb4373beccaa",
+    "assets/MainView-DvVlzH9A.js": "662278c00a7b837b53faec2e626be1b0801203a6350e722019c895331fe18ee0",
+    "assets/Home-BUh8vwqM.js": "e855ecd95a7828aaf2e2679dbeea98f27c3c4f0b8be383ca6b0b309a0670cda0",
+    "assets/simulation-ChRDXt9s.js": "5471a981ce6653f3b1554ceb1a60ebcbc3ad63a67e2214ef967f6bb02a1b5988",
+    "assets/CasesView-CwHzJCV_.css": "0d2c36df725e10c5a33646e674a69343c183c26447a7246c3d242683a9449a10",
+    "assets/CaseCompareView-BMxPbiqq.js": "b9b4603ecce84fdd5c8abd9a79fa293b27ebcd15fb981e6030f8f1a4ef803e8c",
+    "assets/Step2EnvSetup-DQsS2qcl.js": "3a277fe4d29989bce3d350ec0714010a5b7ece6a09936164e4b86c675ae36d40"
+  },
+  "substitutes": [
+    "ontology generator",
+    "graph builder and storage",
+    "simulation endpoints",
+    "drafting LLM"
+  ],
+  "seeded": [
+    "original report and progress",
+    "original source chunk",
+    "graph node",
+    "simulation history"
+  ],
+  "provider_calls": 0
+}

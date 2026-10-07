@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-conditional-fidelity-correction-review",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "frozen_at": "2026-10-05T06:39:40.359261+00:00",
+  "status": "FROZEN_BEFORE_CORRECTION_CANDIDATE_REVIEW",
+  "packet_id": "elmreach_correction_01",
+  "packet_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-fidelity/correction/elmreach-correction.json",
+  "packet_sha256": "4eb4440077f1b5e57cc8fab108f3358077992f7018aa1634657523894cf61d55",
+  "task": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+  "method": "The correction task and both complete fictional originals were read before displaying candidate prose or summaries. Only structural field information was displayed otherwise. These source-only material facts will remain unchanged after candidate review. Fresh run results have not yet been inspected.",
+  "source_evidence": [
+    {
+      "source_id": "S01",
+      "filename": "original.txt",
+      "document_id": "D01",
+      "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+      "excerpt_utf8_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+      "locator": {
+        "page": 1,
+        "paragraph": 1,
+        "scope": "complete_frozen_original_document"
+      }
+    },
+    {
+      "source_id": "S02",
+      "filename": "followup.txt",
+      "document_id": "D02",
+      "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+      "excerpt_utf8_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+      "locator": {
+        "page": 1,
+        "paragraph": 1,
+        "scope": "complete_frozen_original_document"
+      }
+    }
+  ],
+  "reference_facts": [
+    {
+      "fact_id": "CORR-F01",
+      "text": "The Elmreach schedule permits two supervised glazing sessions.",
+      "sources": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F02",
+      "text": "The sessions are permitted only when a certified instructor is present.",
+      "sources": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F03",
+      "text": "Unsupervised access is excluded.",
+      "sources": [
+        {
+          "source_id": "S01",
+          "document_id": "D01",
+          "filename": "original.txt",
+          "source_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F04",
+      "text": "Sora says the group could assist if accessible benches are confirmed.",
+      "sources": [
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    },
+    {
+      "fact_id": "CORR-F05",
+      "text": "This is possible future assistance, not an existing commitment.",
+      "sources": [
+        {
+          "source_id": "S02",
+          "document_id": "D02",
+          "filename": "followup.txt",
+          "source_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285",
+          "locator": {
+            "page": 1,
+            "paragraph": 1,
+            "scope": "complete_frozen_original_document"
+          }
+        }
+      ]
+    }
+  ]
+}

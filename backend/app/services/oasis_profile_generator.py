@@ -16,6 +16,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from ..config import Config
+from .workflow_execution import workflow_stage
+from .task_execution import fenced
+from contextvars import copy_context
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
 from .entity_reader import EntityNode
@@ -494,6 +497,7 @@ class OasisProfileGenerator:
         """Determine if entity is a group/institutional type"""
         return entity_type.lower() in self.GROUP_ENTITY_TYPES
     
+    @workflow_stage('profiles')
     def _generate_profile_with_llm(
         self,
         entity_name: str,
@@ -1046,6 +1050,7 @@ Important:
         lock = Lock()
 
         # Helper function for real-time file writing
+        @fenced
         def save_profiles_realtime():
             """Real-time save generated profiles to file"""
             if not realtime_output_path:
@@ -1130,7 +1135,7 @@ Important:
         with concurrent.futures.ThreadPoolExecutor(max_workers=parallel_count) as executor:
             # Submit all tasks
             future_to_entity = {
-                executor.submit(generate_single_profile, idx, entity): (idx, entity)
+                executor.submit(copy_context().run, generate_single_profile, idx, entity): (idx, entity)
                 for idx, entity in enumerate(entities)
             }
 
@@ -1230,6 +1235,7 @@ Important:
         # Only output to console (avoid duplication, logger no longer outputs complete content)
         print(output)
     
+    @fenced
     def save_profiles(
         self,
         profiles: List[OasisAgentProfile],
@@ -1394,4 +1400,3 @@ Important:
         """[Deprecated] Please use save_profiles() method"""
         logger.warning("save_profiles_to_json is deprecated, please use save_profiles method")
         self.save_profiles(profiles, file_path, platform)
-

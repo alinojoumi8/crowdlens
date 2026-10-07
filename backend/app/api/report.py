@@ -4,12 +4,16 @@ Provides interfaces for simulation report generation, retrieval, and conversatio
 """
 
 import os
+import hashlib
+import json
+import re
 import traceback
 import threading
 from flask import request, jsonify, send_file, current_app
 
 from . import report_bp
 from ..config import Config
+from ..services.task_execution import TaskBusy
 from ..services.report_agent import ReportAgent, ReportManager, ReportStatus, normalize_report_mode, normalize_report_depth
 from ..services.forecasting import (
     infer_report_mode_from_forecast,
@@ -24,6 +28,33 @@ from ..services.proposal_store import ProposalError
 from ..utils.logger import get_logger
 
 logger = get_logger('mirofish.api.report')
+
+
+class ReportRequestConflict(ValueError):
+    pass
+
+
+def _generation_replay(task_manager, request_key, fingerprint):
+    """Called under the shared task gate; task metadata survives response loss."""
+    if not request_key:
+        return None
+    for task in task_manager.runtime.records():
+        metadata = task.get('metadata') or {}
+        if task.get('task_type') != 'report_generate' or metadata.get('request_key') != request_key:
+            continue
+        if metadata.get('request_fingerprint') != fingerprint:
+            raise ReportRequestConflict('request_key_conflict')
+        result = task.get('result') or {}
+        active = task['status'] in {'pending', 'processing'}
+        return jsonify(success=True, data={
+            **{key: metadata[key] for key in ('simulation_id', 'report_id', 'report_mode', 'report_depth')},
+            'task_id': task['task_id'],
+            'status': 'generating' if active else result.get('status', task['status']),
+            'error': task.get('error'), 'reused_task': True,
+            'already_generated': task['status'] == 'completed',
+            'message': 'Existing generation request; no new work dispatched',
+        })
+    return None
 
 
 def _json_bool(value, default=False):
@@ -104,8 +135,27 @@ def generate_report():
                 simulation_requirement=simulation_config.get("simulation_requirement", ""),
             )
             report_mode = normalize_report_mode(
-                infer_report_mode_from_forecast(forecast_settings.forecast_mode)
+                simulation_config.get("report_mode")
+                or (simulation_config.get("prediction_settings") or {}).get("report_mode")
+                or infer_report_mode_from_forecast(forecast_settings.forecast_mode)
             )
+
+        request_key = data.get('request_key')
+        if request_key is not None and (not isinstance(request_key, str)
+                or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,128}', request_key)):
+            return jsonify(success=False, error='invalid_request_key'), 400
+        fingerprint = hashlib.sha256(json.dumps({
+            'simulation_id': simulation_id, 'report_mode': report_mode,
+            'report_depth': report_depth, 'force_regenerate': bool(force_regenerate),
+            **{key: _json_bool(data.get(key), False) for key in
+               ('disable_interviews', 'strict_antirepetition', 'allow_degraded')},
+        }, sort_keys=True).encode()).hexdigest()
+        task_manager = TaskManager()
+        with task_manager.runtime.gate():
+            task_manager.reconcile()
+            replay = _generation_replay(task_manager, request_key, fingerprint)
+            if replay is not None:
+                return replay
 
         if not force_regenerate:
             existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth)
@@ -138,6 +188,8 @@ def generate_report():
             return jsonify({"success": False, "error": f"Project does not exist: {state.project_id}"}), 404
 
         graph_id = state.graph_id or project.graph_id
+        if graph_id != project.graph_id:
+            return jsonify(success=False, error='graph_scope_mismatch'), 409
         if not graph_id:
             return jsonify({"success": False, "error": "Missing graph ID, please ensure graph is built"}), 400
 
@@ -147,18 +199,6 @@ def generate_report():
 
         import uuid
         report_id = f"report_{uuid.uuid4().hex[:12]}"
-
-        task_manager = TaskManager()
-        task_id = task_manager.create_task(
-            task_type="report_generate",
-            metadata={
-                "simulation_id": simulation_id,
-                "graph_id": graph_id,
-                "report_id": report_id,
-                "report_mode": report_mode,
-                "report_depth": report_depth,
-            }
-        )
 
         # Initialize graph_tools in Flask context BEFORE spawning thread
         # (current_app is not available inside background threads)
@@ -180,6 +220,26 @@ def generate_report():
             }), 409
 
         graph_tools = GraphToolsService(storage=storage)
+
+        with task_manager.runtime.gate():
+            # Recheck after preflight: another HTTP process may have admitted it.
+            replay = _generation_replay(task_manager, request_key, fingerprint)
+            if replay is not None:
+                return replay
+            task_id = task_manager.create_task(
+                task_type="report_generate",
+                metadata={
+                    "simulation_id": simulation_id,
+                    "graph_id": graph_id,
+                    "report_id": report_id,
+                    "report_mode": report_mode,
+                    "report_depth": report_depth,
+                    "request_key": request_key,
+                    "request_fingerprint": fingerprint,
+                },
+                resources=[{"key":"report:"+report_id, "root":ReportManager._get_reports_dir()},
+                           {"key":"report-generation:"+simulation_id}]
+            )
 
         def run_generate():
             try:
@@ -213,8 +273,7 @@ def generate_report():
                 logger.error(f"Report generation failed: {str(e)}")
                 task_manager.fail_task(task_id, str(e))
 
-        thread = threading.Thread(target=run_generate, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, run_generate)
 
         return jsonify({"success": True, "data": {
             "simulation_id": simulation_id,
@@ -227,6 +286,10 @@ def generate_report():
             "already_generated": False
         }})
 
+    except ReportRequestConflict as exc:
+        return jsonify(success=False, error=str(exc)), 409
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to start report generation task: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -266,6 +329,8 @@ def get_generate_status():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+from ..services.report_semantics import current_review
+
 # ============== Report Retrieval Interface ==============
 
 @report_bp.route('/<report_id>', methods=['GET'])
@@ -274,7 +339,7 @@ def get_report(report_id: str):
         report = ReportManager.get_report(report_id)
         if not report:
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
-        return jsonify({"success": True, "data": report.to_dict()})
+        return jsonify({"success": True, "data": {**report.to_dict(), 'current_review': current_review(report, ReportManager._get_reports_dir())}})
     except Exception as e:
         logger.error(f"Failed to get report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -286,7 +351,7 @@ def get_report_by_simulation(simulation_id: str):
         report = ReportManager.get_report_by_simulation(simulation_id)
         if not report:
             return jsonify({"success": False, "error": f"No report available for this simulation: {simulation_id}", "has_report": False}), 404
-        return jsonify({"success": True, "data": report.to_dict()})
+        return jsonify({"success": True, "data": {**report.to_dict(), 'current_review': current_review(report, ReportManager._get_reports_dir())}})
     except Exception as e:
         logger.error(f"Failed to get report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -350,6 +415,14 @@ def chat_with_report_agent():
         message = data.get('message')
         chat_history = data.get('chat_history', [])
 
+        if (not isinstance(chat_history, list) or len(chat_history) > 100
+                or any(not isinstance(item, dict)
+                       or set(item) != {'role', 'content'}
+                       or item['role'] not in {'user', 'assistant'}
+                       or not isinstance(item['content'], str)
+                       or len(item['content']) > 15000 for item in chat_history)):
+            return jsonify(success=False, error='invalid_chat_history'), 400
+
         if not simulation_id:
             return jsonify({"success": False, "error": "Please provide simulation_id"}), 400
         if not message:
@@ -365,6 +438,8 @@ def chat_with_report_agent():
             return jsonify({"success": False, "error": f"Project does not exist: {state.project_id}"}), 404
 
         graph_id = state.graph_id or project.graph_id
+        if graph_id != project.graph_id:
+            return jsonify(success=False, error='graph_scope_mismatch'), 409
         if not graph_id:
             return jsonify({"success": False, "error": "Missing graph ID"}), 400
 
@@ -398,6 +473,19 @@ def chat_with_report_agent():
 def get_report_progress(report_id: str):
     try:
         progress = ReportManager.get_progress(report_id)
+        if not progress or progress.get('status') not in {'completed', 'needs_review'}:
+            tasks = TaskManager()
+            binding = tasks.runtime.binding('report:' + report_id)
+            task = tasks.get_task(binding['task_id']) if binding else None
+            if task and task.status == TaskStatus.FAILED:
+                progress = dict(progress or {}, status='interrupted', effective_status='interrupted', terminal=True,
+                    progress=(progress or {}).get('progress', task.progress), reason=task.error, recovery_requires_action=True,
+                    message='Partial generation interrupted; explicit recovery required')
+            elif task and task.status in {TaskStatus.PENDING, TaskStatus.PROCESSING} and (
+                    not progress or progress.get('status') in {'interrupted', 'failed', 'cancelled'}):
+                progress = dict(progress or {}, effective_status='queued', terminal=False,
+                    reason=None, recovery_requires_action=False, task_id=task.task_id,
+                    message='Explicit recovery admitted; waiting for its worker snapshot')
         if not progress:
             return jsonify({"success": False, "error": f"Report does not exist or progress info unavailable: {report_id}"}), 404
         return jsonify({"success": True, "data": progress})
@@ -452,7 +540,7 @@ def regenerate_report_section(report_id: str, section_index: int):
         if not storage:
             raise ValueError("GraphStorage not initialized - check Neo4j connection")
 
-        disable_interviews = _json_bool(data.get("disable_interviews"), False)
+        disable_interviews = report.report_depth == 'fast' or _json_bool(data.get("disable_interviews"), False)
         strict_antirepetition = _json_bool(data.get("strict_antirepetition"), True)
 
         agent = ReportAgent(
@@ -463,6 +551,7 @@ def regenerate_report_section(report_id: str, section_index: int):
             disable_interviews=disable_interviews,
             strict_antirepetition=strict_antirepetition,
             report_mode=report.report_mode,
+            report_depth=report.report_depth,
         )
         updated_report = agent.regenerate_section(
             report=report,
@@ -506,7 +595,8 @@ def resume_report(report_id: str):
         task_manager = TaskManager()
         task_id = task_manager.create_task(
             task_type="report_resume",
-            metadata={"simulation_id": report.simulation_id, "graph_id": report.graph_id, "report_id": report_id}
+            metadata={"simulation_id": report.simulation_id, "graph_id": report.graph_id, "report_id": report_id},
+            resources=[{"key":"report:"+report_id, "root":ReportManager._get_reports_dir()}]
         )
 
         def run_resume():
@@ -520,6 +610,7 @@ def resume_report(report_id: str):
                     disable_interviews=_json_bool(data.get("disable_interviews"), False),
                     strict_antirepetition=_json_bool(data.get("strict_antirepetition"), True),
                     report_mode=report.report_mode,
+                    report_depth=report.report_depth,
                 )
 
                 def progress_callback(stage, progress, message):
@@ -540,8 +631,7 @@ def resume_report(report_id: str):
                 logger.error(f"Report resume failed: {str(e)}")
                 task_manager.fail_task(task_id, str(e))
 
-        thread = threading.Thread(target=run_resume, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, run_resume)
 
         return jsonify({"success": True, "data": {
             "simulation_id": report.simulation_id,
@@ -552,6 +642,8 @@ def resume_report(report_id: str):
         }})
     except ProposalError as e:
         return jsonify({'success': False, 'error': e.code}), e.status
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to resume report: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500

@@ -11,14 +11,16 @@ const state = reactive({
   // When set, the upload is attached as a new version of an existing case instead of
   // spawning a brand-new (single-version) case.
   caseId: null,
+  workflowId: null,
   isPending: false
 })
 
-export function setPendingUpload(files, requirement, urls = [], caseId = null) {
+export function setPendingUpload(files, requirement, urls = [], caseId = null, workflowId = null) {
   state.files = files
   state.urls = urls
   state.simulationRequirement = requirement
   state.caseId = caseId
+  state.workflowId = workflowId
   state.isPending = true
 }
 
@@ -28,6 +30,7 @@ export function getPendingUpload() {
     urls: state.urls,
     simulationRequirement: state.simulationRequirement,
     caseId: state.caseId,
+    workflowId: state.workflowId,
     isPending: state.isPending
   }
 }
@@ -37,6 +40,7 @@ export function clearPendingUpload() {
   state.urls = []
   state.simulationRequirement = ''
   state.caseId = null
+  state.workflowId = null
   state.isPending = false
 }
 

@@ -13,7 +13,7 @@ Vue routes and components
           |
           v
 Flask API blueprints
-  graph | simulation | diagnostics | report | market | status
+  graph | simulation | diagnostics | report | market | status | execution
           |
           v
 Application services
@@ -22,14 +22,15 @@ Application services
        v                     v                         v
 Neo4j graph store     SQLite control database     Artifact filesystem
 entities, edges,      projects, cases, tasks,     documents, extracted
-memories, vectors     simulation run state        text, caches, run files
+memories, vectors     runs, workflow allowance   text, caches, run files
 ```
 
 `create_app()` owns startup composition. It initializes Neo4j and embeddings,
 opens the SQLite control database, performs the one-time legacy import, wires
 repositories into the managers, reconciles persisted simulation processes, and
 then registers API blueprints. Runtime dependencies are exposed through
-`app.extensions`.
+`app.extensions`. Existing manager singletons are process-local; shared SQLite
+resource bindings and an adjacent file lock coordinate task attempts across backends.
 
 ## Backend modules
 
@@ -61,10 +62,35 @@ HTML.
 - Running simulations are reconciled on startup. Persisted processes that no
   longer exist are marked stopped with an interruption reason rather than
   remaining permanently "running."
-- SQLite initialization failure is visible in logs and `GET /api/status`; the
-  legacy filesystem managers remain available for that process.
+- A configured SQLite initialization or migration failure is logged and stops
+  startup. Filesystem managers are selected only when the control database is
+  explicitly disabled, not as an automatic fallback after initialization fails.
 - Internal exceptions are logged with a request ID. Default 5xx responses omit
   tracebacks and return the same request ID for correlation.
+
+- Generic owned tasks use worker/attempt tokens and renewable leases. Periodic
+  reconciliation fails abandoned work and repairs only resources still bound to
+  that attempt. Preparation polling cannot promote leftover files to ready;
+  ensemble cleanup and process control validate ownership at the operation.
+- Root report retries with the same request key return the existing task/report
+  while that task record is retained. One active root request owns each simulation
+  generation resource. A separate durable workflow ledger counts physical model
+  attempts across all stages/children/retries and enforces an authorized request
+  ceiling and deadline. It preserves consumption across refresh/restart and
+  requires explicit new authorization for recovery.
+- Stop serializes with admission/publication, closes the workflow and cancels only
+  its matching owned epoch. Late attempts retain measured/unknown usage without
+  publishing after Stop or time expiry. Provider billing cancellation is not
+  guaranteed. Expected interrupted reports return structured terminal progress;
+  polling/reopening never schedules replacement generation.
+- Simulation state readers refresh same-attempt persisted progress/completion.
+  Expired matching workers repair run mirrors, and stale writers cannot publish
+  over a new owner. GET and recovery responses preserve existing authorization
+  bindings; only new supported artifacts receive automatic bindings.
+
+See [workflow execution](workflow-execution.md) for exact accounting semantics and
+[the 2026-10-03 control/recovery audit](audits/2026-10-03-control-recovery.md) for
+before/after evidence. Request/time admission is distinct from a monetary ceiling.
 
 ## Trust boundary
 
@@ -72,3 +98,7 @@ The default backend and every published Compose port bind to loopback. CORS is
 restricted to the two local frontend origins. Raw model/user HTML is escaped,
 URL fetching validates every redirect target, debug mode is off, and market
 network calls are disabled until `MARKET_DATA_PROVIDER=auto` is explicitly set.
+
+Generic tasks now use persisted attempt ownership and periodic recovery. See
+[the H1 recovery contract](control-plane-migration.md#generic-task-ownership-and-recovery-schema-2)
+and [verification evidence](audits/2026-10-02-h1-task-recovery.md).

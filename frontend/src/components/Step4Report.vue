@@ -8,7 +8,7 @@
           <!-- Report Header -->
           <div class="report-header-block">
             <div class="report-meta">
-              <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Prediction Report' }}</span>
+              <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Scenario Analysis Report' }}</span>
               <span class="report-id">ID: {{ reportId || 'REF-2024-X92' }}</span>
             </div>
             <nav v-if="reportRevision.parent_report_id" class="revision-navigation" aria-label="Report revision history">
@@ -19,7 +19,9 @@
               <span>Forecasts and unselected sections are inherited.</span>
             </nav>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
+            <p class="report-reading-guide">Review the summary, compare proposed changes in each section, and check the original sources. Generated analysis is not a verified forecast.</p>
             <p class="sub-title">{{ reportOutline.summary }}</p>
+            <ReportReview :assessment="currentReview" />
             <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
             <p v-if="forecastData?.status === 'unavailable'" class="sub-title" role="status">
               {{ forecastData.limitations }}
@@ -133,7 +135,7 @@
                     :disabled="reportRevision.immutable || regeneratingSection === idx + 1"
                     @click.stop="regenerateSection(idx + 1, { disable_interviews: true })"
                   >
-                    No interviews
+                    Rerun without interviews
                   </button>
                 </div>
                 <svg 
@@ -153,7 +155,7 @@
               
               <div class="section-body" v-show="!collapsedSections.has(idx)">
                 <details v-if="section.claim_ledger?.length" class="saved-ledger">
-                  <summary>Saved claim ledger · {{ section.claim_ledger.length }} statements</summary>
+                  <summary>Saved claims and sources · {{ section.claim_ledger.length }} statements</summary>
                   <details v-for="claim in section.claim_ledger" :key="claim.claim_id">
                     <summary>{{ claim.kind.replaceAll('_', ' ') }} — {{ claim.text }}</summary>
                     <p v-if="claim.attribution">Attributed to {{ claim.attribution }}</p>
@@ -245,16 +247,18 @@
           </div>
 
           <div v-if="reportQuality || reportProgress?.is_stale" class="quality-strip" :class="`quality-strip--${statusClass}`">
-            <span v-if="reportQuality" class="quality-score mono">Quality {{ reportQuality.score }}/100</span>
+            <span v-if="reportQuality" class="quality-score mono">Automated checks {{ displayScore(reportQuality.score) }}</span>
             <span v-if="reportQuality?.deductions?.length" class="quality-note">{{ reportQuality.deductions[0].message }}</span>
             <span v-if="reportProgress?.is_stale" class="quality-note">No heartbeat for {{ reportProgress.seconds_since_update }}s</span>
           </div>
 
           <div v-if="graphQuality" class="quality-strip" :class="`quality-strip--${graphQualityStatusClass}`">
-            <span class="quality-score mono">Graph {{ graphQuality.score }}/100</span>
+            <span class="quality-score mono">Graph {{ displayScore(graphQuality.score) }}</span>
             <span class="quality-note">{{ graphQualitySummary }}</span>
           </div>
 
+          <details class="advanced-actions"><summary>Report tools and recovery</summary>
+          <p class="tools-help">Rerunning generates new output. Source-search tools require a linked graph; report generation requires a linked simulation. Unavailable actions remain disabled.</p>
           <div class="operator-actions">
             <span class="operator-mode mono">Mode {{ reportModeLabel }}</span>
             <button v-if="canResumeReport" class="operator-btn operator-btn-primary" :disabled="isResuming" @click="resumeFailedReport({})">
@@ -282,6 +286,8 @@
               {{ isBenchmarking ? 'Benchmarking...' : 'Benchmark embeddings' }}
             </button>
           </div>
+
+          </details>
 
           <div v-if="benchmarkResult" class="benchmark-panel">
             <div class="benchmark-header">
@@ -576,7 +582,7 @@
         <span class="log-title">CONSOLE OUTPUT</span>
         <span class="log-id">{{ reportId || 'NO_REPORT' }}</span>
       </div>
-      <div class="log-content" ref="logContent">
+      <div class="log-content" ref="logContent" tabindex="0" role="region" aria-label="System log">
         <div class="log-line" v-for="(log, idx) in consoleLogs" :key="idx">
           <span class="log-msg" :class="getLogLevelClass(log)">{{ log }}</span>
         </div>
@@ -593,11 +599,13 @@ import { benchmarkGraphEmbeddings, getGraphQuality, reembedGraph } from '../api/
 import { renderSafeMarkdown as renderMarkdown } from '../utils/markdown'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
+import ReportReview from './ReportReview.vue'
 import EvidenceDraftReview from './EvidenceDraftReview.vue'
 
 const router = useRouter()
 const route = useRoute()
 const reportRevision = ref({})
+const currentReview = ref(null)
 let reportGeneration = 0
 const openRevision = reportId => router.push({ name: 'Report', params: { reportId } })
 
@@ -1939,11 +1947,13 @@ const statusText = computed(() => {
 })
 
 const canResumeReport = computed(() => {
-  return !reportRevision.value.immutable && !!props.reportId && (reportStatus.value === 'failed' || reportProgress.value?.is_stale)
+  return !reportRevision.value.immutable && !!props.reportId && (['failed', 'interrupted'].includes(reportStatus.value) || reportProgress.value?.is_stale)
 })
 
+const displayScore = value => typeof value === 'number' && Number.isFinite(value) ? `${value}/100` : 'Unknown'
+
 const graphQualityStatusClass = computed(() => {
-  if (!graphQuality.value) return 'pending'
+  if (!graphQuality.value || !['pass', 'warn', 'fail'].includes(graphQuality.value.status)) return 'pending'
   if (graphQuality.value.status === 'fail') return 'error'
   if (graphQuality.value.status === 'warn') return 'needs-review'
   return 'completed'
@@ -1952,6 +1962,7 @@ const graphQualityStatusClass = computed(() => {
 const graphQualitySummary = computed(() => {
   const deductions = graphQuality.value?.deductions || []
   if (deductions.length > 0) return deductions[0].message
+  if (!['pass', 'warn', 'fail'].includes(graphQuality.value?.status)) return 'Graph readiness has not been established'
   if (graphQuality.value?.safe_to_report) return 'Graph structure is ready for synthesis'
   return 'Graph structure is usable, but embeddings may still need repair'
 })
@@ -1976,7 +1987,7 @@ const forecastRows = computed(() => {
     const probability = Number(row.probability || 0)
     return {
       ...row,
-      percent: `${Math.round(probability * 100)}%`
+      percent: `${(probability * 100).toFixed(1)}%`
     }
   })
 })
@@ -2079,7 +2090,7 @@ const activeReportTimingPhase = computed(() => {
 const formatElapsedTime = computed(() => {
   const persistedDuration = formatDuration(reportTiming.value?.total_seconds)
   if (persistedDuration) return persistedDuration
-  if (!startTime.value) return '0s'
+  if (!startTime.value) return 'Unknown'
   const lastLog = agentLogs.value[agentLogs.value.length - 1]
   const elapsed = lastLog?.elapsed_seconds || 0
   if (elapsed < 60) return `${Math.round(elapsed)}s`
@@ -2225,6 +2236,7 @@ const resumeFailedReport = async (options = {}) => {
       reportStatus.value = 'generating'
       emit('update-status', 'generating')
       await refreshReportState()
+      startPolling()
     }
   } catch (err) {
     addLog(`Report resume failed: ${err.message}`)
@@ -2407,9 +2419,8 @@ const fetchAgentLog = async () => {
           if (log.action === 'report_complete') {
             isComplete.value = true
             currentSectionIndex.value = null  // Ensure loading state is cleared
-            emit('update-status', 'completed')
-            stopPolling()
-            // Scroll logic handled uniformly in nextTick after loop
+            // Historical logs cannot determine the current review status.
+            // The report snapshot owns completion and polling termination.
           }
           
           if (log.action === 'report_start') {
@@ -2418,6 +2429,7 @@ const fetchAgentLog = async () => {
         })
         
         agentLogLine.value = res.data.from_line + newLogs.length
+        if (newLogs.some(log => log.action === 'report_complete')) await fetchReportSnapshot()
         
         nextTick(() => {
           if (rightPanel.value) {
@@ -2450,6 +2462,7 @@ const fetchReportSnapshot = async () => {
     if (reportRes.status === 'fulfilled' && reportRes.value?.success && reportRes.value.data) {
       const report = reportRes.value.data
       reportRevision.value = report.revision || {}
+      currentReview.value = report.current_review || null
       reportStatus.value = report.status || reportStatus.value
       reportQuality.value = report.quality_score || null
       reportTiming.value = report.timing || reportTiming.value
@@ -2485,7 +2498,7 @@ const fetchReportSnapshot = async () => {
       if (['completed', 'needs_review'].includes(report.status)) {
         isComplete.value = true
         currentSectionIndex.value = null
-        emit('update-status', report.status === 'needs_review' ? 'needs-review' : 'completed')
+        emit('update-status', report.status === 'needs_review' || currentReview.value?.requires_review ? 'needs-review' : 'completed')
       } else if (['failed', 'interrupted'].includes(report.status)) {
         isComplete.value = false
         currentSectionIndex.value = null
@@ -2504,6 +2517,15 @@ const fetchReportSnapshot = async () => {
       if (reportProgress.value.is_stale) {
         emit('update-status', 'stale')
       }
+    }
+    if (currentReview.value?.requires_review && ['completed', 'needs_review'].includes(reportStatus.value)) {
+      reportStatus.value = 'needs_review'
+      emit('update-status', 'needs-review')
+    }
+    if (reportProgress.value?.terminal || ['completed', 'needs_review', 'failed', 'interrupted', 'cancelled'].includes(reportStatus.value)) {
+      currentSectionIndex.value = null
+      stopPolling()
+      if (['failed', 'interrupted', 'cancelled'].includes(reportStatus.value)) emit('update-status', reportStatus.value)
     }
   } catch (err) {
     console.warn('Failed to fetch report snapshot:', err)
@@ -2623,6 +2645,7 @@ onUnmounted(() => {
 watch(() => props.reportId, (newId) => {
   reportGeneration++
   reportRevision.value = {}
+  currentReview.value = null
   stopPolling()
   if (newId) {
     agentLogs.value = []
@@ -2772,14 +2795,16 @@ watch(() => props.reportId, (newId) => {
 
 /* Left Panel - Report Style */
 .left-panel.report-style {
-  width: 45%;
-  min-width: 450px;
+  width: 64%;
+  flex: 0 0 64%;
+  box-sizing: border-box;
+  min-width: 0;
   background: #FFFFFF;
   border-right: 1px solid #E5E7EB;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: 30px 50px 60px 50px;
+  padding: 28px 32px 48px;
 }
 
 .left-panel::-webkit-scrollbar {
@@ -3341,6 +3366,7 @@ watch(() => props.reportId, (newId) => {
 
 /* Right Panel */
 .right-panel {
+  min-width: 0;
   flex: 1;
   background: #FFFFFF;
   overflow-y: auto;
@@ -5992,4 +6018,25 @@ watch(() => props.reportId, (newId) => {
 .log-msg.error { color: #EF5350; }
 .log-msg.warning { color: #FFA726; }
 .log-msg.success { color: #66BB6A; }
+/* Report reading and responsive review */
+.report-reading-guide, .tools-help { font: 14px/1.6 system-ui, sans-serif; color: #52647a; overflow-wrap: anywhere; }
+.advanced-actions { margin: 12px 20px; border: 1px solid #dce3eb; padding: 12px; }
+.advanced-actions > summary { cursor: pointer; min-height: 40px; font-weight: 600; }
+.report-meta, .section-header-row { flex-wrap: wrap; }
+.report-id { overflow-wrap: anywhere; }
+.main-title { text-wrap: balance; }
+.report-panel button { min-height: 44px; }
+.report-panel :is(button, a, summary):focus-visible { outline: 2px solid #c73500; outline-offset: 3px; }
+@media (max-width: 1100px) {
+  .main-split-layout { flex-direction: column; overflow-y: auto; }
+  .left-panel.report-style { flex: none; width: 100%; min-width: 0; box-sizing: border-box; overflow: visible; padding: 24px; }
+  .right-panel { flex: none; overflow: visible; min-width: 0; }
+}
+@media (max-width: 600px) {
+  .left-panel.report-style { padding: 20px 16px; }
+  .main-title { font-size: 28px; }
+  .section-title { overflow-wrap: anywhere; }
+  .workflow-metrics { flex-wrap: wrap; }
+  .section-actions { flex-wrap: wrap; }
+}
 </style>

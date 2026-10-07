@@ -1,0 +1,62 @@
+/* Shared workflow accessibility and small-screen constraints. */
+:where(button, a, input, textarea, select, summary, [tabindex="0"]):focus-visible {
+  outline: 3px solid #995900 !important;
+  outline-offset: 3px;
+}
+#app .main-view .brand { color: inherit; text-decoration: none; }
+#app .main-view .panel-wrapper[inert] { display: none; }
+#app .main-view .panel-wrapper { min-width: 0; }
+.workflow-error { padding: 16px; color: #873e1c; background: #fff4ed; overflow-wrap: anywhere; }
+.workflow-error button { margin-top: 10px; padding: 8px 12px; cursor: pointer; }
+#app .home-container .history-database .section-title { color: #606775; }
+#app .home-container .history-database .file-tag { color: #555; }
+#app .home-container .history-database .card-date, #app .home-container .history-database .card-time { color: #626b7a; }
+#app .home-container .history-database .card-progress.completed { color: #00774f; }
+.home-container .history-message { text-align: center; padding: 20px; color: #374151; }
+.home-container .source-picker, .home-container .history-message button { margin-top: 8px; padding: 8px 12px; background: white; color: #25334a; border: 1px solid #626b7a; border-radius: 4px; cursor: pointer; }
+#app .report-panel .report-id, #app .report-panel .section-number { color: #626b7a; }
+#app .report-panel .log-title, #app .report-panel .log-id { color: #a3a3a3; }
+#app .main-view .workflow-step .step-num { color: #666; opacity: 1; }
+#app .main-view :is(.api-note, .tag-label, .stat-label, .stat-total, .info-label, .profile-username, .config-item-label, .section-desc, .runtime-mode-hint) { color: #626b7a; }
+#app .main-view :is(.header-index, .header-title, .wf-step--todo .wf-step-title, .workflow-empty > span) { color: #626b7a; }
+#app .main-view .log-header, #app .main-view .log-time { color: #a3a3a3; }
+#app .main-view .badge.accent, #app .main-view .badge.processing { background: #bf360c; }
+#app .simulation-panel .waiting-state { color: #626b7a; }
+#app .report-panel :is(.metric-label, .operator-mode, .wf-step-index) { color: #626b7a; }
+
+@media (max-width: 1100px) {
+  #app .main-view:has(.report-panel) { height: auto; min-height: 100dvh; overflow: visible; }
+  #app .main-view:has(.report-panel) .content-area,
+  #app .main-view:has(.report-panel) .panel-wrapper { height: auto; overflow: visible; }
+  #app .main-view .report-panel { height: auto; overflow: visible; }
+  #app .report-panel .main-split-layout { flex-direction: column; overflow: visible; }
+  #app .report-panel .left-panel.report-style { width: 100%; min-width: 0; padding: 24px; overflow: visible; }
+  #app .report-panel .right-panel { width: 100%; min-width: 0; overflow: visible; }
+  #app .report-panel .report-meta, .report-panel .section-header-row { flex-wrap: wrap; }
+  #app .report-panel .section-body { padding-left: 0; }
+  #app .report-panel .report-content-wrapper { min-width: 0; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 900px) {
+  #app .main-view { height: auto; min-height: 100dvh; overflow: visible; }
+  #app .main-view > .app-header { height: auto; min-height: 60px; flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+  #app .main-view > .app-header .header-center { position: static; transform: none; order: 3; width: 100%; display: flex; justify-content: center; }
+  #app .main-view > .app-header .header-right { gap: 8px; font-size: 12px; }
+  #app .main-view .content-area { flex-direction: column; overflow: visible; }
+  #app .main-view .panel-wrapper:not([inert]) { width: 100% !important; height: auto; overflow: visible; }
+  #app .main-view .graph-panel { height: 380px; }
+  #app .main-view .step1-panel, #app .main-view .env-setup-panel, #app .main-view .simulation-panel { height: auto; min-width: 0; overflow: visible; }
+  #app .report-panel .main-title { font-size: 28px; }
+  #app .report-panel .left-panel.report-style { padding: 20px 16px; }
+  #app .report-panel .section-actions { flex-wrap: wrap; }
+  #app .simulation-panel .control-bar { height: auto; min-height: 64px; }
+  #app .simulation-panel .main-content-area { min-height: 200px; flex: 1 0 200px; }
+  #app .simulation-panel .timeline-feed { min-height: 200px; }
+  #app .simulation-panel .control-bar, #app .simulation-panel .status-group { flex-wrap: wrap; gap: 12px; }
+  #app .simulation-panel .control-actions { margin-left: 0; }
+  #app .graph-panel .graph-building-hint { white-space: normal; max-width: calc(100% - 24px); width: max-content; }
+  #app .graph-panel .hint-text { min-width: 0; white-space: normal; }
+  #app .env-setup-panel .config-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #app .env-setup-panel .config-item { min-width: 0; overflow-wrap: anywhere; }
+  .home-container .project-card:focus-visible { z-index: 30 !important; }
+}

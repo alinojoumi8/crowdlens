@@ -1,0 +1,291 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+__________________ test_selected_settings_reach_config_worker __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-35/test_selected_settings_reach_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x716c4cfbb310>
+
+    def test_selected_settings_reach_config_worker(tmp_path, monkeypatch):
+        monkeypatch.setattr(SimulationManager, 'SIMULATION_DATA_DIR', str(tmp_path))
+        monkeypatch.setattr('app.services.simulation_config_generator.Config.LLM_API_KEY', 'synthetic')
+        seen = {}
+        def config(self, **kwargs):
+            seen.update(kwargs)
+            return SimulationParameters(**{k: kwargs[k] for k in
+                ('simulation_id', 'project_id', 'graph_id', 'simulation_requirement')})
+        monkeypatch.setattr(SimulationConfigGenerator, 'generate_config', config)
+        selected = dict(agent_count=1, profile_parallelism=1, simulation_duration=2,
+                        minutes_per_round=60, active_agents_per_round=1,
+                        report_mode='evidence_gap', report_depth='fast')
+        manager = SimulationManager()
+        state = manager.create_simulation(project_id='synthetic', graph_id='synthetic', prediction_settings=selected)
+        manager.prepare_simulation(state.simulation_id, 'Fictional bike lane', 'Frozen fictional input',
+            use_llm_for_profiles=False, storage=FakeGraphStorage(), prediction_settings=selected)
+        for key, value in selected.items():
+>           assert seen.get('prediction_settings', {}).get(key) == value
+E           AssertionError: assert None == 1
+E            +  where None = <built-in method get of dict object at 0x716c4cfbac00>('agent_count')
+E            +    where <built-in method get of dict object at 0x716c4cfbac00> = {}.get
+E            +      where {} = <built-in method get of dict object at 0x716c4cfbac80>('prediction_settings', {})
+E            +        where <built-in method get of dict object at 0x716c4cfbac80> = {'document_text': 'Frozen fictional input', 'enable_reddit': True, 'enable_twitter': True, 'entities': [EntityNode(uui...], summary='Delivery robot company running a Toronto pilot.', attributes={}, related_edges=[], related_nodes=[])], ...}.get
+
+tests/test_control_recovery.py:32: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[01:30:55] INFO: Create simulation: sim_6e492703085c, project=synthetic, graph=synthetic
+[01:30:55] INFO: Starting to filter entities in graph synthetic...
+[01:30:55] INFO: Getting all nodes in graph synthetic...
+[01:30:55] INFO: Got 1 nodes total
+[01:30:55] INFO: Getting all edges in graph synthetic...
+[01:30:55] INFO: Got 0 edges total
+[01:30:55] INFO: Filter completed: total nodes 1, matched 1, entity types: {'Company'}
+[01:30:55] INFO: Starting parallel generation of 1 agent personas (parallel count: 3)...
+
+============================================================
+Starting agent persona generation - 1 entities total, parallel count: 3
+============================================================
+
+[01:30:55] WARNING: Knowledge graph search failed (Acme Robotics): 'FakeGraphStorage' object has no attribute 'search'
+
+----------------------------------------------------------------------
+[Generated] Acme Robotics (Company)
+----------------------------------------------------------------------
+Username: acme_robotics_370
+
+[Bio]
+Delivery robot company running a Toronto pilot.
+
+[Detailed Persona]
+Delivery robot company running a Toronto pilot.
+
+[Basic Attributes]
+Age: 45 | Gender: female | MBTI: ISTJ
+Profession: Company | Country: Australia
+Interested Topics: General, Social Issues
+----------------------------------------------------------------------
+[01:30:55] INFO: [1/1] Successfully generated persona: Acme Robotics (Company)
+
+============================================================
+Persona generation complete! Generated 1 agents
+============================================================
+
+[01:30:55] INFO: Saved 1 Reddit profiles to /tmp/pytest-of-ali/pytest-35/test_selected_settings_reach_c0/sim_6e492703085c/reddit_profiles.json (JSON format, includes user_id field)
+[01:30:55] INFO: Saved 1 Twitter profiles to /tmp/pytest-of-ali/pytest-35/test_selected_settings_reach_c0/sim_6e492703085c/twitter_profiles.csv (OASIS CSV format)
+[01:30:55] INFO: Simulation preparation completed: sim_6e492703085c, entities=1, profiles=1
+_______ test_report_progress_accepts_recovery_timestamp[tz0-generating] ________
+
+status = 'generating', tz = datetime.timezone.utc
+
+    @pytest.mark.parametrize('status', ['generating', 'interrupted'])
+    @pytest.mark.parametrize('tz', [timezone.utc, timezone(timedelta(hours=-4))])
+    def test_report_progress_accepts_recovery_timestamp(status, tz):
+>       result = ReportManager.enrich_progress(dict(status=status,
+            updated_at=(datetime.now(tz) - timedelta(seconds=120)).isoformat()))
+
+tests/test_control_recovery.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'app.services.report_agent.ReportManager'>
+progress = {'status': 'generating', 'updated_at': '2026-10-03T05:28:55.527989+00:00'}
+stale_after_seconds = None
+
+    @classmethod
+    def enrich_progress(
+        cls,
+        progress: Dict[str, Any],
+        stale_after_seconds: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Add heartbeat/staleness metadata to persisted report progress."""
+        if not progress:
+            return progress
+    
+        stale_after = stale_after_seconds or cls.PROGRESS_STALE_AFTER_SECONDS
+        enriched = dict(progress)
+        status = enriched.get("status")
+        heartbeat = enriched.get("heartbeat_at") or enriched.get("updated_at")
+        seconds_since_update = None
+        is_stale = False
+    
+        if heartbeat:
+            try:
+                heartbeat_dt = datetime.fromisoformat(heartbeat)
+>               seconds_since_update = max(0, int((datetime.now() - heartbeat_dt).total_seconds()))
+E               TypeError: can't subtract offset-naive and offset-aware datetimes
+
+app/services/report_agent.py:3229: TypeError
+_______ test_report_progress_accepts_recovery_timestamp[tz0-interrupted] _______
+
+status = 'interrupted', tz = datetime.timezone.utc
+
+    @pytest.mark.parametrize('status', ['generating', 'interrupted'])
+    @pytest.mark.parametrize('tz', [timezone.utc, timezone(timedelta(hours=-4))])
+    def test_report_progress_accepts_recovery_timestamp(status, tz):
+>       result = ReportManager.enrich_progress(dict(status=status,
+            updated_at=(datetime.now(tz) - timedelta(seconds=120)).isoformat()))
+
+tests/test_control_recovery.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'app.services.report_agent.ReportManager'>
+progress = {'status': 'interrupted', 'updated_at': '2026-10-03T05:28:55.575126+00:00'}
+stale_after_seconds = None
+
+    @classmethod
+    def enrich_progress(
+        cls,
+        progress: Dict[str, Any],
+        stale_after_seconds: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Add heartbeat/staleness metadata to persisted report progress."""
+        if not progress:
+            return progress
+    
+        stale_after = stale_after_seconds or cls.PROGRESS_STALE_AFTER_SECONDS
+        enriched = dict(progress)
+        status = enriched.get("status")
+        heartbeat = enriched.get("heartbeat_at") or enriched.get("updated_at")
+        seconds_since_update = None
+        is_stale = False
+    
+        if heartbeat:
+            try:
+                heartbeat_dt = datetime.fromisoformat(heartbeat)
+>               seconds_since_update = max(0, int((datetime.now() - heartbeat_dt).total_seconds()))
+E               TypeError: can't subtract offset-naive and offset-aware datetimes
+
+app/services/report_agent.py:3229: TypeError
+_______ test_report_progress_accepts_recovery_timestamp[tz1-generating] ________
+
+status = 'generating'
+tz = datetime.timezone(datetime.timedelta(days=-1, seconds=72000))
+
+    @pytest.mark.parametrize('status', ['generating', 'interrupted'])
+    @pytest.mark.parametrize('tz', [timezone.utc, timezone(timedelta(hours=-4))])
+    def test_report_progress_accepts_recovery_timestamp(status, tz):
+>       result = ReportManager.enrich_progress(dict(status=status,
+            updated_at=(datetime.now(tz) - timedelta(seconds=120)).isoformat()))
+
+tests/test_control_recovery.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'app.services.report_agent.ReportManager'>
+progress = {'status': 'generating', 'updated_at': '2026-10-03T01:28:55.693523-04:00'}
+stale_after_seconds = None
+
+    @classmethod
+    def enrich_progress(
+        cls,
+        progress: Dict[str, Any],
+        stale_after_seconds: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Add heartbeat/staleness metadata to persisted report progress."""
+        if not progress:
+            return progress
+    
+        stale_after = stale_after_seconds or cls.PROGRESS_STALE_AFTER_SECONDS
+        enriched = dict(progress)
+        status = enriched.get("status")
+        heartbeat = enriched.get("heartbeat_at") or enriched.get("updated_at")
+        seconds_since_update = None
+        is_stale = False
+    
+        if heartbeat:
+            try:
+                heartbeat_dt = datetime.fromisoformat(heartbeat)
+>               seconds_since_update = max(0, int((datetime.now() - heartbeat_dt).total_seconds()))
+E               TypeError: can't subtract offset-naive and offset-aware datetimes
+
+app/services/report_agent.py:3229: TypeError
+_______ test_report_progress_accepts_recovery_timestamp[tz1-interrupted] _______
+
+status = 'interrupted'
+tz = datetime.timezone(datetime.timedelta(days=-1, seconds=72000))
+
+    @pytest.mark.parametrize('status', ['generating', 'interrupted'])
+    @pytest.mark.parametrize('tz', [timezone.utc, timezone(timedelta(hours=-4))])
+    def test_report_progress_accepts_recovery_timestamp(status, tz):
+>       result = ReportManager.enrich_progress(dict(status=status,
+            updated_at=(datetime.now(tz) - timedelta(seconds=120)).isoformat()))
+
+tests/test_control_recovery.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'app.services.report_agent.ReportManager'>
+progress = {'status': 'interrupted', 'updated_at': '2026-10-03T01:28:55.737044-04:00'}
+stale_after_seconds = None
+
+    @classmethod
+    def enrich_progress(
+        cls,
+        progress: Dict[str, Any],
+        stale_after_seconds: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Add heartbeat/staleness metadata to persisted report progress."""
+        if not progress:
+            return progress
+    
+        stale_after = stale_after_seconds or cls.PROGRESS_STALE_AFTER_SECONDS
+        enriched = dict(progress)
+        status = enriched.get("status")
+        heartbeat = enriched.get("heartbeat_at") or enriched.get("updated_at")
+        seconds_since_update = None
+        is_stale = False
+    
+        if heartbeat:
+            try:
+                heartbeat_dt = datetime.fromisoformat(heartbeat)
+>               seconds_since_update = max(0, int((datetime.now() - heartbeat_dt).total_seconds()))
+E               TypeError: can't subtract offset-naive and offset-aware datetimes
+
+app/services/report_agent.py:3229: TypeError
+___________________ test_stop_does_not_flush_more_generation ___________________
+
+    def test_stop_does_not_flush_more_generation():
+        updater = GraphMemoryUpdater('synthetic', SimpleNamespace())
+        calls = []
+        updater._flush_remaining = lambda: calls.append('scheduled after stop')
+        updater.stop()
+>       assert calls == []
+E       AssertionError: assert ['scheduled after stop'] == []
+E         
+E         Left contains one more item: 'scheduled after stop'
+E         Use -v to get more diff
+
+tests/test_control_recovery.py:49: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[01:30:55] INFO: GraphMemoryUpdater initialized: graph_id=synthetic, batch_size=5
+[01:30:55] INFO: GraphMemoryUpdater stopped: graph_id=synthetic, total_activities=0, batches_sent=0, items_sent=0, failed=0, skipped=0
+_____________________ test_monitor_preserves_explicit_stop _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-35/test_monitor_preserves_explici0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x716c4c720250>
+
+    def test_monitor_preserves_explicit_stop(tmp_path, monkeypatch):
+        state = SimulationRunState(simulation_id='synthetic', runner_status=RunnerStatus.STOPPED)
+        process = SimpleNamespace(poll=lambda: 0, returncode=0)
+        monkeypatch.setattr(SimulationRunner, 'RUN_STATE_DIR', str(tmp_path))
+        monkeypatch.setattr(SimulationRunner, '_processes', {'synthetic': process})
+        monkeypatch.setattr(SimulationRunner, '_graph_memory_enabled', {})
+        monkeypatch.setattr(SimulationRunner, '_action_queues', {})
+        monkeypatch.setattr(SimulationRunner, '_stdout_files', {})
+        monkeypatch.setattr(SimulationRunner, '_stderr_files', {})
+        monkeypatch.setattr(SimulationRunner, 'get_run_state', lambda sid: state)
+        monkeypatch.setattr(SimulationRunner, '_save_run_state', lambda s: None)
+        SimulationRunner._monitor_simulation('synthetic')
+>       assert state.runner_status == RunnerStatus.STOPPED
+E       AssertionError: assert <RunnerStatus...: 'completed'> == <RunnerStatus...ED: 'stopped'>
+E         
+E         - stopped
+E         + completed
+
+tests/test_control_recovery.py:64: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[01:30:55] INFO: Simulation completed: synthetic
+=========================== short test summary info ============================
+FAILED tests/test_control_recovery.py::test_selected_settings_reach_config_worker
+FAILED tests/test_control_recovery.py::test_report_progress_accepts_recovery_timestamp[tz0-generating]
+FAILED tests/test_control_recovery.py::test_report_progress_accepts_recovery_timestamp[tz0-interrupted]
+FAILED tests/test_control_recovery.py::test_report_progress_accepts_recovery_timestamp[tz1-generating]
+FAILED tests/test_control_recovery.py::test_report_progress_accepts_recovery_timestamp[tz1-interrupted]
+FAILED tests/test_control_recovery.py::test_stop_does_not_flush_more_generation
+FAILED tests/test_control_recovery.py::test_monitor_preserves_explicit_stop
+7 failed in 1.38s

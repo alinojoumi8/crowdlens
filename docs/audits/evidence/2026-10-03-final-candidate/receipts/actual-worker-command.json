@@ -1,0 +1,18 @@
+{
+  "pid": 3052615,
+  "command_line": [
+    "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python",
+    "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/../../scripts/run_parallel_simulation.py",
+    "--config",
+    "/home/ali/Documents/CrowdLens-reviews/2026-10-03-final-candidate/runtime/simulations/sim_9ac5f4ad6a6c/simulation_config.json",
+    "--twitter-only",
+    "--max-rounds",
+    "72"
+  ],
+  "only_twitter": true,
+  "max_rounds_argument": "72",
+  "actual_completed_rounds": 2,
+  "actual_disabled_platform_rounds": 0,
+  "fixture_worker": false,
+  "inspection_note": "Initial inspection wrongly expected literal --max-rounds2 (then0). Actual CLI receives72 from stale preset alias, while worker total is clamped to duration-derived2; actual JSON events and completed run confirm2/2. This metadata mismatch remains documented."
+}

@@ -1,0 +1,32 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/PrepareRecovery.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/PrepareRecovery.component.test.js (3 tests | 1 failed) 163ms
+   × reopens numeric controls from persisted effective settings 36ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PrepareRecovery.component.test.js > reopens numeric controls from persisted effective settings
+AssertionError: expected '48' to be '4' // Object.is equality
+
+Expected: "4"
+Received: "48"
+
+ ❯ src/components/PrepareRecovery.component.test.js:37:45
+     35|   await flushPromises()
+     36|   const agents=wrapper.findAll('label').find(label=>label.text().trim(…
+     37|   expect(agents.get('input').element.value).toBe('4')
+       |                                             ^
+     38| })
+     39|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  03:01:52
+   Duration  1.54s (transform 375ms, setup 0ms, import 550ms, tests 163ms, environment 678ms)
+

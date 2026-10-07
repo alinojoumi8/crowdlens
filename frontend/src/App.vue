@@ -1,8 +1,19 @@
 <template>
+  <WorkflowControls v-if="workflowResource || pendingId" :resource="workflowResource" :pending-id="pendingId" />
   <router-view />
 </template>
 
 <script setup>
+import './workflow.css'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import WorkflowControls from './components/WorkflowControls.vue'
+import pendingUpload from './store/pendingUpload'
+const route = useRoute()
+const workflowResource = computed(() => route.params.reportId ? `report:${route.params.reportId}`
+  : route.params.simulationId ? `simulation:${route.params.simulationId}`
+  : route.params.projectId && route.params.projectId !== 'new' ? `project:${route.params.projectId}` : null)
+const pendingId = computed(() => route.params.projectId === 'new' ? pendingUpload.workflowId : null)
 // Use Vue Router to manage pages
 </script>
 

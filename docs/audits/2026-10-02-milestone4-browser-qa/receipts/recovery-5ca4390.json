@@ -1,0 +1,140 @@
+{
+  "browser": "154.0.8037.92",
+  "browserLaunch": {
+    "arguments": [
+      "/usr/bin/google-chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--enable-automation",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--user-data-dir=/tmp/playwright_chromiumdev_profile-knHJg2",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--noerrdialogs",
+      "--ozone-platform=headless",
+      "--ozone-override-screen-size=800,600",
+      "--use-angle=swiftshader-webgl",
+      "--flag-switches-begin",
+      "--flag-switches-end"
+    ],
+    "sandboxStatus": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tYes\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed."
+  },
+  "checks": [
+    {
+      "name": "upload chooser is keyboard reachable and named",
+      "passed": true
+    },
+    {
+      "name": "simulation prompt and website fields have explicit names",
+      "passed": true
+    },
+    {
+      "name": "history dialog traps focus, closes with Escape and restores trigger",
+      "passed": true
+    },
+    {
+      "name": "375px report panels and header controls fit the viewport",
+      "passed": true
+    },
+    {
+      "name": "hidden graph panel cannot receive keyboard focus",
+      "passed": true
+    },
+    {
+      "name": "missing report and graph metrics explicitly remain unknown",
+      "passed": true
+    },
+    {
+      "name": "interrupted root report exposes manual resume controls",
+      "passed": true
+    },
+    {
+      "name": "actual abandoned owner recovers in durable API state",
+      "passed": true
+    },
+    {
+      "name": "recovered failure is visible and has a permitted manual retry",
+      "passed": true
+    },
+    {
+      "name": "recovery has no uncaught browser errors",
+      "passed": true
+    }
+  ],
+  "abandoned": {
+    "project_id": "proj_7d9ef7056439",
+    "task_id": "42713e1d-c17a-485d-8157-1721e11a8538"
+  },
+  "task": {
+    "created_at": "2026-10-02T16:00:06.088513",
+    "error": "ownership_lease_expired",
+    "execution": {
+      "attempt_id": "3eaf46ded5094bd499b79786be602381",
+      "heartbeat_at": 1790971206.089304,
+      "lease_until": 1790971236.0893042,
+      "owner": {
+        "pid": 1412230,
+        "worker_id": "ce5fc9cc67f5442eb61f12f9a96e2a0c"
+      },
+      "resources": [
+        {
+          "key": "project:proj_7d9ef7056439",
+          "root": "/tmp/crowdlens-ecc-browser-sandbox-recovery/projects"
+        }
+      ]
+    },
+    "message": "Execution ownership expired; manual retry required.",
+    "metadata": {
+      "project_id": "proj_7d9ef7056439"
+    },
+    "progress": 25,
+    "progress_detail": {},
+    "recovery": {
+      "pending": false,
+      "reason": "ownership_lease_expired"
+    },
+    "result": null,
+    "status": "failed",
+    "task_id": "42713e1d-c17a-485d-8157-1721e11a8538",
+    "task_type": "graph_build",
+    "updated_at": "2026-10-02T20:00:36.532909+00:00"
+  },
+  "consoleMessages": [],
+  "networkErrors": [],
+  "pageErrors": [],
+  "substitutes": [
+    "Harness synthetic adapters",
+    "Interrupted report presentation intercepted; graph recovery uses actual exited owner and durable task APIs"
+  ]
+}

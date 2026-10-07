@@ -1,0 +1,64 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_________ test_unsupported_settings_are_explicitly_rejected[invalid0] __________
+
+invalid = {'platform': 'unknown'}
+
+    @pytest.mark.parametrize('invalid', [dict(platform='unknown'), dict(report_mode='unknown'),
+        dict(report_depth='unknown'), dict(memory_mode='unknown'), dict(profile_parallelism=0)])
+    def test_unsupported_settings_are_explicitly_rejected(invalid):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_control_recovery.py:71: Failed
+_________ test_unsupported_settings_are_explicitly_rejected[invalid1] __________
+
+invalid = {'report_mode': 'unknown'}
+
+    @pytest.mark.parametrize('invalid', [dict(platform='unknown'), dict(report_mode='unknown'),
+        dict(report_depth='unknown'), dict(memory_mode='unknown'), dict(profile_parallelism=0)])
+    def test_unsupported_settings_are_explicitly_rejected(invalid):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_control_recovery.py:71: Failed
+_________ test_unsupported_settings_are_explicitly_rejected[invalid2] __________
+
+invalid = {'report_depth': 'unknown'}
+
+    @pytest.mark.parametrize('invalid', [dict(platform='unknown'), dict(report_mode='unknown'),
+        dict(report_depth='unknown'), dict(memory_mode='unknown'), dict(profile_parallelism=0)])
+    def test_unsupported_settings_are_explicitly_rejected(invalid):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_control_recovery.py:71: Failed
+_________ test_unsupported_settings_are_explicitly_rejected[invalid3] __________
+
+invalid = {'memory_mode': 'unknown'}
+
+    @pytest.mark.parametrize('invalid', [dict(platform='unknown'), dict(report_mode='unknown'),
+        dict(report_depth='unknown'), dict(memory_mode='unknown'), dict(profile_parallelism=0)])
+    def test_unsupported_settings_are_explicitly_rejected(invalid):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_control_recovery.py:71: Failed
+_________ test_unsupported_settings_are_explicitly_rejected[invalid4] __________
+
+invalid = {'profile_parallelism': 0}
+
+    @pytest.mark.parametrize('invalid', [dict(platform='unknown'), dict(report_mode='unknown'),
+        dict(report_depth='unknown'), dict(memory_mode='unknown'), dict(profile_parallelism=0)])
+    def test_unsupported_settings_are_explicitly_rejected(invalid):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_control_recovery.py:71: Failed
+=========================== short test summary info ============================
+FAILED tests/test_control_recovery.py::test_unsupported_settings_are_explicitly_rejected[invalid0]
+FAILED tests/test_control_recovery.py::test_unsupported_settings_are_explicitly_rejected[invalid1]
+FAILED tests/test_control_recovery.py::test_unsupported_settings_are_explicitly_rejected[invalid2]
+FAILED tests/test_control_recovery.py::test_unsupported_settings_are_explicitly_rejected[invalid3]
+FAILED tests/test_control_recovery.py::test_unsupported_settings_are_explicitly_rejected[invalid4]
+5 failed, 7 deselected in 1.15s

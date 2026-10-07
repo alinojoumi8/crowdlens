@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="7" time="1.338" timestamp="2026-10-02T15:50:45.713727" hostname="ali"><testcase classname="tests.test_prepare_recovery_api" name="test_preparation_poll_preserves_active_or_failed_attempt[False-False]" time="0.026"><failure message="AssertionError: assert 'ready' == 'processing'&#10;  &#10;  - processing&#10;  + ready">preparation = (&lt;FlaskClient &lt;Flask 'test_prepare_recovery_api'&gt;&gt;, &lt;app.services.task_execution.TaskRuntime object at 0x78f3b03c4c90&gt;... task_id='prepare_retry', attempt_id='44177ea73e9943b6be6252d7781f68b3', worker_id='fe54a489303a4e378540183715656753'))
+with_task_id = False, expired = False
+
+    @pytest.mark.parametrize('with_task_id', [False, True])
+    @pytest.mark.parametrize('expired', [False, True])
+    def test_preparation_poll_preserves_active_or_failed_attempt(preparation, with_task_id, expired):
+        client, runtime, clock, folder, _, _ = preparation
+        if expired:
+            clock[0] = 131.0
+            runtime.reconcile()
+        before = (folder / 'state.json').read_bytes()
+        body = {'simulation_id': 'sim_retry'}
+        if with_task_id:
+            body['task_id'] = 'prepare_retry'
+        response = client.post('/api/simulation/prepare/status', json=body)
+        assert response.status_code == 200
+        data = response.json['data']
+&gt;       assert data['status'] == ('failed' if expired else 'processing')
+E       AssertionError: assert 'ready' == 'processing'
+E         
+E         - processing
+E         + ready
+
+tests/test_prepare_recovery_api.py:68: AssertionError</failure></testcase><testcase classname="tests.test_prepare_recovery_api" name="test_preparation_poll_preserves_active_or_failed_attempt[False-True]" time="0.020"><failure message="AssertionError: assert 'ready' == 'processing'&#10;  &#10;  - processing&#10;  + ready">preparation = (&lt;FlaskClient &lt;Flask 'test_prepare_recovery_api'&gt;&gt;, &lt;app.services.task_execution.TaskRuntime object at 0x78f30bd42c50&gt;... task_id='prepare_retry', attempt_id='ced39cc6032c4c08b33abd3afadb5b9a', worker_id='64cb9683667b443e8197eeadcdfbccc4'))
+with_task_id = True, expired = False
+
+    @pytest.mark.parametrize('with_task_id', [False, True])
+    @pytest.mark.parametrize('expired', [False, True])
+    def test_preparation_poll_preserves_active_or_failed_attempt(preparation, with_task_id, expired):
+        client, runtime, clock, folder, _, _ = preparation
+        if expired:
+            clock[0] = 131.0
+            runtime.reconcile()
+        before = (folder / 'state.json').read_bytes()
+        body = {'simulation_id': 'sim_retry'}
+        if with_task_id:
+            body['task_id'] = 'prepare_retry'
+        response = client.post('/api/simulation/prepare/status', json=body)
+        assert response.status_code == 200
+        data = response.json['data']
+&gt;       assert data['status'] == ('failed' if expired else 'processing')
+E       AssertionError: assert 'ready' == 'processing'
+E         
+E         - processing
+E         + ready
+
+tests/test_prepare_recovery_api.py:68: AssertionError</failure></testcase><testcase classname="tests.test_prepare_recovery_api" name="test_preparation_poll_preserves_active_or_failed_attempt[True-False]" time="0.022"><failure message="AssertionError: assert 'ready' == 'failed'&#10;  &#10;  - failed&#10;  + ready">preparation = (&lt;FlaskClient &lt;Flask 'test_prepare_recovery_api'&gt;&gt;, &lt;app.services.task_execution.TaskRuntime object at 0x78f30bc61d90&gt;... task_id='prepare_retry', attempt_id='239b2d5f43f54279b0fa2dd3eaaaac93', worker_id='a44e8835159443819639047891ae7a58'))
+with_task_id = False, expired = True
+
+    @pytest.mark.parametrize('with_task_id', [False, True])
+    @pytest.mark.parametrize('expired', [False, True])
+    def test_preparation_poll_preserves_active_or_failed_attempt(preparation, with_task_id, expired):
+        client, runtime, clock, folder, _, _ = preparation
+        if expired:
+            clock[0] = 131.0
+            runtime.reconcile()
+        before = (folder / 'state.json').read_bytes()
+        body = {'simulation_id': 'sim_retry'}
+        if with_task_id:
+            body['task_id'] = 'prepare_retry'
+        response = client.post('/api/simulation/prepare/status', json=body)
+        assert response.status_code == 200
+        data = response.json['data']
+&gt;       assert data['status'] == ('failed' if expired else 'processing')
+E       AssertionError: assert 'ready' == 'failed'
+E         
+E         - failed
+E         + ready
+
+tests/test_prepare_recovery_api.py:68: AssertionError</failure></testcase><testcase classname="tests.test_prepare_recovery_api" name="test_preparation_poll_preserves_active_or_failed_attempt[True-True]" time="0.022"><failure message="AssertionError: assert 'ready' == 'failed'&#10;  &#10;  - failed&#10;  + ready">preparation = (&lt;FlaskClient &lt;Flask 'test_prepare_recovery_api'&gt;&gt;, &lt;app.services.task_execution.TaskRuntime object at 0x78f30ce60150&gt;... task_id='prepare_retry', attempt_id='65ff35542832475ba81cf7ec569afc79', worker_id='236149e6231441359dd94cafc7fc9d58'))
+with_task_id = True, expired = True
+
+    @pytest.mark.parametrize('with_task_id', [False, True])
+    @pytest.mark.parametrize('expired', [False, True])
+    def test_preparation_poll_preserves_active_or_failed_attempt(preparation, with_task_id, expired):
+        client, runtime, clock, folder, _, _ = preparation
+        if expired:
+            clock[0] = 131.0
+            runtime.reconcile()
+        before = (folder / 'state.json').read_bytes()
+        body = {'simulation_id': 'sim_retry'}
+        if with_task_id:
+            body['task_id'] = 'prepare_retry'
+        response = client.post('/api/simulation/prepare/status', json=body)
+        assert response.status_code == 200
+        data = response.json['data']
+&gt;       assert data['status'] == ('failed' if expired else 'processing')
+E       AssertionError: assert 'ready' == 'failed'
+E         
+E         - failed
+E         + ready
+
+tests/test_prepare_recovery_api.py:68: AssertionError</failure></testcase><testcase classname="tests.test_prepare_recovery_api" name="test_manual_prepare_after_expiry_admits_new_attempt_without_force" time="0.021"><failure message="assert True is False">preparation = (&lt;FlaskClient &lt;Flask 'test_prepare_recovery_api'&gt;&gt;, &lt;app.services.task_execution.TaskRuntime object at 0x78f30babeb10&gt;... task_id='prepare_retry', attempt_id='5405a110de12435abfa8956f674cc191', worker_id='1f4a75bef7954504a9f7498b04a584b7'))
+
+    def test_manual_prepare_after_expiry_admits_new_attempt_without_force(preparation):
+        client, runtime, clock, folder, dispatched, _ = preparation
+        clock[0] = 131.0
+        runtime.reconcile()
+        response = client.post('/api/simulation/prepare', json={'simulation_id': 'sim_retry'})
+        assert response.status_code == 200
+&gt;       assert response.json['data']['already_prepared'] is False
+E       assert True is False
+
+tests/test_prepare_recovery_api.py:82: AssertionError</failure></testcase><testcase classname="tests.test_prepare_recovery_api" name="test_active_prepare_cannot_be_reused_as_ready_or_replaced" time="0.021"><failure message="assert 200 == 409&#10; +  where 200 = &lt;WrapperTestResponse streamed [200 OK]&gt;.status_code">preparation = (&lt;FlaskClient &lt;Flask 'test_prepare_recovery_api'&gt;&gt;, &lt;app.services.task_execution.TaskRuntime object at 0x78f30bb9c550&gt;... task_id='prepare_retry', attempt_id='f816441e014c4bd88acfd448a25831f8', worker_id='d90c4e31a1164e3ca50696498d98ff95'))
+
+    def test_active_prepare_cannot_be_reused_as_ready_or_replaced(preparation):
+        client, _, _, folder, dispatched, _ = preparation
+        before = (folder / 'state.json').read_bytes()
+        response = client.post('/api/simulation/prepare', json={'simulation_id': 'sim_retry'})
+&gt;       assert response.status_code == 409
+E       assert 200 == 409
+E        +  where 200 = &lt;WrapperTestResponse streamed [200 OK]&gt;.status_code
+
+tests/test_prepare_recovery_api.py:94: AssertionError</failure></testcase><testcase classname="tests.test_prepare_recovery_api" name="test_completed_preparation_remains_reusable" time="0.021" /></testsuite></testsuites>

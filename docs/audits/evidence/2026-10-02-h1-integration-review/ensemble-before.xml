@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="4" time="1.111" timestamp="2026-10-02T15:54:30.764889" hostname="ali"><testcase classname="tests.test_ensemble_ownership" name="test_replacement_during_shutdown_cannot_be_deleted_by_old_reset" time="0.011"><failure message="Failed: DID NOT RAISE &lt;class 'app.services.task_execution.OwnershipLost'&gt;">ensemble_owner = (&lt;app.services.task_execution.TaskRuntime object at 0x7f0233c0eed0&gt;, &lt;app.storage.control_db.ControlDatabase object at...d4db188a', worker_id='9f3b0210aa94428e9388acb81656bed7'), &lt;function ensemble_owner.&lt;locals&gt;.replace at 0x7f0233c0b740&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f0233c0ea90&gt;
+
+    def test_replacement_during_shutdown_cannot_be_deleted_by_old_reset(ensemble_owner, monkeypatch):
+        runtime, db, folder, old, replace = ensemble_owner
+        monkeypatch.setattr(SimulationRunner, 'close_simulation_env', lambda *a, **kw: replace())
+&gt;       with old.bind(), pytest.raises(OwnershipLost):
+E       Failed: DID NOT RAISE &lt;class 'app.services.task_execution.OwnershipLost'&gt;
+
+tests/test_ensemble_ownership.py:51: Failed</failure></testcase><testcase classname="tests.test_ensemble_ownership" name="test_replacement_after_reset_cannot_dispatch_old_sample" time="0.009"><failure message="RuntimeError: Ensemble produced no usable completed simulation runs">ensemble_owner = (&lt;app.services.task_execution.TaskRuntime object at 0x7f0234c5e690&gt;, &lt;app.storage.control_db.ControlDatabase object at...7a257193', worker_id='91377c36d2324d41bde824dcd975fd48'), &lt;function ensemble_owner.&lt;locals&gt;.replace at 0x7f0233c47f60&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f0233c0f690&gt;
+
+    def test_replacement_after_reset_cannot_dispatch_old_sample(ensemble_owner, monkeypatch):
+        _, _, _, old, replace = ensemble_owner
+        dispatched = []
+        monkeypatch.setattr(EnsembleRunner, '_load_config', lambda _: {'simulation_requirement': 'Synthetic scenario'})
+        monkeypatch.setattr(EnsembleRunner, '_reset', lambda _: replace())
+        monkeypatch.setattr(EnsembleRunner, '_wait_for_completion', lambda *a: False)
+        monkeypatch.setattr(SimulationRunner, 'start_simulation', lambda **kw: dispatched.append(kw))
+        with old.bind(), pytest.raises(OwnershipLost):
+&gt;           EnsembleRunner.run_ensemble('sim_synthetic', runs=1)
+
+tests/test_ensemble_ownership.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = &lt;class 'app.services.ensemble_runner.EnsembleRunner'&gt;
+simulation_id = 'sim_synthetic', runs = 1, max_rounds = None
+platform = 'parallel', storage = None, memory_mode = 'practical', economy = None
+per_run_timeout = 1200.0, progress_callback = None
+
+    @classmethod
+    def run_ensemble(
+        cls,
+        simulation_id: str,
+        runs: Optional[int] = None,
+        max_rounds: Optional[int] = None,
+        platform: str = "parallel",
+        storage: Any = None,
+        memory_mode: str = "practical",
+        economy: Optional[Dict[str, Any]] = None,
+        per_run_timeout: float = 1200.0,
+        progress_callback: Optional[Callable[[int, int, Optional[Dict[str, Any]]], None]] = None,
+    ) -&gt; Dict[str, Any]:
+        config = cls._load_config(simulation_id)
+        if not config:
+            raise ValueError(f"Simulation config not found for {simulation_id}; call /prepare first")
+    
+        settings = normalize_forecast_settings(
+            config, simulation_requirement=config.get("simulation_requirement", "")
+        )
+        mode = settings.forecast_mode
+        outcomes = list(settings.prediction_target.get("outcomes") or DEFAULT_OUTCOMES[mode])[:5]
+        runs = max(1, min(int(runs or settings.ensemble_runs or cls.DEFAULT_RUNS), cls.MAX_RUNS))
+        graph_id = config.get("graph_id")
+        economy = config.get("economy") if economy is None else economy
+    
+        per_run_net: List[float] = []
+        per_run_probs: List[List[float]] = []
+        per_run_signals: List[Optional[Dict[str, Any]]] = []
+    
+        for i in range(runs):
+            with publication_guard():
+                pass
+            seed = 1000 + i * 97
+            cls._reset(simulation_id)
+            try:
+                SimulationRunner.start_simulation(
+                    simulation_id=simulation_id,
+                    platform=platform,
+                    max_rounds=max_rounds,
+                    enable_graph_memory_update=bool(storage),
+                    graph_id=graph_id,
+                    storage=storage,
+                    scenario_id="baseline",
+                    seed=seed,
+                    memory_mode=memory_mode,
+                    economy=economy,
+                )
+            except Exception as exc:  # pragma: no cover - defensive
+                logger.error("Ensemble run %s/%s failed to start: %s", i + 1, runs, exc)
+                if progress_callback:
+                    progress_callback(i + 1, runs, None)
+                continue
+    
+            attempt = current_attempt()
+            child = SimulationRunner._processes.get(simulation_id)
+            watch = (attempt.runtime.watch_child(attempt, child)
+                     if attempt and child else nullcontext())
+            with watch:
+                completed = cls._wait_for_completion(simulation_id, per_run_timeout)
+            signal = (
+                ForecastSynthesizer(simulation_id, config).build_simulation_signal()
+                if completed else None
+            )
+            try:
+                net = float(signal["net_sentiment"]) if signal else float("nan")
+                usable = bool(signal and signal.get("total_actions", 0) &gt; 0 and math.isfinite(net))
+            except (KeyError, TypeError, ValueError):
+                usable = False
+            if not usable:
+                logger.warning("Ensemble run %s/%s produced no usable completed sample", i + 1, runs)
+                if progress_callback:
+                    progress_callback(i + 1, runs, None)
+                continue
+            per_run_signals.append(signal)
+            per_run_net.append(net)
+            per_run_probs.append(net_to_probabilities(net, outcomes, mode, span=0.5))
+            logger.info(
+                "Ensemble run %s/%s seed=%s completed=%s net=%.3f actions=%s",
+                i + 1, runs, seed, completed, net,
+                (signal or {}).get("total_actions", 0),
+            )
+            if progress_callback:
+                progress_callback(i + 1, runs, signal)
+    
+        # Stop the final environment without deleting its source evidence. Destructive
+        # cleanup belongs before each sample, before the aggregate is persisted.
+        cls._shutdown(simulation_id)
+        if not per_run_signals:
+&gt;           raise RuntimeError("Ensemble produced no usable completed simulation runs")
+E           RuntimeError: Ensemble produced no usable completed simulation runs
+
+app/services/ensemble_runner.py:131: RuntimeError</failure></testcase><testcase classname="tests.test_ensemble_ownership" name="test_late_shutdown_cannot_close_replacement_environment" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'app.services.task_execution.OwnershipLost'&gt;">ensemble_owner = (&lt;app.services.task_execution.TaskRuntime object at 0x7f0233b24790&gt;, &lt;app.storage.control_db.ControlDatabase object at...bc91938b', worker_id='578ab95587144ff99aeb9dab744a1f2a'), &lt;function ensemble_owner.&lt;locals&gt;.replace at 0x7f0233aa9440&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f0233b26290&gt;
+
+    def test_late_shutdown_cannot_close_replacement_environment(ensemble_owner, monkeypatch):
+        _, _, _, old, replace = ensemble_owner
+        replace()
+        closed = []
+        monkeypatch.setattr(SimulationRunner, 'close_simulation_env', lambda *a, **kw: closed.append(a))
+&gt;       with old.bind(), pytest.raises(OwnershipLost):
+E       Failed: DID NOT RAISE &lt;class 'app.services.task_execution.OwnershipLost'&gt;
+
+tests/test_ensemble_ownership.py:75: Failed</failure></testcase><testcase classname="tests.test_ensemble_ownership" name="test_valid_owner_can_cleanup_its_previous_sample" time="0.006" /></testsuite></testsuites>

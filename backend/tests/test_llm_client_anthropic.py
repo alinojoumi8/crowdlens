@@ -40,6 +40,23 @@ class CapturingHandler(logging.Handler):
         self.records.append(record)
 
 
+def test_empty_anthropic_answer_reports_structure_without_private_thinking(monkeypatch):
+    class EmptyAnswer(FakeResponse):
+        def json(self):
+            return {"stop_reason": "end_turn", "content": [
+                {"type": "thinking", "thinking": "PRIVATE SOURCE AND REASONING"}
+            ]}
+
+    monkeypatch.setattr("app.utils.llm_client.OpenAI", lambda **kwargs: FailingOpenAI())
+    monkeypatch.setattr(requests, "post", lambda *args, **kwargs: EmptyAnswer())
+    client = LLMClient(api_key="test-key", base_url="https://api.minimax.io/anthropic", model="MiniMax-M3.1-Flash-Preview")
+    with pytest.raises(ValueError) as failure:
+        client.chat([{"role": "user", "content": "PRIVATE PROMPT"}])
+    assert "stop_reason=end_turn" in str(failure.value)
+    assert "block_types=thinking" in str(failure.value)
+    assert "PRIVATE" not in str(failure.value)
+
+
 def capture_logger(name):
     target_logger = logging.getLogger(name)
     handler = CapturingHandler()
@@ -49,7 +66,7 @@ def capture_logger(name):
     return target_logger, handler, previous_level
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3"])
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
 def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model_name):
     captured = {}
 
@@ -80,6 +97,9 @@ def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model
     )
 
     assert result == "OK"
+    if model_name == "MiniMax-M3.1-Flash-Preview":
+        assert captured["json"]["max_tokens"] == 32768
+        assert captured["json"]["output_config"] == {"effort":"high"}
     assert captured["url"] == "https://api.minimax.io/anthropic/v1/messages"
     assert captured["headers"]["x-api-key"] == "test-key"
     assert captured["headers"]["anthropic-version"] == "2023-06-01"

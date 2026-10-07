@@ -1,0 +1,22 @@
+{
+  "review_kind": "ai",
+  "reviewer_model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "packets_reviewed": 4,
+  "claims_reviewed": 19,
+  "support_judgments": {
+    "supported": 17,
+    "unsupported": 1,
+    "ambiguous": 1,
+    "conflicting": 0
+  },
+  "incorrect_attribution_judgments": 2,
+  "incorrect_citation_support_judgments": 2,
+  "reference_facts": 28,
+  "omitted_reference_facts": 10,
+  "human_quality_status": "PENDING",
+  "human_review_seconds": null,
+  "schema_and_packet_integrity": "passed",
+  "reviews_sha256": "63780cdb9fcc25cd928c4452550f3ebd14a0312168ed32e4272c54a685e1fd3f",
+  "limitation": "AI reviewer opinions, not human labels or adjudicated factual truth."
+}

@@ -1,0 +1,125 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+_____ test_matching_document_keeps_unmatched_companion_original_and_scope ______
+
+    def test_matching_document_keeps_unmatched_companion_original_and_scope():
+        rows=[source('a','agenda','Workshop registration records seven students.'),
+              source('b','followup','No invoice has been approved.'),
+              source('c','foreign','No invoice has been approved.',case_version_id='old')]
+        packet=retrieve_sources(freeze_sources(rows,SCOPE),['Workshop registration'],budget=DraftBudget())
+>       assert {s['episode_id'] for s in packet['sources']}=={'a','b'}
+E       AssertionError: assert {'a'} == {'a', 'b'}
+E         
+E         Extra items in the right set:
+E         'b'
+E         Use -v to get more diff
+
+backend/tests/test_draft_coverage_repairs.py:19: AssertionError
+__________ test_document_coverage_does_not_claim_complete_when_capped __________
+
+    def test_document_coverage_does_not_claim_complete_when_capped():
+        rows=[source(str(i),str(i),'Workshop registration '+str(i)) for i in range(35)]
+        packet=retrieve_sources(freeze_sources(rows,SCOPE),['Workshop registration'],budget=DraftBudget())
+        assert len(packet['sources'])==30
+>       assert 'document_coverage_truncated' in packet['limitations']
+E       AssertionError: assert 'document_coverage_truncated' in ['retrieval_candidates_truncated', 'semantic_retrieval_unavailable', 'exact_hits_truncated:5']
+
+backend/tests/test_draft_coverage_repairs.py:28: AssertionError
+_ test_exact_summary_replacement_resolves_unicode_and_preserves_other_sections _
+
+    def test_exact_summary_replacement_resolves_unicode_and_preserves_other_sections():
+>       from app.services.claim_ledger import resolve_summary_replacements, apply_summary_edits
+E       ImportError: cannot import name 'resolve_summary_replacements' from 'app.services.claim_ledger' (/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/claim_ledger.py)
+
+backend/tests/test_draft_coverage_repairs.py:34: ImportError
+_ test_summary_replacements_reject_ambiguous_stale_and_empty_targets[Same. Same.-Same.] _
+
+original = 'Same. Same.', old = 'Same.'
+
+    @pytest.mark.parametrize('original,old',[('Same. Same.','Same.'),('Summary only.','Section prose absent from summary.'),('Summary only.','')])
+    def test_summary_replacements_reject_ambiguous_stale_and_empty_targets(original,old):
+>       from app.services.claim_ledger import resolve_summary_replacements
+E       ImportError: cannot import name 'resolve_summary_replacements' from 'app.services.claim_ledger' (/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/claim_ledger.py)
+
+backend/tests/test_draft_coverage_repairs.py:43: ImportError
+_ test_summary_replacements_reject_ambiguous_stale_and_empty_targets[Summary only.-Section prose absent from summary.] _
+
+original = 'Summary only.', old = 'Section prose absent from summary.'
+
+    @pytest.mark.parametrize('original,old',[('Same. Same.','Same.'),('Summary only.','Section prose absent from summary.'),('Summary only.','')])
+    def test_summary_replacements_reject_ambiguous_stale_and_empty_targets(original,old):
+>       from app.services.claim_ledger import resolve_summary_replacements
+E       ImportError: cannot import name 'resolve_summary_replacements' from 'app.services.claim_ledger' (/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/claim_ledger.py)
+
+backend/tests/test_draft_coverage_repairs.py:43: ImportError
+_ test_summary_replacements_reject_ambiguous_stale_and_empty_targets[Summary only.-] _
+
+original = 'Summary only.', old = ''
+
+    @pytest.mark.parametrize('original,old',[('Same. Same.','Same.'),('Summary only.','Section prose absent from summary.'),('Summary only.','')])
+    def test_summary_replacements_reject_ambiguous_stale_and_empty_targets(original,old):
+>       from app.services.claim_ledger import resolve_summary_replacements
+E       ImportError: cannot import name 'resolve_summary_replacements' from 'app.services.claim_ledger' (/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/app/services/claim_ledger.py)
+
+backend/tests/test_draft_coverage_repairs.py:43: ImportError
+__________ test_drafting_uses_exact_summary_target_not_model_offsets ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-136/test_drafting_uses_exact_summa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ecf97552350>
+
+    def test_drafting_uses_exact_summary_target_not_model_offsets(tmp_path,monkeypatch):
+        original=FakeLLM.chat_json;payloads={}
+        def record(self,messages,**kwargs):
+            payloads[messages[0]['content'].splitlines()[0]]=json.loads(messages[1]['content'])
+            return original(self,messages,**kwargs)
+        monkeypatch.setattr(FakeLLM,'chat_json',record)
+        draft={'paragraphs':[{'text':TEXT,'kind':'attributed_allegation','claim_ids':['claim_01']}],
+               'summary_replacements':[{'old_text':'The hearing is Thursday.','new_text':TEXT,'claim_ids':['claim_01']}]}
+        result,_=run(tmp_path,{'EVIDENCE_DRAFT_V1':draft})
+>       assert result['state']=='ready'
+E       AssertionError: assert 'blocked' == 'ready'
+E         
+E         - ready
+E         + blocked
+
+backend/tests/test_draft_coverage_repairs.py:57: AssertionError
+________________ test_planned_claim_cannot_disappear_from_draft ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-136/test_planned_claim_cannot_disa0')
+
+    def test_planned_claim_cannot_disappear_from_draft(tmp_path):
+        second={**sample_claim(),'claim_id':'claim_02','text':'Alex describes a postponement.'}
+        result,_=run(tmp_path,{'EVIDENCE_LEDGER_V1':{'claims':[sample_claim(),second],'gaps':[]}})
+>       assert result['state']=='blocked'
+E       AssertionError: assert 'ready' == 'blocked'
+E         
+E         - blocked
+E         + ready
+
+backend/tests/test_draft_coverage_repairs.py:66: AssertionError
+___________ test_review_export_preserves_original_filename_metadata ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-136/test_review_export_preserves_o0')
+
+    def test_review_export_preserves_original_filename_metadata(tmp_path):
+        from scripts.evidence_quality_reviews import export_packets
+        fixture={'id':'development','human_review_packet':True,'split':'development','section':{'description':'Review source.'}}
+        obs={'case_id':'development','sources':[{'evidence_id':'one','filename':'original-notice.txt','origin':'source_document','excerpt':'Notice.','source_hash':'hash','locator':{}}],
+             'claims':[],'after':{'section':'Notice.','summary':'Notice.'}}
+        export_packets(tmp_path,[fixture],[obs])
+        packet=json.loads(next((tmp_path/'reviewer').glob('packet_*.json')).read_text())
+>       assert packet['sources'][0]['filename']=='original-notice.txt'
+E       KeyError: 'filename'
+
+backend/tests/test_draft_coverage_repairs.py:77: KeyError
+=========================== short test summary info ============================
+FAILED backend/tests/test_draft_coverage_repairs.py::test_matching_document_keeps_unmatched_companion_original_and_scope
+FAILED backend/tests/test_draft_coverage_repairs.py::test_document_coverage_does_not_claim_complete_when_capped
+FAILED backend/tests/test_draft_coverage_repairs.py::test_exact_summary_replacement_resolves_unicode_and_preserves_other_sections
+FAILED backend/tests/test_draft_coverage_repairs.py::test_summary_replacements_reject_ambiguous_stale_and_empty_targets[Same. Same.-Same.]
+FAILED backend/tests/test_draft_coverage_repairs.py::test_summary_replacements_reject_ambiguous_stale_and_empty_targets[Summary only.-Section prose absent from summary.]
+FAILED backend/tests/test_draft_coverage_repairs.py::test_summary_replacements_reject_ambiguous_stale_and_empty_targets[Summary only.-]
+FAILED backend/tests/test_draft_coverage_repairs.py::test_drafting_uses_exact_summary_target_not_model_offsets
+FAILED backend/tests/test_draft_coverage_repairs.py::test_planned_claim_cannot_disappear_from_draft
+FAILED backend/tests/test_draft_coverage_repairs.py::test_review_export_preserves_original_filename_metadata
+9 failed in 1.22s

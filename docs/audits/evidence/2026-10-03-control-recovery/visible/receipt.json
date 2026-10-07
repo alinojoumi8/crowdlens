@@ -1,0 +1,535 @@
+{
+  "frontend": {
+    "assets/CaseCompareView-BX-N3eV4.js": "0341e6ead0a72361bfaf1636d3c5cbbf5136cd83c3933076c0e3f16fdd059e27",
+    "assets/CaseCompareView-COpOAnvG.css": "3a04aae6634bfecd55960575ceb1e1d751677cb2db673cc4392e14e0ab54cfc7",
+    "assets/CaseDetailView-BjDDspP6.css": "f3e8f009888266b197c50c32fcc19899d84b373de65e85682b6e6765a6624796",
+    "assets/CaseDetailView-BnS0GkJs.js": "a94eb2701ea7716daa107f51e84b61c6bcb6c43b001c784cfd5bd81de59f9777",
+    "assets/CasesView-BsWP512G.js": "30c31f9791295b7a3c7c9d46c7b8262e84bc4714a1f16dcb40a2d82f196b5ea7",
+    "assets/CasesView-CwHzJCV_.css": "0d2c36df725e10c5a33646e674a69343c183c26447a7246c3d242683a9449a10",
+    "assets/GraphPanel-Bx73uTCP.css": "08117969ebd0f59a2ee27ad11a743f49a8dc48d5b45ffe83de6e168ec5ac33d8",
+    "assets/GraphPanel-D_llzCpv.js": "13b824b71e402d7d563a3a41d375c9a1b0ada727a8836655785c747895deaf28",
+    "assets/Home-BwkCD-fp.css": "a5cd6de0ac2a7b93d21fb7e3f6704382ff9387931d469785025f9f10ff655516",
+    "assets/Home-CXgh7pJn.js": "4d4ed98d77c21d734946cc4d220d5ccf169363b3a9bb40af295d7adc3018b0f1",
+    "assets/InteractionView-BJchoVfX.js": "24c4f7e53e4bd465f277325bba2356895f56fc2334cad600c2bea3d58e57fe60",
+    "assets/InteractionView-ByVH7bwX.css": "cf0ea8cbc86b1d37c1cf3dd079924b74f0e3a18ff498895f65b34146364fca7b",
+    "assets/MainView-B9zbc17M.css": "5fd5467085785f17fb2e8aa6adfd975c4003ba9da774c6ff04d85d38d3adda80",
+    "assets/MainView-BUF1eaXN.js": "473e62081c4de68fa04c2db22bd678c57b02cf1581b8057032997ec883345b61",
+    "assets/ReportView-DVWZ8qDt.js": "c4c978f9b8be7d9ef9d109355c053994a8cc92a21c232338f7515d881b5cc5d1",
+    "assets/ReportView-Zwu1yL-q.css": "fd5647da28e401ead9e1ac5e98362bcbfb54372c442bda82aefc4e5f1fead2dc",
+    "assets/SafeMarkdown-Is7L5e1H.js": "f1ca98f2e656524dcc924dfa034da4366099cb5a27564dda78b8379135340eac",
+    "assets/SimulationRunView-Bshflicv.css": "de66f078884a6cf4474c75306be1d49ff45b3955562045b8d468738433b7c50b",
+    "assets/SimulationRunView-VccNgaQe.js": "dd636a8552a5bb42716d9495251657134eeb2b24d7868b4c2018e031dd353836",
+    "assets/SimulationView-BYm_7Av5.js": "f1c6bcdaf7c22cda57c3141ebd6fc92c4a2d4487c2a877ee9a2a1d4b75441e63",
+    "assets/SimulationView-v4ajHxY3.css": "b57c27140b621638c66e9543f2acdbcb2473cc487e8a65bff67eaafbf14e30bb",
+    "assets/Step2EnvSetup-BJ8C_mtq.css": "e89f17e7b6f91b81a885f92604e03effd3636ffb17b1d8de25c047418fd19e49",
+    "assets/Step2EnvSetup-Ds10gOuq.js": "01fabc80975de1ae68235257794497c92d5ce19e322b2b14529c729f6ecc1277",
+    "assets/economySettings-M8O0gDiO.js": "b2f4cc8b62b57bb6d21e9527ae0e7c894cb668a441ebf6b118afd6c46682babe",
+    "assets/graph-DBVLHvre.js": "0400435f5f11525a270a072e90517305922b709dd1bb4286edf8a2a39ed1ca26",
+    "assets/index-Bz0JUq96.js": "2557fc23882af543568c34493f4223b11f2353824d7291bf41985c7a137641d2",
+    "assets/index-CbbZr_sK.css": "850c1e5dbce752a2b7506e0e96c3f0bf6b68c49568eaad496180961fab5a6523",
+    "assets/report-C5n_Ctt-.js": "c493894138e1b54ffcb564b5a1ff0b0e3a76e426cde3ab1456ebc4ebb2432bd1",
+    "assets/simulation-BURgHvf5.js": "ba9d7573ea7e877caa83fc31a2f179eec0ada7b5eba8c02e1f013254ee5376d5",
+    "assets/workflowInput-2Usd-cif.js": "b894faa7f9f6677ceb6d119e48e5ddcfca1ffbe891551956e563a7478bbbec7c",
+    "crowdlens-icon.svg": "62b1e7f9470a0e69ef164feba1438a4a6bf71034ae4054415c5abb836fa868b7",
+    "crowdlens-mark.svg": "7cedfca9c1a7a143eacb45238d11475a4dd62bc1bbd83112c11108b2fe3f7679",
+    "home-styles.css": "33a9a3cf3d347d56df1ccd733e5b1d3b48a195b766b3d4778080082acc214e41",
+    "icon.png": "2b2c19d0400056000bb88636410c71c39ec3bc6b9cc871d6b022adf8cddb6e7a",
+    "index.html": "56199d054b806dd8f78bba11b1cdda901b8b5e4537e2ddfe767f5c2c097c4f56"
+  },
+  "git_head": "34ad6d27e298f33317e443f0123143fa5e865eab",
+  "parent_digests": {
+    "full_report.md": "0feed4baa82583e7e04f2666eddbbe9a9afc10cbd5f9658f326ee7eb94552e8d",
+    "meta.json": "f31ab1902f9eb672e6d6c93010c65eec1d342893863e3e9652d8f0e3f5eeac22",
+    "outline.json": "d34711f3f87cc9e041377677d97f81c4d362c478f5e5e5ef15e9584140ac68b6",
+    "progress.json": "dc291b1970060bbff010a306bbb43cf380eddf7801a8af46cf08a42491cc0606",
+    "section_01.md": "ce26115a42ef730bde11bcf281d43b9a27a553f6585a43b40926deadfd82bf5c",
+    "section_02.md": "3bdfd0835821fee23bc51813455dc63b2b441e6c32f1aeba3966490d396ff79f"
+  },
+  "parent_unchanged": true,
+  "proposals": [
+    {
+      "accepted_report_id": "report_6b0ffc17d1cb46148ffc1481da4bafe9",
+      "after": {
+        "section": "Alex states that the hearing was postponed until Friday. [1]",
+        "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open."
+      },
+      "before": {
+        "section": "The hearing is Thursday.",
+        "summary": "The hearing is Thursday. Other issues remain open."
+      },
+      "created_at": "2026-10-03T07:19:46.327784+00:00",
+      "deadline_at": 1791012166.327813,
+      "findings": [],
+      "ledger": [
+        {
+          "attribution": "Alex",
+          "checks": [],
+          "citation_ids": [
+            "episode:one"
+          ],
+          "claim_id": "claim_01",
+          "kind": "attributed_allegation",
+          "premise_claim_ids": [],
+          "quote": "",
+          "schema_version": 1,
+          "scope": {
+            "case_id": "synthetic_case",
+            "case_version_id": "synthetic_v1",
+            "graph_id": "synthetic_graph"
+          },
+          "text": "Alex states that the hearing was postponed until Friday."
+        }
+      ],
+      "ledger_digest": "1eb0988d1579319a7d27fab94dfde53cd6bfce81268c811d2be75bdc15ba1fb3",
+      "limitations": [
+        "semantic_retrieval_unavailable",
+        "model_audit_is_not_factual_certification"
+      ],
+      "model": "synthetic-no-provider",
+      "paragraphs": [
+        {
+          "claim_ids": [
+            "claim_01"
+          ],
+          "kind": "attributed_allegation",
+          "text": "Alex states that the hearing was postponed until Friday."
+        }
+      ],
+      "parent_digest": "30eb12ddeedb82dc1d5643d82b871b90b8327fe1407aa6bcfddb64f0e8c3d10d",
+      "parent_report_id": "report_synthetic",
+      "phase": "review",
+      "policy": "evidence-draft-v1",
+      "proposal_digest": "845a8f2f923d43e2cc84eaea93b99566533c45f0ffe0dff730a345b022245c32",
+      "proposal_id": "proposal_7f7679819a64440da277ae964cfca062",
+      "request_digest": "7bef911825d879d77603553860c57950690717f8b100ebaf3b6e2455fdae6658",
+      "request_key_hash": "345d06aee8740171c0a8051bb6b283b208c482d7b3c138babc49716446bb833e",
+      "retrieval": {
+        "admitted": 1,
+        "exact": [],
+        "fused": [
+          "episode:one"
+        ],
+        "lexical": [
+          "episode:one"
+        ],
+        "packet_characters": 56,
+        "semantic_covered": 0
+      },
+      "revision_report_id": "report_6b0ffc17d1cb46148ffc1481da4bafe9",
+      "schema_version": 1,
+      "scope": {
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1",
+        "graph_id": "synthetic_graph"
+      },
+      "section_index": 1,
+      "source_checked_at": "2026-10-03T07:21:04.562365+00:00",
+      "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+      "source_snapshot_digest": "188db7c577de1b2d9e1d8b9d78587f4873498970ccc788c3aa621c0d16c84e19",
+      "sources": [
+        {
+          "case_id": "synthetic_case",
+          "case_version_id": "synthetic_v1",
+          "document_id": "synthetic_doc",
+          "episode_id": "one",
+          "evidence_id": "episode:one",
+          "excerpt": "Alex states that the hearing was postponed until Friday.",
+          "filename": "synthetic-record.txt",
+          "graph_id": "synthetic_graph",
+          "locator": {
+            "char_end": 56,
+            "char_start": 0,
+            "chunk_index": 0,
+            "offset_basis": "stored_chunk",
+            "page": 1,
+            "paragraph": null
+          },
+          "origin": "source_document",
+          "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+          "window": "Alex states that the hearing was postponed until Friday.",
+          "window_end": 56,
+          "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+          "window_start": 0
+        }
+      ],
+      "state": "accepted",
+      "summary_edits": [
+        {
+          "claim_ids": [
+            "claim_01"
+          ],
+          "end": 24,
+          "new_text": "Alex states that the hearing was postponed until Friday.",
+          "old_text": "The hearing is Thursday.",
+          "start": 0
+        }
+      ],
+      "summary_unchanged": false,
+      "task_id": "faf420ca-6155-40ba-8961-dda8a9d77b96",
+      "timing": {
+        "auditing": 209.3,
+        "drafting": 206.8,
+        "planning": 210.27,
+        "retrieving": 6.77
+      },
+      "updated_at": "2026-10-03T07:21:04.568722+00:00",
+      "usage": {
+        "calls": [
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 0,
+            "input_tokens": 0,
+            "model": "synthetic-no-provider",
+            "output_tokens": 0,
+            "provider": "synthetic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 0,
+            "input_tokens": 0,
+            "model": "synthetic-no-provider",
+            "output_tokens": 0,
+            "provider": "synthetic"
+          },
+          {
+            "attempt_count": 1,
+            "elapsed_ms": 0,
+            "input_tokens": 0,
+            "model": "synthetic-no-provider",
+            "output_tokens": 0,
+            "provider": "synthetic"
+          }
+        ],
+        "cost": null,
+        "elapsed_ms": 655.11,
+        "remaining_ms": 179343.67
+      }
+    }
+  ],
+  "provider_calls": 0,
+  "reports": [
+    {
+      "claim_checks": [],
+      "completed_at": "2026-10-03T07:21:04.562537+00:00",
+      "created_at": "2026-10-03T07:21:04.562537+00:00",
+      "decision_config": {},
+      "error": null,
+      "forecast": {
+        "limitations": "Synthetic source-only example; no simulation has run.",
+        "status": "unavailable"
+      },
+      "graph_id": "synthetic_graph",
+      "markdown_content": "# Synthetic hearing report\n\n> Alex states that the hearing was postponed until Friday. Other issues remain open.\n\n## Hearing\n\nAlex states that the hearing was postponed until Friday. [1]\n\n## Unrelated contracts\n\nUnrelated contracts remain unresolved.\n\n",
+      "outline": {
+        "sections": [
+          {
+            "claim_check_hash": "41a8e7a9d5f5dc14948f8895c750e985e3727cbb25e5c54d0169d2fc7a746575",
+            "claim_checks": [],
+            "claim_ledger": [
+              {
+                "attribution": "Alex",
+                "checks": [],
+                "citation_ids": [
+                  "episode:one"
+                ],
+                "claim_id": "claim_01",
+                "kind": "attributed_allegation",
+                "premise_claim_ids": [],
+                "quote": "",
+                "schema_version": 1,
+                "scope": {
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1",
+                  "graph_id": "synthetic_graph"
+                },
+                "text": "Alex states that the hearing was postponed until Friday."
+              }
+            ],
+            "claims": [
+              {
+                "attribution": "Alex",
+                "case_id": "synthetic_case",
+                "case_version_id": "synthetic_v1",
+                "checks": [],
+                "citation_ids": [
+                  "episode:one"
+                ],
+                "claim_id": "claim_01",
+                "evidence_ids": [
+                  "episode:one"
+                ],
+                "graph_id": "synthetic_graph",
+                "kind": "attributed_allegation",
+                "premise_claim_ids": [],
+                "quote": "",
+                "schema_version": 1,
+                "scope": {
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1",
+                  "graph_id": "synthetic_graph"
+                },
+                "text": "Alex states that the hearing was postponed until Friday."
+              }
+            ],
+            "content": "Alex states that the hearing was postponed until Friday. [1]",
+            "description": "",
+            "evidence_cards": [
+              {
+                "case_id": "synthetic_case",
+                "case_version_id": "synthetic_v1",
+                "document_id": "synthetic_doc",
+                "episode_id": "one",
+                "evidence_id": "episode:one",
+                "excerpt": "Alex states that the hearing was postponed until Friday.",
+                "filename": "synthetic-record.txt",
+                "graph_id": "synthetic_graph",
+                "locator": {
+                  "char_end": 56,
+                  "char_start": 0,
+                  "chunk_index": 0,
+                  "offset_basis": "stored_chunk",
+                  "page": 1,
+                  "paragraph": null
+                },
+                "origin": "source_document",
+                "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                "window": "Alex states that the hearing was postponed until Friday.",
+                "window_end": 56,
+                "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                "window_start": 0
+              }
+            ],
+            "title": "Hearing"
+          },
+          {
+            "claim_check_hash": "",
+            "claim_checks": [],
+            "claim_ledger": [],
+            "claims": [],
+            "content": "Unrelated contracts remain unresolved.",
+            "description": "",
+            "evidence_cards": [],
+            "title": "Unrelated contracts"
+          }
+        ],
+        "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open.",
+        "summary_claim_check_hash": "",
+        "summary_claim_checks": [],
+        "summary_claims": [],
+        "title": "Synthetic hearing report"
+      },
+      "quality_score": {
+        "deductions": [
+          {
+            "code": "procedural_source_unavailable",
+            "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.",
+            "penalty": 5
+          },
+          {
+            "code": "thin_section_evidence",
+            "message": "2 section(s) use fewer than 3 distinct evidence points.",
+            "penalty": 10
+          }
+        ],
+        "score": 85,
+        "section_count": 2,
+        "section_evidence_counts": [
+          1,
+          0
+        ],
+        "status": "pass",
+        "threshold": 80
+      },
+      "report_depth": "standard",
+      "report_id": "report_6b0ffc17d1cb46148ffc1481da4bafe9",
+      "report_mode": "legal_case",
+      "revision": {
+        "accepted_at": "2026-10-03T07:21:04.562548+00:00",
+        "content_digest": "ec961a770e14654d49b72d8e29daedd2010fe35e446115584300f310b673f508",
+        "immutable": true,
+        "inherited_forecast": true,
+        "inherited_section_indices": [
+          2
+        ],
+        "parent_report_id": "report_synthetic",
+        "proposal_digest": "845a8f2f923d43e2cc84eaea93b99566533c45f0ffe0dff730a345b022245c32",
+        "proposal_id": "proposal_7f7679819a64440da277ae964cfca062",
+        "root_report_id": "report_synthetic",
+        "section_index": 1,
+        "source_checked_at": "2026-10-03T07:21:04.562365+00:00",
+        "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+        "summary_edits": [
+          {
+            "claim_ids": [
+              "claim_01"
+            ],
+            "end": 24,
+            "new_text": "Alex states that the hearing was postponed until Friday.",
+            "old_text": "The hearing is Thursday.",
+            "start": 0
+          }
+        ]
+      },
+      "simulation_id": "sim_synthetic",
+      "simulation_requirement": "Review the synthetic hearing record.",
+      "source_grounding": {
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1",
+        "graph_id": "synthetic_graph"
+      },
+      "status": "needs_review",
+      "timing": {},
+      "validation_issues": [
+        {
+          "blocking": false,
+          "code": "procedural_source_unavailable",
+          "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.",
+          "requires_review": true
+        }
+      ]
+    },
+    {
+      "claim_checks": [],
+      "completed_at": "",
+      "created_at": "2026-10-02T12:00:00",
+      "decision_config": {},
+      "error": null,
+      "forecast": {
+        "limitations": "Synthetic source-only example; no simulation has run.",
+        "status": "unavailable"
+      },
+      "graph_id": "synthetic_graph",
+      "markdown_content": "# Synthetic hearing report\n\n> The hearing is Thursday. Other issues remain open.\n\n## Hearing\n\nThe hearing is Thursday.\n\n## Unrelated contracts\n\nUnrelated contracts remain unresolved.\n\n",
+      "outline": {
+        "sections": [
+          {
+            "claim_check_hash": "",
+            "claim_checks": [],
+            "claim_ledger": [],
+            "claims": [],
+            "content": "The hearing is Thursday.",
+            "description": "",
+            "evidence_cards": [],
+            "title": "Hearing"
+          },
+          {
+            "claim_check_hash": "",
+            "claim_checks": [],
+            "claim_ledger": [],
+            "claims": [],
+            "content": "Unrelated contracts remain unresolved.",
+            "description": "",
+            "evidence_cards": [],
+            "title": "Unrelated contracts"
+          }
+        ],
+        "summary": "The hearing is Thursday. Other issues remain open.",
+        "summary_claim_check_hash": "",
+        "summary_claim_checks": [],
+        "summary_claims": [],
+        "title": "Synthetic hearing report"
+      },
+      "quality_score": {},
+      "report_depth": "standard",
+      "report_id": "report_synthetic",
+      "report_mode": "legal_case",
+      "revision": {},
+      "simulation_id": "sim_synthetic",
+      "simulation_requirement": "Review the synthetic hearing record.",
+      "source_grounding": {
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1",
+        "graph_id": "synthetic_graph"
+      },
+      "status": "needs_review",
+      "timing": {},
+      "validation_issues": []
+    },
+    {
+      "claim_checks": [],
+      "completed_at": "",
+      "created_at": "",
+      "decision_config": {},
+      "error": null,
+      "forecast": {},
+      "graph_id": "synthetic_graph",
+      "markdown_content": "",
+      "outline": {
+        "sections": [],
+        "summary": "Partial fixture for control testing; no real model was called.",
+        "summary_claim_check_hash": "",
+        "summary_claim_checks": [],
+        "summary_claims": [],
+        "title": "Interrupted synthetic report"
+      },
+      "quality_score": {},
+      "report_depth": "standard",
+      "report_id": "report_interrupted_synthetic",
+      "report_mode": "prediction",
+      "revision": {},
+      "simulation_id": "sim_control",
+      "simulation_requirement": "Synthetic Stop demonstration; no live simulation.",
+      "source_grounding": {},
+      "status": "interrupted",
+      "timing": {},
+      "validation_issues": []
+    }
+  ],
+  "seeded": [
+    "original report and progress",
+    "original source chunk",
+    "graph node",
+    "simulation history"
+  ],
+  "source": {
+    "declared_revision": null,
+    "scope": "runtime-source-v1",
+    "source_sha256": "fea6ca781b9a175fe9face0055dc195bf7f685551e5af5a5f2b42a5342450006"
+  },
+  "substitutes": [
+    "ontology generator",
+    "graph builder and storage",
+    "simulation endpoints",
+    "drafting LLM"
+  ],
+  "tasks": [
+    {
+      "created_at": "2026-10-03T03:19:46.329067",
+      "error": null,
+      "execution": {
+        "attempt_id": "4568907d794b4716b3cdc49b841764b2",
+        "heartbeat_at": 1791011986.3326526,
+        "lease_until": 1791012016.3326528,
+        "owner": {
+          "pid": 2729425,
+          "process_start": "9138717",
+          "worker_id": "87e0d38b6daf492d9683962a580cad18"
+        },
+        "resources": [
+          {
+            "key": "proposal:proposal_7f7679819a64440da277ae964cfca062",
+            "root": "/tmp/crowdlens-control-recovery-delivery-visible/reports"
+          }
+        ]
+      },
+      "message": "Task completed",
+      "metadata": {
+        "proposal_id": "proposal_7f7679819a64440da277ae964cfca062",
+        "report_id": "report_synthetic",
+        "workflow_epoch": 1,
+        "workflow_id": "wf_976d57189bb044309b5daacdd80f1c7e"
+      },
+      "progress": 100,
+      "progress_detail": {},
+      "recovery": null,
+      "result": {
+        "proposal_id": "proposal_7f7679819a64440da277ae964cfca062",
+        "state": "ready"
+      },
+      "status": "completed",
+      "task_id": "faf420ca-6155-40ba-8961-dda8a9d77b96",
+      "task_type": "evidence_proposal",
+      "updated_at": "2026-10-03T07:19:46.990014+00:00"
+    }
+  ]
+}

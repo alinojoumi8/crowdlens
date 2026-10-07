@@ -17,10 +17,12 @@ import math
 import os
 import statistics
 import time
+from contextlib import nullcontext
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 
 from ..config import Config
+from .task_execution import fenced, current_attempt, publication_guard, OwnershipLost
 from ..utils.logger import get_logger
 from .forecasting import (
     DEFAULT_OUTCOMES,
@@ -68,28 +70,40 @@ class EnsembleRunner:
         per_run_signals: List[Optional[Dict[str, Any]]] = []
 
         for i in range(runs):
+            from .workflow_execution import current_scope
+            scope = current_scope()
+            if scope and scope.workflow_id:
+                scope.ledger.require_scheduling(scope.workflow_id, scope.epoch)
             seed = 1000 + i * 97
             cls._reset(simulation_id)
             try:
-                SimulationRunner.start_simulation(
-                    simulation_id=simulation_id,
-                    platform=platform,
-                    max_rounds=max_rounds,
-                    enable_graph_memory_update=bool(storage),
-                    graph_id=graph_id,
-                    storage=storage,
-                    scenario_id="baseline",
-                    seed=seed,
-                    memory_mode=memory_mode,
-                    economy=economy,
-                )
+                with publication_guard():
+                    SimulationRunner.start_simulation(
+                        simulation_id=simulation_id,
+                        platform=platform,
+                        max_rounds=max_rounds,
+                        enable_graph_memory_update=bool(storage),
+                        graph_id=graph_id,
+                        storage=storage,
+                        scenario_id="baseline",
+                        seed=seed,
+                        memory_mode=memory_mode,
+                        economy=economy,
+                    )
+            except OwnershipLost:
+                raise
             except Exception as exc:  # pragma: no cover - defensive
                 logger.error("Ensemble run %s/%s failed to start: %s", i + 1, runs, exc)
                 if progress_callback:
                     progress_callback(i + 1, runs, None)
                 continue
 
-            completed = cls._wait_for_completion(simulation_id, per_run_timeout)
+            attempt = current_attempt()
+            child = SimulationRunner._processes.get(simulation_id)
+            watch = (attempt.runtime.watch_child(attempt, child)
+                     if attempt and child else nullcontext())
+            with watch:
+                completed = cls._wait_for_completion(simulation_id, per_run_timeout)
             signal = (
                 ForecastSynthesizer(simulation_id, config).build_simulation_signal()
                 if completed else None
@@ -139,7 +153,10 @@ class EnsembleRunner:
         """Best-effort: gracefully close any live env, stop a running process, and
         clear runtime logs so the next seeded run starts clean."""
         cls._shutdown(simulation_id)
-        result = SimulationRunner.cleanup_simulation_logs(simulation_id)
+        # Shutdown may wait long enough for ownership to expire. Validate at the
+        # destructive operation and serialize it with replacement admission.
+        with publication_guard():
+            result = SimulationRunner.cleanup_simulation_logs(simulation_id)
         if result and not result.get("success", False):
             raise RuntimeError(f"Cannot isolate ensemble sample: {result.get('errors')}")
 
@@ -147,13 +164,19 @@ class EnsembleRunner:
     def _shutdown(cls, simulation_id: str) -> None:
         """Close runtime processes while preserving the final sample evidence."""
         try:
-            SimulationRunner.close_simulation_env(simulation_id, timeout=20)
+            with publication_guard():
+                SimulationRunner.close_simulation_env(simulation_id, timeout=20)
+        except OwnershipLost:
+            raise
         except Exception as exc:
             logger.debug("close_simulation_env during reset: %s", exc)
         try:
-            state = SimulationRunner.get_run_state(simulation_id)
-            if state and state.runner_status in (RunnerStatus.RUNNING, RunnerStatus.STARTING):
-                SimulationRunner.stop_simulation(simulation_id)
+            with publication_guard():
+                state = SimulationRunner.get_run_state(simulation_id)
+                if state and state.runner_status in (RunnerStatus.RUNNING, RunnerStatus.STARTING):
+                    SimulationRunner.stop_simulation(simulation_id)
+        except OwnershipLost:
+            raise
         except Exception as exc:
             logger.debug("stop_simulation during reset: %s", exc)
 
@@ -161,6 +184,8 @@ class EnsembleRunner:
     def _wait_for_completion(simulation_id: str, timeout: float) -> bool:
         start = time.time()
         while time.time() - start < timeout:
+            with publication_guard():
+                pass
             state = SimulationRunner.get_run_state(simulation_id)
             if state and state.runner_status in (RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED):
                 return state.runner_status == RunnerStatus.COMPLETED
@@ -218,6 +243,7 @@ class EnsembleRunner:
         }
 
     @staticmethod
+    @fenced
     def _persist(simulation_id: str, aggregate: Dict[str, Any]) -> None:
         path = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id, "ensemble_signal.json")
         try:

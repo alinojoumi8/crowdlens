@@ -1,0 +1,29 @@
+{
+  "candidate": "3d8ba0e4dbae05a327e1a6cd6684924c31ad1c85",
+  "status": "build passed; candidate superseded before startup",
+  "build_exit_code": 0,
+  "argv": [
+    "docker",
+    "build",
+    "--build-arg",
+    "CROWDLENS_BUILD_REVISION=3d8ba0e4dbae05a327e1a6cd6684924c31ad1c85",
+    "--tag",
+    "crowdlens-ecc-release:3d8ba0e4dbae",
+    "--iidfile",
+    "/tmp/crowdlens-ecc-release-final-3d8ba0e4/image-id.txt",
+    "/tmp/crowdlens-ecc-release-final-3d8ba0e4/image-source"
+  ],
+  "image_manifest_id": "sha256:0f44844dff0e7bdb6fdddd9dce5f2ce3d4f1424a633dc1100769ff509e09dd6c",
+  "image_configuration_id": "sha256:0f44844dff0e7bdb6fdddd9dce5f2ce3d4f1424a633dc1100769ff509e09dd6c",
+  "bytes": 13793889650,
+  "oci_revision": "3d8ba0e4dbae05a327e1a6cd6684924c31ad1c85",
+  "runtime_command": [
+    "npm",
+    "run",
+    "dev"
+  ],
+  "context_clean_before": true,
+  "build_log": "/tmp/crowdlens-ecc-release-final-3d8ba0e4/logs/image-build.log",
+  "build_log_sha256": "14855f1c644e3017bbec4a5bd4089ffe20052df39310b54745d84391abfba143",
+  "startup": "NOT RUN - superseded before startup"
+}

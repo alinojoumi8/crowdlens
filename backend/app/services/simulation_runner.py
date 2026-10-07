@@ -13,6 +13,9 @@ import subprocess
 import signal
 import atexit
 import tempfile
+import uuid
+from contextvars import copy_context
+from functools import wraps
 from collections import Counter, defaultdict
 from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass, field
@@ -26,6 +29,34 @@ from ..utils.timing import PhaseTimer, wall_clock_timing
 from .graph_memory_updater import GraphMemoryManager
 from .simulation_ipc import SimulationIPCClient, CommandType, IPCResponse
 from .economy import normalize_economy_settings
+from .workflow_execution import current_scope, WorkflowHalt, without_execution_scope
+from .task_execution import current_attempt, OwnershipLost, run_state_write, recovery_context
+
+
+def owned_run_start(function):
+    @wraps(function)
+    def wrapped(cls, simulation_id, *args, **kwargs):
+        from ..models.task import TaskManager, TaskStatus
+        tasks = TaskManager()
+        with tasks.runtime.gate():
+            scope = current_scope()
+            if not scope or not scope.workflow_id or current_attempt():
+                return function(cls, simulation_id, *args, **kwargs)
+            existing = cls.get_run_state(simulation_id)
+            if existing and existing.runner_status in {RunnerStatus.RUNNING, RunnerStatus.STARTING, RunnerStatus.PAUSED}:
+                raise ValueError(f'Simulation already running: {simulation_id}')
+            scope.ledger.require_scheduling(scope.workflow_id, scope.epoch)
+            task_id = tasks.create_task('simulation_run', metadata={'simulation_id': simulation_id},
+                resources=[{'key': 'simulation-runtime:' + simulation_id, 'root': cls.RUN_STATE_DIR}])
+            attempt = tasks.attempt(task_id)
+            with attempt.bind():
+                tasks.update_task(task_id, status=TaskStatus.PROCESSING, message='Simulation running')
+                try:
+                    return function(cls, simulation_id, *args, **kwargs)
+                except BaseException as exc:
+                    tasks.fail_task(task_id, exc.reason if isinstance(exc, WorkflowHalt) else 'simulation_start_failed')
+                    raise
+    return wrapped
 
 logger = get_logger('mirofish.simulation_runner')
 
@@ -60,6 +91,8 @@ class AgentAction:
     action_args: Dict[str, Any] = field(default_factory=dict)
     result: Optional[str] = None
     success: bool = True
+    origin: str = 'unknown'
+    trace_id: Optional[int] = None
     
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -72,6 +105,8 @@ class AgentAction:
             "action_args": self.action_args,
             "result": self.result,
             "success": self.success,
+            "origin": self.origin,
+            "trace_id": self.trace_id,
         }
 
 
@@ -147,6 +182,7 @@ class SimulationRunState:
     # Process ID (for stopping)
     process_pid: Optional[int] = None
     timing: Dict[str, Any] = field(default_factory=dict)
+    execution: Dict[str, Any] = field(default_factory=dict)
     
     def add_action(self, action: AgentAction):
         """Add action to recent actions list"""
@@ -196,6 +232,7 @@ class SimulationRunState:
             "completed_at": self.completed_at,
             "error": self.error,
             "process_pid": self.process_pid,
+            "execution": self.execution,
             "timing": timing,
         }
 
@@ -250,7 +287,12 @@ class SimulationRunner:
     def get_run_state(cls, simulation_id: str) -> Optional[SimulationRunState]:
         """Get run state"""
         if simulation_id in cls._run_states:
-            return cls._run_states[simulation_id]
+            cached = cls._run_states[simulation_id]
+            persisted = cls._repository.get_simulation_run(simulation_id) if cls._repository else None
+            if persisted and persisted != cached.to_detail_dict():
+                cls._run_states.pop(simulation_id, None)
+            else:
+                return cached
         
         # Try to load from file
         state = cls._load_run_state(simulation_id)
@@ -303,6 +345,7 @@ class SimulationRunner:
                 started_at=data.get("started_at"),
                 updated_at=data.get("updated_at", datetime.now().isoformat()),
                 completed_at=data.get("completed_at"),
+                execution=data.get('execution') or {},
                 error=data.get("error"),
                 process_pid=data.get("process_pid"),
                 timing=data.get("timing", {}),
@@ -317,12 +360,14 @@ class SimulationRunner:
                 agent_name=action_data.get("agent_name", ""),
                 action_type=action_data.get("action_type", ""),
                 action_args=action_data.get("action_args", {}),
+                origin=action_data.get("origin", "unknown"), trace_id=action_data.get("trace_id"),
                 result=action_data.get("result"),
                 success=action_data.get("success", True),
             ))
         return state
     
     @classmethod
+    @run_state_write
     def _save_run_state(cls, state: SimulationRunState):
         """Save run state to file"""
         sim_dir = os.path.join(cls.RUN_STATE_DIR, state.simulation_id)
@@ -398,6 +443,7 @@ class SimulationRunner:
         return result
     
     @classmethod
+    @owned_run_start
     def start_simulation(
         cls,
         simulation_id: str,
@@ -494,6 +540,10 @@ class SimulationRunner:
                 started_at=datetime.now().isoformat(),
             )
             state.timing = {**(state.timing or {}), "startup": startup_timing.snapshot()}
+            scope, owner = current_scope(), current_attempt()
+            state.execution = dict(run_id=uuid.uuid4().hex,
+                workflow_id=scope.workflow_id if scope else None, workflow_epoch=scope.epoch if scope else None,
+                task_id=owner.task_id if owner else None, attempt_id=owner.attempt_id if owner else None)
         
         cls._save_run_state(state)
         
@@ -517,14 +567,14 @@ class SimulationRunner:
         
         # Determine which script to run (scripts located in backend/scripts/ directory)
         with startup_timing.time("select_script", label="Select simulation script"):
+            # The shared worker emits the structured action/round events consumed
+            # by the monitor, including when only one platform is enabled.
+            script_name = "run_parallel_simulation.py"
             if platform == "twitter":
-                script_name = "run_twitter_simulation.py"
                 state.twitter_running = True
             elif platform == "reddit":
-                script_name = "run_reddit_simulation.py"
                 state.reddit_running = True
             else:
-                script_name = "run_parallel_simulation.py"
                 state.twitter_running = True
                 state.reddit_running = True
 
@@ -550,10 +600,12 @@ class SimulationRunner:
                 script_path,
                 "--config", config_path,  # Use full config file path
             ]
+            if platform in {"twitter", "reddit"}:
+                cmd.append("--" + platform + "-only")
             
             # If max_rounds specified, add to command-line arguments
-            if max_rounds is not None and max_rounds > 0:
-                cmd.extend(["--max-rounds", str(max_rounds)])
+            if total_rounds > 0:
+                cmd.extend(["--max-rounds", str(total_rounds)])
             
             # Create main log file to avoid stdout/stderr pipe buffer overflow
             main_log_path = os.path.join(sim_dir, "simulation.log")
@@ -562,6 +614,14 @@ class SimulationRunner:
             # Set subprocess environment variables to ensure UTF-8 encoding on Windows
             # This fixes third-party libraries (like OASIS) not specifying encoding when reading files
             env = os.environ.copy()
+            scope = current_scope()
+            if scope and scope.workflow_id:
+                env.update(scope.child_env())
+            env['CROWDLENS_RUN_ID'] = state.execution['run_id']
+            owner = current_attempt()
+            state.execution = dict(run_id=env['CROWDLENS_RUN_ID'],
+                workflow_id=scope.workflow_id if scope else None, workflow_epoch=scope.epoch if scope else None,
+                task_id=owner.task_id if owner else None, attempt_id=owner.attempt_id if owner else None)
             env['PYTHONUTF8'] = '1'  # Python 3.7+ support, make all open() use UTF-8 by default
             env['PYTHONIOENCODING'] = 'utf-8'  # Ensure stdout/stderr use UTF-8
             
@@ -594,12 +654,23 @@ class SimulationRunner:
             cls._save_run_state(state)
             
             # Start monitoring thread
-            monitor_thread = threading.Thread(
-                target=cls._monitor_simulation,
-                args=(simulation_id,),
-                daemon=True
-            )
-            monitor_thread.start()
+            context = copy_context()
+            def monitor():
+                cls._monitor_simulation(simulation_id, process, state)
+            if owner and owner.runtime.get(owner.task_id)['task_type'] == 'simulation_run':
+                def owned_monitor():
+                    from ..models.task import TaskManager
+                    with owner.runtime.watch_child(owner, process):
+                        monitor()
+                    tasks = TaskManager()
+                    if state.runner_status == RunnerStatus.COMPLETED:
+                        tasks.complete_task(owner.task_id, {'simulation_id': simulation_id})
+                    else:
+                        tasks.fail_task(owner.task_id, state.error or state.runner_status.value)
+                monitor_thread = owner.runtime.start(owner, owned_monitor, name='simulation-monitor')
+            else:
+                monitor_thread = threading.Thread(target=lambda: context.run(monitor), daemon=True)
+                monitor_thread.start()
             cls._monitor_threads[simulation_id] = monitor_thread
             
             logger.info(f"Simulation started successfully: {simulation_id}, pid={process.pid}, platform={platform}")
@@ -614,7 +685,7 @@ class SimulationRunner:
         return state
     
     @classmethod
-    def _monitor_simulation(cls, simulation_id: str):
+    def _monitor_simulation(cls, simulation_id: str, expected_process=None, expected_state=None):
         """Monitor simulation process and parse action logs"""
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
         
@@ -622,10 +693,10 @@ class SimulationRunner:
         twitter_actions_log = os.path.join(sim_dir, "twitter", "actions.jsonl")
         reddit_actions_log = os.path.join(sim_dir, "reddit", "actions.jsonl")
         
-        process = cls._processes.get(simulation_id)
-        state = cls.get_run_state(simulation_id)
+        process = expected_process or cls._processes.get(simulation_id)
+        state = expected_state or cls.get_run_state(simulation_id)
         
-        if not process or not state:
+        if not process or not state or cls._processes.get(simulation_id) is not process:
             return
         
         twitter_position = 0
@@ -633,6 +704,27 @@ class SimulationRunner:
         
         try:
             while process.poll() is None:  # Process still running
+                if cls._processes.get(simulation_id) is not process:
+                    return  # A superseded monitor cannot touch replacement work.
+                scope = current_scope()
+                if scope and scope.workflow_id:
+                    try:
+                        scope.checkpoint()
+                    except WorkflowHalt as exc:
+                        with without_execution_scope():
+                            if state.runner_status in {RunnerStatus.RUNNING, RunnerStatus.PAUSED}:
+                                cls.stop_simulation(simulation_id)
+                            state.error = exc.reason
+                        break
+                owner = current_attempt()
+                if owner:
+                    try:
+                        with owner.runtime.gate():
+                            owner.runtime.validate(owner)
+                    except OwnershipLost:
+                        with without_execution_scope():
+                            cls._terminate_process(process, simulation_id)
+                        return
                 # Read Twitter action log
                 if os.path.exists(twitter_actions_log):
                     twitter_position = cls._read_action_log(
@@ -650,6 +742,11 @@ class SimulationRunner:
                 time.sleep(2)
             
             # After process ends, read logs one more time
+            if cls._processes.get(simulation_id) is not process:
+                return
+            owner = current_attempt()
+            if owner:
+                owner.runtime.release_child(owner, process)
             if os.path.exists(twitter_actions_log):
                 cls._read_action_log(twitter_actions_log, twitter_position, state, "twitter")
             if os.path.exists(reddit_actions_log):
@@ -658,12 +755,19 @@ class SimulationRunner:
             # Process ended
             exit_code = process.returncode
             
-            if exit_code == 0:
+            if state.runner_status in {RunnerStatus.STOPPING, RunnerStatus.STOPPED}:
+                state.runner_status = RunnerStatus.STOPPED
+                logger.info(f"Stopped simulation exited: {simulation_id}")
+            elif exit_code == 0 and (state.total_rounds <= 0 or
+                    ((not state.twitter_running or state.twitter_completed or state.twitter_current_round >= state.total_rounds)
+                     and (not state.reddit_running or state.reddit_completed or state.reddit_current_round >= state.total_rounds))):
                 state.runner_status = RunnerStatus.COMPLETED
                 state.completed_at = datetime.now().isoformat()
                 logger.info(f"Simulation completed: {simulation_id}")
             else:
                 state.runner_status = RunnerStatus.FAILED
+                scope = current_scope()
+                record = scope.ledger.status(scope.workflow_id) if scope and scope.workflow_id else {}
                 # Read error info from main log file
                 main_log_path = os.path.join(sim_dir, "simulation.log")
                 error_info = ""
@@ -673,13 +777,18 @@ class SimulationRunner:
                             error_info = f.read()[-2000:]  # Take last 2000 characters
                 except Exception:
                     pass
-                state.error = f"Process exit code: {exit_code}, error: {error_info}"
+                state.error = record.get('reason') or (f"Process exit code: {exit_code}, error: {error_info}"
+                    if exit_code else 'incomplete_simulation')
                 logger.error(f"Simulation failed: {simulation_id}, error={state.error}")
             
             state.twitter_running = False
             state.reddit_running = False
             cls._save_run_state(state)
             
+        except OwnershipLost:
+            if cls._processes.get(simulation_id) is process and process.poll() is None:
+                cls._terminate_process(process, simulation_id)
+            return  # Recovery already terminalized this attempt; never publish stale state.
         except Exception as e:
             logger.error(f"Monitor thread exception: {simulation_id}, error={str(e)}")
             state.runner_status = RunnerStatus.FAILED
@@ -687,16 +796,28 @@ class SimulationRunner:
             cls._save_run_state(state)
         
         finally:
+            if cls._processes.get(simulation_id) is not process:
+                return
             # Stop graph memory updater
             if cls._graph_memory_enabled.get(simulation_id, False):
                 try:
-                    GraphMemoryManager.stop_updater(simulation_id)
+                    GraphMemoryManager.stop_updater(simulation_id, drain=state.runner_status == RunnerStatus.COMPLETED)
                     logger.info(f"Graph memory update stopped: simulation_id={simulation_id}")
+                except WorkflowHalt as exc:
+                    state.error = 'graph_memory_interrupted: ' + exc.reason
+                    state.execution['graph_memory'] = 'interrupted'
+                    try:
+                        with without_execution_scope():
+                            cls._save_run_state(state)
+                    except OwnershipLost:
+                        pass  # Cancellation already reconciled the persisted task.
                 except Exception as e:
                     logger.error(f"Failed to stop graph memory updater: {e}")
                 cls._graph_memory_enabled.pop(simulation_id, None)
             
             # Clean up process resources
+            if cls._processes.get(simulation_id) is not process:
+                return
             cls._processes.pop(simulation_id, None)
             cls._action_queues.pop(simulation_id, None)
             
@@ -754,7 +875,10 @@ class SimulationRunner:
                                 event_type = action_data.get("event_type")
                                 
                                 # Detect simulation_end event, mark platform completed
-                                if event_type == "simulation_end":
+                                if (event_type == "simulation_end"
+                                        and state.runner_status not in {RunnerStatus.STOPPING, RunnerStatus.STOPPED}
+                                        and (state.total_rounds <= 0 or
+                                             getattr(state, platform + '_current_round') >= state.total_rounds)):
                                     if platform == "twitter":
                                         state.twitter_completed = True
                                         state.twitter_running = False
@@ -804,6 +928,7 @@ class SimulationRunner:
                                 agent_name=action_data.get("agent_name", ""),
                                 action_type=action_data.get("action_type", ""),
                                 action_args=action_data.get("action_args", {}),
+                                origin=action_data.get("origin", "unknown"), trace_id=action_data.get("trace_id"),
                                 result=action_data.get("result"),
                                 success=action_data.get("success", True),
                             )
@@ -914,7 +1039,8 @@ class SimulationRunner:
         if not state:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
         
-        if state.runner_status not in [RunnerStatus.RUNNING, RunnerStatus.PAUSED]:
+        if (state.runner_status not in [RunnerStatus.STARTING, RunnerStatus.RUNNING, RunnerStatus.PAUSED, RunnerStatus.COMPLETED]
+                and simulation_id not in cls._processes):
             raise ValueError(f"Simulation not running: {simulation_id}, status={state.runner_status}")
         
         state.runner_status = RunnerStatus.STOPPING
@@ -1015,6 +1141,7 @@ class SimulationRunner:
                         agent_name=data.get("agent_name", ""),
                         action_type=data.get("action_type", ""),
                         action_args=data.get("action_args", {}),
+                        origin=data.get("origin", "unknown"), trace_id=data.get("trace_id"),
                         result=data.get("result"),
                         success=data.get("success", True),
                     ))
@@ -1537,6 +1664,34 @@ class SimulationRunner:
         # Directories to delete (contains action logs)
         dirs_to_clean = ["twitter", "reddit"]
         
+        # Freeze prior evidence before any reset. If archiving fails, do not delete
+        # even one runtime file. A new sample has a new active directory view.
+        from pathlib import Path
+        import hashlib
+        archive = None
+        persisted = cls._repository.get_simulation_run(simulation_id) if cls._repository is not None else None
+        root = Path(sim_dir)
+        runtime_exists = persisted or any((root / name).exists() for name in files_to_delete)
+        runtime_exists = runtime_exists or any((root / name / 'actions.jsonl').exists() for name in dirs_to_clean)
+        if runtime_exists:
+            archive = 'runs/run_' + uuid.uuid4().hex
+            target = root / archive
+            try:
+                target.mkdir(parents=True, mode=0o700)
+                for source in root.iterdir():
+                    if source.is_file():
+                        shutil.copy2(source, target / source.name)
+                for name in dirs_to_clean:
+                    if (root / name).is_dir():
+                        shutil.copytree(root / name, target / name)
+                if persisted:
+                    (target / 'control-state.json').write_text(json.dumps(persisted, ensure_ascii=False, indent=2))
+                manifest = {str(path.relative_to(target)): hashlib.sha256(path.read_bytes()).hexdigest()
+                            for path in target.rglob('*') if path.is_file()}
+                (target / 'sha256.json').write_text(json.dumps(manifest, indent=2))
+            except Exception as exc:
+                return dict(success=False, cleaned_files=[], archive=archive, errors=[f'Archive failed: {exc}'])
+
         # Delete files
         for filename in files_to_delete:
             file_path = os.path.join(sim_dir, filename)
@@ -1575,6 +1730,7 @@ class SimulationRunner:
         return {
             "success": len(errors) == 0,
             "cleaned_files": cleaned_files,
+            "archive": archive,
             "errors": errors if errors else None
         }
     

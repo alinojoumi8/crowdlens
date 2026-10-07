@@ -1,0 +1,171 @@
+{
+  "source_sha256": "70cc6d7ffed63b06ff6b65f7efc6afba8999e2a0e88fcda472b0a596d2311e33",
+  "budget": {
+    "provider": "MiniMax-M3",
+    "limit_requests": 30,
+    "limit_seconds": 900,
+    "admitted_upstream_requests": 30,
+    "first_request_at": 1790995662.7876046,
+    "deadline_at": 1790996562.7876046,
+    "blocked_requests": 1,
+    "completed_requests": 30,
+    "stopped_at_deadline": true
+  },
+  "stages": [
+    {
+      "stage": "ontology",
+      "request_numbers": [
+        1
+      ],
+      "count": 1,
+      "usage": {
+        "input_tokens": 1704,
+        "output_tokens": 2430,
+        "cache_read_input_tokens": 134
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790995662.788247,
+      "last_finished_at": 1790995684.0021253
+    },
+    {
+      "stage": "source_graph",
+      "request_numbers": [
+        2
+      ],
+      "count": 1,
+      "usage": {
+        "input_tokens": 1359,
+        "output_tokens": 917,
+        "cache_read_input_tokens": 128
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790995685.4267302,
+      "last_finished_at": 1790995690.3207302
+    },
+    {
+      "stage": "profiles",
+      "request_numbers": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "count": 4,
+      "usage": {
+        "input_tokens": 4010,
+        "output_tokens": 6959,
+        "cache_read_input_tokens": 528
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790995789.7699084,
+      "last_finished_at": 1790995925.465037
+    },
+    {
+      "stage": "configuration",
+      "request_numbers": [
+        7,
+        8,
+        9
+      ],
+      "count": 3,
+      "usage": {
+        "input_tokens": 3079,
+        "output_tokens": 2396,
+        "cache_read_input_tokens": 402
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790995925.6476076,
+      "last_finished_at": 1790995961.3018286
+    },
+    {
+      "stage": "graph_memory",
+      "request_numbers": [
+        10,
+        11,
+        12,
+        15,
+        16,
+        20,
+        21,
+        22,
+        25,
+        27,
+        28
+      ],
+      "count": 11,
+      "usage": {
+        "input_tokens": 7910,
+        "output_tokens": 6567,
+        "cache_read_input_tokens": 7261
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790996137.5533643,
+      "last_finished_at": 1790996290.7360497
+    },
+    {
+      "stage": "simulation_inferred",
+      "request_numbers": [
+        13,
+        14,
+        17,
+        18,
+        19,
+        23,
+        24,
+        26
+      ],
+      "count": 8,
+      "usage": {
+        "input_tokens": 30115,
+        "output_tokens": 2326,
+        "cache_read_input_tokens": 4102
+      },
+      "assignment": "inferred by exclusion",
+      "first_started_at": 1790996224.807301,
+      "last_finished_at": 1790996281.2919502
+    },
+    {
+      "stage": "report_outline",
+      "request_numbers": [
+        29
+      ],
+      "count": 1,
+      "usage": {
+        "input_tokens": 936,
+        "output_tokens": 499,
+        "cache_read_input_tokens": 133
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790996293.1137404,
+      "last_finished_at": 1790996301.2744792
+    },
+    {
+      "stage": "section_planning",
+      "request_numbers": [
+        30
+      ],
+      "count": 1,
+      "usage": {
+        "input_tokens": 3292,
+        "output_tokens": 96,
+        "cache_read_input_tokens": 128
+      },
+      "assignment": "matched to local stage timing/logs",
+      "first_started_at": 1790996301.4254396,
+      "last_finished_at": 1790996303.2305474
+    }
+  ],
+  "total_usage": {
+    "input_tokens": 52405,
+    "output_tokens": 22190,
+    "cache_read_input_tokens": 12816
+  },
+  "first_to_last_response_seconds": 640.4429428577423,
+  "all_upstream_http_200": true,
+  "unknowns": [
+    "No prompt/response bodies in relay receipts.",
+    "Simulation agent/platform and logical retry identity not carried in relay receipts.",
+    "Billing-category overlap and account invoice unverified."
+  ],
+  "prior_authorization_exhausted": true
+}

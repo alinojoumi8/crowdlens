@@ -1,0 +1,59 @@
+{
+  "checked_at": "2026-10-03T09:35:36.084766+00:00",
+  "parent_report_id": "report_38eb8454832e",
+  "child_report_id": "report_561a7739a24d480bb5a0ac086eec2cdf",
+  "root_files_before": {
+    "section_03.md": "7138be4c7141d208504881368ae91f1e5ce69f9c480336c6b73e4ea2a1f83b49",
+    "console_log.txt": "eb7ed23e9540aaf83dc320acc6054ed707531f35b89a9132a17e5c869780faa5",
+    "section_01.md": "aae9f0d4a1a037179a04762d1cd953cd47ddb1b4ca244d5d7c6d8e9e1853284d",
+    "outline.json": "de6cbcfc9e2a107d1c7ae323198e27acb9655fa11913a60688ae57134d24f3c4",
+    "agent_log.jsonl": "797190e8ce78b9d125375a73d45bd892cb4a50cff8ef6d017e5773165deec1d3",
+    "section_02.md": "b161e7803c7c269850aca5e46c10387673a8800c3d4703fd3ba5ff3dd847d504",
+    "meta.json": "2f4da3c10f1988513dce9d2d07b10a2b3e03ee174767fd4fb4d5547e1f57868e",
+    "progress.json": "573d80fcee8d461e2966311fb6c5a94199d0dc2a712778155b6f8139e9552041",
+    "full_report.md": "cdc3e208b446a2fd630bb55958f3d51faff547188fa756354807253fd9a545f7"
+  },
+  "root_files_after": {
+    "section_03.md": "7138be4c7141d208504881368ae91f1e5ce69f9c480336c6b73e4ea2a1f83b49",
+    "console_log.txt": "eb7ed23e9540aaf83dc320acc6054ed707531f35b89a9132a17e5c869780faa5",
+    "section_01.md": "aae9f0d4a1a037179a04762d1cd953cd47ddb1b4ca244d5d7c6d8e9e1853284d",
+    "outline.json": "de6cbcfc9e2a107d1c7ae323198e27acb9655fa11913a60688ae57134d24f3c4",
+    "agent_log.jsonl": "797190e8ce78b9d125375a73d45bd892cb4a50cff8ef6d017e5773165deec1d3",
+    "section_02.md": "b161e7803c7c269850aca5e46c10387673a8800c3d4703fd3ba5ff3dd847d504",
+    "meta.json": "2f4da3c10f1988513dce9d2d07b10a2b3e03ee174767fd4fb4d5547e1f57868e",
+    "progress.json": "573d80fcee8d461e2966311fb6c5a94199d0dc2a712778155b6f8139e9552041",
+    "full_report.md": "cdc3e208b446a2fd630bb55958f3d51faff547188fa756354807253fd9a545f7"
+  },
+  "all_nine_root_files_unchanged": true,
+  "unselected_section_files_unchanged": {
+    "2": true,
+    "3": true
+  },
+  "summary_unchanged": true,
+  "forecast_inherited": true,
+  "child_status": "needs_review",
+  "proposal_status": "accepted",
+  "revision_history_count": 2,
+  "proposal_scope": {
+    "case_id": "case_a1b28cf9ada0",
+    "case_version_id": "casever_88fa1e1ffa14",
+    "graph_id": "88956ccc-ea07-47a7-807d-4fc391ce2489"
+  },
+  "proposal_digest": "279009979192e2bf1ffbe9db11c5cb8dff4dab400994617bd653cd88e8cfc29c",
+  "child_files_sha256": {
+    "section_03.md": "7138be4c7141d208504881368ae91f1e5ce69f9c480336c6b73e4ea2a1f83b49",
+    "manifest.json": "3832cd733f94b843627a02b464a4d06d422a6a37f6faf8b71a58137165526ad2",
+    "ledger.json": "b6aeff072449c92a13a7c4b1a4f9303f6b7c869918c54648b208ded1cd43cec6",
+    "provenance.json": "f185fc529571c6ba4d61fed18b4f1402a35cd0a79c034d8172ef3e5553d8e877",
+    "section_01.md": "3ff6997fa1a644718d6e0e9edb73309a1bb8540acf4d41a41ad051d386f6053c",
+    "outline.json": "c9671385f910af505753576c7aab03c12f638f8e8e7fab988fef769d9195bbd2",
+    "section_02.md": "b161e7803c7c269850aca5e46c10387673a8800c3d4703fd3ba5ff3dd847d504",
+    "meta.json": "8c9570360b58eceb7ce8a7f568a97ceab0937b954c307f055e613f9453ca6d06",
+    "progress.json": "83b509e521dfb809c098ca17cfd093c0b4123249cd3b9cebb5accf0f91966c9c",
+    "full_report.md": "79b7cf2556cf5628f10ada59ffa6d589fc03602e530f6c29d9040c16fd572f87"
+  },
+  "final_requests": 42,
+  "final_in_flight": 0,
+  "final_unknown_usage": 0,
+  "final_workflow_state": "stopped"
+}

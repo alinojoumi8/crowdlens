@@ -1,0 +1,24 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_unscoped_application_transport_requires_authorization __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7de05649bb50>
+
+    def test_unscoped_application_transport_requires_authorization(monkeypatch):
+        from app.services import workflow_execution as controls
+        from types import SimpleNamespace
+        monkeypatch.setattr(controls, '_ALLOW_UNSCOPED', False, raising=False)
+        calls = []
+        def transport(*a, **k):
+            calls.append(1)
+            return SimpleNamespace(status_code=200, raise_for_status=lambda:None,
+                json=lambda:{'content':[{'type':'text','text':'unapproved'}]})
+        monkeypatch.setattr('app.utils.llm_client.requests.post', transport)
+        client = LLMClient(api_key='synthetic', base_url='http://127.0.0.1:1/anthropic', model='synthetic')
+>       with pytest.raises(WorkflowHalt, match='authorization_required'):
+E       Failed: DID NOT RAISE <class 'app.services.workflow_execution.WorkflowHalt'>
+
+tests/test_workflow_execution.py:90: Failed
+=========================== short test summary info ============================
+FAILED tests/test_workflow_execution.py::test_unscoped_application_transport_requires_authorization
+1 failed, 3 deselected in 1.11s

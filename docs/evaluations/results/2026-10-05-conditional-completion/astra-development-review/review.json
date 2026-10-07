@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-conditional-completion-development-review",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "reviewed_at": "2026-10-05T07:34:52.786085+00:00",
+  "review_seconds": null,
+  "human_review_seconds": null,
+  "run_name": "development-run-01",
+  "evidence_kind": "development_not_holdout",
+  "status": "COMPLETE_INSPECTION_NO_RENDERED_OUTPUT_TO_RATE",
+  "source_first_reference_file": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/astra-development-review/source-first-reference-facts.json",
+  "source_first_reference_sha256": "fff07b1f07c2f297458a9cc5041af0b96f89b5bbef4d447855d4d89faa2c6870",
+  "source_first_frozen_at": "2026-10-05T07:30:34.621516+00:00",
+  "input_corpus_path": "/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/evaluations/conditional-completion-development/cases.json",
+  "input_corpus_sha256": "648566c65740c414635f2593ce32d511abb70ea6f31a808aa94ad68d57e1fb48",
+  "results_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-01/results.json",
+  "results_sha256": "1410bd1f0ae76d1aab173926b1b999d837eea69bc674c71a16f6237112ccd5d4",
+  "collection_complete": true,
+  "counts": {
+    "cases_inspected": 2,
+    "blocked_cases": 2,
+    "ready_cases": 0,
+    "current_originals": 4,
+    "frozen_material_facts": 10,
+    "ledger_entries": 7,
+    "empty_ledger_entries": 7,
+    "actual_rendered_sections": 0,
+    "actual_rendered_summaries": 0,
+    "semantic_claim_judgments_completed": 0,
+    "supported": null,
+    "unsupported": null,
+    "material_omissions": null,
+    "suffix_fidelity": null
+  },
+  "cases": [
+    {
+      "case_id": "completion_dev_repair",
+      "proposal_id": "proposal_2d5c12322c074272b3fd00cc0c91b0f3",
+      "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-01/completion_dev_repair/reports/.evidence-proposals/proposal_2d5c12322c074272b3fd00cc0c91b0f3/record.json",
+      "record_sha256": "a086c7d86a207a22ee46da04b620a39a29b0c3abd56293052b1dc68b4de4f1d1",
+      "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-01/completion_dev_repair/reports/.evidence-proposals/proposal_2d5c12322c074272b3fd00cc0c91b0f3/diagnostics.json",
+      "diagnostics_sha256": "9ba8259e4b20f0adfa8c7a59d8de2b0bd46c19383e5ddd26dfadc87ff8ace40c",
+      "raw_completion_sha256": "a45c2e47f4925cdfdd45ff16aa30826461515fcbab66e1497c1c4d1d390ec314",
+      "state": "blocked",
+      "findings": [
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_01"
+        },
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_02"
+        },
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_03"
+        },
+        {
+          "code": "conditional_source_requires_extract",
+          "blocking": true,
+          "claim_id": "claim_03"
+        },
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_04"
+        },
+        {
+          "code": "conditional_source_requires_extract",
+          "blocking": true,
+          "claim_id": "claim_04"
+        }
+      ],
+      "reference_facts": [
+        {
+          "fact_id": "REPAIR-F01",
+          "text": "The Fernbank repair room permits four supervised assembly sessions.",
+          "sources": [
+            {
+              "source_uuid": "repair_source_0",
+              "document_id": "repair_document_0",
+              "filename": "original.txt",
+              "source_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F02",
+          "text": "Those sessions are permitted only when a qualified facilitator is present.",
+          "sources": [
+            {
+              "source_uuid": "repair_source_0",
+              "document_id": "repair_document_0",
+              "filename": "original.txt",
+              "source_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F03",
+          "text": "Unsupervised use is excluded.",
+          "sources": [
+            {
+              "source_uuid": "repair_source_0",
+              "document_id": "repair_document_0",
+              "filename": "original.txt",
+              "source_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F04",
+          "text": "Tavi says the team could assist if adjustable worktables are confirmed.",
+          "sources": [
+            {
+              "source_uuid": "repair_source_1",
+              "document_id": "repair_document_1",
+              "filename": "followup.txt",
+              "source_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "REPAIR-F05",
+          "text": "This is possible future assistance, not an existing commitment.",
+          "sources": [
+            {
+              "source_uuid": "repair_source_1",
+              "document_id": "repair_document_1",
+              "filename": "followup.txt",
+              "source_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        }
+      ],
+      "admitted_source_evidence": [
+        {
+          "evidence_id": "episode:repair_source_0",
+          "document_id": "repair_document_0",
+          "filename": "original.txt",
+          "source_sha256": "ea7f45b8b87f4149c4612ad37c8ae2eac379cfb466932642d5be5af7a52cada0",
+          "scope_matches_frozen_current_case": true
+        },
+        {
+          "evidence_id": "episode:repair_source_1",
+          "document_id": "repair_document_1",
+          "filename": "followup.txt",
+          "source_sha256": "46c6d04a4cdac38e292921c557442df3d21dca0b6a6ef1def3a4e83f8f8579b5",
+          "scope_matches_frozen_current_case": true
+        }
+      ],
+      "ledger_entry_reviews": [
+        {
+          "claim_id": "claim_01",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:repair_source_0"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        },
+        {
+          "claim_id": "claim_02",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:repair_source_0"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        },
+        {
+          "claim_id": "claim_03",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:repair_source_1"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "Tavi",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        },
+        {
+          "claim_id": "claim_04",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:repair_source_1"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        }
+      ],
+      "minimax_selection_review": {
+        "stored_completion_claim_count": 4,
+        "nonempty_claim_text_count": 0,
+        "recoverable_sentence_selections": false,
+        "assessment": "The saved MiniMax completion cites current documents but has empty text and quote fields. It supplies no explicit sentence IDs/indices or sentence text from which exact selections can be determined. This evidence does not establish that valid selections were produced and then lost by the server."
+      },
+      "server_rendering_review": {
+        "after": {},
+        "drafting_stage_present": false,
+        "rendered_section_available": false,
+        "rendered_summary_available": false,
+        "accepted_report_id": null,
+        "support": null,
+        "conditional_implication_fidelity": null,
+        "only_when_fidelity": null,
+        "attribution_fidelity": null,
+        "omitted_reference_fact_ids": null,
+        "suffix_preserved_once": null,
+        "assessment": "No actual rendered section, paragraphs or summary exists in this completed blocked attempt. Semantic support, material omissions, conditional fidelity and suffix preservation remain unassessed. No output was reconstructed from source sentences."
+      }
+    },
+    {
+      "case_id": "completion_dev_sorting",
+      "proposal_id": "proposal_71b9a26317e544898fa0d8edb5dd3118",
+      "record_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-01/completion_dev_sorting/reports/.evidence-proposals/proposal_71b9a26317e544898fa0d8edb5dd3118/record.json",
+      "record_sha256": "886e69aa58f1dcc789b5101052148bf6ccf21783303f4c407e9816d40a6fdefc",
+      "diagnostics_path": "/home/ali/Documents/CrowdLens-reviews/2026-10-05-conditional-completion/development-run-01/completion_dev_sorting/reports/.evidence-proposals/proposal_71b9a26317e544898fa0d8edb5dd3118/diagnostics.json",
+      "diagnostics_sha256": "6be53516c7d0b3c47cb600f28a2ea0cc6c0e0c9f33df0cffa3338686a4422701",
+      "raw_completion_sha256": "3f67746edf9d6f502cf52bd9cac7ef0898a9c25b1615d557de70a5aa68d14062",
+      "state": "blocked",
+      "findings": [
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_01"
+        },
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_02"
+        },
+        {
+          "code": "conditional_source_requires_extract",
+          "blocking": true,
+          "claim_id": "claim_02"
+        },
+        {
+          "code": "invalid_claim_text",
+          "blocking": true,
+          "claim_id": "claim_03"
+        },
+        {
+          "code": "conditional_source_requires_extract",
+          "blocking": true,
+          "claim_id": "claim_03"
+        }
+      ],
+      "reference_facts": [
+        {
+          "fact_id": "SORT-F01",
+          "text": "The Willowmere reading room permits three evening sorting sessions.",
+          "sources": [
+            {
+              "source_uuid": "sorting_source_0",
+              "document_id": "sorting_document_0",
+              "filename": "original.txt",
+              "source_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "SORT-F02",
+          "text": "Those sessions are permitted only when a staff coordinator is present.",
+          "sources": [
+            {
+              "source_uuid": "sorting_source_0",
+              "document_id": "sorting_document_0",
+              "filename": "original.txt",
+              "source_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "SORT-F03",
+          "text": "Overnight access is excluded.",
+          "sources": [
+            {
+              "source_uuid": "sorting_source_0",
+              "document_id": "sorting_document_0",
+              "filename": "original.txt",
+              "source_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "SORT-F04",
+          "text": "Leena says the group may assist provided accessible carts are confirmed.",
+          "sources": [
+            {
+              "source_uuid": "sorting_source_1",
+              "document_id": "sorting_document_1",
+              "filename": "followup.txt",
+              "source_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        },
+        {
+          "fact_id": "SORT-F05",
+          "text": "This is possible future assistance, not an existing commitment.",
+          "sources": [
+            {
+              "source_uuid": "sorting_source_1",
+              "document_id": "sorting_document_1",
+              "filename": "followup.txt",
+              "source_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281",
+              "page": 1,
+              "paragraph": 1
+            }
+          ]
+        }
+      ],
+      "admitted_source_evidence": [
+        {
+          "evidence_id": "episode:sorting_source_0",
+          "document_id": "sorting_document_0",
+          "filename": "original.txt",
+          "source_sha256": "f3fd7798ca7ea45a6dbed7cb5b7bdd46115bb5d8a3e7b3d988f5ff303f9a252b",
+          "scope_matches_frozen_current_case": true
+        },
+        {
+          "evidence_id": "episode:sorting_source_1",
+          "document_id": "sorting_document_1",
+          "filename": "followup.txt",
+          "source_sha256": "9245f3a00fce66ca54c69aab95eecd65fb6f03ed741228d5ad9938a878bb7281",
+          "scope_matches_frozen_current_case": true
+        }
+      ],
+      "ledger_entry_reviews": [
+        {
+          "claim_id": "claim_01",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:sorting_source_0"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        },
+        {
+          "claim_id": "claim_02",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:sorting_source_1"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        },
+        {
+          "claim_id": "claim_03",
+          "persisted_text": "",
+          "citation_ids": [
+            "episode:sorting_source_1"
+          ],
+          "citation_ids_resolve_to_current_sources": true,
+          "recorded_attribution": "",
+          "support": null,
+          "attribution_correct": null,
+          "citation_support_correct": null,
+          "assessment_status": "UNASSESSED_NO_CLAIM_TEXT",
+          "rationale": "The persisted ledger and stored raw completion both contain an empty text field. Document IDs identify cited sources but no proposition or exact sentence selection is available to judge. This is a missing/invalid output, not a supported or unsupported factual statement."
+        }
+      ],
+      "minimax_selection_review": {
+        "stored_completion_claim_count": 3,
+        "nonempty_claim_text_count": 0,
+        "recoverable_sentence_selections": false,
+        "assessment": "The saved MiniMax completion cites current documents but has empty text and quote fields. It supplies no explicit sentence IDs/indices or sentence text from which exact selections can be determined. This evidence does not establish that valid selections were produced and then lost by the server."
+      },
+      "server_rendering_review": {
+        "after": {},
+        "drafting_stage_present": false,
+        "rendered_section_available": false,
+        "rendered_summary_available": false,
+        "accepted_report_id": null,
+        "support": null,
+        "conditional_implication_fidelity": null,
+        "only_when_fidelity": null,
+        "attribution_fidelity": null,
+        "omitted_reference_fact_ids": null,
+        "suffix_preserved_once": null,
+        "assessment": "No actual rendered section, paragraphs or summary exists in this completed blocked attempt. Semantic support, material omissions, conditional fidelity and suffix preservation remain unassessed. No output was reconstructed from source sentences."
+      }
+    }
+  ],
+  "conclusion": "Both attempts are completed but blocked before any section/summary rendering. Seven empty ledger entries also appear empty in the saved raw completions. Current source admission/hashes match the frozen scoped originals. There is no recoverable MiniMax sentence selection or server-rendered prose to assess; all semantic and omission/suffix judgments remain unassessed. Do not treat missing outputs as zero semantic errors or as successful completion.",
+  "limits": "No provider rerun, code inspection, source reconstruction, acceptance or publication was performed. Superseded and foreign-case source bodies were excluded. This development run cannot establish holdout quality or broader reliability, and this source review alone cannot determine the underlying prompt/schema/integration cause. Earlier v6/v7 and correction artifacts were not modified."
+}

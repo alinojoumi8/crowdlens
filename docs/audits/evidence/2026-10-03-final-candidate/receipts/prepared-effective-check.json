@@ -1,0 +1,31 @@
+{
+  "checks": {
+    "profile_count_four": true,
+    "exact_named_participants": true,
+    "two_hours": true,
+    "sixty_minutes": true,
+    "one_active_agent": true,
+    "explicit_requested_platform": true,
+    "memory_off": true,
+    "report_prediction_fast": true,
+    "single_baseline_ensemble": true,
+    "profile_parallelism_one": true
+  },
+  "all_passed": true,
+  "prepared_profiles": [
+    "Maya Chen",
+    "Leo Martin",
+    "Priya Shah",
+    "Daniel Brooks"
+  ],
+  "saved_legacy_platform_availability": {
+    "twitter": true,
+    "reddit": true
+  },
+  "saved_stale_aliases": {
+    "active_agents_per_hour": 16,
+    "max_rounds": 72
+  },
+  "note": "An initial inspection assertion incorrectly expected state.enable_reddit=False. Creation advertises both platform availabilities; the requested runtime platform is separate and must be verified at explicit Start. The raw availability flags and stale preset aliases remain a UI/config consistency gap. Actual worker execution is not yet claimed here.",
+  "csv_sha256": "2809c33d974a30f53c5eee446f0809d40c7e29a05f4164a0721758f5263c3830"
+}

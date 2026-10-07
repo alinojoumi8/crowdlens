@@ -1,0 +1,143 @@
+{
+  "simulation_id": "sim_9ac5f4ad6a6c",
+  "project_id": "proj_a6ed1026d573",
+  "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+  "enable_twitter": true,
+  "enable_reddit": true,
+  "status": "ready",
+  "entities_count": 4,
+  "profiles_count": 4,
+  "entity_types": [
+    "Cyclist",
+    "TransportPlanner",
+    "SmallBusinessOwner",
+    "AccessibilityAdvocate"
+  ],
+  "config_generated": true,
+  "config_reasoning": "Time config: Small-scale test with 4 named participants on a fictional municipal pilot. Two rounds over 48 hours (roughly one day per round) is sufficient to capture discussion without over-simulating. A single platform and 4 agents means low throughput, so min/max agents per hour is set to 1-2. Peak hours align with commute times (8-9 morning, 17-19 evening) when cyclists and commuters would engage, plus lunch (12-13) when shop owners and accessibility advocates might respond. Work hours (9-18) cover the bulk of municipal/planner and business activity. Off-peak covers late night when minimal activity is expected. | Event config: The source document gives four named participants with distinct, pre-stated positions and explicitly warns against inventing surveys, crash counts, revenue figures or a permanence decision. I built the simulation around exactly those four roles (Cyclist, SmallBusinessOwner, AccessibilityAdvocate, TransportPlanner) as the only available entity types, and used two rounds to mirror the required structure. Hot topics are drawn verbatim from the four stated concerns: intersection safety, parking/loading, accessibility, and reversible measurement. The initial posts are first-person, grounded in the source quotes, and avoid any invented data. Scheduled events are timed to escalate the discussion in the order the document implies \u2014 scope clarification, then intersection safety, then loading conditions, then accessibility \u2014 each tagged to the entity type whose position it advances. Probabilities are framed around three outcomes: Base (measured, low-conflict exchange), Upside (conditional consensus to run the trial with published metrics), and Downside (stalemate on parking/loading or accessibility that blocks the pilot). No external evidence, no invented numbers, no permanence verdict. | Agent config: Successfully generated 4 | Initial posts assigned: 4 posts assigned publishers",
+  "current_round": 0,
+  "twitter_status": "not_started",
+  "reddit_status": "not_started",
+  "created_at": "2026-10-03T05:41:49.907519",
+  "updated_at": "2026-10-03T05:46:05.330407",
+  "error": null,
+  "forecast_mode": "general",
+  "forecast_horizon": "medium_term",
+  "prediction_target": {
+    "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+    "outcomes": [
+      "Base case materializes",
+      "Upside case materializes",
+      "Downside case materializes"
+    ]
+  },
+  "scenario_pack": "baseline",
+  "ensemble_runs": 1,
+  "memory_mode": "off",
+  "prediction_settings": {
+    "preset": "standard_litigation_prediction",
+    "agent_count": 4,
+    "entity_types_include": [
+      "AccessibilityAdvocate",
+      "Cyclist",
+      "SmallBusinessOwner",
+      "TransportPlanner"
+    ],
+    "entity_types_exclude": [],
+    "profile_parallelism": 1,
+    "simulation_duration": 2,
+    "minutes_per_round": 60,
+    "active_agents_per_round": 1,
+    "active_agents_per_hour": 16,
+    "ensemble_runs": 1,
+    "scenario_pack": "baseline",
+    "memory_mode": "off",
+    "report_mode": "prediction",
+    "report_depth": "fast",
+    "max_rounds": 72,
+    "seed": 42,
+    "platform": "twitter",
+    "prediction_target": {
+      "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties."
+    }
+  },
+  "report_mode": "prediction",
+  "report_depth": "fast",
+  "timings": {
+    "simulation_prepare": {
+      "name": "simulation_prepare",
+      "status": "completed",
+      "started_at": "2026-10-03T05:42:42.850116",
+      "completed_at": "2026-10-03T05:46:05.313413",
+      "total_seconds": 202.4633,
+      "phase_totals": {
+        "read_entities": 0.1291,
+        "generate_profiles": 172.2294,
+        "save_profiles": 0.0108,
+        "generate_config": 29.8584,
+        "save_config": 0.0014
+      },
+      "phases": [
+        {
+          "name": "read_entities",
+          "label": "Read and filter graph entities",
+          "started_at": "2026-10-03T05:42:42.902647",
+          "metadata": {},
+          "status": "completed",
+          "completed_at": "2026-10-03T05:42:43.031787",
+          "duration_seconds": 0.1291
+        },
+        {
+          "name": "generate_profiles",
+          "label": "Generate agent profiles",
+          "started_at": "2026-10-03T05:42:43.079005",
+          "metadata": {
+            "entity_count": 4
+          },
+          "status": "completed",
+          "completed_at": "2026-10-03T05:45:35.308439",
+          "duration_seconds": 172.2294
+        },
+        {
+          "name": "save_profiles",
+          "label": "Persist generated profiles",
+          "started_at": "2026-10-03T05:45:35.336656",
+          "metadata": {
+            "profile_count": 4
+          },
+          "status": "completed",
+          "completed_at": "2026-10-03T05:45:35.347494",
+          "duration_seconds": 0.0108
+        },
+        {
+          "name": "generate_config",
+          "label": "Generate simulation config",
+          "started_at": "2026-10-03T05:45:35.427626",
+          "metadata": {
+            "profile_count": 4
+          },
+          "status": "completed",
+          "completed_at": "2026-10-03T05:46:05.286014",
+          "duration_seconds": 29.8584
+        },
+        {
+          "name": "save_config",
+          "label": "Persist simulation config",
+          "started_at": "2026-10-03T05:46:05.303401",
+          "metadata": {},
+          "status": "completed",
+          "completed_at": "2026-10-03T05:46:05.304763",
+          "duration_seconds": 0.0014
+        }
+      ],
+      "active_phases": [],
+      "metadata": {
+        "simulation_id": "sim_9ac5f4ad6a6c",
+        "entities_count": 4,
+        "profiles_count": 4,
+        "config_generated": true
+      },
+      "error": null
+    }
+  }
+}

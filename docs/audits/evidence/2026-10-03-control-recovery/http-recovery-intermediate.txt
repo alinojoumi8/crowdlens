@@ -1,0 +1,27 @@
+.....F..................                                                 [100%]
+=================================== FAILURES ===================================
+___ test_interrupted_progress_prefers_failed_owner_and_preserves_real_errors ___
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x762192deb290>, <app.services.task_execution.TaskRuntime object at 0x76223beda710>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x762191f26590>
+
+    def test_interrupted_progress_prefers_failed_owner_and_preserves_real_errors(controlled,monkeypatch):
+        from app.services.report_agent import ReportManager
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        owner=runtime.admit(dict(task_id='report_task',task_type='report_generation',status='processing',
+            metadata={'workflow_id':wid,'workflow_epoch':1}),[{'key':'report:report_partial','root':'.'}])
+        ledger.bind(wid,'report:report_partial')
+        runtime.cancel_workflow(wid,'request_limit',epoch=1)
+        monkeypatch.setattr(ReportManager,'get_progress',lambda rid:dict(status='generating',progress=24))
+        response=client.get('/api/report/report_partial/progress')
+>       assert response.status_code==200 and response.json['data']['terminal']
+E       assert (500 == 200)
+E        +  where 500 = <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]>.status_code
+
+tests/test_execution_api.py:190: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[02:32:47] ERROR: Failed to get report progress: 'created_at'
+=========================== short test summary info ============================
+FAILED tests/test_execution_api.py::test_interrupted_progress_prefers_failed_owner_and_preserves_real_errors
+1 failed, 23 passed in 4.20s

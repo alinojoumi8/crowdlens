@@ -1,0 +1,293 @@
+FFFFFFFFFFFFFFF                                                          [100%]
+=================================== FAILURES ===================================
+_________ test_selected_sentence_owns_text_even_when_model_paraphrases _________
+
+    def test_selected_sentence_owns_text_even_when_model_paraphrases():
+>       build, resolve, paragraphs = helpers()
+
+tests/test_conditional_completion.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___________ test_extract_selection_rejects_wrong_linkage[mutation0] ____________
+
+mutation = {'source_sentence_id': 'invented'}
+
+    @pytest.mark.parametrize('mutation', [
+        {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+        {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+        {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+        {'premise_claim_ids': ['other']},
+    ])
+    def test_extract_selection_rejects_wrong_linkage(mutation):
+>       build, resolve, _ = helpers()
+
+tests/test_conditional_completion.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___________ test_extract_selection_rejects_wrong_linkage[mutation1] ____________
+
+mutation = {'source_sentence_id': []}
+
+    @pytest.mark.parametrize('mutation', [
+        {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+        {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+        {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+        {'premise_claim_ids': ['other']},
+    ])
+    def test_extract_selection_rejects_wrong_linkage(mutation):
+>       build, resolve, _ = helpers()
+
+tests/test_conditional_completion.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___________ test_extract_selection_rejects_wrong_linkage[mutation2] ____________
+
+mutation = {'citation_ids': ['foreign']}
+
+    @pytest.mark.parametrize('mutation', [
+        {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+        {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+        {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+        {'premise_claim_ids': ['other']},
+    ])
+    def test_extract_selection_rejects_wrong_linkage(mutation):
+>       build, resolve, _ = helpers()
+
+tests/test_conditional_completion.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___________ test_extract_selection_rejects_wrong_linkage[mutation3] ____________
+
+mutation = {'citation_ids': ['episode:one', 'foreign']}
+
+    @pytest.mark.parametrize('mutation', [
+        {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+        {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+        {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+        {'premise_claim_ids': ['other']},
+    ])
+    def test_extract_selection_rejects_wrong_linkage(mutation):
+>       build, resolve, _ = helpers()
+
+tests/test_conditional_completion.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___________ test_extract_selection_rejects_wrong_linkage[mutation4] ____________
+
+mutation = {'citation_ids': [], 'kind': 'analysis', 'premise_claim_ids': ['other']}
+
+    @pytest.mark.parametrize('mutation', [
+        {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+        {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+        {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+        {'premise_claim_ids': ['other']},
+    ])
+    def test_extract_selection_rejects_wrong_linkage(mutation):
+>       build, resolve, _ = helpers()
+
+tests/test_conditional_completion.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___________ test_extract_selection_rejects_wrong_linkage[mutation5] ____________
+
+mutation = {'premise_claim_ids': ['other']}
+
+    @pytest.mark.parametrize('mutation', [
+        {'source_sentence_id': 'invented'}, {'source_sentence_id': []},
+        {'citation_ids': ['foreign']}, {'citation_ids': ['episode:one', 'foreign']},
+        {'kind': 'analysis', 'citation_ids': [], 'premise_claim_ids': ['other']},
+        {'premise_claim_ids': ['other']},
+    ])
+    def test_extract_selection_rejects_wrong_linkage(mutation):
+>       build, resolve, _ = helpers()
+
+tests/test_conditional_completion.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+__________ test_clipped_condition_has_no_selectable_partial_sentence ___________
+
+    def test_clipped_condition_has_no_selectable_partial_sentence():
+        from app.services.evidence_verifier import text_hash
+>       build, _, _ = helpers()
+
+tests/test_conditional_completion.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+________ test_duplicate_sentence_ids_and_source_scope_are_not_ambiguous ________
+
+    def test_duplicate_sentence_ids_and_source_scope_are_not_ambiguous():
+>       build, _, _ = helpers()
+
+tests/test_conditional_completion.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+_________ test_render_does_not_repair_bad_paragraph_contract[changes0] _________
+
+changes = {'kind': 'source_statement'}
+
+    @pytest.mark.parametrize('changes', [
+        {'kind': 'source_statement'}, {'claim_ids': ['missing']},
+        {'claim_ids': ['claim_01','claim_01']}, {'text': None}, {'claim_ids': [[]]},
+    ])
+    def test_render_does_not_repair_bad_paragraph_contract(changes):
+>       _, _, render = helpers()
+
+tests/test_conditional_completion.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+_________ test_render_does_not_repair_bad_paragraph_contract[changes1] _________
+
+changes = {'claim_ids': ['missing']}
+
+    @pytest.mark.parametrize('changes', [
+        {'kind': 'source_statement'}, {'claim_ids': ['missing']},
+        {'claim_ids': ['claim_01','claim_01']}, {'text': None}, {'claim_ids': [[]]},
+    ])
+    def test_render_does_not_repair_bad_paragraph_contract(changes):
+>       _, _, render = helpers()
+
+tests/test_conditional_completion.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+_________ test_render_does_not_repair_bad_paragraph_contract[changes2] _________
+
+changes = {'claim_ids': ['claim_01', 'claim_01']}
+
+    @pytest.mark.parametrize('changes', [
+        {'kind': 'source_statement'}, {'claim_ids': ['missing']},
+        {'claim_ids': ['claim_01','claim_01']}, {'text': None}, {'claim_ids': [[]]},
+    ])
+    def test_render_does_not_repair_bad_paragraph_contract(changes):
+>       _, _, render = helpers()
+
+tests/test_conditional_completion.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+_________ test_render_does_not_repair_bad_paragraph_contract[changes3] _________
+
+changes = {'text': None}
+
+    @pytest.mark.parametrize('changes', [
+        {'kind': 'source_statement'}, {'claim_ids': ['missing']},
+        {'claim_ids': ['claim_01','claim_01']}, {'text': None}, {'claim_ids': [[]]},
+    ])
+    def test_render_does_not_repair_bad_paragraph_contract(changes):
+>       _, _, render = helpers()
+
+tests/test_conditional_completion.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+_________ test_render_does_not_repair_bad_paragraph_contract[changes4] _________
+
+changes = {'claim_ids': [[]]}
+
+    @pytest.mark.parametrize('changes', [
+        {'kind': 'source_statement'}, {'claim_ids': ['missing']},
+        {'claim_ids': ['claim_01','claim_01']}, {'text': None}, {'claim_ids': [[]]},
+    ])
+    def test_render_does_not_repair_bad_paragraph_contract(changes):
+>       _, _, render = helpers()
+
+tests/test_conditional_completion.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+___ test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged ____
+
+    def test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged():
+>       _, resolve, render = helpers()
+
+tests/test_conditional_completion.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def helpers():
+>       from app.services.conditional_extracts import build_extract_contract, resolve_extract_claims, render_extract_paragraphs
+E       ModuleNotFoundError: No module named 'app.services.conditional_extracts'
+
+tests/test_conditional_completion.py:8: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_conditional_completion.py::test_selected_sentence_owns_text_even_when_model_paraphrases
+FAILED tests/test_conditional_completion.py::test_extract_selection_rejects_wrong_linkage[mutation0]
+FAILED tests/test_conditional_completion.py::test_extract_selection_rejects_wrong_linkage[mutation1]
+FAILED tests/test_conditional_completion.py::test_extract_selection_rejects_wrong_linkage[mutation2]
+FAILED tests/test_conditional_completion.py::test_extract_selection_rejects_wrong_linkage[mutation3]
+FAILED tests/test_conditional_completion.py::test_extract_selection_rejects_wrong_linkage[mutation4]
+FAILED tests/test_conditional_completion.py::test_extract_selection_rejects_wrong_linkage[mutation5]
+FAILED tests/test_conditional_completion.py::test_clipped_condition_has_no_selectable_partial_sentence
+FAILED tests/test_conditional_completion.py::test_duplicate_sentence_ids_and_source_scope_are_not_ambiguous
+FAILED tests/test_conditional_completion.py::test_render_does_not_repair_bad_paragraph_contract[changes0]
+FAILED tests/test_conditional_completion.py::test_render_does_not_repair_bad_paragraph_contract[changes1]
+FAILED tests/test_conditional_completion.py::test_render_does_not_repair_bad_paragraph_contract[changes2]
+FAILED tests/test_conditional_completion.py::test_render_does_not_repair_bad_paragraph_contract[changes3]
+FAILED tests/test_conditional_completion.py::test_render_does_not_repair_bad_paragraph_contract[changes4]
+FAILED tests/test_conditional_completion.py::test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged
+15 failed in 1.54s

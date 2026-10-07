@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">CrowdLens</div>
+        <a class="brand" href="/" @click.prevent="router.push('/')">CrowdLens</a>
       </div>
       
       <div class="header-center">
@@ -36,7 +36,7 @@
     <!-- Main Content Area -->
     <main class="content-area">
       <!-- Left Panel: Graph -->
-      <div class="panel-wrapper left" :style="leftPanelStyle">
+      <div class="panel-wrapper left" :style="leftPanelStyle" :inert="viewMode === 'workbench'">
         <GraphPanel 
           :graphData="graphData"
           :loading="graphLoading"
@@ -48,7 +48,7 @@
       </div>
 
       <!-- Right Panel: Step4 Report -->
-      <div class="panel-wrapper right" :style="rightPanelStyle">
+      <div class="panel-wrapper right" :style="rightPanelStyle" :inert="viewMode === 'graph'">
         <Step4Report
           :reportId="currentReportId"
           :simulationId="simulationId"
@@ -110,6 +110,9 @@ const statusClass = computed(() => {
 
 const statusText = computed(() => {
   if (currentStatus.value === 'error') return 'Error'
+  if (currentStatus.value === 'failed') return 'Failed'
+  if (currentStatus.value === 'interrupted') return 'Interrupted'
+  if (currentStatus.value === 'cancelled') return 'Cancelled'
   if (currentStatus.value === 'stale') return 'Stale'
   if (currentStatus.value === 'needs-review') return 'Needs Review'
   if (currentStatus.value === 'completed') return 'Completed'
@@ -348,5 +351,10 @@ onMounted(() => {
 
 .panel-wrapper.left {
   border-right: 1px solid #EAEAEA;
+}
+@media (max-width: 700px) {
+  .app-header { height: auto; min-height: 60px; flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+  .header-right { flex-wrap: wrap; }
+  .switch-btn { min-height: 44px; }
 }
 </style>

@@ -1,0 +1,187 @@
+2026-10-02T20:21:43.623Z pw:browser <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --user-data-dir=/tmp/playwright_chromiumdev_profile-RqpfeK --remote-debugging-pipe --no-startup-window
+2026-10-02T20:21:43.629Z pw:browser <launched> pid=1485944
+2026-10-02T20:21:43.768Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.766475:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.768Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.767190:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.780Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.780Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.781Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.781687:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.781904:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.782023:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.782093:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:43.782Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.782167:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.782236:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.782951:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.783027:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.783096:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.783166:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.783228:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:43.783Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.783287:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:43.785Z pw:browser [pid=1485944][err] [1485991:1485991:1002/162143.785122:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:43.867Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.867440:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.881Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.880951:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.881Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.881001:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.881Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.881071:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.881Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.881108:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.884Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.883879:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.884Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.883964:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.887Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.886042:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.887Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.886089:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.887Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.886665:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.890Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.890560:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.891Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.891277:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.891Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.891360:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.895Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.895361:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.895Z pw:browser [pid=1485944][err] [1485944:1485976:1002/162143.895450:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+2026-10-02T20:21:43.898Z pw:browser [pid=1485944][err] [1485944:1485944:1002/162143.897214:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+2026-10-02T20:21:43.899Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.899Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.900Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.900Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.900306:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.900509:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.900639:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.900737:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.900838:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:43.901Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.900923:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.901663:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.901755:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.901829:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.901906:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.901999:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:43.902Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.902074:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:43.904Z pw:browser [pid=1485944][err] [1486024:1486024:1002/162143.904055:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:43.920Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.920Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.921079:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.921225:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.921307:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.921372:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.921446:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:43.921Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.921522:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.922028:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.922122:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.922186:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.922255:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.922322:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:43.922Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.922376:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:43.924Z pw:browser [pid=1485944][err] [1486034:1486034:1002/162143.924052:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:44.000Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.000Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.001270:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.001469:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.001Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.001581:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.001659:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.001745:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.001819:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.002497:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.002577:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.002Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.003Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.002668:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:44.003Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.002742:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:44.003Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.002816:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:44.003Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.002879:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:44.004Z pw:browser [pid=1485944][err] [1486060:1486060:1002/162144.004757:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:44.030Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.028929:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029099:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029179:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029237:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029296:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029350:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029810:ERROR:ui/gl/angle_platform_impl.cc:34] DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] ERR: DisplayVkXcb.cpp:59 (initialize): xcb_connect() failed, error 1
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029873:ERROR:ui/gl/angle_platform_impl.cc:34] Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] ERR: Display.cpp:1187 (initialize): ANGLE Display::initialize error 0: Not initialized.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029929:ERROR:ui/gl/egl_util.cc:92] EGL Driver message (Critical) eglInitialize: Not initialized.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.029998:ERROR:ui/gl/gl_display.cc:630] eglInitialize SwANGLE failed with error EGL_NOT_INITIALIZED
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.030049:ERROR:ui/gl/gl_display.cc:665] Initialization of all (1) EGL display types failed.
+2026-10-02T20:21:44.031Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.030104:ERROR:ui/ozone/common/gl_ozone_egl.cc:26] GLDisplayEGL::Initialize failed.
+2026-10-02T20:21:44.033Z pw:browser [pid=1485944][err] [1486083:1486083:1002/162144.032203:ERROR:components/viz/service/main/viz_main_impl.cc:190] Exiting GPU process due to errors during initialization
+2026-10-02T20:21:44.055Z pw:browser [pid=1485944][err] Authorization required, but no authorization protocol specified
+2026-10-02T20:21:44.055Z pw:browser [pid=1485944][err] 
+2026-10-02T20:21:50.126Z pw:browser [pid=1485944][err] [1485944:1485979:1002/162150.125785:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+2026-10-02T20:21:58.359Z pw:browser [pid=1485944][err] Created TensorFlow Lite XNNPACK delegate for CPU.
+2026-10-02T20:22:14.328Z pw:browser [pid=1485944][err] [1485944:1485979:1002/162214.328611:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+2026-10-02T20:22:26.123Z pw:browser [pid=1485944] <gracefully close start>
+2026-10-02T20:22:26.227Z pw:browser [pid=1485944] <process did exit: exitCode=0, signal=null>
+2026-10-02T20:22:26.227Z pw:browser [pid=1485944] starting temporary directories cleanup
+2026-10-02T20:22:26.255Z pw:browser [pid=1485944] finished temporary directories cleanup
+2026-10-02T20:22:26.255Z pw:browser [pid=1485944] <gracefully close end>
+[
+  {
+    "name": "upload chooser is keyboard reachable and named",
+    "passed": true
+  },
+  {
+    "name": "simulation prompt and website fields have explicit names",
+    "passed": true
+  },
+  {
+    "name": "history dialog traps focus, closes with Escape and restores trigger",
+    "passed": true
+  },
+  {
+    "name": "375px report panels and header controls fit the viewport",
+    "passed": true
+  },
+  {
+    "name": "hidden graph panel cannot receive keyboard focus",
+    "passed": true
+  },
+  {
+    "name": "missing report and graph metrics explicitly remain unknown",
+    "passed": true
+  },
+  {
+    "name": "interrupted root report exposes manual resume controls",
+    "passed": true
+  },
+  {
+    "name": "actual abandoned owner recovers in durable API state",
+    "passed": true
+  },
+  {
+    "name": "recovered failure is visible and has a permitted manual retry",
+    "passed": true
+  },
+  {
+    "name": "recovery has no uncaught browser errors",
+    "passed": true
+  }
+]

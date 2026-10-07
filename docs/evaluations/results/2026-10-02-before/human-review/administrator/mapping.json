@@ -1,0 +1,47 @@
+[
+  {
+    "candidate_origin": "deterministic_substitute",
+    "fixture_id": "direct_support",
+    "packet_id": "packet_33f6cce12291",
+    "packet_sha256": "7d37a31e2607d5d09779532a9fd0b5ba623db4f2e4ba866d8ca166a2b6482756",
+    "real_model_output": false,
+    "source_aliases": {
+      "episode:src_direct_support": "S01"
+    },
+    "split": "holdout"
+  },
+  {
+    "candidate_origin": "deterministic_substitute",
+    "fixture_id": "conflict",
+    "packet_id": "packet_78acde5efc17",
+    "packet_sha256": "322b73d5e058c541254bcdf8ca3bdabe557e0083914b6735d97aed0cabc5c831",
+    "real_model_output": false,
+    "source_aliases": {
+      "episode:src_conflict": "S01",
+      "episode:src_conflict_second": "S02"
+    },
+    "split": "holdout"
+  },
+  {
+    "candidate_origin": "deterministic_substitute",
+    "fixture_id": "attribution",
+    "packet_id": "packet_9cf8586941d9",
+    "packet_sha256": "e7d048352b1bf2ebe44a4dd98f79d2d1f0d44474f3bc893b75ba24164d424f81",
+    "real_model_output": false,
+    "source_aliases": {
+      "episode:src_attribution": "S01"
+    },
+    "split": "holdout"
+  },
+  {
+    "candidate_origin": "deterministic_substitute",
+    "fixture_id": "semantic_gap",
+    "packet_id": "packet_ddeecb057926",
+    "packet_sha256": "74d8659a724f5020be86203adb0d89ea554b38b96216ee20a922b4dfc31bdd34",
+    "real_model_output": false,
+    "source_aliases": {
+      "episode:src_semantic_gap": "S01"
+    },
+    "split": "holdout"
+  }
+]

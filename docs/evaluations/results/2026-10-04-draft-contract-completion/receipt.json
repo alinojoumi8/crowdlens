@@ -1,0 +1,52 @@
+{
+  "application_candidate": "1372e891317235fa9d08ad4e56acc86d50398734",
+  "test_counts": {
+    "backend": 628,
+    "node": 12,
+    "component": 54,
+    "total": 694
+  },
+  "build": "passed",
+  "independent_code_review": "no_blocking_findings",
+  "live_model_collections": {
+    "v4": {
+      "requests": 8,
+      "ready": 0,
+      "attempted": 4,
+      "invariants_pass": false
+    },
+    "v5": {
+      "requests": 10,
+      "ready": 0,
+      "attempted": 4,
+      "invariants_pass": true
+    }
+  },
+  "billing_amount": null,
+  "browser": {
+    "runtime": "provider_disabled_synthetic_model_real_frontend_and_report_APIs",
+    "revision": "report_1d260e4f8aeb472eb0334105daa12c9e",
+    "parent_unchanged": true,
+    "unrelated_section_and_summary_clause_preserved": true,
+    "status": "needs_review",
+    "human_quality_evidence": false
+  },
+  "human_quality_labels": null,
+  "human_review_seconds": null,
+  "main_modified_by_this_milestone": false,
+  "pushed": false,
+  "deployed": false,
+  "release_readiness": "not_established",
+  "independent_ai_review": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "reviewed_drafts": 2,
+    "ledger_claims": 10,
+    "supported_ledger_claims": 10,
+    "material_section_facts": 10,
+    "section_omissions": 0,
+    "summary_defects": 1,
+    "human_review_seconds": null,
+    "overrides_production_gates": false
+  }
+}

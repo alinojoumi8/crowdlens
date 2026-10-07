@@ -1,0 +1,40 @@
+{
+  "candidate_section": "Morgan states that the parcel delivery occurred on Tuesday. [1]",
+  "candidate_summary": "The parcel delivery record needs review.",
+  "claims": [
+    {
+      "attribution": "Morgan",
+      "citation_ids": [
+        "S01"
+      ],
+      "claim_id": "claim_01",
+      "kind": "attributed_allegation",
+      "premise_claim_ids": [],
+      "text": "Morgan states that the parcel delivery occurred on Tuesday."
+    }
+  ],
+  "notice": "Fictional synthetic packet. Candidate origin and expected assertions are withheld. Review only against these sources.",
+  "packet_id": "packet_9cf8586941d9",
+  "schema_version": 1,
+  "sources": [
+    {
+      "case_id": "case-A",
+      "case_version_id": "version-current",
+      "document_id": "D01",
+      "excerpt": "Morgan states that the parcel delivery occurred on Tuesday. Casey disputes Morgan's account and has not signed the receipt.",
+      "graph_id": "graph-A",
+      "locator": {
+        "char_end": 123,
+        "char_start": 0,
+        "chunk_index": 0,
+        "offset_basis": "stored_chunk",
+        "page": 1,
+        "paragraph": 1
+      },
+      "origin": "source_document",
+      "source_id": "S01",
+      "source_sha256": "26230a8d8eb46c2bc27fa748cd80827e982f425af00a4ce24b512da451a5c501"
+    }
+  ],
+  "task": "Review parcel delivery timing and receipt attribution."
+}

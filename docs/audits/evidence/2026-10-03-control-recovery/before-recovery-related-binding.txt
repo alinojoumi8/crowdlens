@@ -1,0 +1,34 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_recovery_response_does_not_rebind_existing_related_resources _______
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x73cb90260bd0>, <app.services.task_execution.TaskRuntime object at 0x73cb90262c90>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x73cb90261010>
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-63/test_recovery_response_does_no0')
+
+    def test_recovery_response_does_not_rebind_existing_related_resources(controlled,monkeypatch,tmp_path):
+        from app.services.report_agent import ReportManager,Report,ReportStatus
+        from app.services.simulation_manager import SimulationManager
+        client,ledger,runtime,calls=controlled
+        first=client.post('/api/execution/authorize',json=terms('first')).json['data']['workflow_id']
+        second=client.post('/api/execution/authorize',json=terms('second')).json['data']['workflow_id']
+        ledger.bind(first,'simulation:shared');ledger.bind(first,'graph:shared');ledger.bind(second,'report:recovery')
+        report=Report('recovery','shared','shared','fictional',ReportStatus.INTERRUPTED)
+        monkeypatch.setattr(ReportManager,'REPORTS_DIR',str(tmp_path/'reports'))
+        monkeypatch.setattr(ReportManager,'get_report',lambda rid:report)
+        monkeypatch.setattr(SimulationManager,'get_simulation',lambda self,sid:SimpleNamespace(simulation_requirement='fictional',prediction_settings={}))
+        class Agent:
+            def __init__(self,**kw):pass
+            def resume_report(self,**kw):return report
+        monkeypatch.setattr('app.api.report.ReportAgent',Agent)
+        response=client.post('/api/report/recovery/resume',json={})
+>       assert response.status_code==200
+E       assert 500 == 200
+E        +  where 500 = <WrapperTestResponse streamed [500 INTERNAL SERVER ERROR]>.status_code
+
+tests/test_execution_api.py:270: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[03:13:38] ERROR: Failed to resume report: GraphStorage not initialized - check Neo4j connection
+=========================== short test summary info ============================
+FAILED tests/test_execution_api.py::test_recovery_response_does_not_rebind_existing_related_resources
+1 failed, 12 deselected in 1.20s

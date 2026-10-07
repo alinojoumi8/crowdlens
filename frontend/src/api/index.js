@@ -47,6 +47,8 @@ service.interceptors.response.use(
       console.error('Network error - please check your connection')
     }
 
+    const detail = error.response?.data?.error || error.response?.data?.message
+    if (typeof detail === 'string' && detail.trim()) error.message = detail
     return Promise.reject(error)
   }
 )

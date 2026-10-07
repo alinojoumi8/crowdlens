@@ -1,0 +1,11 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/ReportRecovery.component.test.js src/components/PrepareRecovery.component.test.js src/views/CaseDetailView.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  5 passed (5)
+   Start at  03:00:29
+   Duration  1.88s (transform 1.73s, setup 0ms, import 2.46s, tests 412ms, environment 2.15s)
+

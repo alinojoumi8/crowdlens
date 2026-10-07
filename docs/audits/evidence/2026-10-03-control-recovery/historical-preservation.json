@@ -1,0 +1,210 @@
+{
+  "checked": 34,
+  "all_unchanged": true,
+  "files": [
+    {
+      "path": "cedarbrook-bike-lane.md",
+      "expected": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b",
+      "actual": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b",
+      "unchanged": true
+    },
+    {
+      "path": "test-result.md",
+      "expected": "7f2167b60d1bd387b0a56d620ab48254262d0fecfab23c61015d119ac5e069d9",
+      "actual": "7f2167b60d1bd387b0a56d620ab48254262d0fecfab23c61015d119ac5e069d9",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/01-upload.jpg",
+      "expected": "bede37f9cebffde1e2d974c23fa3ff4625c6828069b4930819fcd8988eb7829c",
+      "actual": "bede37f9cebffde1e2d974c23fa3ff4625c6828069b4930819fcd8988eb7829c",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/02-graph.jpg",
+      "expected": "486a8e4db4a91ded00882494be9f405679a3ef1a3b1bebb21eeb87398865d3d5",
+      "actual": "486a8e4db4a91ded00882494be9f405679a3ef1a3b1bebb21eeb87398865d3d5",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/03-settings.jpg",
+      "expected": "7f7dba607a8f11b67826102cf35e3dec1ffec196229add86edd0f77b26644c2e",
+      "actual": "7f7dba607a8f11b67826102cf35e3dec1ffec196229add86edd0f77b26644c2e",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/04-prepared.jpg",
+      "expected": "9bc6bbfd2da53ee8d5b6e16a3108e543507b6031392cca6c2c1ff6d4a6b5e3f9",
+      "actual": "9bc6bbfd2da53ee8d5b6e16a3108e543507b6031392cca6c2c1ff6d4a6b5e3f9",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/05-running.jpg",
+      "expected": "665f00efc0fa3f747364ba727c822e8901ef5bcae48a1e6d55fad81095978ec3",
+      "actual": "665f00efc0fa3f747364ba727c822e8901ef5bcae48a1e6d55fad81095978ec3",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/06-stopped-sample.jpg",
+      "expected": "042ba8a454986e7928cfb7582e3c2a041c141d202c573e68799e0e8c6cdbdf6c",
+      "actual": "042ba8a454986e7928cfb7582e3c2a041c141d202c573e68799e0e8c6cdbdf6c",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/07-report-interrupted.jpg",
+      "expected": "80a49aa567304685bf9d3ecffac6f32f136624f1fe4f5203690c0b6ec44902b0",
+      "actual": "80a49aa567304685bf9d3ecffac6f32f136624f1fe4f5203690c0b6ec44902b0",
+      "unchanged": true
+    },
+    {
+      "path": "screenshots/08-review-ready.jpg",
+      "expected": "72c8937af587f09193e4ab523d794f92cb362ed726503b5244cce1c5cf553856",
+      "actual": "72c8937af587f09193e4ab523d794f92cb362ed726503b5244cce1c5cf553856",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/action-counts.json",
+      "expected": "73cd2997de1985e5b964d53efae3eadc69829ff409a49312e8f9eb7235fae187",
+      "actual": "73cd2997de1985e5b964d53efae3eadc69829ff409a49312e8f9eb7235fae187",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/control-db.sqlite",
+      "expected": "891dbee1ce2aef4f47722128f17404defba289f74618843f15b8be84d99aef8c",
+      "actual": "891dbee1ce2aef4f47722128f17404defba289f74618843f15b8be84d99aef8c",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/graph.json",
+      "expected": "d38c8d5aa709a84323c56887ad4fea5cd365e88c41e79368be0c16b8f4bfeb3f",
+      "actual": "d38c8d5aa709a84323c56887ad4fea5cd365e88c41e79368be0c16b8f4bfeb3f",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/health.json",
+      "expected": "b8d44f4ae13f38dc17dec29018e085a34f308fd759cd858dc3c2b4465ed215d4",
+      "actual": "b8d44f4ae13f38dc17dec29018e085a34f308fd759cd858dc3c2b4465ed215d4",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/neo4j-indexes.txt",
+      "expected": "1b068e789417f9d17420e35a5b68671ee27b5196ec83e97d36e374a19c580626",
+      "actual": "1b068e789417f9d17420e35a5b68671ee27b5196ec83e97d36e374a19c580626",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/report-progress-error.json",
+      "expected": "11ad87c81c60edf4cb61fdf326bc232da6fe4a5fc78de293ad94c4695a776fad",
+      "actual": "11ad87c81c60edf4cb61fdf326bc232da6fe4a5fc78de293ad94c4695a776fad",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/reports/report_8c343d6450c0/agent_log.jsonl",
+      "expected": "0ab3915f0109d39dbd3632d0c18cd5efd4ada5affb85336bf6b7bf49fa8777c2",
+      "actual": "0ab3915f0109d39dbd3632d0c18cd5efd4ada5affb85336bf6b7bf49fa8777c2",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/reports/report_8c343d6450c0/console_log.txt",
+      "expected": "435b315a3dc360fde974a5fbbfc972f1ed461af102038ee8c242e9e22cd63599",
+      "actual": "435b315a3dc360fde974a5fbbfc972f1ed461af102038ee8c242e9e22cd63599",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/reports/report_8c343d6450c0/meta.json",
+      "expected": "8aee7c1600b3d3b5c184defaf26226dff4d421455b55461d587c98e1e6dcd327",
+      "actual": "8aee7c1600b3d3b5c184defaf26226dff4d421455b55461d587c98e1e6dcd327",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/reports/report_8c343d6450c0/outline.json",
+      "expected": "b792dffa92364c27729b4f371a70df260cc8fbb3f9d1f29d0fa641a23c99353e",
+      "actual": "b792dffa92364c27729b4f371a70df260cc8fbb3f9d1f29d0fa641a23c99353e",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/reports/report_8c343d6450c0/progress.json",
+      "expected": "891b540c8caa559a8ccacafafaf9aa0728479867da0eb97fc8e8383274bbed60",
+      "actual": "891b540c8caa559a8ccacafafaf9aa0728479867da0eb97fc8e8383274bbed60",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/agent_memory_summaries.json",
+      "expected": "c2c64f829a94a26c2dff56f3b5caf1f47d8fc73e76734fe920c00893d8576271",
+      "actual": "c2c64f829a94a26c2dff56f3b5caf1f47d8fc73e76734fe920c00893d8576271",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/agent_short_memory.json",
+      "expected": "6189078f11d4b953cef2b8c6b45d6318135ba6da31f3cbebd6d9a88060820af0",
+      "actual": "6189078f11d4b953cef2b8c6b45d6318135ba6da31f3cbebd6d9a88060820af0",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/env_status.json",
+      "expected": "a1f51f0276e3ab40634471d44eef8e90af49dc30131bfe5a861b1446f2a3be04",
+      "actual": "a1f51f0276e3ab40634471d44eef8e90af49dc30131bfe5a861b1446f2a3be04",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/reddit/actions.jsonl",
+      "expected": "5830256271f916ca05bb0595addc3f6a9f2f4dfcda99a1f6f8d07be9f5322a45",
+      "actual": "5830256271f916ca05bb0595addc3f6a9f2f4dfcda99a1f6f8d07be9f5322a45",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/reddit_profiles.json",
+      "expected": "ab4083fede51f17d8060a57d4de77d5c339f998071ec8b2415994f1b83640518",
+      "actual": "ab4083fede51f17d8060a57d4de77d5c339f998071ec8b2415994f1b83640518",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/reddit_simulation.db",
+      "expected": "3dffcab3e1a67fee52599e54dabc4727b63ccdc5b279431ee61ecd5b6aa1cc47",
+      "actual": "3dffcab3e1a67fee52599e54dabc4727b63ccdc5b279431ee61ecd5b6aa1cc47",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/run_state.json",
+      "expected": "290a42769e4885426a1044255ea6318b1dd28f330ec88767a6d5ad908d662338",
+      "actual": "290a42769e4885426a1044255ea6318b1dd28f330ec88767a6d5ad908d662338",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/simulation.log",
+      "expected": "9c015bfb075b29b68e6aa4713888fba8f888bb4e6725367335cf8640760bdf65",
+      "actual": "9c015bfb075b29b68e6aa4713888fba8f888bb4e6725367335cf8640760bdf65",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/simulation_config.json",
+      "expected": "5622f89e2afe07389f0e463dfa913836e2cd255479001f0ff244d0978f9287e6",
+      "actual": "5622f89e2afe07389f0e463dfa913836e2cd255479001f0ff244d0978f9287e6",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/state.json",
+      "expected": "eb968f70497ed4240cc88312ff046aa90dc61e7d338b4bb9fbbe545ec1d6334c",
+      "actual": "eb968f70497ed4240cc88312ff046aa90dc61e7d338b4bb9fbbe545ec1d6334c",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/twitter/actions.jsonl",
+      "expected": "d460a07418b659bb3acfbe72cd83142ed827968572e51cbe46d8a4aec182ff03",
+      "actual": "d460a07418b659bb3acfbe72cd83142ed827968572e51cbe46d8a4aec182ff03",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/twitter_profiles.csv",
+      "expected": "ab12cb0afbcbb5ada73f26fce95950e7e374e7c6dd2809f49e77ea8b4e1d7b92",
+      "actual": "ab12cb0afbcbb5ada73f26fce95950e7e374e7c6dd2809f49e77ea8b4e1d7b92",
+      "unchanged": true
+    },
+    {
+      "path": "evidence-at-original-limit/simulations/sim_c59433035846/twitter_simulation.db",
+      "expected": "a5eac0fc1997f38218b211248435243edf1ceeeeac934f3838c9ac88f6353ac2",
+      "actual": "a5eac0fc1997f38218b211248435243edf1ceeeeac934f3838c9ac88f6353ac2",
+      "unchanged": true
+    }
+  ]
+}

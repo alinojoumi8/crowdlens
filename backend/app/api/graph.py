@@ -11,6 +11,7 @@ from flask import request, jsonify, current_app
 
 from . import graph_bp
 from ..config import Config
+from ..services.task_execution import TaskBusy
 from ..services.ontology_generator import OntologyGenerator
 from ..services.graph_builder import GraphBuilderService
 from ..services.embedding_benchmark import DEFAULT_QUERIES, run_embedding_benchmark
@@ -56,6 +57,7 @@ def get_project(project_id: str):
     """
     Get project details
     """
+    TaskManager().reconcile()
     project = ProjectManager.get_project(project_id)
     
     if not project:
@@ -598,6 +600,8 @@ def build_graph():
                 "error": "Please provide project_id"
             }), 400
 
+        # Recover abandoned owners before deciding whether manual retry is allowed.
+        TaskManager().reconcile()
         # Get project
         project = ProjectManager.get_project(project_id)
         if not project:
@@ -615,10 +619,10 @@ def build_graph():
                 "error": "Project has not generated ontology yet. Please call /ontology/generate first"
             }), 400
 
-        if project.status == ProjectStatus.GRAPH_BUILDING and not force:
+        if project.status == ProjectStatus.GRAPH_BUILDING:
             return jsonify({
                 "success": False,
-                "error": "Graph is being built. Do not submit repeatedly. To force rebuild, add force: true",
+                "error": "Graph ownership is active or unknown. Retry after recovery or operator review.",
                 "task_id": project.graph_build_task_id
             }), 400
 
@@ -680,13 +684,15 @@ def build_graph():
 
         # Create async task
         task_manager = TaskManager()
-        task_id = task_manager.create_task(f"Build graph: {graph_name}")
+        task_id = task_manager.create_task(f"Build graph: {graph_name}",
+            metadata={"project_id":project_id}, resources=[{"key":"project:"+project_id, "root":ProjectManager.PROJECTS_DIR}])
         logger.info(f"Graph build task created: task_id={task_id}, project_id={project_id}")
         
         # Update project status
         project.status = ProjectStatus.GRAPH_BUILDING
         project.graph_build_task_id = task_id
-        ProjectManager.save_project(project)
+        with task_manager.attempt(task_id).bind():
+            ProjectManager.save_project(project)
 
         # Start background task
         def build_task():
@@ -1062,8 +1068,7 @@ def build_graph():
                 )
 
         # Start background thread
-        thread = threading.Thread(target=build_task, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, build_task)
 
         return jsonify({
             "success": True,
@@ -1077,6 +1082,8 @@ def build_graph():
             }
         })
         
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         return jsonify({
             "success": False,

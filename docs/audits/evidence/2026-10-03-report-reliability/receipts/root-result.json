@@ -1,0 +1,665 @@
+{
+  "report_id": "report_7b90d18cdb75",
+  "status": "completed",
+  "validation_issues": [],
+  "quality_score": {
+    "score": 100,
+    "threshold": 80,
+    "status": "pass",
+    "deductions": [],
+    "section_count": 3,
+    "section_evidence_counts": [
+      7,
+      21,
+      10
+    ],
+    "timings": {
+      "outline_seconds": 5.9843,
+      "section_generation_seconds": 57.1105,
+      "merge_seconds": 0.011,
+      "forecast_synthesis_seconds": 0.0005,
+      "validation_seconds": 0.0122,
+      "total_seconds": 63.5302
+    }
+  },
+  "forecast": {
+    "forecast_mode": "general",
+    "forecast_horizon": "medium_term",
+    "prediction_target": {
+      "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+      "outcomes": [
+        "Base case materializes",
+        "Upside case materializes",
+        "Downside case materializes"
+      ]
+    },
+    "scenario_pack": "baseline",
+    "ensemble_runs": 1,
+    "memory_mode": "off",
+    "confidence": "low",
+    "probabilities": [
+      {
+        "outcome": "Base case materializes",
+        "probability": 0.234,
+        "confidence": "medium",
+        "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+      },
+      {
+        "outcome": "Upside case materializes",
+        "probability": 0.516,
+        "confidence": "medium",
+        "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+      },
+      {
+        "outcome": "Downside case materializes",
+        "probability": 0.25,
+        "confidence": "medium",
+        "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+      }
+    ],
+    "numeric": null,
+    "simulation_signal": {
+      "net_sentiment": 0.531,
+      "total_actions": 2,
+      "model_actions": 2,
+      "unknown_origin_actions": 0,
+      "active_agents": 1,
+      "support_weight": 1.2,
+      "oppose_weight": 0.0,
+      "neutral_weight": 0.0,
+      "agents_supporting": 1,
+      "agents_opposing": 0
+    },
+    "ensemble": null,
+    "assumptions": [
+      "The uploaded record is the main evidence base.",
+      "Forecasts depend on simulation assumptions and agent configuration quality."
+    ],
+    "sensitivity": [
+      {
+        "factor": "Evidence completeness",
+        "effect": "More complete graph context improves forecast stability."
+      },
+      {
+        "factor": "Agent incentives",
+        "effect": "Incorrect incentives can distort simulated behavior."
+      }
+    ],
+    "missing_information": [
+      "More high-quality evidence and agent interviews",
+      "External base rates",
+      "Recent real-world updates"
+    ],
+    "evidence_references": [
+      "Cedarbrook represents the concerns of residents like Priya Shah in evaluating the bike-lane pilot, including accessibility complaints.",
+      "Current Valid Facts: 8",
+      "Daniel Brooks is the city's transport planner working for Cedarbrook.",
+      "Daniel Brooks responded to Leo Martin's loading access concerns by committing to publish delivery and customer visit counts before any permanent change.",
+      "Daniel Brooks responded to Priya Shah's accessibility concerns by committing to publish accessibility complaint counts before any permanent change.",
+      "Daniel Brooks responded to cycling safety concerns by noting the pilot is reversible and will publish cyclist counts before any permanent change.",
+      "Historical/Expired Facts: 0",
+      "Involved Entities: 0",
+      "Leo Martin expressed concern about losing short-stay parking under the Cedarbrook proposal.",
+      "Leo Martin is a shop owner on Main Street, which is under Cedarbrook's jurisdiction.",
+      "Maya Chen stated she supports the Cedarbrook pilot if the intersections are protected.",
+      "Related Prediction Facts: 8",
+      "Relationship Chains: 6",
+      "Total Edges: 8",
+      "Total Nodes: 5",
+      "Which actions are actual model-driven responses vs scheduled scenario inputs in the Cedarbrook bike-lane simulation",
+      "episode:065c7ffe-9eb2-4ed8-ae80-f9aff9acde0b"
+    ],
+    "limitations": "Probabilities are derived from 2 simulated agent actions across 1 agents, weighted by influence and graph-derived stance (1 supporting / 0 opposing). Treat as scenario estimates, not certainty; add external base rates for operational decisions."
+  },
+  "forecast_initial_probabilities_unchanged": true,
+  "source_grounding": {
+    "report_contract": "report-grounding-v1",
+    "graph_id": "a4f570c2-385a-4c5a-a441-acf564cf4fa9",
+    "status": "available",
+    "original_sources": [
+      {
+        "evidence_id": "episode:065c7ffe-9eb2-4ed8-ae80-f9aff9acde0b",
+        "episode_id": "065c7ffe-9eb2-4ed8-ae80-f9aff9acde0b",
+        "origin": "source_document",
+        "excerpt": "# Cedarbrook bike-lane pilot \u2014 fictional browser test\n\nThis is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\n\nFour participants provided these statements:\n- Maya Chen, a resident who cycles to work: \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\"\n- Leo Martin, a Main Street shop owner: \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\"\n- Priya Shah, a resident with limited mobility: \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\"\n- Daniel Brooks, the city's transport planner: \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\"\n\nThe four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.",
+        "source_hash": "b55863a69d8458a232fd2a35fa35458b400576037f1e2efbe5992e493b7cf64d",
+        "graph_id": "a4f570c2-385a-4c5a-a441-acf564cf4fa9",
+        "case_id": "case_9bfde1a7e3ec",
+        "case_version_id": "casever_4a61fddb3469",
+        "document_id": "doc_dea3bcfe1434",
+        "filename": "cedarbrook-bike-lane.md",
+        "locator": {
+          "page": null,
+          "paragraph": null,
+          "chunk_index": 0,
+          "char_start": 0,
+          "char_end": 1468,
+          "offset_basis": "stored_chunk"
+        }
+      }
+    ],
+    "limitations": [],
+    "case_id": "case_9bfde1a7e3ec",
+    "case_version_id": "casever_4a61fddb3469",
+    "source_corpus_digest": "56d85a2ec6708e2803eceffb566526a67e30c94c0e746f30031d7e5c5d53d8fc",
+    "simulation_activity": {
+      "summary": {
+        "logged_entries": 14,
+        "unique_posts": 10,
+        "model_actions": 2,
+        "initial_posts": 4,
+        "scheduled_posts": 4,
+        "scheduled_events": 4,
+        "unknown_origin_actions": 0
+      },
+      "actions": [
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T14:57:59.616712",
+          "agent_id": 0,
+          "agent_name": "Maya Chen",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "I support the Cedarbrook eight-week pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe. A protected lane on Main Street could make my commute viable again, and I would value clear intersection treatment during the trial.",
+            "post_id": 1
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 5,
+          "platform": "twitter",
+          "reference": "twitter:trace:5"
+        },
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T14:57:59.616857",
+          "agent_id": 1,
+          "agent_name": "Leo Martin",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "I am concerned about losing short-stay parking on Main Street, but I could support the Cedarbrook trial if loading access remains reliable and customer visits are measured during the eight-week pilot. Two signed loading bays are a start; I would like clarity on delivery windows.",
+            "post_id": 2
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 6,
+          "platform": "twitter",
+          "reference": "twitter:trace:6"
+        },
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T14:57:59.616948",
+          "agent_id": 2,
+          "agent_name": "Priya Shah",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Accessible pickup spaces and a clear pedestrian path must remain during the Cedarbrook pilot. A bike lane alone does not answer those needs. I would like to see how accessibility is protected alongside the bike-lane design before the eight weeks begin.",
+            "post_id": 3
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 7,
+          "platform": "twitter",
+          "reference": "twitter:trace:7"
+        },
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T14:57:59.617024",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "The Cedarbrook bike-lane pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering any permanent change. The eight-week timeline exists to gather those measurements, not to predetermine an outcome.",
+            "post_id": 4
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 8,
+          "platform": "twitter",
+          "reference": "twitter:trace:8"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T14:57:59.617353",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "SCHEDULED_EVENT",
+          "action_args": {
+            "content": "Round 1 opens with the four participants restating their positions: Maya (Cyclist) presses for protected intersections, Leo (ShopOwner) raises loading-bay reliability and customer-visit measurement, Priya (AccessibilityAdvocate) flags accessible pickup and pedestrian path, Daniel (TransportPlanner) reaffirms reversibility and published counts. No survey, crash, revenue or permanence data is introduced.",
+            "event_type": "news",
+            "title": "Pilot design discussion: intersection protection and loading bays"
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": null,
+          "platform": "twitter",
+          "reference": "twitter:legacy:4"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T14:57:59.617439",
+          "agent_id": 1,
+          "agent_name": "Leo Martin",
+          "action_type": "SCHEDULED_EVENT",
+          "action_args": {
+            "content": "Leo (ShopOwner) asks Daniel (TransportPlanner) for written delivery-window rules at the two signed loading bays, framing it as a condition for not opposing the trial. Daniel indicates windows can be clarified without changing the reversible pilot structure.",
+            "event_type": "shock",
+            "title": "Shop owner requests clearer delivery-window specification"
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": null,
+          "platform": "twitter",
+          "reference": "twitter:legacy:5"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T14:58:01.996565",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Round 1 opens with the four participants restating their positions: Maya (Cyclist) presses for protected intersections, Leo (ShopOwner) raises loading-bay reliability and customer-visit measurement, Priya (AccessibilityAdvocate) flags accessible pickup and pedestrian path, Daniel (TransportPlanner) reaffirms reversibility and published counts. No survey, crash, revenue or permanence data is introduced.",
+            "post_id": 5
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": 9,
+          "platform": "twitter",
+          "reference": "twitter:trace:9"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T14:58:01.996703",
+          "agent_id": 1,
+          "agent_name": "Leo Martin",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Leo (ShopOwner) asks Daniel (TransportPlanner) for written delivery-window rules at the two signed loading bays, framing it as a condition for not opposing the trial. Daniel indicates windows can be clarified without changing the reversible pilot structure.",
+            "post_id": 6
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": 10,
+          "platform": "twitter",
+          "reference": "twitter:trace:10"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T14:58:05.407122",
+          "agent_id": 0,
+          "agent_name": "Maya Chen",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Watching the Cedarbrook bike-lane pilot on Main Street. My baseline: I currently detour off Main because traffic feels unsafe mixing with cars in the door zone and at unprotected intersections. I can support this pilot if the intersections are actually protected (concrete or planters, not just paint) and if cyclist counts are published before any talk of permanence. Reversible + measured = worth trying. Placed for permanence = no. That's my one commuter data point. #MainStreet #CedarbrookPilot",
+            "post_id": 7
+          },
+          "result": null,
+          "success": true,
+          "origin": "model_action",
+          "trace_id": 11,
+          "platform": "twitter",
+          "reference": "twitter:trace:11"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T14:58:05.407249",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "SCHEDULED_EVENT",
+          "action_args": {
+            "content": "Round 2: Daniel (TransportPlanner) confirms the published counts will cover cyclists, deliveries, customer visits and accessibility complaints, gathered over the eight weeks. Maya (Cyclist) accepts the measurement-based approach if intersection protection is in place. Leo (ShopOwner) accepts conditional on reliable loading and the customer-visit count being shared. Priya (AccessibilityAdvocate) accepts conditional on accessible pickup and pedestrian path being preserved. No decision is made on permanence.",
+            "event_type": "news",
+            "title": "Measurement scope agreed, no permanence decision"
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": null,
+          "platform": "twitter",
+          "reference": "twitter:legacy:9"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T14:58:05.407300",
+          "agent_id": 2,
+          "agent_name": "Priya Shah",
+          "action_type": "SCHEDULED_EVENT",
+          "action_args": {
+            "content": "Priya (AccessibilityAdvocate) raises a specific design question: width and obstruction rules for the pedestrian path adjacent to the bike lane. Maya (Cyclist) supports adequate pedestrian width. Daniel (TransportPlanner) notes this can be addressed within the reversible pilot design without changing scope.",
+            "event_type": "shock",
+            "title": "Accessibility advocate emphasizes pedestrian-path design detail"
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": null,
+          "platform": "twitter",
+          "reference": "twitter:legacy:10"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T14:58:05.577824",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Round 2: Daniel (TransportPlanner) confirms the published counts will cover cyclists, deliveries, customer visits and accessibility complaints, gathered over the eight weeks. Maya (Cyclist) accepts the measurement-based approach if intersection protection is in place. Leo (ShopOwner) accepts conditional on reliable loading and the customer-visit count being shared. Priya (AccessibilityAdvocate) accepts conditional on accessible pickup and pedestrian path being preserved. No decision is made on permanence.",
+            "post_id": 8
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": 12,
+          "platform": "twitter",
+          "reference": "twitter:trace:12"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T14:58:05.577931",
+          "agent_id": 2,
+          "agent_name": "Priya Shah",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Priya (AccessibilityAdvocate) raises a specific design question: width and obstruction rules for the pedestrian path adjacent to the bike lane. Maya (Cyclist) supports adequate pedestrian width. Daniel (TransportPlanner) notes this can be addressed within the reversible pilot design without changing scope.",
+            "post_id": 9
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": 13,
+          "platform": "twitter",
+          "reference": "twitter:trace:13"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T14:58:11.213372",
+          "agent_id": 0,
+          "agent_name": "Maya Chen",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Watching the Cedarbrook 8-week pilot closely. Main Street commuter here \u2014 I currently detour because the corridor doesn't feel safe enough to mix with traffic. I can support a reversible pilot IF the intersections are actually protected (not paint-only). What does \"protected\" mean in the Cedarbrook design \u2014 concrete, planters, delineators? And when will pre-pilot cyclist counts be published so we have a real baseline? Support is not endorsement of permanence. #CedarbrookPilot #MainStreet",
+            "post_id": 10
+          },
+          "result": null,
+          "success": true,
+          "origin": "model_action",
+          "trace_id": 14,
+          "platform": "twitter",
+          "reference": "twitter:trace:14"
+        }
+      ],
+      "contract": "initial_post and scheduled_event are scenario inputs; only model_action is a model response; unknown is unverified legacy origin"
+    },
+    "digest": "952733b1a5bda62b1c799dfbd9b9f860054646a0225af464f3e97789242a1ed8"
+  },
+  "timing": {
+    "name": "report_generation",
+    "status": "completed",
+    "started_at": "2026-10-03T14:59:07.216269",
+    "completed_at": "2026-10-03T15:00:10.746491",
+    "total_seconds": 63.5302,
+    "phase_totals": {
+      "outline": 5.9843,
+      "section_01": 14.5291,
+      "section_02": 18.7894,
+      "section_03": 23.792,
+      "merge": 0.011,
+      "forecast_synthesis": 0.0005,
+      "validation": 0.0122
+    },
+    "phases": [
+      {
+        "name": "outline",
+        "label": "Plan report outline",
+        "started_at": "2026-10-03T14:59:07.392231",
+        "metadata": {},
+        "status": "completed",
+        "completed_at": "2026-10-03T14:59:13.376547",
+        "duration_seconds": 5.9843
+      },
+      {
+        "name": "section_01",
+        "label": "Source Facts and Positions",
+        "started_at": "2026-10-03T14:59:13.453967",
+        "metadata": {
+          "section_index": 1
+        },
+        "status": "completed",
+        "completed_at": "2026-10-03T14:59:27.983081",
+        "duration_seconds": 14.5291
+      },
+      {
+        "name": "section_02",
+        "label": "Recorded Simulated Discussion",
+        "started_at": "2026-10-03T14:59:28.030709",
+        "metadata": {
+          "section_index": 2
+        },
+        "status": "completed",
+        "completed_at": "2026-10-03T14:59:46.820125",
+        "duration_seconds": 18.7894
+      },
+      {
+        "name": "section_03",
+        "label": "Scenario Assumptions, Uncertainties and Evidence Gaps",
+        "started_at": "2026-10-03T14:59:46.875378",
+        "metadata": {
+          "section_index": 3
+        },
+        "status": "completed",
+        "completed_at": "2026-10-03T15:00:10.667385",
+        "duration_seconds": 23.792
+      },
+      {
+        "name": "merge",
+        "label": "Assemble report markdown",
+        "started_at": "2026-10-03T15:00:10.722657",
+        "metadata": {},
+        "status": "completed",
+        "completed_at": "2026-10-03T15:00:10.733660",
+        "duration_seconds": 0.011
+      },
+      {
+        "name": "forecast_synthesis",
+        "label": "Synthesize forecast",
+        "started_at": "2026-10-03T15:00:10.733715",
+        "metadata": {},
+        "status": "completed",
+        "completed_at": "2026-10-03T15:00:10.734201",
+        "duration_seconds": 0.0005
+      },
+      {
+        "name": "validation",
+        "label": "Validate report output",
+        "started_at": "2026-10-03T15:00:10.734238",
+        "metadata": {},
+        "status": "completed",
+        "completed_at": "2026-10-03T15:00:10.746431",
+        "duration_seconds": 0.0122
+      }
+    ],
+    "active_phases": [],
+    "metadata": {
+      "report_id": "report_7b90d18cdb75",
+      "simulation_id": "sim_2757a283087d",
+      "graph_id": "a4f570c2-385a-4c5a-a441-acf564cf4fa9",
+      "report_mode": "prediction",
+      "report_depth": "fast",
+      "total_sections": 3
+    },
+    "error": null
+  },
+  "requests_before_proposal": 23,
+  "model_stages": {
+    "ontology": 1,
+    "graph": 1,
+    "profiles": 4,
+    "time_configuration": 1,
+    "event_configuration": 1,
+    "agent_configuration": 1,
+    "simulation": 2,
+    "report": 12
+  },
+  "grounding_corrections": [
+    {
+      "timestamp": "2026-10-03T14:59:24.498733",
+      "elapsed_seconds": 17.17,
+      "report_id": "report_7b90d18cdb75",
+      "action": "grounding_correction_start",
+      "stage": "generating",
+      "section_title": "Source Facts and Positions",
+      "section_index": 1,
+      "details": {
+        "validation_issues": [
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "There is no survey, crash count, business revenue measurement or final decision in this source"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "do not represent all residents,"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "A bike lane alone does not answer those needs"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "moved,"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "softened"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "converged"
+          }
+        ],
+        "attempt_limit": 1,
+        "content_sha256": "21af3e82e8d7b11b32ef13aed2fb969e152116748b9240d39dd0f6c2114dc4b4",
+        "content_characters": 3339
+      }
+    },
+    {
+      "timestamp": "2026-10-03T14:59:27.982868",
+      "elapsed_seconds": 20.66,
+      "report_id": "report_7b90d18cdb75",
+      "action": "grounding_correction_result",
+      "stage": "generating",
+      "section_title": "Source Facts and Positions",
+      "section_index": 1,
+      "details": {
+        "validation_issues": [],
+        "accepted": true,
+        "content_sha256": "971f0454fa10cfeb9bb24532fe07bb1569e4c2578d5542b14b2f6c3822de428a",
+        "content_characters": 3294
+      }
+    },
+    {
+      "timestamp": "2026-10-03T14:59:38.879823",
+      "elapsed_seconds": 31.55,
+      "report_id": "report_7b90d18cdb75",
+      "action": "grounding_correction_start",
+      "stage": "generating",
+      "section_title": "Recorded Simulated Discussion",
+      "section_index": 2,
+      "details": {
+        "validation_issues": [
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "No survey, crash, revenue or permanence data is introduced"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "debated"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "I can support this pilot if the intersections are actually protected (concrete or planters, not just paint) and if cyclist counts are published before any talk of permanence. Reversible + measured = worth trying. Placed for permanence = no."
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "concrete or planters"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "one commuter data point,"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "No decision is made on permanence."
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "protected"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "Support is not endorsement of permanence"
+          },
+          {
+            "code": "unverified_quotation",
+            "blocking": true,
+            "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+            "quote": "speaks"
+          }
+        ],
+        "attempt_limit": 1,
+        "content_sha256": "2b506dea1057b71f695ab77d2537e0e762a312a0d7c15cf69cedf96bc1e3bb74",
+        "content_characters": 5829
+      }
+    },
+    {
+      "timestamp": "2026-10-03T14:59:46.819832",
+      "elapsed_seconds": 39.49,
+      "report_id": "report_7b90d18cdb75",
+      "action": "grounding_correction_result",
+      "stage": "generating",
+      "section_title": "Recorded Simulated Discussion",
+      "section_index": 2,
+      "details": {
+        "validation_issues": [],
+        "accepted": true,
+        "content_sha256": "6ea39d1de0e148b9d8b42ff8c4a665dddb74e9b289da3e7bcae37e8d4a76f5ee",
+        "content_characters": 5815
+      }
+    }
+  ]
+}

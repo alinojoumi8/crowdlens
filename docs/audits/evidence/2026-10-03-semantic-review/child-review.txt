@@ -1,0 +1,250 @@
+- region "Workflow allowance":
+  - paragraph:
+    - strong: stopped
+    - text: · 26/90 requests · 0 in flight or delivery unknown · 3606 seconds elapsed
+  - status: "New calls are blocked: stopped. Partial output is retained. Recovery requires an explicit allowance authorization and a manual action."
+  - button "Stop workflow" [disabled]
+  - paragraph: Stop blocks new calls. In-flight provider requests may still finish and be billed.
+- banner:
+  - link "CrowdLens":
+    - /url: /
+  - button "Graph"
+  - button "Split"
+  - button "Workbench"
+  - generic: Step 4/5
+  - generic: Report
+  - generic: Needs Review
+- main:
+  - generic: Prediction Report
+  - generic: "ID: report_3d12d343d6fa4c5d86998d8d88ea042a"
+  - navigation "Report revision history":
+    - strong: Saved revision · Needs review
+    - link "Parent report":
+      - /url: /report/report_7b90d18cdb75
+    - link "Original report":
+      - /url: /report/report_7b90d18cdb75
+    - link "Review accepted proposal":
+      - /url: /report/report_7b90d18cdb75?proposal=proposal_a960d285e17d4a339892b7647869c301&section=1
+    - generic: Forecasts and unselected sections are inherited.
+  - 'heading "Cedarbrook Bike-Lane Pilot: A Thin Simulated Discussion" [level=1]'
+  - paragraph: A four-agent, two-round simulation on a single platform produced minimal model-driven activity, with participants restating reversible, measurement-based positions and no permanence decision reached.
+  - region "Current report review":
+    - strong: Current assessment · Needs review
+    - paragraph: "Saved status: needs_review. This assessment does not change the saved report."
+    - list:
+      - strong: The stated model-action count conflicts with recorded actions.
+      - paragraph: Round 1 contains no model actions.
+      - list:
+        - listitem: "Recorded: twitter:trace:11 · Maya Chen · Round 1 · model_action"
+      - strong: The proposal audit left a finding unresolved; inspect the claim and its original sources.
+      - paragraph: "None of the four participant statements is unconditional: three (Chen, Martin, Shah) are framed as support-pending-conditions, and Brooks offers a procedural commitment to reversibility and measurement rather than an endorsement; no participant endorses permanence and none rejects the pilot outright, a conditional symmetry that is a source fact and constrains how confidently convergence or conflict among them can be described."
+      - paragraph: Unresolved model audit finding · claim_08. Requires source review; not an independent truth judgment.
+    - generic "Coverage and limits" [active]
+    - paragraph: 3 explicit assertions checked. No general truth or completeness certification.
+    - list:
+      - listitem: Checks cover explicit round action counts and nearby trace author/round/origin assertions only. Quoted, hypothetical and negated statements are excluded.
+      - listitem: Arbitrary paraphrases, omissions, predictions and implied agreement require independent review.
+      - listitem: Proposal-audit findings are model judgments, not independently established facts. Up to 30 unresolved findings are displayed; full sealed provenance is retained.
+  - generic: Forecast probabilities
+  - generic: general · low
+  - generic: Base case materializes
+  - generic: 23.4%
+  - paragraph: Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence.
+  - generic: Upside case materializes
+  - generic: 51.6%
+  - paragraph: Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence.
+  - generic: Downside case materializes
+  - generic: 25.0%
+  - paragraph: Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence.
+  - generic: 2 actions · 1 agents
+  - generic: ▲ 1 supporting
+  - generic: ▼ 0 opposing
+  - generic: "Missing: More high-quality evidence and agent interviews; External base rates"
+  - generic "Assumptions, sensitivity & evidence"
+  - generic: "01"
+  - heading "Source Facts and Positions" [level=3]
+  - generic: 1 evidence
+  - button "Rerun" [disabled]
+  - button "No interviews" [disabled]
+  - generic "Saved claim ledger · 8 statements"
+  - button "Draft with sources"
+  - paragraph: "The report rests on a single fictional source document, explicitly framed as a test scenario rather than a real municipal proposal, with Cedarbrook and the named people described as invented and not a prediction. That framing shapes how the positions below should be read: they are qualitative source statements, not survey results, observed behaviour or empirical inputs. [1]"
+  - paragraph: According to the source, Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street, in which one parking lane is repurposed as a bike lane and deliveries are routed through two signed loading bays. The city has not decided whether the pilot will become permanent. [1]
+  - paragraph: The source explicitly states that there is no survey, crash count, business revenue measurement or final decision in the document, so any later section that touches numbers, safety statistics, revenue or a permanence ruling must treat them as absent rather than inferred. The four statements are likewise described as qualitative, not representing all residents, and are explicitly separated from any simulated output. [1]
+  - paragraph: Maya Chen, a resident who cycles to work, states she supports the pilot if the intersections are protected and that she currently avoids Main Street because traffic feels unsafe. [1]
+  - paragraph: Leo Martin, a Main Street shop owner, states he is concerned about losing short-stay parking and could support a trial if loading access remains reliable and customer visits are measured. [1]
+  - paragraph: Priya Shah, a resident with limited mobility, states that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not answer those needs. [1]
+  - paragraph: Daniel Brooks, the city's transport planner, states the pilot is reversible and that the city will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change. [1]
+  - paragraph: This participatory composition — cyclist, shop owner, accessibility advocate, transport planner — is the source's own framing and explains why safety, parking/loading, accessibility and measurement all appear as legitimate concerns from the outset. [1]
+  - paragraph: "Analysis: None of the four participant statements is unconditional: three (Chen, Martin, Shah) are framed as support-pending-conditions, and Brooks offers a procedural commitment to reversibility and measurement rather than an endorsement. No participant endorses permanence and none rejects the pilot outright, a conditional symmetry that is a source fact and constrains how confidently convergence or conflict among the four can be described, and that means the source itself already anticipates the measurement-based, reversible decision path that the simulation later revisits."
+  - paragraph: The four statements above are the only documentary positions in the packet and should be treated as the baseline against which any generated reaction is compared. Any later discussion of how these positions shifted, softened or aligned must be sourced from recorded model actions, not inferred from the persona descriptions. [1]
+  - generic: "02"
+  - heading "Recorded Simulated Discussion" [level=3]
+  - generic: 17 evidence
+  - button "Rerun" [disabled]
+  - button "No interviews" [disabled]
+  - button "Draft with sources"
+  - paragraph:
+    - strong: Provenance of recorded actions
+  - paragraph:
+    - text: The simulation produced 14 logged entries, of which only two carry the origin label
+    - code:
+      - text: model
+      - emphasis: action
+    - emphasis:
+      - text: ; everything else is a scenario input. The four Round 0
+      - code: CREATE
+    - code: POST
+    - text: rows are tagged
+    - code:
+      - text: initial
+      - emphasis: post
+    - emphasis:
+      - text: and restate each persona's source-language position. The four
+      - code: SCHEDULED
+    - code: EVENT
+    - text: rows and their corresponding
+    - code:
+      - text: CREATE
+      - emphasis: POST
+    - emphasis:
+      - text: echoes in Rounds 1 and 2 are tagged
+      - code: scheduled
+    - code: event
+    - text: . The packet summary also records zero
+    - code:
+      - text: unknown
+      - emphasis: origin
+      - text: actions
+    - text: . The only rows that count as genuine model-driven participant responses are the two Maya Chen posts at
+    - code: twitter:trace:11
+    - text: and
+    - code: twitter:trace:14
+    - text: . No other agent generated a model action in either round.
+  - paragraph:
+    - strong: "Round 1: restated positions, not new positions"
+  - paragraph:
+    - text: Round 1 contains no model actions. Its two posts are scheduled-event content. The first round-1 post (echoed from
+    - code: twitter:legacy:4
+    - text: and stored at
+    - code: twitter:trace:9
+    - text: ") summarises the four participants as: Maya pressing for protected intersections, Leo raising loading-bay reliability and customer-visit measurement, Priya flagging accessible pickup and pedestrian path, and Daniel reaffirming reversibility and published counts. The scheduled content states that no survey, crash, revenue or permanence data is introduced, so the absence of such data is itself a scenario input rather than an observed restraint by the participants. The second round-1 post (echoed from"
+    - code: twitter:legacy:5
+    - text: and stored at
+    - code: twitter:trace:10
+    - text: ) has Leo ask Daniel for written delivery-window rules at the two signed loading bays, with Daniel indicating windows can be clarified within the reversible structure. Both of these are pre-scripted scenario frames, not model responses, so any implication that participants negotiated loading windows in Round 1 would overstate the recorded evidence.
+  - paragraph:
+    - strong: The only Round 1 model action
+  - paragraph:
+    - text: The lone model-driven post in Round 1 belongs to Maya Chen at
+    - code: twitter:trace:11
+    - text: ". She re-frames her support with a sharper conditional, recorded in the packet as: she can support the pilot if the intersections are actually protected (concrete or planters, not just paint) and if cyclist counts are published before any talk of permanence, adding that reversible and measured is worth trying while placement for permanence is not. This is the first place a model adds operational specificity, distinguishing concrete or planters from paint-only treatments, that is not present in the source excerpt or in scheduled content. The model also frames her contribution as one commuter data point, signalling self-positioning as anecdotal rather than representative. The post carries a Twitter hashtag format ("
+    - code: "#MainStreet #CedarbrookPilot"
+    - text: ) that none of the source or scheduled rows use, marking it stylistically as model output.
+  - paragraph:
+    - strong: "Round 2: measurement scope agreed, permanence deferred"
+  - paragraph:
+    - text: Round 2 again contains no model actions from Daniel, Leo or Priya. Both round-2 posts are scheduled-event content. The first (echoed from
+    - code: twitter:legacy:9
+    - text: and stored at
+    - code: twitter:trace:12
+    - text: ) states that Daniel confirms the published counts will cover cyclists, deliveries, customer visits and accessibility complaints gathered over the eight weeks, that Maya accepts the measurement-based approach subject to intersection protection, that Leo accepts conditional on reliable loading and a shared customer-visit count, and that Priya accepts conditional on accessible pickup and pedestrian path preservation; the same scheduled content records that no decision is made on permanence. The second (echoed from
+    - code: twitter:legacy:10
+    - text: and stored at
+    - code: twitter:trace:13
+    - text: ) has Priya raise width and obstruction rules for the pedestrian path, Maya support adequate pedestrian width, and Daniel note that this can be addressed within the reversible design without changing scope. Because both of these are scenario inputs, the recorded simulation never actually shows the four agents arriving at conditional acceptance; that framing is delivered to them by the scheduled content rather than produced by their own model outputs.
+  - paragraph:
+    - strong: The only Round 2 model action and the data that did not appear
+  - paragraph:
+    - text: The second and final model action is again Maya Chen at
+    - code: twitter:trace:14
+    - text: ". She repeats her Round 1 conditional in tighter form and asks two explicit questions: what protected means in the Cedarbrook design, listing concrete, planters and delineators as candidates, and when pre-pilot cyclist counts will be published. The post reaffirms that support is not endorsement of permanence and again uses the hashtag format absent from source and scheduled rows. Beyond these two Maya posts, no participant introduced survey results, crash counts, revenue figures, customer-visit numbers, delivery counts or accessibility-complaint counts, and no participant issued a permanence decision. The"
+    - code:
+      - text: simulation
+      - emphasis: signal
+    - emphasis:
+      - text: "field corroborates this:"
+      - code: model
+    - code: "actions: 2"
+    - text: ","
+    - code:
+      - text: active
+      - emphasis: "agents: 1"
+    - emphasis:
+      - text: ","
+      - code: agents
+    - code: "supporting: 1"
+    - text: ","
+    - code: "agents_opposing: 0"
+    - text: ", with all support weight concentrated in Maya's two posts."
+  - paragraph:
+    - strong: Implication for interpreting the run
+  - paragraph: "The recorded simulated discussion is therefore thin in a specific sense: it is not just sparse in volume, but narrow in authorship. Every exchange about loading windows, pedestrian-path width, or conditional acceptance of the measurement regime originates from scheduled scenario content, while the only model that actually responds is Maya Chen, who uses both of her opportunities to sharpen rather than soften her conditional. Leo, Priya and Daniel register no model action in either round, so their recorded behaviour is indistinguishable from no-op. Any reading of the run as a four-way exchange, a negotiated compromise, or a convergence on the measurement-based reversible path is therefore reading scheduled content as if it were model output, a category error the report should avoid."
+  - generic: "03"
+  - heading "Scenario Assumptions, Uncertainties and Evidence Gaps" [level=3]
+  - generic: 15 evidence
+  - button "Rerun" [disabled]
+  - button "No interviews" [disabled]
+  - button "Draft with sources"
+  - paragraph:
+    - strong: The frozen forecast table as an uncalibrated scenario estimate
+  - paragraph: "The probability row in the supplied packet — three named outcomes described as base, upside and downside cases, each tagged with low overall confidence and a medium per-outcome confidence — is best read as an uncalibrated heuristic output rather than an empirical forecast. It is generated from a simulation signal built on a deliberately small run: the packet records two model actions in total, both from a single agent, against a backdrop of fourteen logged entries dominated by initial posts and scheduled events. The packet itself states that the probabilities are derived from those two actions and from a graph-derived stance split of one supporting and zero opposing, weighted by an influence score. Any reading of the three branches as a probability distribution over real-world outcomes is therefore inconsistent with the packet's own framing, which labels the run a thin test and explicitly excludes external base rates. The base, upside and downside cases are better treated as scenario branches — what an outcome might look like if conditional support held, broadened or narrowed — not as a calibrated probability statement."
+  - paragraph:
+    - strong: Key uncertainties flowing from the thin run
+  - paragraph: "Several uncertainties follow directly from the structure of the executed-action packet and the source's own disclaimers:"
+  - list:
+    - listitem: The model-action count is two, the active-agent count is one, and the only agent who acted on her own initiative is Maya Chen. Any inference about how Leo, Priya or Daniel would update their positions in response to a model prompt is not supported, because no such model prompt was issued to them. The upside and downside branches cannot be attributed to evidence that the other three participants generated, since none exists in the recorded actions.
+    - listitem: The platform is single, the rounds are two, and there is no third-party content, no audience response, no follow-up clarification and no numeric measurement of any kind. The simulation signal therefore cannot distinguish a genuine softening of conditional support from restatement of the source's own conditional symmetry.
+    - text: The source explicitly disclaims the existence of a survey, crash count, business revenue measurement and a permanence decision. The packet's own missing
+    - emphasis: information list reiterates that external base rates and recent real-world updates are absent. Any operational reading of the forecast would have to add those inputs from outside the simulation before the table could be acted on.
+    - emphasis: The simulation carries a net
+    - text: sentiment value, a support weight of 1.2 and oppose and neutral weights of 0.0. Because the support weight is driven by a single model's two posts, those numbers track Maya's conditional language rather than the group dynamic, and treating them as a population sentiment estimate would overstate the evidence.
+  - strong: Sensitivity points the section assignment flags
+  - paragraph
+  - paragraph: "Three sensitivity dimensions deserve explicit treatment because they are where the uncalibrated estimate is most fragile:"
+  - list:
+    - strong: Evidence completeness.
+    - text: "The graph context available to the model is shallow: eight current-valid paraphrased facts, all of which restate the source's four positions, and no derived numeric inputs. If the graph were expanded with pre-pilot cyclist counts, delivery-window history or accessibility complaint history, the same prompt would likely produce a different model_action and therefore a different simulation signal. The current packet cannot resolve that counterfactual."
+    - strong: Agent incentive design.
+    - text: The packet's own sensitivity list notes that incorrect incentives can distort simulated behaviour. Because three of four agents produced no model action, the incentive structure in effect rewarded Maya's conditional-restatement pattern and left the other three roles inert. If incentives were tuned to elicit model responses from shop-owner, accessibility and planner roles, the recorded support/oppose split would almost certainly shift, and the base/upside/downside branches would re-anchor against a different evidence base.
+    - strong: Scheduled-event framing.
+    - text: Round 1 and Round 2 each open with scheduled content that already describes the four participants' positions, the measurement scope, and the absence of a permanence decision. Scheduled content is a scenario input, not a participant response, and yet it pre-emptively states the convergence that a real dialogue would have to reach. A reader who forgets that distinction could overread the recorded actions as evidence that the four agents negotiated, when in fact the negotiation is delivered to them by the script. This is the most consequential interpretive risk in the packet and the one most likely to survive into operational reading.
+  - strong: Implications for using the forecast
+  - paragraph
+  - paragraph: Two practical implications follow. First, the three outcome branches should be presented as scenario descriptions, not as probabilities to be quoted in a decision memo; the frozen probability row should be referred to rather than restated, and the prose should not propagate the numbers as if they were calibrated. Second, before any of the three branches is used to inform an actual decision, the missing_information items — external base rates, recent real-world updates and richer dialogue activity from the shop-owner, accessibility and planner roles — would have to be supplied. Until then, the packet supports only a thin description of how one simulated cyclist restated her conditional support over two rounds, and a longer description of that finding would exceed what the executed actions justify.
+  - generic: Sections
+  - generic: 3/3
+  - generic: Progress
+  - generic: 100%
+  - generic: Elapsed
+  - generic: 1m 4s
+  - generic: Tools
+  - generic: "0"
+  - generic: Forecast
+  - generic: 23.4%
+  - generic: Needs review
+  - generic: Automated checks 100/100
+  - generic: Graph 100/100
+  - generic: Graph structure is ready for synthesis
+  - generic: Mode Prediction
+  - button "Repair embeddings"
+  - button "Regenerate"
+  - button "No interviews"
+  - button "Strict anti-repeat"
+  - button "Legal mode"
+  - button "Benchmark embeddings"
+  - generic: PL
+  - generic: Planning / Outline
+  - generic: "01"
+  - generic: Source Facts and Positions
+  - generic: "02"
+  - generic: Recorded Simulated Discussion
+  - generic: "03"
+  - generic: Scenario Assumptions, Uncertainties and Evidence Gaps
+  - generic: OK
+  - generic: Complete
+  - button "Enter Deep Interaction":
+    - generic: Enter Deep Interaction
+  - generic: CONSOLE OUTPUT
+  - generic: report_3d12d343d6fa4c5d86998d8d88ea042a
+  - region "System log"

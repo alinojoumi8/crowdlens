@@ -1,0 +1,104 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_failed_owner_repairs_running_state_without_signalling_recorded_pid[simulation-runtime] _
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7cba90f90a90>, <app.services.task_execution.TaskRuntime object at 0x7cba90f9d510>, [])
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-53/test_failed_owner_repairs_runn0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7cba90f9c550>
+kind = 'simulation-runtime'
+
+    @pytest.mark.parametrize('kind',['simulation-runtime','ensemble'])
+    def test_failed_owner_repairs_running_state_without_signalling_recorded_pid(controlled,tmp_path,monkeypatch,kind):
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        monkeypatch.setattr(SimulationRunner,'RUN_STATE_DIR',str(tmp_path/'runs'))
+        monkeypatch.setattr(SimulationRunner,'_repository',runtime.repository)
+        with execution_scope(ledger,wid,'simulation'):
+            task_id=TaskManager().create_task('simulation_run',resources=[{'key':kind+':sim_owned','root':SimulationRunner.RUN_STATE_DIR}])
+            owner=TaskManager().attempt(task_id)
+            state=SimulationRunState('sim_owned',runner_status=RunnerStatus.RUNNING,process_pid=12345,
+                execution={'task_id':task_id,'attempt_id':owner.attempt_id,'workflow_id':wid,'workflow_epoch':1})
+            with owner.bind(): SimulationRunner._save_run_state(state)
+        signals=[]
+        monkeypatch.setattr('app.services.simulation_runner.os.kill',lambda pid,signal:signals.append((pid,signal)))
+        assert client.post('/api/execution/'+wid+'/stop',json={}).status_code==200
+        SimulationRunner.reconcile_persisted_runs()
+        recovered=SimulationRunner.get_run_state('sim_owned')
+>       assert recovered.runner_status==RunnerStatus.STOPPED
+E       AssertionError: assert <RunnerStatus...NG: 'running'> == <RunnerStatus...ED: 'stopped'>
+E         
+E         - stopped
+E         + running
+
+tests/test_control_edges.py:173: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[02:57:37] INFO: Task created: task_id=f8ad129e-3b5c-4981-b018-6c554c3a2914 task_type=simulation_run metadata_keys=workflow_epoch,workflow_id
+_ test_failed_owner_repairs_running_state_without_signalling_recorded_pid[ensemble] _
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7cba93451dd0>, <app.services.task_execution.TaskRuntime object at 0x7cba9248fe10>, [])
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-53/test_failed_owner_repairs_runn1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7cba90f93990>
+kind = 'ensemble'
+
+    @pytest.mark.parametrize('kind',['simulation-runtime','ensemble'])
+    def test_failed_owner_repairs_running_state_without_signalling_recorded_pid(controlled,tmp_path,monkeypatch,kind):
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        monkeypatch.setattr(SimulationRunner,'RUN_STATE_DIR',str(tmp_path/'runs'))
+        monkeypatch.setattr(SimulationRunner,'_repository',runtime.repository)
+        with execution_scope(ledger,wid,'simulation'):
+            task_id=TaskManager().create_task('simulation_run',resources=[{'key':kind+':sim_owned','root':SimulationRunner.RUN_STATE_DIR}])
+            owner=TaskManager().attempt(task_id)
+            state=SimulationRunState('sim_owned',runner_status=RunnerStatus.RUNNING,process_pid=12345,
+                execution={'task_id':task_id,'attempt_id':owner.attempt_id,'workflow_id':wid,'workflow_epoch':1})
+            with owner.bind(): SimulationRunner._save_run_state(state)
+        signals=[]
+        monkeypatch.setattr('app.services.simulation_runner.os.kill',lambda pid,signal:signals.append((pid,signal)))
+        assert client.post('/api/execution/'+wid+'/stop',json={}).status_code==200
+        SimulationRunner.reconcile_persisted_runs()
+        recovered=SimulationRunner.get_run_state('sim_owned')
+>       assert recovered.runner_status==RunnerStatus.STOPPED
+E       AssertionError: assert <RunnerStatus...NG: 'running'> == <RunnerStatus...ED: 'stopped'>
+E         
+E         - stopped
+E         + running
+
+tests/test_control_edges.py:173: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[02:57:37] INFO: Task created: task_id=767bf453-c303-4ba7-80b0-ce320f63fb7f task_type=simulation_run metadata_keys=workflow_epoch,workflow_id
+_________________ test_replaced_owner_cannot_publish_run_state _________________
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x7cba90fa55d0>, <app.services.task_execution.TaskRuntime object at 0x7cba90fc5210>, [])
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-53/test_replaced_owner_cannot_pub0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7cba9113b450>
+
+    def test_replaced_owner_cannot_publish_run_state(controlled,tmp_path,monkeypatch):
+        client,ledger,runtime,calls=controlled
+        wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']
+        monkeypatch.setattr(SimulationRunner,'RUN_STATE_DIR',str(tmp_path/'runs'))
+        monkeypatch.setattr(SimulationRunner,'_repository',runtime.repository)
+        with execution_scope(ledger,wid,'simulation'):
+            task_id=TaskManager().create_task('simulation_run',resources=[{'key':'simulation-runtime:sim_owned','root':SimulationRunner.RUN_STATE_DIR}])
+            owner=TaskManager().attempt(task_id)
+            state=SimulationRunState('sim_owned',runner_status=RunnerStatus.RUNNING,
+                execution={'task_id':task_id,'attempt_id':owner.attempt_id})
+            with owner.bind(): SimulationRunner._save_run_state(state)
+            runtime.update(owner,{'status':'failed','error':'synthetic replacement'})
+            replacement=TaskManager().create_task('simulation_run',resources=[{'key':'simulation-runtime:sim_owned','root':SimulationRunner.RUN_STATE_DIR}])
+            fresh=SimulationRunState('sim_owned',runner_status=RunnerStatus.RUNNING,
+                execution={'task_id':replacement,'attempt_id':TaskManager().attempt(replacement).attempt_id})
+            with TaskManager().attempt(replacement).bind(): SimulationRunner._save_run_state(fresh)
+            original=(tmp_path/'runs'/'sim_owned'/'run_state.json').read_bytes()
+            state.runner_status=RunnerStatus.COMPLETED
+>           with owner.bind(),pytest.raises(OwnershipLost): SimulationRunner._save_run_state(state)
+E           Failed: DID NOT RAISE <class 'app.services.task_execution.OwnershipLost'>
+
+tests/test_control_edges.py:198: Failed
+----------------------------- Captured stdout call -----------------------------
+[02:57:37] INFO: Task created: task_id=b8012e2b-ba57-4a61-82f0-f24592428e00 task_type=simulation_run metadata_keys=workflow_epoch,workflow_id
+[02:57:37] INFO: Task created: task_id=ef1e1f92-088f-4144-b7ae-b5cb7a51cd32 task_type=simulation_run metadata_keys=workflow_epoch,workflow_id
+=========================== short test summary info ============================
+FAILED tests/test_control_edges.py::test_failed_owner_repairs_running_state_without_signalling_recorded_pid[simulation-runtime]
+FAILED tests/test_control_edges.py::test_failed_owner_repairs_running_state_without_signalling_recorded_pid[ensemble]
+FAILED tests/test_control_edges.py::test_replaced_owner_cannot_publish_run_state
+3 failed, 8 deselected in 1.24s

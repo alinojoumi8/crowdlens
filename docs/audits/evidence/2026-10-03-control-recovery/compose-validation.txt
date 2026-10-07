@@ -1,0 +1,1 @@
+env file /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/.env not found: stat /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/.env: no such file or directory

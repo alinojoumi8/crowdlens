@@ -242,7 +242,7 @@
         <span class="log-title">SYSTEM DASHBOARD</span>
         <span class="log-id">{{ projectData?.project_id || 'NO_PROJECT' }}</span>
       </div>
-      <div class="log-content" ref="logContent">
+      <div class="log-content" ref="logContent" tabindex="0" role="region" aria-label="System log">
         <div class="log-line" v-for="(log, idx) in systemLogs" :key="idx">
           <span class="log-time">{{ log.time }}</span>
           <span class="log-msg">{{ log.msg }}</span>

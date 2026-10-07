@@ -1,0 +1,474 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-source-review-v2",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "created_at": "2026-10-03T22:51:57.106400+00:00",
+  "status": "FROZEN_BEFORE_CANDIDATE_CONTENT_REVIEW",
+  "method": "Only packet IDs, structural key/type information, blank forms, task text and the complete original source documents were read before freezing these material reference facts. Candidate section, summary, proposed replacements and claim text have not been displayed or evaluated. The reference facts will not be revised after candidate review.",
+  "scope": "Fictional supplied original documents only; source-backed reference assessment by an AI, not independently verified events or human/adjudicated truth.",
+  "packets": [
+    {
+      "packet_id": "packet_0cb718ce2d34",
+      "packet_sha256": "34b6755331ccd13892837ceb76fc7205d4954cb78dba0d9e989c23003d63b72d",
+      "task": "Review the proposed shuttle pilot, preserving each speaker’s position and the boundary between requirements and endorsement.",
+      "frozen_at": "2026-10-03T22:51:57.106400+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "P0CB-F01",
+          "text": "Rosa Lin says she could support a six-week shuttle trial if wheelchair boarding is demonstrated; this is conditional possible support.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P0CB-F02",
+          "text": "Amir West says a trial must retain evening service and does not state support or opposition.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P0CB-F03",
+          "text": "Planner Elena Frost says no permanent route decision has been taken.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P0CB-F04",
+          "text": "Planner Elena Frost says the shuttle trial has not started.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P0CB-F05",
+          "text": "The council will discuss a proposed six-week shuttle trial on 18 November.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P0CB-F06",
+          "text": "No vote has been held on the proposed trial.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P0CB-F07",
+          "text": "No ridership or cost figures are available.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_899779dccb4a",
+      "packet_sha256": "ce0febaadf979ac3217895f5c1afcf2b310588b63f8e8244d83c27e26a4f52d3",
+      "task": "Review conflicting attendance records without resolving an unverified discrepancy or conflating attendance with demand.",
+      "frozen_at": "2026-10-03T22:51:57.106400+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "P899-F01",
+          "text": "The Saturday workshop visitor register, signed by coordinator Nia Cole, records 18 visitors.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P899-F02",
+          "text": "The visitor register records that two visitors requested later opening hours.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P899-F03",
+          "text": "The visitor sheet has no repeat-visitor identifier.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P899-F04",
+          "text": "Volunteer Finn Reed reports counting 23 attendees including volunteers and staff, without distinguishing visitors from staff.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P899-F05",
+          "text": "Finn Reed's email does not correct or withdraw the signed visitor register.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P899-F06",
+          "text": "No comparison-week figure is provided.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_dd4cc5e995cb",
+      "packet_sha256": "201f751edc434ba00c28488e4757d4b31d8195aafdf0e82e0f7c071cf45837f7",
+      "task": "Review the boat-ramp proposal, preserving unavailable measurements, approximate amounts and attribution of concerns.",
+      "frozen_at": "2026-10-03T22:51:57.106400+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "PDD4-F01",
+          "text": "The early boat-ramp estimate is approximately $18,000 and excludes permits and maintenance.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F02",
+          "text": "The boat-ramp design is provisional.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F03",
+          "text": "No queue timing study is included in the ramp brief.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F04",
+          "text": "No user survey is included in the ramp brief.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F05",
+          "text": "No funding approval is included in the ramp brief.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F06",
+          "text": "Boater Lena Orr expects easier launching but gives no measured time saving.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F07",
+          "text": "Angler Theo Vale is concerned about shoreline access and has not endorsed the design.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PDD4-F08",
+          "text": "Engineer Mira North requests a site assessment before recommending construction.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_e7c7c3cf0192",
+      "packet_sha256": "ea5b3d1a9e0800e82c28130de31bb4cf9f614a7253520fe43db069838cf3a107",
+      "task": "Review the current garden trial decision, distinguishing allocation, spending and permission from earlier draft proposals.",
+      "frozen_at": "2026-10-03T22:51:57.106400+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "PE7C-F01",
+          "text": "The current Bracken School minutes are final version 2 and supersede the version-1 draft.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE7C-F02",
+          "text": "The final minutes approve a one-term movable-container garden trial.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE7C-F03",
+          "text": "The final minutes set an allocation ceiling of $2,400; the linked finance note states that this ceiling is not a spending total.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            },
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE7C-F04",
+          "text": "The garden-trial approval excludes permanent ground works.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE7C-F05",
+          "text": "No expenditure has yet been recorded.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE7C-F06",
+          "text": "A proposed supplier quotation of $1,950 is awaiting approval.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE7C-F07",
+          "text": "No purchase order has been issued.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

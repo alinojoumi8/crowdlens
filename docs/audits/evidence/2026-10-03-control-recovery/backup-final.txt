@@ -1,0 +1,27 @@
+[03:25:06] INFO: outlinesaved: report_root
+[03:25:06] INFO: reportsaved: report_root
+[03:25:06] INFO: outlinesaved: report_active
+[03:25:06] INFO: reportsaved: report_active
+{"proposal_id": "proposal_01c7eb6940464c808199f1b46b8d645a", "digest": "252234931c22bed3f55485c390cf88b39f827dedd4132f7795b276970b1cb8c3", "revision_id": "report_1d122ec0724f4b0d853602cd626545fc", "parent_hashes": {"meta.json": "280eaaaf4cdec2d79d60e4061e9354d1137eb6ecff4ca581ed696c414df6c9ea", "outline.json": "8e1ac74c0d55c2e31034b9cee4e6ab8718620b236f6508f1a83790ffe8a08e91"}, "revision_hashes": {"full_report.md": "204969cb6ebe8195e043eb566c525141b2a06cc6057bc4fd004117ddf43b4431", "ledger.json": "75e3acf3983afc4088e25e597e749c334dba1bc66d89703dd9949ffabd86eddf", "manifest.json": "5f718e28525ce56757c9bf98077223537ba6917f333d1cc95ac76d6ba6b67504", "meta.json": "57d98d953191f89fb66adb451535db274e2d0b5deee9c21395251a72b311f3d7", "outline.json": "49ae6aaebd4401f574e82eac9dba42cd8ed3018b6920370b483d73c3bc3d9579", "progress.json": "83b509e521dfb809c098ca17cfd093c0b4123249cd3b9cebb5accf0f91966c9c", "provenance.json": "813b66be55db51b438110dc3d2ff9b0a0af48074ce3a4d56a3767d08512919b5", "section_01.md": "dcff7502c769df54135018ba447c8ebe9a68aa7f6d50f5f495df03abc4fa4e41", "section_02.md": "de3953c9709fb23c345b72ff234077cfb5d4e917328083ecbe63f59c77351d78"}, "expired_owned_tasks": ["active_graph_task", "active_report_task"], "valid_lease_task": "newer_graph_task", "stable_absolute_root": "/tmp/crowdlens-control-recovery-backup-34ad6d2/synthetic-live", "controlled_recovery_clock": 131.0, "substitutions": ["scripted drafting model", "in-memory synthetic source chunks"], "scripted_model_calls": 3, "real_model_calls": 0}
+{"restored_revision": "report_1d122ec0724f4b0d853602cd626545fc", "status": "needs_review", "idempotent_acceptance": true, "immutable": true, "database_integrity": "ok"}
+{"same_root_active_recovery": "passed", "counts": {"failed": 2, "repaired": 2, "unknown": 0, "repair_failed": 0}, "valid_lease_task_preserved": true, "controlled_clock": 131.0}
+{"restored_revision": "report_1d122ec0724f4b0d853602cd626545fc", "status": "needs_review", "idempotent_acceptance": true, "immutable": true, "database_integrity": "ok"}
+{
+  "status": "passed",
+  "scope": "quiesced synthetic SQLite and complete artifact-root copy",
+  "writer_exited_before_backup": true,
+  "restored_in_fresh_process": true,
+  "archived_original_unchanged": true,
+  "copied_file_count": 26,
+  "same_root_active_task_recovery": "passed",
+  "expired_tasks_recovered": 2,
+  "associated_project_failed": true,
+  "partial_report_interrupted": true,
+  "valid_lease_task_and_newer_project_preserved": true,
+  "controlled_lease_clock": true,
+  "active_task_relocation": "not covered; stored absolute roots must remain stable",
+  "includes_hidden_proposals_and_locks": true,
+  "neo4j_backup": "not covered",
+  "hot_backup": "not covered",
+  "power_loss_durability": "not covered"
+}

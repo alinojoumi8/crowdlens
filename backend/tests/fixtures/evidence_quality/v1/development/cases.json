@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "corpus_version": "evidence-quality-v1",
+  "cases": [
+    {
+      "id": "development_receipt",
+      "category": "development_smoke",
+      "split": "development",
+      "provenance": {
+        "kind": "synthetic",
+        "author": "Codex evaluation fixture author",
+        "created_on": "2026-10-02",
+        "private_or_reserved_inputs": false,
+        "human_reviewed": false
+      },
+      "scope": {
+        "graph_id": "eq_graph_development_receipt",
+        "case_id": "eq_case_development_receipt",
+        "case_version_id": "eq_v1_development_receipt"
+      },
+      "sources": [
+        {
+          "graph_id": "eq_graph_development_receipt",
+          "case_id": "eq_case_development_receipt",
+          "case_version_id": "eq_v1_development_receipt",
+          "uuid": "src_development_receipt",
+          "document_id": "doc_development_receipt",
+          "filename": "development_receipt.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "The parcel log records delivery on Tuesday at 10:00. Receipt 99 remains unsigned.",
+          "fixture_text_sha256": "20adcea390a701febbaa2d54f32bcc07a382b52a02772228ba980539a4e838f9"
+        }
+      ],
+      "section": {
+        "title": "parcel delivery log",
+        "description": "Review parcel delivery timing and receipt attribution.",
+        "content": "The parcel delivery log needs review."
+      },
+      "summary": "The parcel delivery record needs review.",
+      "stub_claims": [
+        {
+          "claim_id": "claim_01",
+          "kind": "source_statement",
+          "text": "The parcel log records delivery on Tuesday at 10:00.",
+          "citation_ids": [
+            "episode:src_development_receipt"
+          ],
+          "premise_claim_ids": [],
+          "quote": ""
+        }
+      ],
+      "stub_gaps": [],
+      "expected": {
+        "state": "ready",
+        "finding_codes": [],
+        "selected_source_ids": [
+          "episode:src_development_receipt"
+        ],
+        "stub_calls": 3
+      },
+      "human_review_packet": false
+    }
+  ]
+}

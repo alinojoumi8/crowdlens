@@ -4,19 +4,27 @@ Unified OpenAI format API calls
 Supports Ollama num_ctx parameter to prevent prompt truncation
 """
 
+from .model_limits import anthropic_output_settings
+
 import json
 import os
 import re
 import time
 from typing import Optional, Dict, Any, List
 from openai import OpenAI
+from openai import APIConnectionError, APITimeoutError, APIStatusError
 import requests
 
 from ..config import Config
 from ..utils.logger import get_logger
+from ..services.workflow_execution import transport_attempt
 
 
 logger = get_logger('mirofish.llm_client')
+
+
+class EmptyLLMResponseError(ValueError):
+    """Provider completed a request without usable answer text."""
 
 
 class LLMClient:
@@ -41,6 +49,7 @@ class LLMClient:
             api_key=self.api_key,
             base_url=self.base_url,
             timeout=timeout,
+            max_retries=0,
         )
 
         # Ollama context window size — prevents prompt truncation.
@@ -72,7 +81,7 @@ class LLMClient:
 
         body: Dict[str, Any] = {
             "model": self.model,
-            "max_tokens": max_tokens,
+            **anthropic_output_settings(self.model, max_tokens),
             "messages": chat_messages,
         }
         if system_messages:
@@ -106,7 +115,14 @@ class LLMClient:
         ]
         content = "\n".join(text_parts).strip()
         if not content:
-            raise ValueError("Anthropic-compatible LLM returned no text content")
+            # Keep diagnostics structural: never expose private prompts or thinking.
+            block_types = sorted({str(item.get("type", "unknown")) for item in data.get("content", [])})
+            raise EmptyLLMResponseError(
+                "Anthropic-compatible LLM returned no text content "
+                f"(stop_reason={data.get('stop_reason', 'unknown')}, "
+                f"block_types={','.join(block_types) or 'none'}). "
+                "Completed sections are preserved; retry the unfinished operation."
+            )
         return content
 
     def _post_anthropic_with_retry(
@@ -123,13 +139,17 @@ class LLMClient:
 
         for attempt in range(max_retries + 1):
             try:
-                response = requests.post(
-                    url,
-                    headers=headers,
-                    json=body,
-                    timeout=self.timeout if request_timeout is None else request_timeout,
-                )
-                response.raise_for_status()
+                with transport_attempt(self.model, self.base_url, attempt + 1) as receipt:
+                    response = requests.post(
+                        url, headers=headers, json=body,
+                        timeout=self.timeout if request_timeout is None else request_timeout,
+                    )
+                    receipt['http_status'] = getattr(response, 'status_code', 200)
+                    try:
+                        receipt['usage'] = response.json().get('usage')
+                    except ValueError:
+                        pass
+                    response.raise_for_status()
                 return response
             except (
                 requests.exceptions.ConnectionError,
@@ -202,13 +222,24 @@ class LLMClient:
         overrides = {}
         if request_timeout is not None:
             overrides['timeout'] = request_timeout
-        if request_max_retries is not None:
-            overrides['max_retries'] = request_max_retries
+        overrides['max_retries'] = 0
         if overrides:
             client = client.with_options(**overrides)
         started = time.monotonic()
         try:
-            response = client.chat.completions.create(**kwargs)
+            retries = request_max_retries if request_max_retries is not None else 2
+            for attempt in range(retries + 1):
+                try:
+                    with transport_attempt(self.model, self.base_url, attempt + 1) as receipt:
+                        response = client.chat.completions.create(**kwargs)
+                        receipt['usage'] = response.usage.model_dump() if getattr(response, 'usage', None) else None
+                        receipt['http_status'] = 200
+                    break
+                except (APIConnectionError, APITimeoutError, APIStatusError) as exc:
+                    status = getattr(exc, 'status_code', None)
+                    if attempt >= retries or (status and status < 500 and status != 429):
+                        raise
+                    time.sleep(min(30, 2 ** (attempt + 1)))
         except Exception:
             if usage_callback:
                 usage_callback('openai_compatible', self.model, {}, (time.monotonic() - started) * 1000)
@@ -227,7 +258,7 @@ class LLMClient:
         temperature: float = 0.3,
         max_tokens: int = 4096,
         disable_reasoning: bool = False,
-        *, request_timeout=None, request_max_retries=None, usage_callback=None,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None, response_callback=None,
     ) -> Dict[str, Any]:
         """
         Send chat request and return JSON
@@ -252,20 +283,19 @@ class LLMClient:
             if self._num_ctx:
                 options["num_ctx"] = self._num_ctx
             started = time.monotonic()
-            native_response = requests.post(
-                f"{base_url}/api/chat",
-                json={
-                    "model": self.model,
-                    "messages": messages,
-                    "stream": False,
-                    "think": False,
-                    "format": "json",
-                    "options": options,
-                },
-                timeout=self.timeout if request_timeout is None else request_timeout,
-            )
-            native_response.raise_for_status()
-            body = native_response.json()
+            with transport_attempt(self.model, self.base_url) as receipt:
+                native_response = requests.post(
+                    f"{base_url}/api/chat",
+                    json={"model": self.model, "messages": messages, "stream": False,
+                          "think": False, "format": "json", "options": options},
+                    timeout=self.timeout if request_timeout is None else request_timeout,
+                )
+                receipt['http_status'] = getattr(native_response, 'status_code', 200)
+                native_response.raise_for_status()
+                body = native_response.json()
+                receipt['usage'] = {key: value for key, value in {
+                    'input_tokens': body.get('prompt_eval_count'), 'output_tokens': body.get('eval_count')
+                }.items() if value is not None}
             if usage_callback:
                 usage_callback('ollama', body.get('model', self.model),
                     {'input_tokens': body.get('prompt_eval_count'), 'output_tokens': body.get('eval_count')},
@@ -282,6 +312,12 @@ class LLMClient:
                 **({k: v for k, v in dict(request_timeout=request_timeout,
                      request_max_retries=request_max_retries, usage_callback=usage_callback).items() if v is not None})
             )
+        # Preserve completion text before JSON cleanup/parsing, including failures.
+        # Opt-in observers own their private storage; nothing is logged globally.
+        if response_callback is not None:
+            response_callback(response)
+        if not isinstance(response, str):
+            raise ValueError("invalid_llm_response_text")
         # Clean markdown code block markers
         cleaned_response = response.strip()
         cleaned_response = re.sub(r'^```(?:json)?\s*\n?', '', cleaned_response, flags=re.IGNORECASE)

@@ -1,0 +1,80 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "commands": [
+    {
+      "label": "branch-base",
+      "argv": [
+        "git",
+        "rev-parse",
+        "main"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/branch-base.log",
+      "sha256": "5f9c24cdba8c28c7fb6192677f2349d1a3a115a89fa02fe9b1df0eb4f0a88393"
+    },
+    {
+      "label": "branch-diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "main..242b8999044e33c8c3217df857c06401f3efbba3"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 2,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/branch-diff-check.log",
+      "sha256": "cc1fe3532aa9c4df090c79759e9d3398a0ff835802d3e35be8330c36278df4a4"
+    },
+    {
+      "label": "final-source-working-diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-source-working-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "final-source-state",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-source-state.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "final-source-ignored",
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--ignored"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/final-source-ignored.log",
+      "sha256": "791706dd680f6a773963f8e900426a68d928e493cf25a42e80ffddb9d52c4718"
+    }
+  ],
+  "checked_at": "2026-10-02T20:24:55Z",
+  "branch_whitespace_files": [
+    "docs/audits/evidence/2026-10-02-h1-integration-review/ensemble-before.xml",
+    "docs/audits/evidence/2026-10-02-h1-integration-review/preparation-before.xml",
+    "docs/evaluations/results/2026-10-02-before/run-1.txt",
+    "docs/evaluations/results/2026-10-02-before/run-1.xml",
+    "docs/evaluations/results/2026-10-02-before/run-2.txt",
+    "docs/evaluations/results/2026-10-02-before/run-2.xml",
+    "docs/evaluations/results/2026-10-02-before/run-3.txt",
+    "docs/evaluations/results/2026-10-02-before/run-3.xml"
+  ],
+  "branch_warning_count": 35
+}

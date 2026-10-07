@@ -576,6 +576,15 @@ class ParallelIPCHandler:
         if not command:
             return True
         
+        from app.services.workflow_execution import ipc_execution_context, WorkflowHalt
+        try:
+            with ipc_execution_context(command):
+                return await self._execute_command(command)
+        except WorkflowHalt as exc:
+            self.send_response(command.get("command_id"), "failed", error=exc.reason)
+            return True
+
+    async def _execute_command(self, command) -> bool:
         command_id = command.get("command_id")
         command_type = command.get("command_type")
         args = command.get("args", {})
@@ -751,6 +760,7 @@ def fetch_new_actions_from_db(
                 'agent_name': agent_names.get(user_id, f'Agent_{user_id}'),
                 'action_type': action_type,
                 'action_args': simplified_args,
+                'trace_id': rowid,
             })
         
         conn.close()
@@ -1096,7 +1106,7 @@ async def run_twitter_simulation(
     log_info("Environment started")
     
     if action_logger:
-        action_logger.log_simulation_start(config)
+        action_logger.log_simulation_start(config, max_rounds)
     
     total_actions = 0
     last_rowid = 0  # Track last processed row in Database (use rowid to avoid created_at format differences)
@@ -1122,22 +1132,20 @@ async def run_twitter_simulation(
                     action_args={"content": content}
                 )
                 
-                if action_logger:
-                    action_logger.log_action(
-                        round_num=0,
-                        agent_id=agent_id,
-                        agent_name=agent_names.get(agent_id, f"Agent_{agent_id}"),
-                        action_type="CREATE_POST",
-                        action_args={"content": content}
-                    )
-                    total_actions += 1
-                    initial_action_count += 1
             except Exception:
                 pass
         
         if initial_actions:
             await result.env.step(initial_actions)
-            log_info(f"Published {len(initial_actions)} initial posts")
+            initial_executed, last_rowid = fetch_new_actions_from_db(db_path, last_rowid, agent_names)
+            for action_data in initial_executed:
+                if action_logger:
+                    action_logger.log_action(0, action_data['agent_id'], action_data['agent_name'],
+                        action_data['action_type'], action_data['action_args'],
+                        origin='initial_post', trace_id=action_data['trace_id'])
+                total_actions += 1
+                initial_action_count += 1
+            log_info(f"Published {initial_action_count} initial actions")
     
     # Log round 0 end
     if action_logger:
@@ -1191,13 +1199,21 @@ async def run_twitter_simulation(
                             agent_id=agent_id,
                             agent_name=agent_names.get(agent_id, f"Agent_{agent_id}"),
                             action_type="SCHEDULED_EVENT",
-                            action_args={"content": content, "event_type": event.get("event_type"), "title": event.get("title")}
+                            action_args={"content": content, "event_type": event.get("event_type"), "title": event.get("title")},
+                            origin='scheduled_event',
                         )
                 except Exception:
                     pass
             if event_actions:
                 await result.env.step(event_actions)
-                log_info(f"Triggered {len(event_actions)} scheduled forecast events")
+                scheduled_executed, last_rowid = fetch_new_actions_from_db(db_path, last_rowid, agent_names)
+                for action_data in scheduled_executed:
+                    if action_logger:
+                        action_logger.log_action(round_num + 1, action_data['agent_id'], action_data['agent_name'],
+                            action_data['action_type'], action_data['action_args'],
+                            origin='scheduled_event', trace_id=action_data['trace_id'])
+                    total_actions += 1
+                log_info(f"Triggered {len(scheduled_executed)} scheduled input actions")
         
         active_agents = get_active_agents_for_round(
             result.env, config, simulated_hour, round_num
@@ -1248,7 +1264,8 @@ async def run_twitter_simulation(
                     agent_id=action_data['agent_id'],
                     agent_name=action_data['agent_name'],
                     action_type=action_data['action_type'],
-                    action_args=action_data['action_args']
+                    action_args=action_data['action_args'],
+                    origin='model_action', trace_id=action_data['trace_id'],
                 )
                 total_actions += 1
                 round_action_count += 1
@@ -1337,7 +1354,7 @@ async def run_reddit_simulation(
     log_info("Environment started")
     
     if action_logger:
-        action_logger.log_simulation_start(config)
+        action_logger.log_simulation_start(config, max_rounds)
     
     total_actions = 0
     last_rowid = 0  # Track last processed row in Database (use rowid to avoid created_at format differences)
@@ -1371,22 +1388,20 @@ async def run_reddit_simulation(
                         action_args={"content": content}
                     )
                 
-                if action_logger:
-                    action_logger.log_action(
-                        round_num=0,
-                        agent_id=agent_id,
-                        agent_name=agent_names.get(agent_id, f"Agent_{agent_id}"),
-                        action_type="CREATE_POST",
-                        action_args={"content": content}
-                    )
-                    total_actions += 1
-                    initial_action_count += 1
             except Exception:
                 pass
         
         if initial_actions:
             await result.env.step(initial_actions)
-            log_info(f"Published {len(initial_actions)} initial posts")
+            initial_executed, last_rowid = fetch_new_actions_from_db(db_path, last_rowid, agent_names)
+            for action_data in initial_executed:
+                if action_logger:
+                    action_logger.log_action(0, action_data['agent_id'], action_data['agent_name'],
+                        action_data['action_type'], action_data['action_args'],
+                        origin='initial_post', trace_id=action_data['trace_id'])
+                total_actions += 1
+                initial_action_count += 1
+            log_info(f"Published {initial_action_count} initial actions")
     
     # Log round 0 end
     if action_logger:
@@ -1440,13 +1455,21 @@ async def run_reddit_simulation(
                             agent_id=agent_id,
                             agent_name=agent_names.get(agent_id, f"Agent_{agent_id}"),
                             action_type="SCHEDULED_EVENT",
-                            action_args={"content": content, "event_type": event.get("event_type"), "title": event.get("title")}
+                            action_args={"content": content, "event_type": event.get("event_type"), "title": event.get("title")},
+                            origin='scheduled_event',
                         )
                 except Exception:
                     pass
             if event_actions:
                 await result.env.step(event_actions)
-                log_info(f"Triggered {len(event_actions)} scheduled forecast events")
+                scheduled_executed, last_rowid = fetch_new_actions_from_db(db_path, last_rowid, agent_names)
+                for action_data in scheduled_executed:
+                    if action_logger:
+                        action_logger.log_action(round_num + 1, action_data['agent_id'], action_data['agent_name'],
+                            action_data['action_type'], action_data['action_args'],
+                            origin='scheduled_event', trace_id=action_data['trace_id'])
+                    total_actions += 1
+                log_info(f"Triggered {len(scheduled_executed)} scheduled input actions")
         
         active_agents = get_active_agents_for_round(
             result.env, config, simulated_hour, round_num
@@ -1497,7 +1520,8 @@ async def run_reddit_simulation(
                     agent_id=action_data['agent_id'],
                     agent_name=action_data['agent_name'],
                     action_type=action_data['action_type'],
-                    action_args=action_data['action_args']
+                    action_args=action_data['action_args'],
+                    origin='model_action', trace_id=action_data['trace_id'],
                 )
                 total_actions += 1
                 round_action_count += 1
@@ -1571,8 +1595,8 @@ async def main():
     
     # Create log manager
     log_manager = SimulationLogManager(simulation_dir)
-    twitter_logger = log_manager.get_twitter_logger()
-    reddit_logger = log_manager.get_reddit_logger()
+    twitter_logger = log_manager.get_twitter_logger() if not args.reddit_only else None
+    reddit_logger = log_manager.get_reddit_logger() if not args.twitter_only else None
     
     log_manager.info("=" * 60)
 

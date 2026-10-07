@@ -1,0 +1,411 @@
+{
+  "image": "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e",
+  "commands": [
+    {
+      "label": "image-identity",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "--format",
+        "{{.Id}}",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e"
+      ],
+      "exit_code": 0,
+      "seconds": 0.059,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/image-identity.log",
+      "sha256": "4a244d24a1138e6241182fa3a2df6398f966b0adca356e631df5c7574b213143"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-source-create",
+      "argv": [
+        "docker",
+        "volume",
+        "create",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source"
+      ],
+      "exit_code": 0,
+      "seconds": 0.046,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-source-create.log",
+      "sha256": "1857ad4a0c277d96c92daad63df16781380c3ef401fcb75e53a1838b42bdc483"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-archive-create",
+      "argv": [
+        "docker",
+        "volume",
+        "create",
+        "crowdlens-ecc-release-backup-01da9cc28f01-archive"
+      ],
+      "exit_code": 0,
+      "seconds": 0.041,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-archive-create.log",
+      "sha256": "003262e6b9f501b6c874fee7b0e955d1d27d03ed2c591cfb7f0313c452449875"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-restore-create",
+      "argv": [
+        "docker",
+        "volume",
+        "create",
+        "crowdlens-ecc-release-backup-01da9cc28f01-restore"
+      ],
+      "exit_code": 0,
+      "seconds": 0.048,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-restore-create.log",
+      "sha256": "d1c8afa48b09492903239b966ba6b0cd749d065c13e9be22f413a54a6c2f1e48"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-source-service-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source-service",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--publish",
+        "127.0.0.1::7687",
+        "--mount",
+        "type=volume,source=crowdlens-ecc-release-backup-01da9cc28f01-source,target=/data",
+        "--tmpfs",
+        "/logs:rw,size=128m",
+        "--env",
+        "NEO4J_AUTH=neo4j/crowdlens-synthetic-backup-password",
+        "--env",
+        "NEO4J_server_memory_heap_initial__size=256m",
+        "--env",
+        "NEO4J_server_memory_heap_max__size=512m",
+        "--env",
+        "NEO4J_server_memory_pagecache_size=256m",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e"
+      ],
+      "exit_code": 0,
+      "seconds": 3.461,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-source-service-start.log",
+      "sha256": "e0f73aaef3269cd0475f39b5710a403f4b6ebc97bfc2f0009666e70b2528f5a5"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-source-service-port",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source-service",
+        "7687/tcp"
+      ],
+      "exit_code": 0,
+      "seconds": 0.041,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-source-service-port.log",
+      "sha256": "b923039544a54df0d9cb52d2c59fdff81cdfe1f41d37963b91f17f640462883e"
+    },
+    {
+      "label": "stop-before-dump",
+      "argv": [
+        "docker",
+        "stop",
+        "--time",
+        "30",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source-service"
+      ],
+      "exit_code": 0,
+      "seconds": 10.211,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/stop-before-dump.log",
+      "sha256": "ae00725a268fbda988e03aab1837e17d77f624b97dc0501b56b7abc8275a3f19"
+    },
+    {
+      "label": "cold-dump",
+      "argv": [
+        "docker",
+        "run",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-backup-01da9cc28f01-dump",
+        "--network",
+        "none",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--user",
+        "0:0",
+        "--mount",
+        "type=volume,source=crowdlens-ecc-release-backup-01da9cc28f01-source,target=/data",
+        "--mount",
+        "type=volume,source=crowdlens-ecc-release-backup-01da9cc28f01-archive,target=/backups",
+        "--entrypoint",
+        "neo4j-admin",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e",
+        "database",
+        "dump",
+        "neo4j",
+        "--to-path=/backups"
+      ],
+      "exit_code": 0,
+      "seconds": 6.49,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/cold-dump.log",
+      "sha256": "19bf519a474d242654abbb90d68037f9fed30db39a7ee94a660b01ab19752be9"
+    },
+    {
+      "label": "copy-archive",
+      "argv": [
+        "docker",
+        "cp",
+        "crowdlens-ecc-release-backup-01da9cc28f01-dump:/backups/neo4j.dump",
+        "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/neo4j.dump"
+      ],
+      "exit_code": 0,
+      "seconds": 0.077,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/copy-archive.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "cold-load",
+      "argv": [
+        "docker",
+        "run",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-backup-01da9cc28f01-load",
+        "--network",
+        "none",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--user",
+        "0:0",
+        "--mount",
+        "type=volume,source=crowdlens-ecc-release-backup-01da9cc28f01-restore,target=/data",
+        "--mount",
+        "type=volume,source=crowdlens-ecc-release-backup-01da9cc28f01-archive,target=/backups,readonly",
+        "--entrypoint",
+        "neo4j-admin",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e",
+        "database",
+        "load",
+        "neo4j",
+        "--from-path=/backups"
+      ],
+      "exit_code": 0,
+      "seconds": 6.78,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/cold-load.log",
+      "sha256": "f37683aef4362d9e1f9fd1868b53eaa5977b451b3c676f78703e3e6b2e411e0b"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-restored-service-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-backup-01da9cc28f01-restored-service",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--publish",
+        "127.0.0.1::7687",
+        "--mount",
+        "type=volume,source=crowdlens-ecc-release-backup-01da9cc28f01-restore,target=/data",
+        "--tmpfs",
+        "/logs:rw,size=128m",
+        "--env",
+        "NEO4J_AUTH=neo4j/crowdlens-synthetic-backup-password",
+        "--env",
+        "NEO4J_server_memory_heap_initial__size=256m",
+        "--env",
+        "NEO4J_server_memory_heap_max__size=512m",
+        "--env",
+        "NEO4J_server_memory_pagecache_size=256m",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e"
+      ],
+      "exit_code": 0,
+      "seconds": 0.504,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-restored-service-start.log",
+      "sha256": "f3279b911f37966157f64e28c7625a7d137cc6c5247a08ff76e228774e2099f0"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-restored-service-port",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-backup-01da9cc28f01-restored-service",
+        "7687/tcp"
+      ],
+      "exit_code": 0,
+      "seconds": 0.033,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-restored-service-port.log",
+      "sha256": "621062709922a86f35ca299ea71e83822ebf8a6edeb174fb27a54dc384aa8937"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-source-service-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source-service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.036,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-source-service-logs.log",
+      "sha256": "695c20567d998260ab8f5c44f452b3aaf183ba78107447e4e44a28a19ac31be8"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-source-service-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source-service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.123,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-source-service-remove.log",
+      "sha256": "397c0d9e51ea15a82c4cafc3569f226b78a61847c9023e12bb29de3f9e5e84d6"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-dump-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-backup-01da9cc28f01-dump"
+      ],
+      "exit_code": 0,
+      "seconds": 0.037,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-dump-logs.log",
+      "sha256": "19bf519a474d242654abbb90d68037f9fed30db39a7ee94a660b01ab19752be9"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-dump-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-backup-01da9cc28f01-dump"
+      ],
+      "exit_code": 0,
+      "seconds": 0.108,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-dump-remove.log",
+      "sha256": "914b7fde8620c9edb1ca001c61b500d108378ebd286ee1a6af39e478d0f1e1ea"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-load-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-backup-01da9cc28f01-load"
+      ],
+      "exit_code": 0,
+      "seconds": 0.044,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-load-logs.log",
+      "sha256": "f37683aef4362d9e1f9fd1868b53eaa5977b451b3c676f78703e3e6b2e411e0b"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-load-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-backup-01da9cc28f01-load"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-load-remove.log",
+      "sha256": "34df49069bbd120b9c44b596cb6769a9ddabd25f4301c0a68daa0272e0e76fff"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-restored-service-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-backup-01da9cc28f01-restored-service"
+      ],
+      "exit_code": 0,
+      "seconds": 0.042,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-restored-service-logs.log",
+      "sha256": "0b991f9c42647851b0d3600535aecddd7aacbd1717cac517ad8677868fc1d751"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-restored-service-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-backup-01da9cc28f01-restored-service"
+      ],
+      "exit_code": 0,
+      "seconds": 2.229,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-restored-service-remove.log",
+      "sha256": "f89f42445d0975f0870bd669a5a01ade9e00f33f463e245210471782e2cb63a6"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-source-remove",
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "crowdlens-ecc-release-backup-01da9cc28f01-source"
+      ],
+      "exit_code": 0,
+      "seconds": 0.062,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-source-remove.log",
+      "sha256": "1857ad4a0c277d96c92daad63df16781380c3ef401fcb75e53a1838b42bdc483"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-archive-remove",
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "crowdlens-ecc-release-backup-01da9cc28f01-archive"
+      ],
+      "exit_code": 0,
+      "seconds": 0.043,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-archive-remove.log",
+      "sha256": "003262e6b9f501b6c874fee7b0e955d1d27d03ed2c591cfb7f0313c452449875"
+    },
+    {
+      "label": "crowdlens-ecc-release-backup-01da9cc28f01-restore-remove",
+      "argv": [
+        "docker",
+        "volume",
+        "rm",
+        "crowdlens-ecc-release-backup-01da9cc28f01-restore"
+      ],
+      "exit_code": 0,
+      "seconds": 0.056,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/neo4j-backup/crowdlens-ecc-release-backup-01da9cc28f01-restore-remove.log",
+      "sha256": "d1c8afa48b09492903239b966ba6b0cd749d065c13e9be22f413a54a6c2f1e48"
+    }
+  ],
+  "scope": "cold synthetic Neo4j dump/load",
+  "script_sha256": "4511d2bdbab2e437acc640fe02f5b3e7ec1631030f482e58041fbec84cbf267a",
+  "volumes": [
+    "crowdlens-ecc-release-backup-01da9cc28f01-source",
+    "crowdlens-ecc-release-backup-01da9cc28f01-archive",
+    "crowdlens-ecc-release-backup-01da9cc28f01-restore"
+  ],
+  "containers": [
+    "crowdlens-ecc-release-backup-01da9cc28f01-source-service",
+    "crowdlens-ecc-release-backup-01da9cc28f01-dump",
+    "crowdlens-ecc-release-backup-01da9cc28f01-load",
+    "crowdlens-ecc-release-backup-01da9cc28f01-restored-service"
+  ],
+  "real_model_calls": 0,
+  "dump_sha256": "2daee08f01b82ed5afc685a47dba9527f564ff79270fa0f4a2a67a6749f4d336",
+  "status": "passed",
+  "restored_graph_matches": true,
+  "nodes": 2,
+  "relationships": 1,
+  "stopped_before_dump": true,
+  "graph_sha256": "2d05f29c3e42a645825e051b1df1011ef6b67b59d5cb185288f94bb12c8fc87f",
+  "cleanup_passed": true
+}

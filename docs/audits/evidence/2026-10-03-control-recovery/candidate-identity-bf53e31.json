@@ -1,0 +1,9 @@
+{
+  "declared_revision": "bf53e31c7346594ee98f3448b81d4619992d5e2b",
+  "source_sha256": "60944cdd12c846fb5d82645f2c7c5ef5d8398dbde2c9bb130a1de66a9281a921",
+  "scope": "runtime-source-v1",
+  "git_commit": "bf53e31c7346594ee98f3448b81d4619992d5e2b",
+  "git_tree": "15c8c29f4a4c4445e20c2693bb956065685baae1",
+  "runtime_source_dirty": "",
+  "environment": "host Python 3.11, existing pinned dependencies; no new image build"
+}

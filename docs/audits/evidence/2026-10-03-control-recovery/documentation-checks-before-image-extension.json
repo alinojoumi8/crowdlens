@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-03T07:56:42.390418+00:00",
+  "scope": "documentation-only reporting changes; exact tested source retained; no new application test/image/CI claim",
+  "tested_code_commit": "34ad6d27e298f33317e443f0123143fa5e865eab",
+  "reporting_parent": "34ad6d27e298f33317e443f0123143fa5e865eab",
+  "runtime_source_identity": {
+    "declared_revision": "34ad6d27e298f33317e443f0123143fa5e865eab",
+    "source_sha256": "fea6ca781b9a175fe9face0055dc195bf7f685551e5af5a5f2b42a5342450006",
+    "scope": "runtime-source-v1"
+  },
+  "application_source_test_dependency_build_changes": [],
+  "markdown_files_checked": 12,
+  "local_markdown_targets_checked": 173,
+  "json_files_parsed": 25,
+  "xml_files_parsed": 3,
+  "png_files_validated": 43,
+  "frozen_original_files_rechecked": 34,
+  "main_overlays_rechecked": 5,
+  "evaluation_inputs_unchanged": true,
+  "preview_bundle_hashes_match": true,
+  "frozen_acceptance_packet_unchanged": true,
+  "maintained_docs_whitespace_passed": true,
+  "markdown_sha256": {
+    "README.md": "c30d8bee101a2a02d39ceba8f6a4d79f8260f8704804d6da40b04bca0f1255aa",
+    "ROADMAP.md": "669eab91610b6123799c400eac25fbfe54e29769ada7e5f16e86655bfd1f146c",
+    "docs/ECC-WORKFLOW-PLAN.md": "04fa3267c1e42af4e09b60b36dd7d9e27e6bb95b1e5331ca3eeca09c6bc2e392",
+    "docs/acceptance-fixtures/cedarbrook-bike-lane/cedarbrook-bike-lane.md": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b",
+    "docs/architecture.md": "098324d215c2fc0bfe3c6831f1182367ee10ab22388f659cbce3383fffbdd996",
+    "docs/audits/2026-10-03-bike-lane-request-accounting.md": "cefb234244307f3b7880787c6237b4923234979c5f357a4bd307f5dcd85d52a0",
+    "docs/audits/2026-10-03-control-recovery.md": "903f7f2568f7a44ee2660b448746093bbfc9ca17daf752b03dda045c1a2693d0",
+    "docs/audits/evidence/2026-10-03-control-recovery/README.md": "088fdb3998e8e2ade18e488f23d09199ef31b85d195096aad0deb30cfbc1b06c",
+    "docs/audits/evidence/2026-10-03-control-recovery/independent-review.md": "f9560606f645e54dc3b68c9a6664cd078f43cd7cdbfe2ee6653725d3d82b05b5",
+    "docs/product-capabilities.md": "d54c6bfb8c0dc87620a089a9d9e8c83287347ecb084796bcdb2ecb1b65a39a6a",
+    "docs/visible-browser-acceptance.md": "acc92fd27307ca16e304c9411d070deda75cdf5e68106ddb7693e0e75dd95d04",
+    "docs/workflow-execution.md": "13d7dc4eaa535f739ea245f63ab24f657a8620ae347a76a243e802fc2d43c888"
+  },
+  "errors": [
+    {
+      "invalid_artifact": "docs/audits/evidence/2026-10-03-control-recovery/visible/accepted-revision-reopened.png",
+      "error": ""
+    },
+    {
+      "invalid_artifact": "docs/audits/evidence/2026-10-03-control-recovery/visible/proposal-before-acceptance.png",
+      "error": ""
+    },
+    {
+      "invalid_artifact": "docs/audits/evidence/2026-10-03-control-recovery/visible/stopped-after-refresh.png",
+      "error": ""
+    }
+  ],
+  "passed": false
+}

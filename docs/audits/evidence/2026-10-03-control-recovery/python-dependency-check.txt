@@ -1,0 +1,1 @@
+/home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/backend/.venv/bin/python: No module named pip

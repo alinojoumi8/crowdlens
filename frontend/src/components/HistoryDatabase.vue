@@ -23,11 +23,16 @@
         v-for="(project, index) in projects" 
         :key="project.simulation_id"
         class="project-card"
+        role="button"
+        tabindex="0"
+        :aria-label="`Open simulation ${getSimulationTitle(project.simulation_requirement)}`"
         :class="{ expanded: isExpanded, hovering: hoveringCard === index }"
         :style="getCardStyle(index)"
         @mouseenter="hoveringCard = index"
         @mouseleave="hoveringCard = null"
         @click="navigateToProject(project)"
+        @keydown.enter.prevent="navigateToProject(project)"
+        @keydown.space.prevent="navigateToProject(project)"
       >
         <!-- Card header: simulation_id and feature availability status -->
         <div class="card-header">
@@ -104,12 +109,17 @@
       <span class="loading-spinner"></span>
       <span class="loading-text">Loading...</span>
     </div>
+    <div v-else-if="historyError" class="history-message" role="alert">
+      <p>Unable to load simulation records.</p>
+      <button @click="loadHistory">Retry history</button>
+    </div>
+    <p v-else-if="projects.length === 0" class="history-message" role="status">No simulation records yet. Upload a document to start a scenario.</p>
 
     <!-- Simulation playback details modal -->
     <Teleport to="body">
       <Transition name="modal">
         <div v-if="selectedProject" class="modal-overlay" @click.self="closeModal">
-          <div class="modal-content">
+          <div class="modal-content" ref="dialog" role="dialog" aria-modal="true" aria-label="Simulation details" @keydown="handleDialogKey">
             <!-- Modal header -->
             <div class="modal-header">
               <div class="modal-title-section">
@@ -119,7 +129,7 @@
                 </span>
                 <span class="modal-create-time">{{ formatDate(selectedProject.created_at) }} {{ formatTime(selectedProject.created_at) }}</span>
               </div>
-              <button class="modal-close" @click="closeModal">×</button>
+              <button class="modal-close" aria-label="Close simulation details" @click="closeModal">×</button>
             </div>
 
             <!-- Modal content -->
@@ -216,10 +226,13 @@ const route = useRoute()
 // State
 const projects = ref([])
 const loading = ref(true)
+const historyError = ref(false)
 const isExpanded = ref(false)
 const hoveringCard = ref(null)
 const historyContainer = ref(null)
 const selectedProject = ref(null)  // Currently selected project (for modal)
+const dialog = ref(null)
+let dialogTrigger = null
 let observer = null
 let isAnimating = false  // Animation lock to prevent flickering
 let expandDebounceTimer = null  // Debounce timer
@@ -408,12 +421,25 @@ const truncateFilename = (filename, maxLength) => {
 
 // Open project details modal
 const navigateToProject = (simulation) => {
+  dialogTrigger = document.activeElement
   selectedProject.value = simulation
+  nextTick(() => dialog.value?.querySelector('button')?.focus())
 }
 
 // Close modal
 const closeModal = () => {
   selectedProject.value = null
+  nextTick(() => dialogTrigger?.focus())
+}
+
+const handleDialogKey = (event) => {
+  if (event.key === 'Escape') { event.preventDefault(); closeModal(); return }
+  if (event.key !== 'Tab') return
+  const controls = [...dialog.value.querySelectorAll('button:not(:disabled), a[href], input, select, textarea, [tabindex="0"]')]
+    .filter(element => element.getClientRects().length)
+  const first = controls[0], last = controls.at(-1)
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
 }
 
 // Navigate to Graph Construction page (Project)
@@ -497,13 +523,17 @@ const phaseStatusClass = (phase) => {
 const loadHistory = async () => {
   try {
     loading.value = true
+    historyError.value = false
     const response = await getSimulationHistory(20)
     if (response.success) {
       projects.value = response.data || []
+    } else {
+      historyError.value = true
     }
   } catch (error) {
     console.error('Failed to load history projects:', error)
     projects.value = []
+    historyError.value = true
   } finally {
     loading.value = false
   }
@@ -882,7 +912,7 @@ onUnmounted(() => {
 .file-tag.doc { background: #e6eff5; color: #5a7ea6; }
 .file-tag.xls { background: #e6f2e8; color: #5aa668; }
 .file-tag.ppt { background: #f5efe6; color: #a6815a; }
-.file-tag.txt { background: #f0f0f0; color: #757575; }
+.file-tag.txt { background: #f0f0f0; color: #555555; }
 .file-tag.code { background: #eae6f2; color: #815aa6; }
 .file-tag.img { background: #e6f2f2; color: #5aa6a6; }
 .file-tag.zip { background: #f2f0e6; color: #a69b5a; }
@@ -1161,14 +1191,14 @@ onUnmounted(() => {
   background: #F9FAFB;
 }
 
-.modal-progress.completed { color: #10B981; background: rgba(16, 185, 129, 0.1); }
+.modal-progress.completed { color: #00774F; background: rgba(16, 185, 129, 0.1); }
 .modal-progress.in-progress { color: #F59E0B; background: rgba(245, 158, 11, 0.1); }
 .modal-progress.not-started { color: #9CA3AF; background: #F3F4F6; }
 
 .modal-create-time {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 0.3px;
 }
 
@@ -1178,7 +1208,7 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   font-size: 1.5rem;
-  color: #9CA3AF;
+  color: #626B7A;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1306,7 +1336,7 @@ onUnmounted(() => {
 .divider-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 2px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1353,7 +1383,7 @@ onUnmounted(() => {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6rem;
   font-weight: 500;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -1393,7 +1423,7 @@ onUnmounted(() => {
 .hint-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
-  color: #9CA3AF;
+  color: #626B7A;
   letter-spacing: 0.3px;
   text-align: center;
   line-height: 1.5;

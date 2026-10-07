@@ -1,0 +1,123 @@
+{
+  "data": {
+    "admission_closed": true,
+    "admitted": 3,
+    "attempts": [
+      {
+        "admitted_at": 1791011986.562896,
+        "attempt_number": 1,
+        "elapsed_seconds": 0.0007076263427734375,
+        "epoch": 1,
+        "finished_at": 1791011986.5636015,
+        "http_status": 200,
+        "model": "synthetic-no-provider",
+        "owner_attempt": "4568907d794b4716b3cdc49b841764b2",
+        "request_id": "req_60a1986c4a784df79ac5fa1ea73de36c",
+        "sequence": 1,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": "faf420ca-6155-40ba-8961-dda8a9d77b96",
+        "usage": {
+          "input_tokens": 0,
+          "output_tokens": 0
+        },
+        "workflow_id": "wf_976d57189bb044309b5daacdd80f1c7e"
+      },
+      {
+        "admitted_at": 1791011986.7724361,
+        "attempt_number": 1,
+        "elapsed_seconds": 0.0005450248718261719,
+        "epoch": 1,
+        "finished_at": 1791011986.7729797,
+        "http_status": 200,
+        "model": "synthetic-no-provider",
+        "owner_attempt": "4568907d794b4716b3cdc49b841764b2",
+        "request_id": "req_1a041184dabb4729b5b4818ff820e965",
+        "sequence": 2,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": "faf420ca-6155-40ba-8961-dda8a9d77b96",
+        "usage": {
+          "input_tokens": 0,
+          "output_tokens": 0
+        },
+        "workflow_id": "wf_976d57189bb044309b5daacdd80f1c7e"
+      },
+      {
+        "admitted_at": 1791011986.9806354,
+        "attempt_number": 1,
+        "elapsed_seconds": 0.0008366107940673828,
+        "epoch": 1,
+        "finished_at": 1791011986.9814692,
+        "http_status": 200,
+        "model": "synthetic-no-provider",
+        "owner_attempt": "4568907d794b4716b3cdc49b841764b2",
+        "request_id": "req_98f62147fd3941c19a03789ed43fdd1d",
+        "sequence": 3,
+        "stage": "proposal",
+        "status": "response",
+        "task_id": "faf420ca-6155-40ba-8961-dda8a9d77b96",
+        "usage": {
+          "input_tokens": 0,
+          "output_tokens": 0
+        },
+        "workflow_id": "wf_976d57189bb044309b5daacdd80f1c7e"
+      }
+    ],
+    "authorizations": [
+      {
+        "at": 1791011881.2767687,
+        "endpoint_identity": "be7edb7f7f875c4864e2f8ceeaa113f6f4de116ac7e31e429b42ade0923cb776",
+        "epoch": 1,
+        "imported_requests": 0,
+        "input_description": "Explicitly seeded synthetic browser fixture; no inference",
+        "input_fingerprint": null,
+        "max_requests": 60,
+        "max_seconds": 1800,
+        "model": "synthetic-no-provider",
+        "provider": "synthetic"
+      }
+    ],
+    "billing_amount": null,
+    "created_at": 1791011881.2767699,
+    "deadline_at": 1791013786.562896,
+    "elapsed_seconds": 2151.4169647693634,
+    "endpoint_identity": "be7edb7f7f875c4864e2f8ceeaa113f6f4de116ac7e31e429b42ade0923cb776",
+    "epoch": 1,
+    "finished": 3,
+    "imported_requests": 0,
+    "in_flight": 0,
+    "initial_authorization": {
+      "endpoint_identity": "be7edb7f7f875c4864e2f8ceeaa113f6f4de116ac7e31e429b42ade0923cb776",
+      "imported_requests": 0,
+      "input_description": "Explicitly seeded synthetic browser fixture; no inference",
+      "input_fingerprint": null,
+      "max_requests": 60,
+      "max_seconds": 1800,
+      "model": "synthetic-no-provider",
+      "provider": "synthetic"
+    },
+    "input_description": "Explicitly seeded synthetic browser fixture; no inference",
+    "input_fingerprint": null,
+    "max_requests": 60,
+    "max_seconds": 1800,
+    "model": "synthetic-no-provider",
+    "provider": "synthetic",
+    "reason": "runtime_limit",
+    "remaining_requests": 57,
+    "request_key": "seeded-report",
+    "started_at": 1791011986.562896,
+    "state": "runtime_limit",
+    "unknown_usage_attempts": 0,
+    "usage_by_stage": {
+      "proposal": {
+        "attempts": 3,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "unknown_usage_attempts": 0
+      }
+    },
+    "workflow_id": "wf_976d57189bb044309b5daacdd80f1c7e"
+  },
+  "success": true
+}

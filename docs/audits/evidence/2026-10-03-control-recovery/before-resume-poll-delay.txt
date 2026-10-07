@@ -1,0 +1,28 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/components/ReportRecovery.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/ReportRecovery.component.test.js (2 tests | 1 failed) 113ms
+   × an explicit resume restarts polling after an interrupted snapshot 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ReportRecovery.component.test.js > an explicit resume restarts polling after an interrupted snapshot
+TypeError: Cannot read properties of undefined (reading 'trigger')
+ ❯ src/components/ReportRecovery.component.test.js:39:16
+     37|   getReport.mockResolvedValueOnce({success:true,data:{status:'interrup…
+     38|   const button=wrapper.findAll('button').find(item=>item.text()==='Res…
+     39|   await button.trigger('click');await flushPromises()
+       |                ^
+     40|   getReport.mockResolvedValue({success:true,data:{status:'generating'}…
+     41|   getReportProgress.mockResolvedValue({success:true,data:{status:'gene…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  02:46:51
+   Duration  1.74s (transform 603ms, setup 0ms, import 718ms, tests 113ms, environment 739ms)
+

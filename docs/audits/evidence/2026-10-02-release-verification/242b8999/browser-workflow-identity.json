@@ -1,0 +1,59 @@
+{
+  "source": {
+    "declared_revision": "242b8999044e33c8c3217df857c06401f3efbba3",
+    "source_sha256": "a807c651b35560c12a91ec6f0b79b2d32df7bad60ebf3322d121c643d9e835fb",
+    "scope": "runtime-source-v1"
+  },
+  "git_head": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "frontend": {
+    "index.html": "5fdc36ab3f7e64f0143ae8e98e832aa8fa179db1f784aced3a050c3a30a18fab",
+    "icon.png": "2b2c19d0400056000bb88636410c71c39ec3bc6b9cc871d6b022adf8cddb6e7a",
+    "home-styles.css": "33a9a3cf3d347d56df1ccd733e5b1d3b48a195b766b3d4778080082acc214e41",
+    "crowdlens-mark.svg": "7cedfca9c1a7a143eacb45238d11475a4dd62bc1bbd83112c11108b2fe3f7679",
+    "crowdlens-icon.svg": "62b1e7f9470a0e69ef164feba1438a4a6bf71034ae4054415c5abb836fa868b7",
+    "assets/pendingUpload-nUeJwzLD.js": "b62d5afc46a00b365cd67ed5d18796ecc32d567685a3a19b07daa123c752dbe5",
+    "assets/_plugin-vue_export-helper-CUmsg1Cw.js": "c58fa04c692928bc6df56463863551e6005e3f44c4334117a80e06704df38533",
+    "assets/graph-Cma-AEcX.js": "7cbddfe0a645199f1914dcbb2633ac66919c7c0cf90e8560ae8437ca072e28ba",
+    "assets/simulation-ChRDXt9s.js": "5471a981ce6653f3b1554ceb1a60ebcbc3ad63a67e2214ef967f6bb02a1b5988",
+    "assets/GraphPanel-Dfbsk6V4.js": "259c0274909ee7eb135911a41a8b611e5d4d3b2416a6605f3f680dd7ac214d25",
+    "assets/report-BhwVWeSg.js": "05476f696c7949241fbbd64d945acbec8fb0760af986d2558e9f3ccaef2cda90",
+    "assets/SafeMarkdown-C3VDtGVW.js": "3784640f1281ac6cfac0a2e907bd847f14b602c488da90f79ebeed4f83ab8ebe",
+    "assets/InteractionView-CJ2JtZ3h.js": "2244f0affc9fcc180fcc740755fd202d25ecbf3038893fb8a8ce484d460d4c38",
+    "assets/ReportView-Ca3PJj6l.js": "168f12d0563db651db0291a2ab99130040dfe0168281a29729b515d0074bfa7e",
+    "assets/economySettings-M8O0gDiO.js": "b2f4cc8b62b57bb6d21e9527ae0e7c894cb668a441ebf6b118afd6c46682babe",
+    "assets/SimulationRunView-BlQ903bY.js": "0b2b52442bf5d112843414faa6817f985c57e8599de4390fb6889bcc3b3e8c4d",
+    "assets/Step2EnvSetup-Ctyzo2Ix.js": "beaf330e3b5b02dd0082df5ee315f0a330a3f40ecffd8e0a2912a901f6329e44",
+    "assets/CaseDetailView-DlHFt-t9.js": "dc190bf20718d980ffdea098ee1d9829909a704c3da2d5b062bacfcfa60b3776",
+    "assets/SimulationView-TGxypbQX.js": "5cfde5d117bb4fe554cee6bb2142e83932652fd9baadc2652d91091335d453d3",
+    "assets/MainView-BVuBVHjE.js": "e99b568d3fdad3ac26e9d09bd65c2d16d717e506626fa475e8c7d7429e6502d1",
+    "assets/CaseCompareView-CC_tu_9X.js": "c29b0f6102e1f61394a37d32c82aa291bd1fcecf191051490a014355a1ff745e",
+    "assets/Home-BgdbTM1l.js": "d57915ef86602e0c734360220ebfec574ab911a3a9e2a13c409e3e46dfcfd1d4",
+    "assets/CasesView-CmvOFE9V.js": "d9be5dcebfb36aba23592c01381c4b51185ac406895cef001dcbb7b604ce8156",
+    "assets/Step2EnvSetup-0zt_Ufc0.css": "32e835c16882541392d85a720be334444c58f16a1e7de01d6181aea0118068a1",
+    "assets/index-B1YDJrya.js": "6b8c76c01127e770e7ff3625d2a757e1836fd65103bec533ee381c17bd62ca6d",
+    "assets/GraphPanel-Bx73uTCP.css": "08117969ebd0f59a2ee27ad11a743f49a8dc48d5b45ffe83de6e168ec5ac33d8",
+    "assets/InteractionView-ByVH7bwX.css": "cf0ea8cbc86b1d37c1cf3dd079924b74f0e3a18ff498895f65b34146364fca7b",
+    "assets/ReportView-B-Sk-v6K.css": "fd952d77109633c658054bed73fd117194dd2fb3a7474b76a23529f36dd88277",
+    "assets/CaseDetailView-snTT7t4x.css": "20709a693327396768d8c66d8973c0c3d15ebe898f0675eb2575ed3b78518ffd",
+    "assets/SimulationRunView-Cj0SbMbq.css": "844ed5e2658ea8bed5ee704f547ea76d6d4ae97101d1787f358e85d4fa16a684",
+    "assets/SimulationView-v4ajHxY3.css": "b57c27140b621638c66e9543f2acdbcb2473cc487e8a65bff67eaafbf14e30bb",
+    "assets/MainView-BU36wCcT.css": "79c050dba316cb4b130218b6836c791294624a89e5e1da3b01d64fa3f098a203",
+    "assets/CaseCompareView-COpOAnvG.css": "3a04aae6634bfecd55960575ceb1e1d751677cb2db673cc4392e14e0ab54cfc7",
+    "assets/CasesView-CwHzJCV_.css": "0d2c36df725e10c5a33646e674a69343c183c26447a7246c3d242683a9449a10",
+    "assets/Home-BwkCD-fp.css": "a5cd6de0ac2a7b93d21fb7e3f6704382ff9387931d469785025f9f10ff655516",
+    "assets/index-ibF_rNad.css": "c1041d9ae5f21011e60bb9eb184511e1772a7e0d184cc71ca94e2410115e44fd"
+  },
+  "substitutes": [
+    "ontology generator",
+    "graph builder and storage",
+    "simulation endpoints",
+    "drafting LLM"
+  ],
+  "seeded": [
+    "original report and progress",
+    "original source chunk",
+    "graph node",
+    "simulation history"
+  ],
+  "provider_calls": 0
+}

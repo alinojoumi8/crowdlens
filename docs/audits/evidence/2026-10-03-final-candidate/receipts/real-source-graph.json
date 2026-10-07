@@ -1,0 +1,392 @@
+{
+  "data": {
+    "edge_count": 10,
+    "edges": [
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street.",
+        "fact_type": "PROPOSES",
+        "invalid_at": null,
+        "name": "PROPOSES",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Cedarbrook",
+        "source_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "4141a218-dc62-4e4c-ae97-24f3139f6e8f",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.",
+        "fact_type": "CONCERNS",
+        "invalid_at": null,
+        "name": "CONCERNS",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Maya Chen",
+        "source_node_uuid": "fe929db1-6701-457d-866d-92345f434318",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "f130d7ea-b9c9-46b1-8263-db3b93e96e7f",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Maya Chen supports the pilot conditionally if intersections are made protected.",
+        "fact_type": "SUPPORTS",
+        "invalid_at": null,
+        "name": "SUPPORTS",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Maya Chen",
+        "source_node_uuid": "fe929db1-6701-457d-866d-92345f434318",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "2fc84958-5491-4bb6-b035-a4514c0e44ec",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Maya Chen is a Cedarbrook resident who cycles to work.",
+        "fact_type": "LIVES_IN",
+        "invalid_at": null,
+        "name": "LIVES_IN",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Maya Chen",
+        "source_node_uuid": "fe929db1-6701-457d-866d-92345f434318",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "4469ae13-a307-466d-8020-120eb252b9c8",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Leo Martin could support a trial if loading access remains reliable and customer visits are measured.",
+        "fact_type": "SUPPORTS",
+        "invalid_at": null,
+        "name": "SUPPORTS",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Leo Martin",
+        "source_node_uuid": "c5e820ac-b1b4-4adf-b8f0-bf7bdb56ad41",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "3d04a9b4-f3a1-425d-a4c4-ad8058820517",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.",
+        "fact_type": "CONCERNS",
+        "invalid_at": null,
+        "name": "CONCERNS",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Leo Martin",
+        "source_node_uuid": "c5e820ac-b1b4-4adf-b8f0-bf7bdb56ad41",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "e70c2b40-d142-4e60-8350-c3c685b4a904",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.",
+        "fact_type": "CONCERNS",
+        "invalid_at": null,
+        "name": "CONCERNS",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Priya Shah",
+        "source_node_uuid": "813767b8-126b-40f4-a5a3-10d89a1c1297",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "41363cd5-7359-4adf-93b7-9c7c971341e9",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Priya Shah is a Cedarbrook resident with limited mobility.",
+        "fact_type": "LIVES_IN",
+        "invalid_at": null,
+        "name": "LIVES_IN",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Priya Shah",
+        "source_node_uuid": "813767b8-126b-40f4-a5a3-10d89a1c1297",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "89ba6d70-cfb0-49a4-b021-1b548ce723e6",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.",
+        "fact_type": "PROPOSES",
+        "invalid_at": null,
+        "name": "PROPOSES",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Daniel Brooks",
+        "source_node_uuid": "7e52b405-acc7-44bd-86cd-1ce68a8dae7e",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "175cf4c3-1d2f-404e-95e1-e69840bceda2",
+        "valid_at": null
+      },
+      {
+        "attributes": {},
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "episode_ids": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "episodes": [
+          "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf"
+        ],
+        "expired_at": null,
+        "fact": "Daniel Brooks works for Cedarbrook as the city's transport planner.",
+        "fact_type": "WORKS_FOR",
+        "invalid_at": null,
+        "name": "WORKS_FOR",
+        "provenance": {
+          "case_id": "case_d61e8c54c9bb",
+          "chunk_index": 0,
+          "document_id": "doc_33e01499e0b2",
+          "document_type": "pleading",
+          "filename": "cedarbrook-bike-lane.md",
+          "page": null,
+          "paragraph": null,
+          "version_id": "casever_6066a8caca25"
+        },
+        "source_node_name": "Daniel Brooks",
+        "source_node_uuid": "7e52b405-acc7-44bd-86cd-1ce68a8dae7e",
+        "target_node_name": "Cedarbrook",
+        "target_node_uuid": "cff86555-a1fe-4a24-867c-ec06251cc703",
+        "uuid": "fe62b026-55f6-40e4-96f6-7b4188e63974",
+        "valid_at": null
+      }
+    ],
+    "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+    "node_count": 5,
+    "nodes": [
+      {
+        "attributes": {
+          "jurisdiction": "Cedarbrook (Main Street)",
+          "org_name": "Cedarbrook",
+          "policy_stage": "Pilot proposal"
+        },
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "labels": [
+          "MunicipalGovernment"
+        ],
+        "name": "Cedarbrook",
+        "summary": "Cedarbrook (MunicipalGovernment)",
+        "uuid": "cff86555-a1fe-4a24-867c-ec06251cc703"
+      },
+      {
+        "attributes": {
+          "commute_route": "Main Street (currently avoided)",
+          "full_name": "Maya Chen",
+          "safety_concern": "Unsafe intersections; avoids Main Street due to traffic"
+        },
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "labels": [
+          "Cyclist"
+        ],
+        "name": "Maya Chen",
+        "summary": "Maya Chen (Cyclist)",
+        "uuid": "fe929db1-6701-457d-866d-92345f434318"
+      },
+      {
+        "attributes": {
+          "business_location": "Main Street",
+          "full_name": "Leo Martin",
+          "primary_concern": "Loss of short-stay parking; requires reliable loading access and customer visit measurement"
+        },
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "labels": [
+          "SmallBusinessOwner"
+        ],
+        "name": "Leo Martin",
+        "summary": "Leo Martin (SmallBusinessOwner)",
+        "uuid": "c5e820ac-b1b4-4adf-b8f0-bf7bdb56ad41"
+      },
+      {
+        "attributes": {
+          "accessibility_priority": "Accessible pickup spaces and a clear pedestrian path",
+          "full_name": "Priya Shah",
+          "mobility_status": "Limited mobility"
+        },
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "labels": [
+          "AccessibilityAdvocate"
+        ],
+        "name": "Priya Shah",
+        "summary": "Priya Shah (AccessibilityAdvocate)",
+        "uuid": "813767b8-126b-40f4-a5a3-10d89a1c1297"
+      },
+      {
+        "attributes": {
+          "decision_phase": "Pilot design and pre-permanent measurement phase",
+          "full_name": "Daniel Brooks",
+          "jurisdiction": "Cedarbrook"
+        },
+        "created_at": "2026-10-03T09:41:13.738819+00:00",
+        "labels": [
+          "TransportPlanner"
+        ],
+        "name": "Daniel Brooks",
+        "summary": "Daniel Brooks (TransportPlanner)",
+        "uuid": "7e52b405-acc7-44bd-86cd-1ce68a8dae7e"
+      }
+    ]
+  },
+  "success": true
+}

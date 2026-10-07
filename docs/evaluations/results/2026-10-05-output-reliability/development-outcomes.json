@@ -1,0 +1,673 @@
+{
+  "split": "development_not_holdout",
+  "runs": [
+    {
+      "attempted_cases": 1,
+      "attempts_per_case": 1,
+      "cases": [
+        {
+          "allowed_source_ids": [
+            "episode:rota_1",
+            "episode:rota_2"
+          ],
+          "case_id": "dev_rota",
+          "elapsed_seconds": 15.976899286994012,
+          "error_code": null,
+          "finding_codes": [
+            "premise_unverified",
+            "unsupported_paraphrase",
+            "summary_inconsistent",
+            "claim_grounding_ambiguous"
+          ],
+          "original_source_scope_valid": true,
+          "parent_unchanged": true,
+          "proposal_id": "proposal_2e40c5d88dbe4039baecebc35a6b9787",
+          "selected_source_ids": [
+            "episode:rota_1",
+            "episode:rota_2"
+          ],
+          "state": "blocked",
+          "usage": {
+            "calls": [
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 5548.59,
+                "input_tokens": 1232,
+                "model": "MiniMax-M3",
+                "output_tokens": 279,
+                "provider": "anthropic"
+              },
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 2941.36,
+                "input_tokens": 1506,
+                "model": "MiniMax-M3",
+                "output_tokens": 179,
+                "provider": "anthropic"
+              },
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 7234.26,
+                "input_tokens": 2588,
+                "model": "MiniMax-M3",
+                "output_tokens": 461,
+                "provider": "anthropic"
+              }
+            ],
+            "cost": null,
+            "elapsed_ms": 15976.9,
+            "remaining_ms": 164023.1
+          }
+        }
+      ],
+      "code_revision": "049bdd4627086b72eccdd5cc2fe6fe16ebc07865",
+      "collection_complete": true,
+      "corpus_manifest": {
+        "files_sha256": {
+          "cases.json": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8"
+        },
+        "independent_quality_labels": null,
+        "schema_version": 1,
+        "split": "development"
+      },
+      "cost": null,
+      "invariants_pass": true,
+      "model": "MiniMax-M3",
+      "prompt_sha256": {
+        "audit": "79bd4947f2bdb911440a60ad482a72c90c34d4a084b6be5757a389354f1110f6",
+        "draft": "57785c8e882ecd4b7204b5e52bf93ad5dbacd8753f008cfb2adb7dfd1ea14428",
+        "ledger": "bbcc796d453d820d5aa81ec7b703ee1ff69eead2582f4cf4d010a1bf5a512820"
+      },
+      "provider": "minimax",
+      "quality_labels": null,
+      "ready_rate": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "real_model_outputs": true,
+      "review_export": {
+        "completed_human_reviews": 0,
+        "packet_count": 1,
+        "status": "PENDING"
+      },
+      "schema_version": 1,
+      "workflow": {
+        "admission_closed": true,
+        "admitted": 3,
+        "attempts": [
+          {
+            "admitted_at": 1791174296.2036152,
+            "attempt_number": 1,
+            "elapsed_seconds": 5.534811735153198,
+            "epoch": 1,
+            "finished_at": 1791174301.738424,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_b73bb7b1823b4b30971bfdf0f5b9aa2e",
+            "sequence": 1,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 132,
+              "input_tokens": 1232,
+              "output_tokens": 279,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_2dc59f4008614eeab642ab7c1b5b1b23"
+          },
+          {
+            "admitted_at": 1791174301.8063374,
+            "attempt_number": 1,
+            "elapsed_seconds": 2.919903039932251,
+            "epoch": 1,
+            "finished_at": 1791174304.7262375,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_fabaf12673e9484d91f54f303785c0f1",
+            "sequence": 2,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 128,
+              "input_tokens": 1506,
+              "output_tokens": 179,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_2dc59f4008614eeab642ab7c1b5b1b23"
+          },
+          {
+            "admitted_at": 1791174304.7922127,
+            "attempt_number": 1,
+            "elapsed_seconds": 7.213710069656372,
+            "epoch": 1,
+            "finished_at": 1791174312.00592,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_7aaea6d08f9447c193e0190b7aa7bfbd",
+            "sequence": 3,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 128,
+              "input_tokens": 2588,
+              "output_tokens": 461,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_2dc59f4008614eeab642ab7c1b5b1b23"
+          }
+        ],
+        "authorizations": [
+          {
+            "at": 1791174296.0296896,
+            "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+            "epoch": 1,
+            "imported_requests": 0,
+            "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+            "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+            "max_requests": 6,
+            "max_seconds": 900,
+            "model": "MiniMax-M3",
+            "provider": "minimax"
+          }
+        ],
+        "billing_amount": null,
+        "created_at": 1791174296.0296915,
+        "deadline_at": 1791175196.2036152,
+        "elapsed_seconds": 15.886760234832764,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "finished": 3,
+        "imported_requests": 0,
+        "in_flight": 0,
+        "initial_authorization": {
+          "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+          "imported_requests": 0,
+          "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+          "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+          "max_requests": 6,
+          "max_seconds": 900,
+          "model": "MiniMax-M3",
+          "provider": "minimax"
+        },
+        "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+        "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+        "max_requests": 6,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax",
+        "reason": "stopped",
+        "remaining_requests": 3,
+        "request_key": "input",
+        "started_at": 1791174296.2036152,
+        "state": "stopped",
+        "stopped_at": 1791174312.0720606,
+        "unknown_usage_attempts": 0,
+        "usage_by_stage": {
+          "proposal": {
+            "attempts": 3,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 388,
+            "input_tokens": 5326,
+            "output_tokens": 919,
+            "unknown_usage_attempts": 0
+          }
+        },
+        "workflow_id": "wf_2dc59f4008614eeab642ab7c1b5b1b23"
+      }
+    },
+    {
+      "attempted_cases": 1,
+      "attempts_per_case": 1,
+      "cases": [
+        {
+          "allowed_source_ids": [
+            "episode:rota_1",
+            "episode:rota_2"
+          ],
+          "case_id": "dev_rota",
+          "elapsed_seconds": 18.203348480019486,
+          "error_code": null,
+          "finding_codes": [
+            "material_omission",
+            "material_omission",
+            "material_omission",
+            "material_omission",
+            "material_omission"
+          ],
+          "original_source_scope_valid": true,
+          "parent_unchanged": true,
+          "proposal_id": "proposal_03e5874af66e44f495a3031aa7d550ae",
+          "selected_source_ids": [
+            "episode:rota_1",
+            "episode:rota_2"
+          ],
+          "state": "blocked",
+          "usage": {
+            "calls": [
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 5672.12,
+                "input_tokens": 1156,
+                "model": "MiniMax-M3",
+                "output_tokens": 333,
+                "provider": "anthropic"
+              },
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 4699.35,
+                "input_tokens": 1694,
+                "model": "MiniMax-M3",
+                "output_tokens": 181,
+                "provider": "anthropic"
+              },
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 7605.42,
+                "input_tokens": 2447,
+                "model": "MiniMax-M3",
+                "output_tokens": 540,
+                "provider": "anthropic"
+              }
+            ],
+            "cost": null,
+            "elapsed_ms": 18203.35,
+            "remaining_ms": 161796.64
+          }
+        }
+      ],
+      "code_revision": "049bdd4627086b72eccdd5cc2fe6fe16ebc07865",
+      "collection_complete": true,
+      "corpus_manifest": {
+        "files_sha256": {
+          "cases.json": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8"
+        },
+        "independent_quality_labels": null,
+        "schema_version": 1,
+        "split": "development"
+      },
+      "cost": null,
+      "invariants_pass": true,
+      "model": "MiniMax-M3",
+      "prompt_sha256": {
+        "audit": "2f10d8e9f9afe1bb36995600abdd102af59b36fa003426945534f2f4623d3ebf",
+        "draft": "57785c8e882ecd4b7204b5e52bf93ad5dbacd8753f008cfb2adb7dfd1ea14428",
+        "ledger": "f77defab2ec43e953ec467a2f9ecfe5fae432c7699900e430701f582b343b214"
+      },
+      "provider": "minimax",
+      "quality_labels": null,
+      "ready_rate": {
+        "denominator": 1,
+        "numerator": 0
+      },
+      "real_model_outputs": true,
+      "review_export": {
+        "completed_human_reviews": 0,
+        "packet_count": 1,
+        "status": "PENDING"
+      },
+      "schema_version": 1,
+      "workflow": {
+        "admission_closed": true,
+        "admitted": 3,
+        "attempts": [
+          {
+            "admitted_at": 1791174393.8676913,
+            "attempt_number": 1,
+            "elapsed_seconds": 5.644941568374634,
+            "epoch": 1,
+            "finished_at": 1791174399.5126297,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_920e815a69f945afbc0ba884c6de54cd",
+            "sequence": 1,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 132,
+              "input_tokens": 1156,
+              "output_tokens": 333,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_5e62a56474fa4186b9eef3a3dcf43ee2"
+          },
+          {
+            "admitted_at": 1791174399.5967557,
+            "attempt_number": 1,
+            "elapsed_seconds": 4.67439603805542,
+            "epoch": 1,
+            "finished_at": 1791174404.2711494,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_d47a5f4e1fb1455f9b1bd93f1aec5ef5",
+            "sequence": 2,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 132,
+              "input_tokens": 1694,
+              "output_tokens": 181,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_5e62a56474fa4186b9eef3a3dcf43ee2"
+          },
+          {
+            "admitted_at": 1791174404.340491,
+            "attempt_number": 1,
+            "elapsed_seconds": 7.585127353668213,
+            "epoch": 1,
+            "finished_at": 1791174411.9256153,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_ab023935d42c47ea919c2d7dbbe136db",
+            "sequence": 3,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 132,
+              "input_tokens": 2447,
+              "output_tokens": 540,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_5e62a56474fa4186b9eef3a3dcf43ee2"
+          }
+        ],
+        "authorizations": [
+          {
+            "at": 1791174393.742102,
+            "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+            "epoch": 1,
+            "imported_requests": 0,
+            "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+            "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+            "max_requests": 6,
+            "max_seconds": 900,
+            "model": "MiniMax-M3",
+            "provider": "minimax"
+          }
+        ],
+        "billing_amount": null,
+        "created_at": 1791174393.7421045,
+        "deadline_at": 1791175293.8676913,
+        "elapsed_seconds": 18.146766424179077,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "finished": 3,
+        "imported_requests": 0,
+        "in_flight": 0,
+        "initial_authorization": {
+          "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+          "imported_requests": 0,
+          "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+          "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+          "max_requests": 6,
+          "max_seconds": 900,
+          "model": "MiniMax-M3",
+          "provider": "minimax"
+        },
+        "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+        "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+        "max_requests": 6,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax",
+        "reason": "stopped",
+        "remaining_requests": 3,
+        "request_key": "input",
+        "started_at": 1791174393.8676913,
+        "state": "stopped",
+        "stopped_at": 1791174411.9949973,
+        "unknown_usage_attempts": 0,
+        "usage_by_stage": {
+          "proposal": {
+            "attempts": 3,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 396,
+            "input_tokens": 5297,
+            "output_tokens": 1054,
+            "unknown_usage_attempts": 0
+          }
+        },
+        "workflow_id": "wf_5e62a56474fa4186b9eef3a3dcf43ee2"
+      }
+    },
+    {
+      "attempted_cases": 1,
+      "attempts_per_case": 1,
+      "cases": [
+        {
+          "allowed_source_ids": [
+            "episode:rota_1",
+            "episode:rota_2"
+          ],
+          "case_id": "dev_rota",
+          "elapsed_seconds": 22.29843593199621,
+          "error_code": null,
+          "finding_codes": [
+            "premise_unverified",
+            "premise_unverified"
+          ],
+          "original_source_scope_valid": true,
+          "parent_unchanged": true,
+          "proposal_id": "proposal_1e883eaa6b464c178ba19836ecdf4a43",
+          "selected_source_ids": [
+            "episode:rota_1",
+            "episode:rota_2"
+          ],
+          "state": "ready",
+          "usage": {
+            "calls": [
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 8439.71,
+                "input_tokens": 15,
+                "model": "MiniMax-M3",
+                "output_tokens": 655,
+                "provider": "anthropic"
+              },
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 3320.96,
+                "input_tokens": 1174,
+                "model": "MiniMax-M3",
+                "output_tokens": 335,
+                "provider": "anthropic"
+              },
+              {
+                "attempt_count": 1,
+                "elapsed_ms": 10264.8,
+                "input_tokens": 3288,
+                "model": "MiniMax-M3",
+                "output_tokens": 755,
+                "provider": "anthropic"
+              }
+            ],
+            "cost": null,
+            "elapsed_ms": 22298.44,
+            "remaining_ms": 157701.55
+          }
+        }
+      ],
+      "code_revision": "049bdd4627086b72eccdd5cc2fe6fe16ebc07865",
+      "collection_complete": true,
+      "corpus_manifest": {
+        "files_sha256": {
+          "cases.json": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8"
+        },
+        "independent_quality_labels": null,
+        "schema_version": 1,
+        "split": "development"
+      },
+      "cost": null,
+      "invariants_pass": true,
+      "model": "MiniMax-M3",
+      "prompt_sha256": {
+        "audit": "6491b9865d13e38a2166e88a9cf8bd3b9f3f70d1f19ed82cf72218d6cffef036",
+        "draft": "57785c8e882ecd4b7204b5e52bf93ad5dbacd8753f008cfb2adb7dfd1ea14428",
+        "ledger": "f77defab2ec43e953ec467a2f9ecfe5fae432c7699900e430701f582b343b214"
+      },
+      "provider": "minimax",
+      "quality_labels": null,
+      "ready_rate": {
+        "denominator": 1,
+        "numerator": 1
+      },
+      "real_model_outputs": true,
+      "review_export": {
+        "completed_human_reviews": 0,
+        "packet_count": 1,
+        "status": "PENDING"
+      },
+      "schema_version": 1,
+      "workflow": {
+        "admission_closed": true,
+        "admitted": 3,
+        "attempts": [
+          {
+            "admitted_at": 1791174525.1952486,
+            "attempt_number": 1,
+            "elapsed_seconds": 8.409347534179688,
+            "epoch": 1,
+            "finished_at": 1791174533.604594,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_be18fea8c1c94b1ea9acd71fe2e9b90a",
+            "sequence": 1,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 1273,
+              "input_tokens": 15,
+              "output_tokens": 655,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_c153d01782a74f52b400197b0a300a2e"
+          },
+          {
+            "admitted_at": 1791174533.7453501,
+            "attempt_number": 1,
+            "elapsed_seconds": 3.306624174118042,
+            "epoch": 1,
+            "finished_at": 1791174537.051972,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_46a2f776308a41d8a2ce737f5b78f30e",
+            "sequence": 2,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 1102,
+              "input_tokens": 1174,
+              "output_tokens": 335,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_c153d01782a74f52b400197b0a300a2e"
+          },
+          {
+            "admitted_at": 1791174537.0959458,
+            "attempt_number": 1,
+            "elapsed_seconds": 10.245094537734985,
+            "epoch": 1,
+            "finished_at": 1791174547.3410373,
+            "http_status": 200,
+            "model": "MiniMax-M3",
+            "owner_attempt": null,
+            "request_id": "req_ed7513935e35460689edb27aa22cff61",
+            "sequence": 3,
+            "stage": "proposal",
+            "status": "response",
+            "task_id": null,
+            "usage": {
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 132,
+              "input_tokens": 3288,
+              "output_tokens": 755,
+              "service_tier": "standard"
+            },
+            "workflow_id": "wf_c153d01782a74f52b400197b0a300a2e"
+          }
+        ],
+        "authorizations": [
+          {
+            "at": 1791174525.0595922,
+            "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+            "epoch": 1,
+            "imported_requests": 0,
+            "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+            "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+            "max_requests": 6,
+            "max_seconds": 900,
+            "model": "MiniMax-M3",
+            "provider": "minimax"
+          }
+        ],
+        "billing_amount": null,
+        "created_at": 1791174525.0595937,
+        "deadline_at": 1791175425.1952486,
+        "elapsed_seconds": 22.237107276916504,
+        "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+        "epoch": 1,
+        "finished": 3,
+        "imported_requests": 0,
+        "in_flight": 0,
+        "initial_authorization": {
+          "endpoint_identity": "2eee3586922def0f46b71074cdfa28d854e481aabd49d8be7330e5d688fb36c9",
+          "imported_requests": 0,
+          "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+          "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+          "max_requests": 6,
+          "max_seconds": 900,
+          "model": "MiniMax-M3",
+          "provider": "minimax"
+        },
+        "input_description": "1 frozen fictional input cases; one unchanged proposal attempt each",
+        "input_fingerprint": "dfb5f6d8292632f2abd7d591ab97140845ac5133f5925ae235bad02fb7f580f8",
+        "max_requests": 6,
+        "max_seconds": 900,
+        "model": "MiniMax-M3",
+        "provider": "minimax",
+        "reason": "stopped",
+        "remaining_requests": 3,
+        "request_key": "input",
+        "started_at": 1791174525.1952486,
+        "state": "stopped",
+        "stopped_at": 1791174547.413159,
+        "unknown_usage_attempts": 0,
+        "usage_by_stage": {
+          "proposal": {
+            "attempts": 3,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2507,
+            "input_tokens": 4477,
+            "output_tokens": 1745,
+            "unknown_usage_attempts": 0
+          }
+        },
+        "workflow_id": "wf_c153d01782a74f52b400197b0a300a2e"
+      }
+    }
+  ]
+}

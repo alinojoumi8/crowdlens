@@ -7,6 +7,7 @@ Includes: CRUD, NER/RE-based text ingestion, hybrid search, retry logic.
 
 import json
 import time
+from ..services.task_execution import fenced, publication_guard
 import uuid
 import logging
 import threading
@@ -147,7 +148,8 @@ class Neo4jStorage(GraphStorage):
         last_error = None
         for attempt in range(self.MAX_RETRIES):
             try:
-                return func(*args, **kwargs)
+                with publication_guard():
+                    return func(*args, **kwargs)
             except (TransientError, ServiceUnavailable, SessionExpired) as e:
                 last_error = e
                 wait = self.RETRY_DELAY_BASE * (2 ** attempt)
@@ -563,6 +565,7 @@ class Neo4jStorage(GraphStorage):
                 ],
             }
 
+    @fenced
     def _write_embeddings(
         self,
         graph_id: str,
@@ -591,6 +594,7 @@ class Neo4jStorage(GraphStorage):
                     rows=relationships,
                 )
 
+    @fenced
     def _update_graph_embedding_metadata(self, graph_id: str) -> None:
         info = self._embedding.info
         with self._driver.session() as session:
@@ -1410,7 +1414,7 @@ class Neo4jStorage(GraphStorage):
                     excerpt = episode["data"]
                     sources.append({
                         "evidence_id": f"episode:{eid}", "episode_id": eid,
-                        "origin": "source_document" if episode.get("document_id") else "unknown",
+                        "origin": episode.get("origin", "source_document" if episode.get("document_id") else "unknown"),
                         "excerpt": excerpt, "source_hash": hashlib.sha256(excerpt.encode()).hexdigest(),
                         "graph_id": graph_id, "case_id": episode.get("case_id"),
                         "case_version_id": episode.get("case_version_id"),

@@ -1,0 +1,72 @@
+{
+  "artifact_dir": "/tmp/crowdlens-ecc-review-preparation-ekvj99sn",
+  "durable_task": {
+    "task_id": "prepare_retry",
+    "task_type": "simulation_prepare",
+    "status": "failed",
+    "created_at": "2026-10-02T00:00:00",
+    "updated_at": "2026-10-02T19:47:37.561239+00:00",
+    "metadata": {
+      "simulation_id": "sim_retry"
+    },
+    "execution": {
+      "attempt_id": "b403b3122bdd41a3a97a42b29fbe3d35",
+      "owner": {
+        "worker_id": "4db4f85590564e58ac9f75e4002598aa",
+        "pid": 1375883
+      },
+      "heartbeat_at": 100.0,
+      "lease_until": 130.0,
+      "resources": [
+        {
+          "key": "simulation:sim_retry",
+          "root": "/tmp/crowdlens-ecc-review-preparation-ekvj99sn/simulations"
+        }
+      ]
+    },
+    "error": "ownership_lease_expired",
+    "message": "Execution ownership expired; manual retry required.",
+    "recovery": {
+      "reason": "ownership_lease_expired",
+      "pending": false
+    }
+  },
+  "durable_state": {
+    "simulation_id": "sim_retry",
+    "project_id": "proj_synthetic",
+    "graph_id": "graph_synthetic",
+    "status": "failed",
+    "config_generated": true,
+    "profiles_count": 1,
+    "enable_reddit": true,
+    "enable_twitter": true,
+    "error": "ownership_lease_expired",
+    "updated_at": "2026-10-02T19:47:37.562056+00:00"
+  },
+  "http_status": 200,
+  "response": {
+    "data": {
+      "already_prepared": true,
+      "message": "Preparation already completed",
+      "prepare_info": {
+        "config_generated": true,
+        "created_at": null,
+        "entities_count": 0,
+        "entity_types": [],
+        "existing_files": [
+          "state.json",
+          "simulation_config.json",
+          "reddit_profiles.json",
+          "twitter_profiles.csv"
+        ],
+        "profiles_count": 1,
+        "status": "failed",
+        "updated_at": "2026-10-02T19:47:37.562056+00:00"
+      },
+      "progress": 100,
+      "simulation_id": "sim_retry",
+      "status": "ready"
+    },
+    "success": true
+  }
+}

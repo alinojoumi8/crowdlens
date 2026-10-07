@@ -1,0 +1,20 @@
+{
+  "proposal_41906b440b3d49758794e2ea69afb196": {
+    "ledger.json": "1203bc060301cd1cc18a1762fc64fb054c8ea5491fb939a054398b3afdcccee9",
+    "parent.json": "89fb73f3fc761c49bfe439d0b259057dc8081d8eb79c9f22badad2d25db78eb9",
+    "record.json": "2cd57b0bb4f57dcfc2416b1f972fe1bd0f138e8a6f17d26e5a569d1b956d949c",
+    "sources.json": "8017e05bd764b27cffbcad14c5d061f8f77b7a02400a33339ec15985a3e17ccd"
+  },
+  "proposal_20eda4b6140f4a2b8541e828165301de": {
+    "ledger.json": "c4e027d61a0ee26450945c438e8863f0124fd171119b6a89e39602ab0adc76c1",
+    "parent.json": "89fb73f3fc761c49bfe439d0b259057dc8081d8eb79c9f22badad2d25db78eb9",
+    "record.json": "5e3a30aea8d4c9e8d95e1f596e8dbc099e42a66b330c76fefb24830d18414436",
+    "sources.json": "8017e05bd764b27cffbcad14c5d061f8f77b7a02400a33339ec15985a3e17ccd"
+  },
+  "proposal_58c0cb1b68774a998250e844ae64701a": {
+    "ledger.json": "b8c2041075e42fc1083089064a3df90c6f896d8a6a45f4d0aef4a87a8d235e17",
+    "parent.json": "89fb73f3fc761c49bfe439d0b259057dc8081d8eb79c9f22badad2d25db78eb9",
+    "record.json": "fad5d11753580fa5cf351a7695b010356ef129a13cdebd6539cced05c61db709",
+    "sources.json": "8017e05bd764b27cffbcad14c5d061f8f77b7a02400a33339ec15985a3e17ccd"
+  }
+}

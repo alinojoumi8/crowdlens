@@ -1,0 +1,211 @@
+{
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": true
+    },
+    {
+      "name": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "passed": true
+    },
+    {
+      "name": "scenario configuration with seeded persona and simulation substitutes",
+      "passed": true
+    },
+    {
+      "name": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "passed": true
+    },
+    {
+      "name": "source review and keyboard provenance inspection",
+      "passed": true
+    },
+    {
+      "name": "changed source produces an honest 409 conflict and disables save",
+      "passed": true
+    },
+    {
+      "name": "unrelated unsupported proposal blocks saving",
+      "passed": true
+    },
+    {
+      "name": "duplicate clicks plus response-loss retry create one immutable child",
+      "passed": true
+    },
+    {
+      "name": "saved revision reload, inherited section and source ledger remain reviewable",
+      "passed": true
+    },
+    {
+      "name": "history loading, error, explicit retry and empty states",
+      "passed": true
+    },
+    {
+      "name": "visible Stop closes durable workflow and refresh cannot start it again",
+      "passed": true
+    },
+    {
+      "name": "interrupted report has terminal controls and polling stops",
+      "passed": true
+    }
+  ],
+  "fatal": "stopped-simulation at 375px has automated accessibility findings\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     impact: 'serious',\n+     nodes: [\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.twitter > .platform-stats > .stat:nth-child(1) > .stat-label'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.twitter > .platform-stats > .stat:nth-child(1) > .stat-value.mono > .stat-total'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.twitter > .platform-stats > .stat:nth-child(2) > .stat-label'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.twitter > .platform-stats > .stat:nth-child(3) > .stat-label'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.reddit > .platform-stats > .stat:nth-child(1) > .stat-label'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.reddit > .platform-stats > .stat:nth-child(1) > .stat-value.mono > .stat-total'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.reddit > .platform-stats > .stat:nth-child(2) > .stat-label'\n+         ]\n+       },\n+       {\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.87 (foreground color: #9097a1, background color: #fcfcfc, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         target: [\n+           '.reddit > .platform-stats > .stat:nth-child(3) > .stat-label'\n+         ]\n+       }\n+     ]\n+   }\n+ ]\n- []\n",
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 375,
+      "clipped": [],
+      "a11y": [
+        "color-contrast"
+      ]
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 768,
+      "clipped": [],
+      "a11y": [
+        "color-contrast"
+      ]
+    },
+    {
+      "name": "stopped-simulation",
+      "width": 1440,
+      "clipped": [],
+      "a11y": [
+        "color-contrast"
+      ]
+    },
+    {
+      "name": "interrupted-report",
+      "width": 375,
+      "clipped": [],
+      "a11y": [
+        "color-contrast"
+      ]
+    },
+    {
+      "name": "interrupted-report",
+      "width": 768,
+      "clipped": [],
+      "a11y": [
+        "color-contrast"
+      ]
+    },
+    {
+      "name": "interrupted-report",
+      "width": 1440,
+      "clipped": [],
+      "a11y": [
+        "color-contrast"
+      ]
+    }
+  ]
+}

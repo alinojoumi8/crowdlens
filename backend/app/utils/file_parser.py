@@ -4,6 +4,8 @@ Supports text extraction from PDF, Markdown, TXT files
 """
 
 import os
+import shutil
+import subprocess
 from pathlib import Path
 from typing import List, Optional
 
@@ -107,10 +109,22 @@ class FileParser:
 
         text_parts = []
         with fitz.open(file_path) as doc:
-            for page in doc:
+            for number, page in enumerate(doc, 1):
                 text = page.get_text()
+                if len(text.strip()) < 20 and page.get_images():
+                    executable = shutil.which('tesseract')
+                    if not executable:
+                        raise ValueError(f'PDF page {number} requires local OCR. Install Tesseract before retrying; scanned pages cannot be silently skipped.')
+                    result = subprocess.run(
+                        [executable, 'stdin', 'stdout', '-l', 'eng', '--psm', '3'],
+                        input=page.get_pixmap(dpi=180).tobytes('png'),
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60, check=False,
+                    )
+                    if result.returncode:
+                        raise ValueError(f'Local OCR failed for PDF page {number}; retry after checking Tesseract.')
+                    text = result.stdout.decode('utf-8', errors='replace')
                 if text.strip():
-                    text_parts.append(text)
+                    text_parts.append(f'[PDF page {number}]\n{text}')
 
         return "\n\n".join(text_parts)
 

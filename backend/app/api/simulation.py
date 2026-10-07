@@ -10,6 +10,7 @@ from flask import request, jsonify, send_file, current_app
 
 from . import simulation_bp
 from ..config import Config
+from ..services.task_execution import TaskBusy
 from ..services.entity_reader import EntityReader
 from ..services.oasis_profile_generator import OasisProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
@@ -210,6 +211,9 @@ def create_simulation():
                 "error": "Project has not built knowledge graph yet, please call /api/graph/build first"
             }), 400
         
+        if graph_id != project.graph_id:
+            return jsonify(success=False, error='graph_scope_mismatch'), 409
+
         manager = SimulationManager()
         prediction_settings = normalize_prediction_settings(
             {
@@ -240,6 +244,20 @@ def create_simulation():
         }), 500
 
 
+def _preparation_task(simulation_id: str):
+    """Read the current preparation owner before interpreting leftover files."""
+    from ..models.task import TaskManager
+
+    runtime = TaskManager().runtime
+    with runtime.gate():
+        runtime.reconcile(raise_on_error=False)
+        binding = runtime.binding('simulation:' + simulation_id)
+        task = runtime.get(binding['task_id']) if binding else None
+        if task and task.get('task_type') == 'simulation_prepare':
+            return task
+    return None
+
+
 def _check_simulation_prepared(simulation_id: str) -> tuple:
     """
     Check if simulation is ready
@@ -258,6 +276,11 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
     """
     import os
     from ..config import Config
+
+    task = _preparation_task(simulation_id)
+    if task and task['status'] != 'completed':
+        return False, {"reason": task.get('error') or 'Preparation attempt has not completed',
+                       "status": task['status'], "task_id": task['task_id']}
     
     simulation_dir = os.path.join(Config.OASIS_SIMULATION_DATA_DIR, simulation_id)
     
@@ -303,15 +326,9 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
         # Detailed logs
         logger.debug(f"Detect simulation preparation status: {simulation_id}, status={status}, config_generated={config_generated}")
         
-        # If config_generated=True and files exist, consider preparation complete
-        # The following statuses indicate preparation is complete：
-        # - ready: Preparation complete, can run
-        # - preparing: If config_generated=True, description shows completed
-        # - running: Running, preparation already completed
-        # - completed: Execution complete, preparation already completed
-        # - stopped: Stopped, preparation already completed
-        # - failed: Execution failed (but preparation is not completed)
-        prepared_statuses = ["ready", "preparing", "running", "completed", "stopped", "failed"]
+        # Files may belong to an earlier preparation. Only a published usable
+        # state establishes readiness; status inspection never promotes it.
+        prepared_statuses = ["ready", "running", "completed", "stopped"]
         if status in prepared_statuses and config_generated:
             # Get file statistics
             profiles_file = os.path.join(simulation_dir, "reddit_profiles.json")
@@ -322,19 +339,6 @@ def _check_simulation_prepared(simulation_id: str) -> tuple:
                 with open(profiles_file, 'r', encoding='utf-8') as f:
                     profiles_data = json.load(f)
                     profiles_count = len(profiles_data) if isinstance(profiles_data, list) else 0
-            
-            # If status is "preparing" but files are completed, update status to "ready"
-            if status == "preparing":
-                try:
-                    state_data["status"] = "ready"
-                    from datetime import datetime
-                    state_data["updated_at"] = datetime.now().isoformat()
-                    with open(state_file, 'w', encoding='utf-8') as f:
-                        json.dump(state_data, f, ensure_ascii=False, indent=2)
-                    logger.info(f"Auto update simulation status: {simulation_id} preparing -> ready")
-                    status = "ready"
-                except Exception as e:
-                    logger.warning(f"Failed to auto update status: {e}")
             
             logger.info(f"Simulation {simulation_id} Detection result: HasPreparation complete (status={status}, config_generated={config_generated})")
             return True, {
@@ -541,12 +545,16 @@ def prepare_simulation():
             metadata={
                 "simulation_id": simulation_id,
                 "project_id": state.project_id
-            }
+            },
+            resources=[{"key":"simulation:"+simulation_id, "root":manager.SIMULATION_DATA_DIR}]
         )
         
         # Update simulation status（Include pre-fetched entity count）
         state.status = SimulationStatus.PREPARING
-        manager._save_simulation_state(state)
+        state.config_generated = False
+        state.error = None
+        with task_manager.attempt(task_id).bind():
+            manager._save_simulation_state(state)
         
         # Define background task
         def run_prepare():
@@ -655,8 +663,7 @@ def prepare_simulation():
                     manager._save_simulation_state(state)
         
         # Start background thread
-        thread = threading.Thread(target=run_prepare, daemon=True)
-        thread.start()
+        task_manager.start_task(task_id, run_prepare)
         
         return jsonify({
             "success": True,
@@ -679,6 +686,8 @@ def prepare_simulation():
             "error": str(e)
         }), 404
         
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to start preparation task: {str(e)}")
         return jsonify({
@@ -723,6 +732,19 @@ def get_prepare_status():
         
         task_id = data.get('task_id')
         simulation_id = data.get('simulation_id')
+
+        # Explicit task polling must report that attempt, even when artifacts
+        # from an earlier preparation remain. Simulation-only polling also
+        # surfaces its current active/failed owner so reloads retain recovery.
+        task_manager = TaskManager()
+        task = task_manager.get_task(task_id) if task_id else None
+        task_data = task.to_dict() if task else None
+        if not task_id and simulation_id:
+            owned = _preparation_task(simulation_id)
+            if owned and owned['status'] != 'completed':
+                task_data = owned
+        if task_data:
+            return jsonify(success=True, data={**task_data, "already_prepared": False})
         
         # If simulation_id is provided, check if preparation is complete
         if simulation_id:
@@ -758,9 +780,6 @@ def get_prepare_status():
                 "success": False,
                 "error": "Please provide task_id Or simulation_id"
             }), 400
-        
-        task_manager = TaskManager()
-        task = task_manager.get_task(task_id)
         
         if not task:
             # Task does not exist, but if simulation_id is provided, check if preparation is complete
@@ -840,7 +859,9 @@ def run_ensemble():
             storage = current_app.extensions.get('neo4j_storage')
 
         task_manager = TaskManager()
-        task_id = task_manager.create_task('ensemble_run', metadata={'simulation_id': simulation_id})
+        task_id = task_manager.create_task('ensemble_run', metadata={'simulation_id': simulation_id},
+            resources=[{'key':'ensemble:'+simulation_id, 'root':SimulationRunner.RUN_STATE_DIR},
+                       {'key':'simulation-runtime:'+simulation_id, 'root':SimulationRunner.RUN_STATE_DIR}])
 
         def run_ensemble_task():
             from ..models.task import TaskStatus
@@ -865,7 +886,7 @@ def run_ensemble():
                 logger.error(f"Ensemble run failed: {exc}")
                 task_manager.fail_task(task_id, str(exc))
 
-        threading.Thread(target=run_ensemble_task, daemon=True).start()
+        task_manager.start_task(task_id, run_ensemble_task)
 
         return jsonify({
             "success": True,
@@ -876,6 +897,8 @@ def run_ensemble():
                 "message": "Ensemble started. Poll progress via /api/simulation/run-ensemble/status",
             }
         })
+    except TaskBusy:
+        return jsonify(success=False, error='resource_has_active_task'), 409
     except Exception as e:
         logger.error(f"Failed to start ensemble: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
@@ -972,59 +995,11 @@ def list_simulations():
 
 
 def _get_report_id_for_simulation(simulation_id: str) -> str:
-    """
-    Get simulation Corresponding latest report_id
-    
-    Traverse reports directory and find the report matching the simulation_id.
-    If multiple exist, return the latest one (by created_at timestamp).
-    
-    Args:
-        simulation_id: Simulation ID
-        
-    Returns:
-        report_id Or None
-    """
-    import json
-    from datetime import datetime
-    
-    # reports Directory path：backend/uploads/reports
-    # __file__ Is app/api/simulation.py，Need to go up two levels to backend/
-    reports_dir = os.path.join(os.path.dirname(__file__), '../../uploads/reports')
-    if not os.path.exists(reports_dir):
-        return None
-    
-    matching_reports = []
-    
+    """Find the latest root report through the effective report store."""
+    from ..services.report_agent import ReportManager
     try:
-        for report_folder in os.listdir(reports_dir):
-            report_path = os.path.join(reports_dir, report_folder)
-            if not os.path.isdir(report_path):
-                continue
-            
-            meta_file = os.path.join(report_path, "meta.json")
-            if not os.path.exists(meta_file):
-                continue
-            
-            try:
-                with open(meta_file, 'r', encoding='utf-8') as f:
-                    meta = json.load(f)
-                
-                if meta.get("simulation_id") == simulation_id:
-                    matching_reports.append({
-                        "report_id": meta.get("report_id"),
-                        "created_at": meta.get("created_at", ""),
-                        "status": meta.get("status", "")
-                    })
-            except Exception:
-                continue
-        
-        if not matching_reports:
-            return None
-        
-        # Sort by creation time descending，ReturnLatest
-        matching_reports.sort(key=lambda x: x.get("created_at", ""), reverse=True)
-        return matching_reports[0].get("report_id")
-        
+        report = ReportManager.get_report_by_simulation(simulation_id)
+        return report.report_id if report else None
     except Exception as e:
         logger.warning(f"Failed to find report for simulation {simulation_id}: {e}")
         return None
@@ -1834,7 +1809,8 @@ def start_simulation():
         
         response_data = run_state.to_dict()
         if max_rounds:
-            response_data['max_rounds_applied'] = max_rounds
+            response_data['requested_max_rounds'] = max_rounds
+            response_data['max_rounds_applied'] = run_state.total_rounds
         response_data['graph_memory_update_enabled'] = enable_graph_memory_update
         response_data['force_restarted'] = force_restarted
         if enable_graph_memory_update:
@@ -1913,7 +1889,7 @@ def stop_simulation():
         
         return jsonify({
             "success": True,
-            "data": run_state.to_dict()
+            "data": _activity_status(simulation_id, run_state.to_dict())
         })
         
     except ValueError as e:
@@ -1932,6 +1908,15 @@ def stop_simulation():
 
 
 # ============== Real-time status monitoring interface ==============
+
+def _activity_status(simulation_id, result):
+    from ..services.simulation_activity import read_activity, summarize_activity
+    rows = read_activity(os.path.join(SimulationRunner.RUN_STATE_DIR, simulation_id))
+    result['activity_summary'] = summarize_activity(rows)
+    result['platform_activity'] = {platform: summarize_activity([r for r in rows if r['platform'] == platform])
+                                   for platform in ('twitter', 'reddit')}
+    return result
+
 
 @simulation_bp.route('/<simulation_id>/run-status', methods=['GET'])
 def get_run_status(simulation_id: str):
@@ -1979,7 +1964,7 @@ def get_run_status(simulation_id: str):
         
         return jsonify({
             "success": True,
-            "data": run_state.to_dict()
+            "data": _activity_status(simulation_id, run_state.to_dict())
         })
         
     except Exception as e:
@@ -2070,7 +2055,7 @@ def get_run_status_detail(simulation_id: str):
         ) if current_round > 0 else []
         
         # Get basic status information
-        result = run_state.to_dict()
+        result = _activity_status(simulation_id, run_state.to_dict())
         result["all_actions"] = [a.to_dict() for a in all_actions]
         result["twitter_actions"] = [a.to_dict() for a in twitter_actions]
         result["reddit_actions"] = [a.to_dict() for a in reddit_actions]

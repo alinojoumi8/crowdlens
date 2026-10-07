@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v6",
+  "cases": [
+    {
+      "id": "v6_archive",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v6_graph_archive",
+        "case_id": "v6_case_archive",
+        "case_version_id": "v6_current_archive"
+      },
+      "sources": [
+        {
+          "graph_id": "v6_graph_archive",
+          "case_id": "v6_case_archive",
+          "case_version_id": "v6_current_archive",
+          "uuid": "archive_source_1",
+          "document_id": "archive_document_1",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Marrowfield archive authorizes a portable document trolley trial for four weekday mornings with a $510 allocation ceiling. Permanent shelving is excluded. No spending has been recorded.",
+          "fixture_text_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c"
+        },
+        {
+          "graph_id": "v6_graph_archive",
+          "case_id": "v6_case_archive",
+          "case_version_id": "v6_current_archive",
+          "uuid": "archive_source_2",
+          "document_id": "archive_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Marrowfield purchasing note: a $360 trolley quote remains awaiting approval. No purchase order has been issued. An allocation ceiling is not payment.",
+          "fixture_text_sha256": "359e9599e32a86fc30fa51dc936294c623aed2c882ae9d2a3221f6030dc5a0ce"
+        },
+        {
+          "graph_id": "v6_graph_archive",
+          "case_id": "v6_case_archive",
+          "case_version_id": "superseded",
+          "uuid": "archive_old",
+          "document_id": "archive_old",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Marrowfield archive authorizes a portable document trolley trial for four weekday mornings with a $510 allocation ceiling. Permanent shelving is excluded. No spending has been recorded.",
+          "fixture_text_sha256": "b6885252dc2d2ec1357298e846d015ff0669fecc6cfa645e4d101d088626054c"
+        },
+        {
+          "graph_id": "v6_graph_archive",
+          "case_id": "foreign_case",
+          "case_version_id": "v6_current_archive",
+          "uuid": "archive_foreign",
+          "document_id": "archive_foreign",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Marrowfield purchasing note: a $360 trolley quote remains awaiting approval. No purchase order has been issued. An allocation ceiling is not payment.",
+          "fixture_text_sha256": "359e9599e32a86fc30fa51dc936294c623aed2c882ae9d2a3221f6030dc5a0ce"
+        }
+      ],
+      "summary": "Permanent shelving was purchased for $4,400. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "Archive trolley trial",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "Permanent shelving was purchased for $4,400."
+      }
+    },
+    {
+      "id": "v6_cleanup",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v6_graph_cleanup",
+        "case_id": "v6_case_cleanup",
+        "case_version_id": "v6_current_cleanup"
+      },
+      "sources": [
+        {
+          "graph_id": "v6_graph_cleanup",
+          "case_id": "v6_case_cleanup",
+          "case_version_id": "v6_current_cleanup",
+          "uuid": "cleanup_source_1",
+          "document_id": "cleanup_document_1",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Amberford riverbank log records 46 public volunteers at the first cleanup session. Three coordinators participated separately and are excluded from the volunteer count.",
+          "fixture_text_sha256": "d01bece9001b44187e9ac6e6174c121b7d096d4bc81d1d088a70e4d4ea241de0"
+        },
+        {
+          "graph_id": "v6_graph_cleanup",
+          "case_id": "v6_case_cleanup",
+          "case_version_id": "v6_current_cleanup",
+          "uuid": "cleanup_source_2",
+          "document_id": "cleanup_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Amberford follow-up records 31 public volunteers at the second session. Coordinator attendance was not recorded for that session. Attendance does not constitute a vote or endorsement.",
+          "fixture_text_sha256": "44d0d0f4f44eae8142a43af01cc7af4aa518a83ae5bce0d6431d3192b8b36dc5"
+        },
+        {
+          "graph_id": "v6_graph_cleanup",
+          "case_id": "v6_case_cleanup",
+          "case_version_id": "superseded",
+          "uuid": "cleanup_old",
+          "document_id": "cleanup_old",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Amberford riverbank log records 46 public volunteers at the first cleanup session. Three coordinators participated separately and are excluded from the volunteer count.",
+          "fixture_text_sha256": "d01bece9001b44187e9ac6e6174c121b7d096d4bc81d1d088a70e4d4ea241de0"
+        },
+        {
+          "graph_id": "v6_graph_cleanup",
+          "case_id": "foreign_case",
+          "case_version_id": "v6_current_cleanup",
+          "uuid": "cleanup_foreign",
+          "document_id": "cleanup_foreign",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Amberford follow-up records 31 public volunteers at the second session. Coordinator attendance was not recorded for that session. Attendance does not constitute a vote or endorsement.",
+          "fixture_text_sha256": "44d0d0f4f44eae8142a43af01cc7af4aa518a83ae5bce0d6431d3192b8b36dc5"
+        }
+      ],
+      "summary": "Both cleanup sessions had 60 public volunteers and everyone endorsed the plan. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "Riverbank cleanup attendance",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "Both cleanup sessions had 60 public volunteers and everyone endorsed the plan."
+      }
+    },
+    {
+      "id": "v6_pottery",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v6_graph_pottery",
+        "case_id": "v6_case_pottery",
+        "case_version_id": "v6_current_pottery"
+      },
+      "sources": [
+        {
+          "graph_id": "v6_graph_pottery",
+          "case_id": "v6_case_pottery",
+          "case_version_id": "v6_current_pottery",
+          "uuid": "pottery_source_1",
+          "document_id": "pottery_document_1",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present. Unsupervised access is excluded.",
+          "fixture_text_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319"
+        },
+        {
+          "graph_id": "v6_graph_pottery",
+          "case_id": "v6_case_pottery",
+          "case_version_id": "v6_current_pottery",
+          "uuid": "pottery_source_2",
+          "document_id": "pottery_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285"
+        },
+        {
+          "graph_id": "v6_graph_pottery",
+          "case_id": "v6_case_pottery",
+          "case_version_id": "superseded",
+          "uuid": "pottery_old",
+          "document_id": "pottery_old",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Elmreach studio schedule permits two supervised glazing sessions only when a certified instructor is present. Unsupervised access is excluded.",
+          "fixture_text_sha256": "cfb48bfe76c7f967a7a7d6098622f7a08aa9fb968465dcfe8ba892d17f0d0319"
+        },
+        {
+          "graph_id": "v6_graph_pottery",
+          "case_id": "foreign_case",
+          "case_version_id": "v6_current_pottery",
+          "uuid": "pottery_foreign",
+          "document_id": "pottery_foreign",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Elmreach participant note: Sora says the group could assist if accessible benches are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "e2b0a10eebecbddbd947e3dbf8a45d3d5ac6c2f2a7443c842cb350857ae61285"
+        }
+      ],
+      "summary": "Unsupervised glazing access is approved and participants have committed to assist. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "Pottery glazing workshop",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "Unsupervised glazing access is approved and participants have committed to assist."
+      }
+    },
+    {
+      "id": "v6_projector",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v6_graph_projector",
+        "case_id": "v6_case_projector",
+        "case_version_id": "v6_current_projector"
+      },
+      "sources": [
+        {
+          "graph_id": "v6_graph_projector",
+          "case_id": "v6_case_projector",
+          "case_version_id": "v6_current_projector",
+          "uuid": "projector_source_1",
+          "document_id": "projector_document_1",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Larkmere hall booking note proposes borrowing a projector on November 12, pending lender confirmation. No reservation has been confirmed.",
+          "fixture_text_sha256": "4edb3eb0e8199d966a1ad59c66fe9bcaa6a1fbd8c0551517987372da357b14db"
+        },
+        {
+          "graph_id": "v6_graph_projector",
+          "case_id": "v6_case_projector",
+          "case_version_id": "v6_current_projector",
+          "uuid": "projector_source_2",
+          "document_id": "projector_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Larkmere follow-up says the lender requested a pickup-time clarification. It records no confirmation, delivery or payment.",
+          "fixture_text_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b"
+        },
+        {
+          "graph_id": "v6_graph_projector",
+          "case_id": "v6_case_projector",
+          "case_version_id": "superseded",
+          "uuid": "projector_old",
+          "document_id": "projector_old",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Larkmere hall booking note proposes borrowing a projector on November 12, pending lender confirmation. No reservation has been confirmed.",
+          "fixture_text_sha256": "4edb3eb0e8199d966a1ad59c66fe9bcaa6a1fbd8c0551517987372da357b14db"
+        },
+        {
+          "graph_id": "v6_graph_projector",
+          "case_id": "foreign_case",
+          "case_version_id": "v6_current_projector",
+          "uuid": "projector_foreign",
+          "document_id": "projector_foreign",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Larkmere follow-up says the lender requested a pickup-time clarification. It records no confirmation, delivery or payment.",
+          "fixture_text_sha256": "0e5a40b21c827bcc9965c9e1ae08158d5bc3231ee70bc461953373b52490af3b"
+        }
+      ],
+      "summary": "The projector reservation is confirmed and the equipment has been delivered and paid for. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "Projector reservation status",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The projector reservation is confirmed and the equipment has been delivered and paid for."
+      }
+    }
+  ]
+}

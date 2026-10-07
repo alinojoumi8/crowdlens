@@ -1,0 +1,176 @@
+[16:21:43] INFO: outlinesaved: report_synthetic
+[16:21:43] INFO: reportsaved: report_synthetic
+[16:21:43] INFO: Sectionsaved: report_synthetic/section_01.md
+[16:21:43] INFO: Sectionsaved: report_synthetic/section_02.md
+{"url": "http://127.0.0.1:44943", "output_dir": "/tmp/crowdlens-ecc-release-final-242b8999/browser-regressions-data"}
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /assets/Home-BgdbTM1l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /assets/Home-BwkCD-fp.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /api/simulation/history?limit=20 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /crowdlens-mark.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:44] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/ReportView-Ca3PJj6l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/report-BhwVWeSg.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/GraphPanel-Bx73uTCP.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/GraphPanel-Dfbsk6V4.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/graph-Cma-AEcX.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/SafeMarkdown-C3VDtGVW.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:47] "GET /assets/ReportView-B-Sk-v6K.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/graph/project/proj_d5f7d37daf7e HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:48] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+[16:21:48] INFO: Task created: task_id=64d5f46f-9b35-42ec-b155-30cc5d19f505 task_type=evidence_proposal metadata_keys=proposal_id,report_id
+127.0.0.1 - - [02/Oct/2026 16:21:48] "POST /api/report/report_synthetic/evidence-proposals HTTP/1.1" 202 -
+[16:21:48] INFO: Task status changed: task_id=64d5f46f-9b35-42ec-b155-30cc5d19f505 pending -> processing progress=5 message=Drafting from original sources
+[16:21:48] INFO: Task status changed: task_id=64d5f46f-9b35-42ec-b155-30cc5d19f505 processing -> completed progress=100 message=Task completed
+[16:21:48] INFO: Task completed: task_id=64d5f46f-9b35-42ec-b155-30cc5d19f505 result_keys=proposal_id,state
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic/evidence-proposals/proposal_8b1570918f9348649b02f487a39985ca HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "POST /api/report/report_synthetic/evidence-proposals/proposal_8b1570918f9348649b02f487a39985ca/reject HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/ReportView-Ca3PJj6l.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/GraphPanel-Dfbsk6V4.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/ReportView-B-Sk-v6K.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/report-BhwVWeSg.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/GraphPanel-Bx73uTCP.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/graph-Cma-AEcX.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /assets/SafeMarkdown-C3VDtGVW.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic/agent-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic/console-log?from_line=0 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic/progress HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/report/report_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/graph/synthetic_graph/quality HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/simulation/sim_synthetic HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/graph/project/proj_d5f7d37daf7e HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:49] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "POST /__synthetic/abandon-task HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /process/proj_23015a28c2f2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /home-styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/index-B1YDJrya.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/index-ibF_rNad.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/MainView-BVuBVHjE.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/GraphPanel-Dfbsk6V4.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/_plugin-vue_export-helper-CUmsg1Cw.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/Step2EnvSetup-0zt_Ufc0.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/MainView-BU36wCcT.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/GraphPanel-Bx73uTCP.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/simulation-ChRDXt9s.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/pendingUpload-nUeJwzLD.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/graph-Cma-AEcX.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/economySettings-M8O0gDiO.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /assets/Step2EnvSetup-Ctyzo2Ix.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /crowdlens-icon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /api/graph/project/proj_23015a28c2f2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:51] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:52] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:53] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:53] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:53] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:54] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:54] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:55] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:55] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:55] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:56] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:56] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:57] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:57] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:57] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:58] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:58] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:59] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:59] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:21:59] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:00] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:00] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:01] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:01] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:01] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:02] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:02] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:03] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:03] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:03] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:04] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:04] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:05] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:05] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:05] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:06] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:06] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:07] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:07] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:07] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:08] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:08] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:09] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:09] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:09] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:10] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:10] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:11] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:11] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:11] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:12] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:12] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:13] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:13] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:13] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:14] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:14] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:15] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:15] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:15] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:16] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:16] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:17] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:17] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:17] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:18] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:18] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:19] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:19] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:19] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:20] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:20] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:21] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:21] "GET /api/graph/project/proj_23015a28c2f2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:21] "GET /api/graph/task/79788c5e-e597-4bee-be1a-8880b2ad28e2 HTTP/1.1" 200 -
+[16:22:23] INFO: === Starting graph build ===
+[16:22:23] INFO: Task created: task_id=ea518f5b-fbc7-4293-bca4-7337661f7df9 task_type=Build graph: Synthetic abandoned graph build metadata_keys=project_id
+[16:22:23] INFO: Graph build task created: task_id=ea518f5b-fbc7-4293-bca4-7337661f7df9, project_id=proj_23015a28c2f2
+127.0.0.1 - - [02/Oct/2026 16:22:23] "POST /api/graph/build HTTP/1.1" 200 -
+[16:22:23] INFO: [ea518f5b-fbc7-4293-bca4-7337661f7df9] Starting graph build...
+[16:22:23] INFO: Task status changed: task_id=ea518f5b-fbc7-4293-bca4-7337661f7df9 pending -> processing progress=0 message=Initializing graph build service...
+127.0.0.1 - - [02/Oct/2026 16:22:23] "GET /api/graph/task/ea518f5b-fbc7-4293-bca4-7337661f7df9 HTTP/1.1" 200 -
+[16:22:24] INFO: [ea518f5b-fbc7-4293-bca4-7337661f7df9] Graph build completed: graph_id=synthetic_graph, nodes=1, edges=0
+[16:22:24] INFO: Task status changed: task_id=ea518f5b-fbc7-4293-bca4-7337661f7df9 processing -> completed progress=100 message=Graph build completed
+127.0.0.1 - - [02/Oct/2026 16:22:25] "GET /api/graph/task/ea518f5b-fbc7-4293-bca4-7337661f7df9 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:25] "GET /api/graph/project/proj_23015a28c2f2 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:25] "GET /api/graph/data/synthetic_graph HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:22:26] "GET /api/graph/project/proj_23015a28c2f2 HTTP/1.1" 200 -

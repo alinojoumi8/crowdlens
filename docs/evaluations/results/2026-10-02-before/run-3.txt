@@ -1,0 +1,96 @@
+.......................FF............................................... [ 43%]
+........................................................................ [ 87%]
+....................                                                     [100%]
+=================================== FAILURES ===================================
+____________ test_lost_root_response_retry_does_not_dispatch_twice _____________
+
+root_admission = (<Flask 'test_evidence_quality_faults'>, <app.storage.control_db.ControlDatabase object at 0x7736e56473d0>, ['93823e45-1c73-4d65-9202-68ad744a9299', 'd2fdec99-6586-434b-b8c1-03d6e8194248'])
+record_property = <function record_property.<locals>.append_property at 0x7736e56fdf80>
+
+    def test_lost_root_response_retry_does_not_dispatch_twice(root_admission, record_property):
+        app, db, dispatched = root_admission
+        client = app.test_client()
+        # The first response is received only by the test observer, lost to the caller.
+        first = client.post('/api/report/generate', json=ROOT_REQUEST)
+        retry = client.post('/api/report/generate', json=ROOT_REQUEST)
+>       assert_single_admission([first, retry], db, dispatched, record_property)
+
+tests/test_evidence_quality_faults.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+responses = [<WrapperTestResponse 326 bytes [200 OK]>, <WrapperTestResponse 326 bytes [200 OK]>]
+db = <app.storage.control_db.ControlDatabase object at 0x7736e56473d0>
+dispatched = ['93823e45-1c73-4d65-9202-68ad744a9299', 'd2fdec99-6586-434b-b8c1-03d6e8194248']
+record_property = <function record_property.<locals>.append_property at 0x7736e56fdf80>
+
+    def assert_single_admission(responses, db, dispatched, record_property):
+        statuses = [response.status_code for response in responses]
+        accepted = [response.json['data'] for response in responses if response.status_code in {200, 202}]
+        observation = {'statuses': statuses, 'task_ids': [row['task_id'] for row in accepted],
+                       'report_ids': [row['report_id'] for row in accepted],
+                       'persisted_tasks': len(db.list_tasks()), 'dispatches': len(dispatched),
+                       'real_model_calls': 0, 'generation_executed': False}
+        record_property('fault_observation', json.dumps(observation, sort_keys=True))
+        assert all(status in {200, 202, 409} for status in statuses), observation
+        assert accepted, observation
+>       assert len(db.list_tasks()) == 1, observation
+E       AssertionError: {'dispatches': 2, 'generation_executed': False, 'persisted_tasks': 2, 'real_model_calls': 0, ...}
+E       assert 2 == 1
+E        +  where 2 = len([{'created_at': '2026-10-02T15:30:13.763202', 'error': None, 'execution': {'attempt_id': 'ab2e6103e44a4537a99b9f6db529...0969443.7615154, 'owner': {'pid': 1327186, 'worker_id': '1237f0f6cf92476e84ad42eb856f24a7'}, ...}, 'message': '', ...}])
+E        +    where [{'created_at': '2026-10-02T15:30:13.763202', 'error': None, 'execution': {'attempt_id': 'ab2e6103e44a4537a99b9f6db529...0969443.7615154, 'owner': {'pid': 1327186, 'worker_id': '1237f0f6cf92476e84ad42eb856f24a7'}, ...}, 'message': '', ...}] = <bound method ControlDatabase.list_tasks of <app.storage.control_db.ControlDatabase object at 0x7736e56473d0>>()
+E        +      where <bound method ControlDatabase.list_tasks of <app.storage.control_db.ControlDatabase object at 0x7736e56473d0>> = <app.storage.control_db.ControlDatabase object at 0x7736e56473d0>.list_tasks
+
+tests/test_evidence_quality_faults.py:53: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[15:30:13] INFO: Task created: task_id=93823e45-1c73-4d65-9202-68ad744a9299 task_type=report_generate metadata_keys=graph_id,report_depth,report_id,report_mode,simulation_id
+[15:30:13] INFO: Task created: task_id=d2fdec99-6586-434b-b8c1-03d6e8194248 task_type=report_generate metadata_keys=graph_id,report_depth,report_id,report_mode,simulation_id
+_______________ test_concurrent_root_requests_admit_one_attempt ________________
+
+root_admission = (<Flask 'test_evidence_quality_faults'>, <app.storage.control_db.ControlDatabase object at 0x7736e554a410>, ['137c44c2-2085-4951-a066-3507d6a78536', '424a7d96-190e-498e-9880-5713f8bdc796'])
+record_property = <function record_property.<locals>.append_property at 0x7736e55a94e0>
+
+    def test_concurrent_root_requests_admit_one_attempt(root_admission, record_property):
+        app, db, dispatched = root_admission
+        barrier = Barrier(2)
+        def submit(_):
+            with app.test_client() as client:
+                barrier.wait(timeout=5)
+                return client.post('/api/report/generate', json=ROOT_REQUEST)
+        with ThreadPoolExecutor(max_workers=2) as workers:
+            responses = list(workers.map(submit, range(2)))
+>       assert_single_admission(responses, db, dispatched, record_property)
+
+tests/test_evidence_quality_faults.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+responses = [<WrapperTestResponse 326 bytes [200 OK]>, <WrapperTestResponse 326 bytes [200 OK]>]
+db = <app.storage.control_db.ControlDatabase object at 0x7736e554a410>
+dispatched = ['137c44c2-2085-4951-a066-3507d6a78536', '424a7d96-190e-498e-9880-5713f8bdc796']
+record_property = <function record_property.<locals>.append_property at 0x7736e55a94e0>
+
+    def assert_single_admission(responses, db, dispatched, record_property):
+        statuses = [response.status_code for response in responses]
+        accepted = [response.json['data'] for response in responses if response.status_code in {200, 202}]
+        observation = {'statuses': statuses, 'task_ids': [row['task_id'] for row in accepted],
+                       'report_ids': [row['report_id'] for row in accepted],
+                       'persisted_tasks': len(db.list_tasks()), 'dispatches': len(dispatched),
+                       'real_model_calls': 0, 'generation_executed': False}
+        record_property('fault_observation', json.dumps(observation, sort_keys=True))
+        assert all(status in {200, 202, 409} for status in statuses), observation
+        assert accepted, observation
+>       assert len(db.list_tasks()) == 1, observation
+E       AssertionError: {'dispatches': 2, 'generation_executed': False, 'persisted_tasks': 2, 'real_model_calls': 0, ...}
+E       assert 2 == 1
+E        +  where 2 = len([{'created_at': '2026-10-02T15:30:13.886616', 'error': None, 'execution': {'attempt_id': 'f00616b4531845399e12824b36f0...0969443.8881106, 'owner': {'pid': 1327186, 'worker_id': '54bf4acf6ff84af78ebc6814580c8d1f'}, ...}, 'message': '', ...}])
+E        +    where [{'created_at': '2026-10-02T15:30:13.886616', 'error': None, 'execution': {'attempt_id': 'f00616b4531845399e12824b36f0...0969443.8881106, 'owner': {'pid': 1327186, 'worker_id': '54bf4acf6ff84af78ebc6814580c8d1f'}, ...}, 'message': '', ...}] = <bound method ControlDatabase.list_tasks of <app.storage.control_db.ControlDatabase object at 0x7736e554a410>>()
+E        +      where <bound method ControlDatabase.list_tasks of <app.storage.control_db.ControlDatabase object at 0x7736e554a410>> = <app.storage.control_db.ControlDatabase object at 0x7736e554a410>.list_tasks
+
+tests/test_evidence_quality_faults.py:53: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[15:30:13] INFO: Task created: task_id=137c44c2-2085-4951-a066-3507d6a78536 task_type=report_generate metadata_keys=graph_id,report_depth,report_id,report_mode,simulation_id
+[15:30:13] INFO: Task created: task_id=424a7d96-190e-498e-9880-5713f8bdc796 task_type=report_generate metadata_keys=graph_id,report_depth,report_id,report_mode,simulation_id
+---- generated xml file: /tmp/crowdlens-ecc-eval-before-20261002/run-3.xml -----
+=========================== short test summary info ============================
+FAILED tests/test_evidence_quality_faults.py::test_lost_root_response_retry_does_not_dispatch_twice
+FAILED tests/test_evidence_quality_faults.py::test_concurrent_root_requests_admit_one_attempt
+2 failed, 162 passed in 5.43s

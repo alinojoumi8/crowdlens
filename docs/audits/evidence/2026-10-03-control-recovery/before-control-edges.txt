@@ -1,0 +1,86 @@
+FF.F.F                                                                   [100%]
+=================================== FAILURES ===================================
+______ test_partial_usage_is_unknown_and_known_fields_are_still_measured _______
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-45/test_partial_usage_is_unknown_0')
+
+    def test_partial_usage_is_unknown_and_known_fields_are_still_measured(tmp_path):
+        ledger=WorkflowLedger(tmp_path/'ledger.db');wid=authorize(ledger)
+        ticket=ledger.admit(wid,1,'report','synthetic','http://127.0.0.1:1/anthropic')
+        ledger.finish(ticket,status='response',usage={'output_tokens':7},http_status=200)
+        status=ledger.status(wid)
+>       assert status['unknown_usage_attempts']==1
+E       assert 0 == 1
+
+tests/test_control_edges.py:27: AssertionError
+_________ test_successful_process_exit_cannot_complete_partial_rounds __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-45/test_successful_process_exit_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x73bc05787b90>
+
+    def test_successful_process_exit_cannot_complete_partial_rounds(tmp_path,monkeypatch):
+        state=SimulationRunState('sim_partial',runner_status=RunnerStatus.RUNNING,
+            total_rounds=2,current_round=1,twitter_current_round=1,twitter_running=True)
+        process=SimpleNamespace(poll=lambda:0,returncode=0)
+        runner(monkeypatch,tmp_path,state,process)
+        folder=tmp_path/state.simulation_id/'twitter';folder.mkdir(parents=True)
+        (folder/'actions.jsonl').write_text(json.dumps({'event_type':'simulation_end','total_rounds':2})+'\n')
+        ledger=WorkflowLedger(tmp_path/'ledger.db');wid=authorize(ledger,1)
+        ledger.admit(wid,1,'simulation','synthetic','http://127.0.0.1:1/anthropic')
+        with execution_scope(ledger,wid,'simulation'):
+            SimulationRunner._monitor_simulation(state.simulation_id)
+>       assert state.runner_status==RunnerStatus.FAILED
+E       AssertionError: assert <RunnerStatus...: 'completed'> == <RunnerStatus...LED: 'failed'>
+E         
+E         - failed
+E         + completed
+
+tests/test_control_edges.py:42: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[02:27:00] INFO: Twitter simulation completed: sim_partial, total_rounds=2, total_actions=None
+[02:27:00] INFO: All platform simulations completed: sim_partial
+[02:27:00] INFO: Simulation completed: sim_partial
+________ test_restart_archives_partial_evidence_before_clearing_runtime ________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-45/test_restart_archives_partial_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x73bc05829bd0>
+
+    def test_restart_archives_partial_evidence_before_clearing_runtime(tmp_path,monkeypatch):
+        monkeypatch.setattr(SimulationRunner,'RUN_STATE_DIR',str(tmp_path))
+        monkeypatch.setattr(SimulationRunner,'_repository',None)
+        monkeypatch.setattr(SimulationRunner,'_run_states',{})
+        folder=tmp_path/'sim_partial';(folder/'twitter').mkdir(parents=True)
+        original=b'{"round":1,"result":"preserved partial"}\n'
+        (folder/'twitter'/'actions.jsonl').write_bytes(original)
+        (folder/'run_state.json').write_text('{"runner_status":"failed"}')
+        result=SimulationRunner.cleanup_simulation_logs('sim_partial')
+        assert result['success']
+>       archive=folder/result['archive']
+E       KeyError: 'archive'
+
+tests/test_control_edges.py:69: KeyError
+----------------------------- Captured stdout call -----------------------------
+[02:27:00] INFO: Cleanup simulation logs completed: sim_partial, deleted files: ['run_state.json', 'twitter/actions.jsonl']
+_______ test_invalid_resource_authorization_has_no_partial_side_effects ________
+
+controlled = (<FlaskClient <Flask 'test_execution_api'>>, <app.services.workflow_execution.WorkflowLedger object at 0x73bc0581ecd0>, <app.services.task_execution.TaskRuntime object at 0x73bc0581e650>, [])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x73bc0581ce50>
+
+    def test_invalid_resource_authorization_has_no_partial_side_effects(controlled,monkeypatch):
+        client,ledger,runtime,calls=controlled
+        from app.models.project import ProjectManager
+        monkeypatch.setattr(ProjectManager,'get_project',lambda identifier:identifier=='valid')
+        response=client.post('/api/execution/authorize',json={**terms(),'resources':['project:valid','project:missing']})
+        assert response.status_code==400
+>       assert ledger.resolve('project:valid') is None
+E       AssertionError: assert 'wf_d7a0cd63df294c3a8149a3ce046d8b88' is None
+E        +  where 'wf_d7a0cd63df294c3a8149a3ce046d8b88' = <bound method WorkflowLedger.resolve of <app.services.workflow_execution.WorkflowLedger object at 0x73bc0581ecd0>>('project:valid')
+E        +    where <bound method WorkflowLedger.resolve of <app.services.workflow_execution.WorkflowLedger object at 0x73bc0581ecd0>> = <app.services.workflow_execution.WorkflowLedger object at 0x73bc0581ecd0>.resolve
+
+tests/test_control_edges.py:96: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_control_edges.py::test_partial_usage_is_unknown_and_known_fields_are_still_measured
+FAILED tests/test_control_edges.py::test_successful_process_exit_cannot_complete_partial_rounds
+FAILED tests/test_control_edges.py::test_restart_archives_partial_evidence_before_clearing_runtime
+FAILED tests/test_control_edges.py::test_invalid_resource_authorization_has_no_partial_side_effects
+4 failed, 2 passed in 1.14s

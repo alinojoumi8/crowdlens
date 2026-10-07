@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "gpt-6-astra-max-source-review-v5",
+  "reviewer_kind": "ai",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "created_at": "2026-10-04T12:12:11.754201+00:00",
+  "status": "FROZEN_BEFORE_CANDIDATE_CONTENT_REVIEW",
+  "method": "Only the two supplied v5 packet tasks, complete fictional originals, source metadata, structural field names and blank forms were displayed before these material source facts were frozen. No candidate prose, candidate summaries or original comparison summary was displayed. These facts will not be revised after candidate review. Only reviewer-directory material is within the input boundary.",
+  "packets": [
+    {
+      "packet_id": "packet_813bf897be6b",
+      "packet_sha256": "042d8948d70b72c2b3c876ffc3e991457d4a407b9ff1303de6ffdda88d1061a1",
+      "task": "Reconcile the original documents, preserving conditions, attribution, populations and evidence limits.",
+      "frozen_at": "2026-10-04T12:12:11.754201+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "P813-F01",
+          "text": "The Meadowbank visitor log records 72 public visitors at the morning exhibition session.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "record.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P813-F02",
+          "text": "Four staff attended the morning session separately and are excluded from its count of 72 public visitors.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "record.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P813-F03",
+          "text": "The Meadowbank afternoon session had 55 public visitors.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P813-F04",
+          "text": "Staff attendance was not recorded for the afternoon session.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "P813-F05",
+          "text": "Neither session was a vote or endorsement.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packet_id": "packet_e0107f297db0",
+      "packet_sha256": "5987fc11b3417ce774f277ca5acd52365d10539619ed50bb9052ce4642dfa64b",
+      "task": "Reconcile the original documents, preserving conditions, attribution, populations and evidence limits.",
+      "frozen_at": "2026-10-04T12:12:11.754201+00:00",
+      "reference_facts": [
+        {
+          "fact_id": "PE01-F01",
+          "text": "The Brookvale pool schedule permits two supervised evening sessions.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "record.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE01-F02",
+          "text": "Permission for those two sessions applies only if two lifeguards are present.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "record.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE01-F03",
+          "text": "A permanent evening opening is not approved.",
+          "sources": [
+            {
+              "source_id": "S01",
+              "document_id": "D01",
+              "filename": "record.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE01-F04",
+          "text": "Nia says the group could support the two evening sessions if accessible changing facilities are confirmed.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        },
+        {
+          "fact_id": "PE01-F05",
+          "text": "Nia's statement is possible future support, not an existing endorsement.",
+          "sources": [
+            {
+              "source_id": "S02",
+              "document_id": "D02",
+              "filename": "followup.txt",
+              "locator": {
+                "page": 1,
+                "paragraph": 1,
+                "scope": "complete_frozen_original_document"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

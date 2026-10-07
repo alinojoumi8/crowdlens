@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v8",
+  "cases": [
+    {
+      "id": "v8_puppets",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v8_puppets_graph_id",
+        "case_id": "v8_puppets_case_id",
+        "case_version_id": "v8_puppets_case_version_id"
+      },
+      "sources": [
+        {
+          "graph_id": "v8_puppets_graph_id",
+          "case_id": "v8_puppets_case_id",
+          "case_version_id": "v8_puppets_case_version_id",
+          "uuid": "puppets_source_0",
+          "document_id": "puppets_document_0",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Reedvale puppet room permits two supervised building sessions only when a workshop leader is present. Late-night access is excluded.",
+          "fixture_text_sha256": "d27a00e9aa20069becd4dc3a3d2aed92e5cd6b39b225766a6e08c9fadbe7980b"
+        },
+        {
+          "graph_id": "v8_puppets_graph_id",
+          "case_id": "v8_puppets_case_id",
+          "case_version_id": "v8_puppets_case_version_id",
+          "uuid": "puppets_source_1",
+          "document_id": "puppets_document_1",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Reedvale participant note: Mavi says the team might assist if reachable workstations are confirmed and the coordinator agrees. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "af619727ff620af8400359a6ef13b84c4480249a89230723a5ebc9ec83037c40"
+        },
+        {
+          "graph_id": "v8_puppets_graph_id",
+          "case_id": "v8_puppets_case_id",
+          "case_version_id": "superseded",
+          "uuid": "puppets_source_2",
+          "document_id": "puppets_document_2",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Reedvale puppet room permits two supervised building sessions only when a workshop leader is present. Late-night access is excluded.",
+          "fixture_text_sha256": "d27a00e9aa20069becd4dc3a3d2aed92e5cd6b39b225766a6e08c9fadbe7980b"
+        },
+        {
+          "graph_id": "v8_puppets_graph_id",
+          "case_id": "foreign_case",
+          "case_version_id": "v8_puppets_case_version_id",
+          "uuid": "puppets_source_3",
+          "document_id": "puppets_document_3",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Reedvale participant note: Mavi says the team might assist if reachable workstations are confirmed and the coordinator agrees. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "af619727ff620af8400359a6ef13b84c4480249a89230723a5ebc9ec83037c40"
+        }
+      ],
+      "summary": "The team has committed to assist and late-night access is approved. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "puppets sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The team has committed to assist and late-night access is approved."
+      }
+    },
+    {
+      "id": "v8_maps",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v8_maps_graph_id",
+        "case_id": "v8_maps_case_id",
+        "case_version_id": "v8_maps_case_version_id"
+      },
+      "sources": [
+        {
+          "graph_id": "v8_maps_graph_id",
+          "case_id": "v8_maps_case_id",
+          "case_version_id": "v8_maps_case_version_id",
+          "uuid": "maps_source_0",
+          "document_id": "maps_document_0",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Birchhaven map room permits five afternoon sorting sessions only when a staff custodian is present. Weekend access is excluded.",
+          "fixture_text_sha256": "9017fee8d693cb3c72fd754a82f89e9a4fe2dca5d4cfd480fca6bf74fa705f04"
+        },
+        {
+          "graph_id": "v8_maps_graph_id",
+          "case_id": "v8_maps_case_id",
+          "case_version_id": "v8_maps_case_version_id",
+          "uuid": "maps_source_1",
+          "document_id": "maps_document_1",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Birchhaven participant note: If accessible carts are confirmed, Nori says the group could assist. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "ec0f6d92bb8bc8c2cb01d473fd7624f8c365093b073fc36a93c99ae98251cf82"
+        },
+        {
+          "graph_id": "v8_maps_graph_id",
+          "case_id": "v8_maps_case_id",
+          "case_version_id": "superseded",
+          "uuid": "maps_source_2",
+          "document_id": "maps_document_2",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Birchhaven map room permits five afternoon sorting sessions only when a staff custodian is present. Weekend access is excluded.",
+          "fixture_text_sha256": "9017fee8d693cb3c72fd754a82f89e9a4fe2dca5d4cfd480fca6bf74fa705f04"
+        },
+        {
+          "graph_id": "v8_maps_graph_id",
+          "case_id": "foreign_case",
+          "case_version_id": "v8_maps_case_version_id",
+          "uuid": "maps_source_3",
+          "document_id": "maps_document_3",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Birchhaven participant note: If accessible carts are confirmed, Nori says the group could assist. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "ec0f6d92bb8bc8c2cb01d473fd7624f8c365093b073fc36a93c99ae98251cf82"
+        }
+      ],
+      "summary": "The group has committed to assist and weekend access is approved. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "maps sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The group has committed to assist and weekend access is approved."
+      }
+    }
+  ]
+}

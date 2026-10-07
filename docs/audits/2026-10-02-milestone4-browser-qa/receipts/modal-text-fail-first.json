@@ -1,0 +1,914 @@
+[
+  {
+    "width": 375,
+    "textContrast": [
+      {
+        "text": "SIM_SYNTHE",
+        "selector": "modal-id",
+        "foreground": "rgb(17, 24, 39)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "16px",
+        "ratio": 17.73971700407407,
+        "minimum": 4.5
+      },
+      {
+        "text": "2/2 rounds",
+        "selector": "modal-progress completed",
+        "foreground": "rgb(0, 119, 79)",
+        "background": [
+          231.1,
+          248,
+          242.4
+        ],
+        "fontSize": "12px",
+        "ratio": 5.095127546490597,
+        "minimum": 4.5
+      },
+      {
+        "text": "2026-10-02 12:00",
+        "selector": "modal-create-time",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "×",
+        "selector": "modal-close",
+        "foreground": "rgb(156, 163, 175)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "24px",
+        "ratio": 2.5388412065932826,
+        "minimum": 3
+      },
+      {
+        "text": "Simulation Requirement",
+        "selector": "modal-label",
+        "foreground": "rgb(107, 114, 128)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 4.834490081424352,
+        "minimum": 4.5
+      },
+      {
+        "text": "Review the synthetic hearing record.",
+        "selector": "modal-requirement",
+        "foreground": "rgb(55, 65, 81)",
+        "background": [
+          249,
+          250,
+          251
+        ],
+        "fontSize": "15.2px",
+        "ratio": 9.863254791756054,
+        "minimum": 4.5
+      },
+      {
+        "text": "Associated Files",
+        "selector": "modal-label",
+        "foreground": "rgb(107, 114, 128)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 4.834490081424352,
+        "minimum": 4.5
+      },
+      {
+        "text": "TXT",
+        "selector": "file-tag txt",
+        "foreground": "rgb(85, 85, 85)",
+        "background": [
+          240,
+          240,
+          240
+        ],
+        "fontSize": "8.8px",
+        "ratio": 6.541862573644603,
+        "minimum": 4.5
+      },
+      {
+        "text": "synthetic-record.txt",
+        "selector": "modal-file-name",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "13.6px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation Playback",
+        "selector": "divider-text",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "11.2px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Graph: Ready",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Setup: Ready",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation: Complete",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Report: Needs review",
+        "selector": "phase-status phase-warn",
+        "foreground": "rgb(180, 83, 9)",
+        "background": [
+          255,
+          251,
+          235
+        ],
+        "fontSize": "9.92px",
+        "ratio": 4.842409024801452,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step1",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Graph Construction",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step2",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Environment Setup",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step3",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation Run",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step4",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Analysis Report",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Open the report to continue analysis, retry failed sections, or enter deep interaction.",
+        "selector": "hint-text",
+        "foreground": "rgb(156, 163, 175)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "11.2px",
+        "ratio": 2.5388412065932826,
+        "minimum": 4.5
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "textContrast": [
+      {
+        "text": "SIM_SYNTHE",
+        "selector": "modal-id",
+        "foreground": "rgb(17, 24, 39)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "16px",
+        "ratio": 17.73971700407407,
+        "minimum": 4.5
+      },
+      {
+        "text": "2/2 rounds",
+        "selector": "modal-progress completed",
+        "foreground": "rgb(0, 119, 79)",
+        "background": [
+          231.1,
+          248,
+          242.4
+        ],
+        "fontSize": "12px",
+        "ratio": 5.095127546490597,
+        "minimum": 4.5
+      },
+      {
+        "text": "2026-10-02 12:00",
+        "selector": "modal-create-time",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "×",
+        "selector": "modal-close",
+        "foreground": "rgb(156, 163, 175)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "24px",
+        "ratio": 2.5388412065932826,
+        "minimum": 3
+      },
+      {
+        "text": "Simulation Requirement",
+        "selector": "modal-label",
+        "foreground": "rgb(107, 114, 128)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 4.834490081424352,
+        "minimum": 4.5
+      },
+      {
+        "text": "Review the synthetic hearing record.",
+        "selector": "modal-requirement",
+        "foreground": "rgb(55, 65, 81)",
+        "background": [
+          249,
+          250,
+          251
+        ],
+        "fontSize": "15.2px",
+        "ratio": 9.863254791756054,
+        "minimum": 4.5
+      },
+      {
+        "text": "Associated Files",
+        "selector": "modal-label",
+        "foreground": "rgb(107, 114, 128)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 4.834490081424352,
+        "minimum": 4.5
+      },
+      {
+        "text": "TXT",
+        "selector": "file-tag txt",
+        "foreground": "rgb(85, 85, 85)",
+        "background": [
+          240,
+          240,
+          240
+        ],
+        "fontSize": "8.8px",
+        "ratio": 6.541862573644603,
+        "minimum": 4.5
+      },
+      {
+        "text": "synthetic-record.txt",
+        "selector": "modal-file-name",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "13.6px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation Playback",
+        "selector": "divider-text",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "11.2px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Graph: Ready",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Setup: Ready",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation: Complete",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Report: Needs review",
+        "selector": "phase-status phase-warn",
+        "foreground": "rgb(180, 83, 9)",
+        "background": [
+          255,
+          251,
+          235
+        ],
+        "fontSize": "9.92px",
+        "ratio": 4.842409024801452,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step1",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Graph Construction",
+        "selector": "btn-text",
+        "foreground": "rgb(17, 24, 39)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 17.73971700407407,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step2",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Environment Setup",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step3",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation Run",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step4",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Analysis Report",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Open the report to continue analysis, retry failed sections, or enter deep interaction.",
+        "selector": "hint-text",
+        "foreground": "rgb(156, 163, 175)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "11.2px",
+        "ratio": 2.5388412065932826,
+        "minimum": 4.5
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "textContrast": [
+      {
+        "text": "SIM_SYNTHE",
+        "selector": "modal-id",
+        "foreground": "rgb(17, 24, 39)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "16px",
+        "ratio": 17.73971700407407,
+        "minimum": 4.5
+      },
+      {
+        "text": "2/2 rounds",
+        "selector": "modal-progress completed",
+        "foreground": "rgb(0, 119, 79)",
+        "background": [
+          231.1,
+          248,
+          242.4
+        ],
+        "fontSize": "12px",
+        "ratio": 5.095127546490597,
+        "minimum": 4.5
+      },
+      {
+        "text": "2026-10-02 12:00",
+        "selector": "modal-create-time",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "×",
+        "selector": "modal-close",
+        "foreground": "rgb(156, 163, 175)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "24px",
+        "ratio": 2.5388412065932826,
+        "minimum": 3
+      },
+      {
+        "text": "Simulation Requirement",
+        "selector": "modal-label",
+        "foreground": "rgb(107, 114, 128)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 4.834490081424352,
+        "minimum": 4.5
+      },
+      {
+        "text": "Review the synthetic hearing record.",
+        "selector": "modal-requirement",
+        "foreground": "rgb(55, 65, 81)",
+        "background": [
+          249,
+          250,
+          251
+        ],
+        "fontSize": "15.2px",
+        "ratio": 9.863254791756054,
+        "minimum": 4.5
+      },
+      {
+        "text": "Associated Files",
+        "selector": "modal-label",
+        "foreground": "rgb(107, 114, 128)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 4.834490081424352,
+        "minimum": 4.5
+      },
+      {
+        "text": "TXT",
+        "selector": "file-tag txt",
+        "foreground": "rgb(85, 85, 85)",
+        "background": [
+          240,
+          240,
+          240
+        ],
+        "fontSize": "8.8px",
+        "ratio": 6.541862573644603,
+        "minimum": 4.5
+      },
+      {
+        "text": "synthetic-record.txt",
+        "selector": "modal-file-name",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "13.6px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation Playback",
+        "selector": "divider-text",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "11.2px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Graph: Ready",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Setup: Ready",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation: Complete",
+        "selector": "phase-status phase-ok",
+        "foreground": "rgb(4, 120, 87)",
+        "background": [
+          236,
+          253,
+          245
+        ],
+        "fontSize": "9.92px",
+        "ratio": 5.205862916797388,
+        "minimum": 4.5
+      },
+      {
+        "text": "Report: Needs review",
+        "selector": "phase-status phase-warn",
+        "foreground": "rgb(180, 83, 9)",
+        "background": [
+          255,
+          251,
+          235
+        ],
+        "fontSize": "9.92px",
+        "ratio": 4.842409024801452,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step1",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Graph Construction",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step2",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Environment Setup",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step3",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Simulation Run",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Step4",
+        "selector": "btn-step",
+        "foreground": "rgb(98, 107, 122)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "9.6px",
+        "ratio": 5.379869750937995,
+        "minimum": 4.5
+      },
+      {
+        "text": "Analysis Report",
+        "selector": "btn-text",
+        "foreground": "rgb(75, 85, 99)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "12px",
+        "ratio": 7.557378129674007,
+        "minimum": 4.5
+      },
+      {
+        "text": "Open the report to continue analysis, retry failed sections, or enter deep interaction.",
+        "selector": "hint-text",
+        "foreground": "rgb(156, 163, 175)",
+        "background": [
+          255,
+          255,
+          255
+        ],
+        "fontSize": "11.2px",
+        "ratio": 2.5388412065932826,
+        "minimum": 4.5
+      }
+    ]
+  }
+]

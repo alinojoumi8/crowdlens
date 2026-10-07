@@ -1,0 +1,122 @@
+[
+  {
+    "action": "grounding_correction_start",
+    "section_index": 1,
+    "section_title": "Source Facts and Positions",
+    "validation_issues": [
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "There is no survey, crash count, business revenue measurement or final decision in this source"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "do not represent all residents,"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "A bike lane alone does not answer those needs"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "moved,"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "softened"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "converged"
+      }
+    ],
+    "accepted": null
+  },
+  {
+    "action": "grounding_correction_result",
+    "section_index": 1,
+    "section_title": "Source Facts and Positions",
+    "validation_issues": [],
+    "accepted": true
+  },
+  {
+    "action": "grounding_correction_start",
+    "section_index": 2,
+    "section_title": "Recorded Simulated Discussion",
+    "validation_issues": [
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "No survey, crash, revenue or permanence data is introduced"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "debated"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "I can support this pilot if the intersections are actually protected (concrete or planters, not just paint) and if cyclist counts are published before any talk of permanence. Reversible + measured = worth trying. Placed for permanence = no."
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "concrete or planters"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "one commuter data point,"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "No decision is made on permanence."
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "protected"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "Support is not endorsement of permanence"
+      },
+      {
+        "code": "unverified_quotation",
+        "blocking": true,
+        "message": "Quotation is not an exact referenced original-source span or recorded model response.",
+        "quote": "speaks"
+      }
+    ],
+    "accepted": null
+  },
+  {
+    "action": "grounding_correction_result",
+    "section_index": 2,
+    "section_title": "Recorded Simulated Discussion",
+    "validation_issues": [],
+    "accepted": true
+  }
+]

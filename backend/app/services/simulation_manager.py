@@ -13,6 +13,7 @@ from datetime import datetime
 from enum import Enum
 
 from ..config import Config
+from .task_execution import simulation_write, publication_guard
 from ..utils.logger import get_logger
 from ..utils.timing import PhaseTimer
 from .entity_reader import EntityReader, FilteredEntities
@@ -176,6 +177,7 @@ class SimulationManager:
         os.makedirs(sim_dir, exist_ok=True)
         return sim_dir
     
+    @simulation_write
     def _save_simulation_state(self, state: SimulationState):
         """Save simulation state to file"""
         sim_dir = self._get_simulation_dir(state.simulation_id)
@@ -190,8 +192,7 @@ class SimulationManager:
     
     def _load_simulation_state(self, simulation_id: str) -> Optional[SimulationState]:
         """Load simulation state from file"""
-        if simulation_id in self._simulations:
-            return self._simulations[simulation_id]
+        # Filesystem state may have been repaired by another backend.
         
         sim_dir = self._get_simulation_dir(simulation_id)
         state_file = os.path.join(sim_dir, "state.json")
@@ -283,7 +284,7 @@ class SimulationManager:
         defined_entity_types: Optional[List[str]] = None,
         use_llm_for_profiles: bool = True,
         progress_callback: Optional[callable] = None,
-        parallel_profile_count: int = 3,
+        parallel_profile_count: int = None,
         storage: 'GraphStorage' = None,
         forecast_settings: Optional[ForecastSettings] = None,
         prediction_settings: Optional[Dict[str, Any]] = None,
@@ -434,7 +435,7 @@ class SimulationManager:
                     use_llm=use_llm_for_profiles,
                     progress_callback=profile_progress,
                     graph_id=state.graph_id,  # Pass graph_id for graph retrieval
-                    parallel_count=parallel_profile_count,  # Parallel generation count
+                    parallel_count=parallel_profile_count or state.prediction_settings.get('profile_parallelism', 3),
                     realtime_output_path=realtime_output_path,  # Real-time save path
                     output_platform=realtime_platform  # Output format
                 )
@@ -501,6 +502,7 @@ class SimulationManager:
                     enable_twitter=state.enable_twitter,
                     enable_reddit=state.enable_reddit,
                     forecast_settings=forecast_settings.to_dict(),
+                    prediction_settings=state.prediction_settings,
                 )
 
             emit_progress(
@@ -512,7 +514,7 @@ class SimulationManager:
 
             # Save config files
             config_path = os.path.join(sim_dir, "simulation_config.json")
-            with timing.time("save_config", label="Persist simulation config"):
+            with publication_guard(), timing.time("save_config", label="Persist simulation config"):
                 with open(config_path, 'w', encoding='utf-8') as f:
                     f.write(sim_params.to_json())
             

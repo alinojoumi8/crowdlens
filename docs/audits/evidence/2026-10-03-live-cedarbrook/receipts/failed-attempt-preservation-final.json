@@ -1,0 +1,19 @@
+{
+  "checked": 13,
+  "all_unchanged": true,
+  "files_sha256": {
+    "env_status.json": "577217d71cfd3ccc032006ac92621b9c4182e6a5606c3a996773dcb584a739a7",
+    "twitter_profiles.csv": "5ebe5c91ec0bc98611e62696c95b3a980b76ca1f1ab0c458c3180bed9debff1c",
+    "state.json": "8cb0837deb494bfb793ff34a271b5a0ceed3bf140ade93335f62161ef5bb601b",
+    "twitter_simulation.db": "c2abb43b1a6201b7f95d8d9d8df11df5e7b0f63f107c2bce477959e6fef68f98",
+    "reddit_profiles.json": "128b3bfbba8f83f29b4e77ef4bdc7915b7c15459a9eedd6a470d524be62ea3d1",
+    "run_state.json": "2b84eda2f60031fda989a8bb50c7800b201e92b835534a793c45412e52bcb6c5",
+    "simulation_config.json": "1dec61260327334a40286d60256108dbfce78fd288815119819124401a3cea70",
+    "simulation.log": "0f089c42b5d27a936d2c86b947de3d243038620105952e30cf7eec3e31a5acf8",
+    "log/social.agent.log": "27c8c6bc4d56552e5e917ed8582d3d31a468f41b1cc756bd854b6ec1f3d401d2",
+    "log/oasis.env.log": "1282d85c5d1311d976b0710f38abf2868be6106d2d779145831d18d493d74178",
+    "log/table.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "log/social.rec.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "log/social.twitter.log": "af219457dcc91b080dcf07fee88398c8a33076197bdbeda4a98f6ee4e816e1da"
+  }
+}

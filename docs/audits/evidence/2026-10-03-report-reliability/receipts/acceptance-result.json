@@ -1,0 +1,35 @@
+{
+  "candidate": "7f4d68e2d6b1184d299aa9ad81be95aeea8b446f",
+  "runtime_source_sha256": "311188690e104b88e865e180fda0367c7616ea4c69ea0c07a3247ad00bb64e20",
+  "workflow_id": "wf_e39ea20ed1fd4f0aaff7c8f27c52a32a",
+  "project_id": "proj_cab56063dd57",
+  "graph_id": "a4f570c2-385a-4c5a-a441-acf564cf4fa9",
+  "simulation_id": "sim_2757a283087d",
+  "root_report_id": "report_7b90d18cdb75",
+  "proposal_id": "proposal_a960d285e17d4a339892b7647869c301",
+  "child_report_id": "report_3d12d343d6fa4c5d86998d8d88ea042a",
+  "root_status": "completed",
+  "child_status": "needs_review",
+  "accepted_and_reopened": true,
+  "reload_verified": true,
+  "history_reopened": true,
+  "parent_unchanged": true,
+  "parent_files_checked": 9,
+  "forecast_inherited": true,
+  "unselected_sections_unchanged": true,
+  "workflow_stopped": true,
+  "requests": 26,
+  "max_requests": 90,
+  "max_seconds": 3600,
+  "inflight_or_unknown": 0,
+  "request_statuses": {
+    "response": 26
+  },
+  "input_fingerprint": "a0cbc3c1a4d5e82a5c02fd14cddc9d7c568b88386b586f5e291a4b26ac568cd4",
+  "quality_limitations": [
+    "Root incorrectly states Round 1 contains no model action although twitter:trace:11 is Maya's round-1 model post.",
+    "Proposal retains a premise_unverified review finding about inferred conditional symmetry; summary and unselected sections are inherited.",
+    "Mechanical score 100 and local acceptance do not establish semantic validity, calibration or release readiness."
+  ],
+  "monetary_cost": null
+}

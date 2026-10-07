@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v2",
+  "cases": [
+    {
+      "id": "v2_transit",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v2_graph_transit",
+        "case_id": "v2_case_transit",
+        "case_version_id": "v2_current_transit"
+      },
+      "sources": [
+        {
+          "graph_id": "v2_graph_transit",
+          "case_id": "v2_case_transit",
+          "case_version_id": "v2_current_transit",
+          "uuid": "transit_src_1",
+          "document_id": "transit_doc_1",
+          "filename": "meeting.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Northmere shuttle workshop. Rosa Lin says she could support a six-week trial if wheelchair boarding is demonstrated. Amir West says a trial must retain evening service; he does not state support or opposition. Planner Elena Frost says no permanent route decision has been taken and the trial has not started.",
+          "fixture_text_sha256": "e0b3497a70458371e34528080b762c4cad34dafcd01b224dcfce496ee31c928b"
+        },
+        {
+          "graph_id": "v2_graph_transit",
+          "case_id": "v2_case_transit",
+          "case_version_id": "v2_current_transit",
+          "uuid": "transit_src_2",
+          "document_id": "transit_doc_2",
+          "filename": "notice.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Northmere notice: the council will discuss a proposed six-week shuttle trial on 18 November. No vote has been held. No ridership or cost figures are available.",
+          "fixture_text_sha256": "d63c64239aa162ea76bcf1f8c1d2970533e6f094c90a71a7f52e933f742c8bb1"
+        },
+        {
+          "graph_id": "v2_graph_transit",
+          "case_id": "v2_different_case",
+          "case_version_id": "v2_current_transit",
+          "uuid": "transit_other",
+          "document_id": "transit_other",
+          "filename": "other.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated project note: unanimous approval and completed construction.",
+          "fixture_text_sha256": "f628e77031562a95bc649c0d58ced5d191b910f46ab9d1e25712f6c1f6c324d0"
+        },
+        {
+          "graph_id": "v2_graph_transit",
+          "case_id": "v2_case_transit",
+          "case_version_id": "v2_superseded",
+          "uuid": "transit_old",
+          "document_id": "transit_old",
+          "filename": "old.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional superseded draft: allocate $9,000 and propose permanent construction. This draft is not the current decision.",
+          "fixture_text_sha256": "43b7a9f18d445564a92d6053a014bb3f450f32607e79201c77e954ca3b8246cb"
+        }
+      ],
+      "section": {
+        "title": "Source review",
+        "description": "Review the proposed shuttle pilot, preserving each speaker\u2019s position and the boundary between requirements and endorsement.",
+        "content": "All residents support making the shuttle permanent."
+      },
+      "summary": "The fictional source records require careful review.",
+      "provenance": {
+        "kind": "new_fictional_documents",
+        "author": "Codex evaluation packet author",
+        "human_reviewed": false,
+        "private_or_reserved_inputs": false
+      }
+    },
+    {
+      "id": "v2_library",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v2_graph_library",
+        "case_id": "v2_case_library",
+        "case_version_id": "v2_current_library"
+      },
+      "sources": [
+        {
+          "graph_id": "v2_graph_library",
+          "case_id": "v2_case_library",
+          "case_version_id": "v2_current_library",
+          "uuid": "library_src_1",
+          "document_id": "library_doc_1",
+          "filename": "register.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Alder Quay library event register, signed by coordinator Nia Cole: 18 visitors attended the Saturday workshop. Two requested later opening hours. The sheet has no repeat-visitor identifier.",
+          "fixture_text_sha256": "5cca8baac5c7c2f2d8c9e90ac633969296f2068a90a2ea47a77d4872c50ad67f"
+        },
+        {
+          "graph_id": "v2_graph_library",
+          "case_id": "v2_case_library",
+          "case_version_id": "v2_current_library",
+          "uuid": "library_src_2",
+          "document_id": "library_doc_2",
+          "filename": "email.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional email from volunteer Finn Reed: I counted 23 attendees including volunteers and staff. I did not distinguish visitors from staff. This email does not correct or withdraw the signed visitor register. No comparison-week figure is provided.",
+          "fixture_text_sha256": "0f51f4e4fd6bbf8fc80295ffe62d306ba8248688226ba0400434dbc2025df9e8"
+        },
+        {
+          "graph_id": "v2_graph_library",
+          "case_id": "v2_different_case",
+          "case_version_id": "v2_current_library",
+          "uuid": "library_other",
+          "document_id": "library_other",
+          "filename": "other.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated project note: unanimous approval and completed construction.",
+          "fixture_text_sha256": "f628e77031562a95bc649c0d58ced5d191b910f46ab9d1e25712f6c1f6c324d0"
+        },
+        {
+          "graph_id": "v2_graph_library",
+          "case_id": "v2_case_library",
+          "case_version_id": "v2_superseded",
+          "uuid": "library_old",
+          "document_id": "library_old",
+          "filename": "old.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional superseded draft: allocate $9,000 and propose permanent construction. This draft is not the current decision.",
+          "fixture_text_sha256": "43b7a9f18d445564a92d6053a014bb3f450f32607e79201c77e954ca3b8246cb"
+        }
+      ],
+      "section": {
+        "title": "Source review",
+        "description": "Review conflicting attendance records without resolving an unverified discrepancy or conflating attendance with demand.",
+        "content": "The library\u2019s attendance doubled and everyone requested later hours."
+      },
+      "summary": "The fictional source records require careful review.",
+      "provenance": {
+        "kind": "new_fictional_documents",
+        "author": "Codex evaluation packet author",
+        "human_reviewed": false,
+        "private_or_reserved_inputs": false
+      }
+    },
+    {
+      "id": "v2_garden",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v2_graph_garden",
+        "case_id": "v2_case_garden",
+        "case_version_id": "v2_current_garden"
+      },
+      "sources": [
+        {
+          "graph_id": "v2_graph_garden",
+          "case_id": "v2_case_garden",
+          "case_version_id": "v2_current_garden",
+          "uuid": "garden_src_1",
+          "document_id": "garden_doc_1",
+          "filename": "minutes-v2.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Bracken School minutes, final version 2, superseding the version-1 draft: approve a one-term movable-container garden trial, with an allocation ceiling of $2,400. The approval excludes permanent ground works. No expenditure has yet been recorded.",
+          "fixture_text_sha256": "4f0102549349687585a086e96e5a818d2a03530c2495e95a555d75d22e188f67"
+        },
+        {
+          "graph_id": "v2_graph_garden",
+          "case_id": "v2_case_garden",
+          "case_version_id": "v2_current_garden",
+          "uuid": "garden_src_2",
+          "document_id": "garden_doc_2",
+          "filename": "finance.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional finance note linked to the final minutes: the allocation ceiling is not a spending total. A proposed supplier quotation of $1,950 is awaiting approval, and no purchase order has been issued.",
+          "fixture_text_sha256": "2b750a1dca767070d18daa2cbe78fcd8a4e7bbbd81c9dcfeae8f580e7919d521"
+        },
+        {
+          "graph_id": "v2_graph_garden",
+          "case_id": "v2_different_case",
+          "case_version_id": "v2_current_garden",
+          "uuid": "garden_other",
+          "document_id": "garden_other",
+          "filename": "other.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated project note: unanimous approval and completed construction.",
+          "fixture_text_sha256": "f628e77031562a95bc649c0d58ced5d191b910f46ab9d1e25712f6c1f6c324d0"
+        },
+        {
+          "graph_id": "v2_graph_garden",
+          "case_id": "v2_case_garden",
+          "case_version_id": "v2_superseded",
+          "uuid": "garden_old",
+          "document_id": "garden_old",
+          "filename": "old.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional superseded draft: allocate $9,000 and propose permanent construction. This draft is not the current decision.",
+          "fixture_text_sha256": "43b7a9f18d445564a92d6053a014bb3f450f32607e79201c77e954ca3b8246cb"
+        }
+      ],
+      "section": {
+        "title": "Source review",
+        "description": "Review the current garden trial decision, distinguishing allocation, spending and permission from earlier draft proposals.",
+        "content": "The school approved the original $9,000 permanent garden and spent the entire amount."
+      },
+      "summary": "The fictional source records require careful review.",
+      "provenance": {
+        "kind": "new_fictional_documents",
+        "author": "Codex evaluation packet author",
+        "human_reviewed": false,
+        "private_or_reserved_inputs": false
+      }
+    },
+    {
+      "id": "v2_harbor",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v2_graph_harbor",
+        "case_id": "v2_case_harbor",
+        "case_version_id": "v2_current_harbor"
+      },
+      "sources": [
+        {
+          "graph_id": "v2_graph_harbor",
+          "case_id": "v2_case_harbor",
+          "case_version_id": "v2_current_harbor",
+          "uuid": "harbor_src_1",
+          "document_id": "harbor_doc_1",
+          "filename": "brief.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Eastwick ramp brief: an early estimate is approximately $18,000, excluding permits and maintenance. The design is provisional. No queue timing study, user survey or funding approval is included.",
+          "fixture_text_sha256": "0337a5a061194a8c94a53d64ab2ef66fe6082f7cb4e9acdf4d7c1200879ec464"
+        },
+        {
+          "graph_id": "v2_graph_harbor",
+          "case_id": "v2_case_harbor",
+          "case_version_id": "v2_current_harbor",
+          "uuid": "harbor_src_2",
+          "document_id": "harbor_doc_2",
+          "filename": "comments.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional stakeholder notes: boater Lena Orr expects easier launching but gives no measured time saving. Angler Theo Vale is concerned about shoreline access and has not endorsed the design. Engineer Mira North requests a site assessment before recommending construction.",
+          "fixture_text_sha256": "b4f327abb1a80179f88382c42be1c08228178a9ed6859b86e322d4eef2f2e0d3"
+        },
+        {
+          "graph_id": "v2_graph_harbor",
+          "case_id": "v2_different_case",
+          "case_version_id": "v2_current_harbor",
+          "uuid": "harbor_other",
+          "document_id": "harbor_other",
+          "filename": "other.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional unrelated project note: unanimous approval and completed construction.",
+          "fixture_text_sha256": "f628e77031562a95bc649c0d58ced5d191b910f46ab9d1e25712f6c1f6c324d0"
+        },
+        {
+          "graph_id": "v2_graph_harbor",
+          "case_id": "v2_case_harbor",
+          "case_version_id": "v2_superseded",
+          "uuid": "harbor_old",
+          "document_id": "harbor_old",
+          "filename": "old.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional superseded draft: allocate $9,000 and propose permanent construction. This draft is not the current decision.",
+          "fixture_text_sha256": "43b7a9f18d445564a92d6053a014bb3f450f32607e79201c77e954ca3b8246cb"
+        }
+      ],
+      "section": {
+        "title": "Source review",
+        "description": "Review the boat-ramp proposal, preserving unavailable measurements, approximate amounts and attribution of concerns.",
+        "content": "The ramp will cost exactly $18,000, remove all queues and has full public support."
+      },
+      "summary": "The fictional source records require careful review.",
+      "provenance": {
+        "kind": "new_fictional_documents",
+        "author": "Codex evaluation packet author",
+        "human_reviewed": false,
+        "private_or_reserved_inputs": false
+      }
+    }
+  ]
+}

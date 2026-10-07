@@ -7,6 +7,9 @@ from werkzeug.exceptions import BadRequest, RequestEntityTooLarge, UnsupportedMe
 from . import report_bp
 from ..config import Config
 from ..models.task import TaskManager, TaskStatus
+from ..models.project import ProjectManager
+from ..models.case import CaseManager
+from ..services.task_execution import OwnershipLost
 from ..services.report_agent import ReportManager, ReportStatus
 from ..services.proposal_store import ProposalStore, ProposalError, canonical_digest
 from ..services.report_revisions import ReportRevisionService
@@ -56,6 +59,13 @@ def default_embedder():
     return EmbeddingService(auto_pull=False)
 
 
+def proposal_source_scope(snapshot, config):
+    """Recover legacy general-report scope only from its original graph version."""
+    from ..services.source_scope import resolve_source_scope
+    return resolve_source_scope(snapshot, config,
+        project_loader=ProjectManager.get_project, case_loader=CaseManager.get_case)
+
+
 def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, embedder_factory, tasks):
     identifier, task_id = record['proposal_id'], record['task_id']
     service = None
@@ -66,6 +76,8 @@ def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, emb
                 store.update(identifier, {'queued', 'running'}, {'state': 'failed', 'error_code': 'deadline_exceeded',
                              'phase': 'deadline', 'usage': budget.snapshot()})
                 tasks.fail_task(task_id, 'deadline_exceeded')
+                return
+            except OwnershipLost:
                 return
             except ProposalError as exc:
                 if exc.code != 'state_busy' or time.monotonic() >= retry_until:
@@ -118,7 +130,7 @@ def create_evidence_proposal(report_id):
         if not parent.outline or data['section_index'] > len(parent.outline.sections):
             raise ProposalError('invalid_section', 400)
         try:
-            scope = source_scope(parent.to_dict(), load_simulation_config(parent.simulation_id))
+            scope = proposal_source_scope(parent.to_dict(), load_simulation_config(parent.simulation_id))
         except ValueError:
             raise ProposalError('missing_or_inconsistent_scope', 409)
         storage = current_app.extensions.get('neo4j_storage')
@@ -127,15 +139,15 @@ def create_evidence_proposal(report_id):
         seconds = min(180, float(current_app.config.get('EVIDENCE_PROPOSAL_SECONDS', 180)))
         budget = DraftBudget(seconds=max(.001, seconds - (time.time() - (record['deadline_at'] - 180))))
         tasks = TaskManager()
-        task_id = tasks.create_task('evidence_proposal', metadata={'report_id': report_id, 'proposal_id': record['proposal_id']})
+        task_id = tasks.create_task('evidence_proposal', metadata={'report_id': report_id, 'proposal_id': record['proposal_id']},
+            resources=[{'key':'proposal:'+record['proposal_id'], 'root':str(store.root)}])
         snapshot = parent.to_dict()
         record = store.update(record['proposal_id'], {'queued'}, {'scope': scope, 'section_index': data['section_index'],
             'task_id': task_id, 'deadline_at': time.time() + budget.remaining()})
         llm_factory = current_app.extensions.get('evidence_llm_factory', lambda identifier: LLMClient())
         embedder_factory = current_app.extensions.get('evidence_embedder_factory', default_embedder)
-        thread = threading.Thread(target=run_worker, args=(store, record, snapshot, lease, budget, storage,
-                                  llm_factory, embedder_factory, tasks), daemon=True, name='evidence-proposal')
-        thread.start()
+        tasks.start_task(task_id, run_worker, (store, record, snapshot, lease, budget, storage,
+                                  llm_factory, embedder_factory, tasks), name='evidence-proposal')
         handed_off = True
         return jsonify(success=True, data=record), 202
     except Exception:

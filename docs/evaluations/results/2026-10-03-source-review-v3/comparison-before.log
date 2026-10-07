@@ -1,0 +1,21 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_review_keeps_original_comparison_summary_separate ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-142/test_review_keeps_original_com0')
+
+    def test_review_keeps_original_comparison_summary_separate(tmp_path):
+        from scripts.evidence_quality_reviews import export_packets
+        fixture={'id':'development','human_review_packet':True,'split':'development','section':{'description':'Review source.'}}
+        observation={'case_id':'development','sources':[],'claims':[],
+            'original_comparison_summary':'Original target. Other section retained.',
+            'after':{'section':'Draft','summary':'Revised target. Other section retained.'}}
+        export_packets(tmp_path,[fixture],[observation])
+        packet=json.loads(next((tmp_path/'reviewer').glob('packet_*.json')).read_text())
+>       assert packet['original_comparison_summary']=='Original target. Other section retained.'
+E       KeyError: 'original_comparison_summary'
+
+backend/tests/test_draft_coverage_repairs.py:88: KeyError
+=========================== short test summary info ============================
+FAILED backend/tests/test_draft_coverage_repairs.py::test_review_keeps_original_comparison_summary_separate
+1 failed in 1.11s

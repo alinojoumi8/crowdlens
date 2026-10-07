@@ -4,12 +4,21 @@ These checks establish structural linkage, never the truth of a source or infere
 """
 import hashlib
 import json
+import re
 
 from .evidence_verifier import text_hash
+from .pdf_source_pages import exact_extract_range
 
 SCOPE_KEYS = ('graph_id', 'case_id', 'case_version_id')
 KINDS = {'source_statement', 'attributed_allegation', 'analysis'}
 MAX_CLAIMS = 30
+
+
+def conditional_offer(text):
+    """Bounded English trigger, not a general entailment classifier."""
+    return isinstance(text, str) and bool(
+        re.search(r'\b(could|may|might)\b', text, re.I)
+        and re.search(r'\b(if|unless|provided|providing)\b', text, re.I))
 
 
 def canonical_digest(value):
@@ -95,13 +104,22 @@ def validate_ledger(ledger, sources, scope):
             error = validate_source(source, scope) if source else 'unknown_citation'
             if error:
                 findings.append(finding(error, identifier))
+            elif conditional_offer(source['excerpt']) and not (
+                    exact_extract_range(source) is not None
+                    and claim.get('text') == source['excerpt'][slice(*exact_extract_range(source))]
+                    and isinstance(claim.get('text'), str) and claim['text'] in source['window']):
+                findings.append(finding('conditional_source_requires_extract', identifier))
         quote = claim.get('quote', '')
         if not isinstance(quote, str) or (quote and not any(
                 quote in by_source[c]['window'] for c in citations
                 if c in by_source and not validate_source(by_source[c], scope))):
             findings.append(finding('quote_absent', identifier))
 
-    colors, outcomes = {}, {}
+    colors, outcomes, conditional_claims = {}, {}, set()
+    for identifier, claim in claims.items():
+        if any(conditional_offer(by_source.get(c, {}).get('excerpt'))
+               for c in (claim.get('citation_ids') if _strings(claim.get('citation_ids')) else [])):
+            conditional_claims.add(identifier)
 
     def visit(identifier):
         if identifier not in claims:
@@ -131,6 +149,10 @@ def validate_ledger(ledger, sources, scope):
                     if parent not in claims:
                         findings.append(finding('unknown_premise', identifier))
                     state.update(visit(parent))
+                    if parent in conditional_claims:
+                        conditional_claims.add(identifier)
+            if identifier in conditional_claims:
+                findings.append(finding('conditional_analysis_requires_review', identifier))
             for outcome in sorted(state - {'supported'}):
                 findings.append(finding('premise_' + str(outcome), identifier, blocking=False))
         elif not state:
@@ -146,24 +168,31 @@ def validate_ledger(ledger, sources, scope):
     return findings
 
 
-def validate_paragraphs(paragraphs, ledger):
+def validate_paragraphs(paragraphs, ledger, sources=None):
     if not isinstance(paragraphs, list) or not paragraphs or len(paragraphs) > 60:
         return [finding('invalid_paragraphs')]
     claims = {c['claim_id']: c for c in ledger}
+    conditional_sources = {s['evidence_id'] for s in sources or [] if conditional_offer(s.get('excerpt'))}
     findings = []
     for index, paragraph in enumerate(paragraphs):
+        def issue(code, **details):
+            findings.append({**finding(code), 'paragraph_index': index, **details})
         if not isinstance(paragraph, dict):
-            findings.append(finding('invalid_paragraph'))
+            issue('invalid_paragraph')
             continue
         text, identifiers = paragraph.get('text'), paragraph.get('claim_ids')
+        if isinstance(identifiers, list) and any(
+                isinstance(i, str) and i in claims and (conditional_offer(claims[i].get('text'))
+                or (_strings(claims[i].get('citation_ids')) and bool(set(claims[i]['citation_ids']) & conditional_sources))) for i in identifiers):
+            if len(identifiers) != 1 or text != claims[identifiers[0]]['text']:
+                issue('conditional_paragraph_requires_extract')
         if not isinstance(text, str) or not text.strip() or len(text) > 8000:
-            findings.append(finding('invalid_paragraph_text'))
+            issue('invalid_paragraph_text')
         if not _strings(identifiers) or not identifiers or any(i not in claims for i in identifiers):
-            findings.append(finding('unlinked_paragraph'))
+            issue('unlinked_paragraph')
         elif any(claims[i]['kind'] != paragraph.get('kind') for i in identifiers):
-            findings.append(finding('paragraph_kind_mismatch'))
-        for item in findings:
-            item.setdefault('paragraph_index', index)
+            issue('paragraph_kind_mismatch', expected_kinds=sorted({claims[i]['kind'] for i in identifiers}),
+                  detail='Every linked claim must have the paragraph kind; separate different kinds.')
     return findings
 
 
@@ -204,3 +233,49 @@ def apply_summary_edits(original, edits, ledger):
         result = result[:start] + edit['new_text'] + result[end:]
         previous_start = start
     return result
+
+
+def resolve_summary_replacements(original, replacements, ledger):
+    """Resolve exact unique original spans; never guess stale/repeated targets.
+
+    Models supply text, not offsets. Existing deterministic edit validation stays
+    authoritative, including claim links, overlap and replacement-size bounds.
+    """
+    if not isinstance(original, str) or not isinstance(replacements, list) or len(replacements) > 30:
+        raise ValueError('invalid_summary_replacements')
+    edits = []
+    for replacement in replacements:
+        if not isinstance(replacement, dict):
+            raise ValueError('invalid_summary_replacement')
+        old = replacement.get('old_text')
+        if not isinstance(old, str) or not old or len(old) > 64000:
+            raise ValueError('invalid_summary_target')
+        start = original.find(old)
+        if start < 0 or original.find(old, start + 1) >= 0:
+            raise ValueError('missing_or_ambiguous_summary_target')
+        edits.append({'start': start, 'end': start + len(old), 'old_text': old,
+                      'new_text': replacement.get('new_text'), 'claim_ids': replacement.get('claim_ids')})
+    apply_summary_edits(original, edits, ledger)
+    return edits
+
+
+def summary_edit_scope(original, section_text):
+    """Only a unique literal section-to-summary link authorizes automatic edits.
+
+    Abstract summaries have no inferred semantic boundaries. Keep their text
+    unchanged unless a separate trusted mapping is available in a future policy.
+    """
+    spans = []
+    if isinstance(section_text, str) and section_text.strip():
+        start = original.find(section_text)
+        if start >= 0 and original.find(section_text, start + 1) < 0:
+            spans.append({'start': start, 'end': start + len(section_text), 'text': section_text})
+    return {'basis': 'unique_exact_selected_section', 'editable_spans': spans,
+            'unmapped_summary_requires_review': not bool(spans)}
+
+
+def validate_summary_edit_scope(edits, scope):
+    spans = scope['editable_spans']
+    for edit in edits:
+        if not any(span['start'] <= edit['start'] < edit['end'] <= span['end'] for span in spans):
+            raise ValueError('summary_edit_outside_selected_section')

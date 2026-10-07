@@ -1,0 +1,56 @@
+..FF.....                                                                [100%]
+=================================== FAILURES ===================================
+______________ test_history_skips_unrelated_unreadable_report[{] _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-109/test_history_skips_unrelated_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77b4ba888a90>
+bad_metadata = '{'
+
+    @pytest.mark.parametrize("bad_metadata", ['{', '{"report_id":"unrelated","status":"unknown"}'])
+    def test_history_skips_unrelated_unreadable_report(tmp_path, monkeypatch, bad_metadata):
+        monkeypatch.setattr(ReportManager, "REPORTS_DIR", str(tmp_path))
+        root = Report("report_valid_history", "sim_valid_history", "graph", "test", ReportStatus.COMPLETED)
+        ReportManager.save_report(root)
+        bad = tmp_path / "report_bad"
+        bad.mkdir()
+        (bad / "meta.json").write_text(bad_metadata, encoding="utf-8")
+
+>       assert _get_report_id_for_simulation(root.simulation_id) == root.report_id
+E       AssertionError: assert None == 'report_valid_history'
+E        +  where None = _get_report_id_for_simulation('sim_valid_history')
+E        +    where 'sim_valid_history' = Report(report_id='report_valid_history', simulation_id='sim_valid_history', graph_id='graph', simulation_requirement='...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).simulation_id
+E        +  and   'report_valid_history' = Report(report_id='report_valid_history', simulation_id='sim_valid_history', graph_id='graph', simulation_requirement='...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).report_id
+
+tests/test_report_browser_regressions.py:40: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[14:49:54] INFO: reportsaved: report_valid_history
+[14:49:54] WARNING: Failed to find report for simulation sim_valid_history: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+_ test_history_skips_unrelated_unreadable_report[{"report_id":"unrelated","status":"unknown"}] _
+
+tmp_path = PosixPath('/tmp/pytest-of-ali/pytest-109/test_history_skips_unrelated_u1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77b4baa57950>
+bad_metadata = '{"report_id":"unrelated","status":"unknown"}'
+
+    @pytest.mark.parametrize("bad_metadata", ['{', '{"report_id":"unrelated","status":"unknown"}'])
+    def test_history_skips_unrelated_unreadable_report(tmp_path, monkeypatch, bad_metadata):
+        monkeypatch.setattr(ReportManager, "REPORTS_DIR", str(tmp_path))
+        root = Report("report_valid_history", "sim_valid_history", "graph", "test", ReportStatus.COMPLETED)
+        ReportManager.save_report(root)
+        bad = tmp_path / "report_bad"
+        bad.mkdir()
+        (bad / "meta.json").write_text(bad_metadata, encoding="utf-8")
+
+>       assert _get_report_id_for_simulation(root.simulation_id) == root.report_id
+E       AssertionError: assert None == 'report_valid_history'
+E        +  where None = _get_report_id_for_simulation('sim_valid_history')
+E        +    where 'sim_valid_history' = Report(report_id='report_valid_history', simulation_id='sim_valid_history', graph_id='graph', simulation_requirement='...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).simulation_id
+E        +  and   'report_valid_history' = Report(report_id='report_valid_history', simulation_id='sim_valid_history', graph_id='graph', simulation_requirement='...es=[], quality_score={}, forecast={}, timing={}, claim_checks=[], decision_config={}, source_grounding={}, revision={}).report_id
+
+tests/test_report_browser_regressions.py:40: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[14:49:54] INFO: reportsaved: report_valid_history
+[14:49:54] WARNING: Failed to find report for simulation sim_valid_history: 'simulation_id'
+=========================== short test summary info ============================
+FAILED tests/test_report_browser_regressions.py::test_history_skips_unrelated_unreadable_report[{]
+FAILED tests/test_report_browser_regressions.py::test_history_skips_unrelated_unreadable_report[{"report_id":"unrelated","status":"unknown"}]
+2 failed, 7 passed in 1.31s

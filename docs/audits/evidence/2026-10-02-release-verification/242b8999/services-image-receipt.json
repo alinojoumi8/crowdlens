@@ -1,0 +1,442 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "image": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+  "neo4j_image": "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e",
+  "network": "crowdlens-ecc-release-final-242b8999-2737e1-net",
+  "containers": [
+    "crowdlens-ecc-release-final-242b8999-2737e1-neo4j",
+    "crowdlens-ecc-release-final-242b8999-2737e1-app"
+  ],
+  "commands": [
+    {
+      "label": "network-create",
+      "argv": [
+        "docker",
+        "network",
+        "create",
+        "crowdlens-ecc-release-final-242b8999-2737e1-net"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-create.log",
+      "sha256": "37c2904b05c378a7013466fb00d602e20886fbe0741ca572858648158c820589"
+    },
+    {
+      "label": "neo4j-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-final-242b8999-2737e1-neo4j",
+        "--network",
+        "crowdlens-ecc-release-final-242b8999-2737e1-net",
+        "--network-alias",
+        "neo4j",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--publish",
+        "127.0.0.1::7687",
+        "--tmpfs",
+        "/data:rw,size=2g",
+        "--tmpfs",
+        "/logs:rw,size=128m",
+        "--env",
+        "NEO4J_AUTH=neo4j/crowdlens-synthetic-m2-password",
+        "--env",
+        "NEO4J_server_memory_heap_initial__size=256m",
+        "--env",
+        "NEO4J_server_memory_heap_max__size=512m",
+        "--env",
+        "NEO4J_server_memory_pagecache_size=256m",
+        "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.566,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/neo4j-start.log",
+      "sha256": "6da99094546b97d0cb9a0057dc6df8ea7b7e33af03a79901f375cb7912c823d9"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-neo4j-port-7687",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-final-242b8999-2737e1-neo4j",
+        "7687/tcp"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.032,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-port-7687.log",
+      "sha256": "791a5d804b55e76a176534a8542973195f430768c3d9ae5825be171c141ee1bc"
+    },
+    {
+      "label": "real-http-neo4j",
+      "argv": [
+        "./backend/.venv/bin/python",
+        "backend/scripts/check_ecc_services.py",
+        "--synthetic",
+        "--neo4j-uri",
+        "bolt://127.0.0.1:32783",
+        "--output-dir",
+        "/tmp/crowdlens-ecc-release-final-242b8999/services"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 3.576,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/real-http-neo4j.log",
+      "sha256": "a678bcfb8bf2685ddaefb72b4fe443d27770f8e80e342738c0d6195d78961856"
+    },
+    {
+      "label": "image-inspect",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-inspect.log",
+      "sha256": "609831158d03ce5b4e9fd1558810886906157de4070552429c8b29e5bb9a32e5"
+    },
+    {
+      "label": "image-start",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--pull",
+        "never",
+        "--name",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "--network",
+        "crowdlens-ecc-release-final-242b8999-2737e1-net",
+        "--memory",
+        "4g",
+        "--cpus",
+        "2",
+        "--publish",
+        "127.0.0.1::5001",
+        "--publish",
+        "127.0.0.1::3000",
+        "--tmpfs",
+        "/app/backend/uploads:rw,size=256m",
+        "--env",
+        "LLM_API_KEY=synthetic-local-only",
+        "--env",
+        "LLM_DEFAULT_PROVIDER=ollama",
+        "--env",
+        "LLM_BASE_URL=http://127.0.0.1:9/v1",
+        "--env",
+        "LLM_MODEL_NAME=synthetic-no-generation",
+        "--env",
+        "OPENAI_API_BASE_URL=http://127.0.0.1:9/v1",
+        "--env",
+        "EMBEDDING_BASE_URL=http://127.0.0.1:9",
+        "--env",
+        "EMBEDDING_AUTO_PULL=False",
+        "--env",
+        "NEO4J_URI=bolt://neo4j:7687",
+        "--env",
+        "NEO4J_USER=neo4j",
+        "--env",
+        "NEO4J_PASSWORD=crowdlens-synthetic-m2-password",
+        "--env",
+        "JEV_EVIDENCE_MODE=off",
+        "--env",
+        "JEV_INTERVIEW_MODE=off",
+        "--env",
+        "JEV_RERANK_MODE=off",
+        "--env",
+        "MARKET_DATA_PROVIDER=none",
+        "--env",
+        "FLASK_DEBUG=False",
+        "--env",
+        "FLASK_HOST=0.0.0.0",
+        "--env",
+        "FLASK_PORT=5001",
+        "--env",
+        "CROWDLENS_BUILD_REVISION=242b8999044e33c8c3217df857c06401f3efbba3",
+        "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.617,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-start.log",
+      "sha256": "40c39436c462cd592e45d1f0b41585fe904cb333542e07a8f5d14281c4e44d40"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-app-port-5001",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "5001/tcp"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.033,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-port-5001.log",
+      "sha256": "cf51dbc09f8da549cf1a7eb381e61fa7c6d2d39325dc7742a3fffeb66a14d9cd"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-app-port-3000",
+      "argv": [
+        "docker",
+        "port",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "3000/tcp"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-port-3000.log",
+      "sha256": "4819bd5eb26f6384aa8d5b79f0e98f1528d92b1074e95f1cb3bd7fdb1644bea6"
+    },
+    {
+      "label": "image-python-version",
+      "argv": [
+        "docker",
+        "exec",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "/app/backend/.venv/bin/python",
+        "--version"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-python-version.log",
+      "sha256": "686560bcd94a5a3fe8187b7c4fc49beaff41c87eccb79908cd3da863ec30e52e"
+    },
+    {
+      "label": "image-node-version",
+      "argv": [
+        "docker",
+        "exec",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "node",
+        "--version"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-node-version.log",
+      "sha256": "33e26f35db6e57ce0c486ddc815fe966867e4f649e418eaf323f75f4720eb8e9"
+    },
+    {
+      "label": "image-uv-version",
+      "argv": [
+        "docker",
+        "exec",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "uv",
+        "--version"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-uv-version.log",
+      "sha256": "48703788344d7b88ae4c8d6700546005c597a1cecffb8f51088e795cdffebcb1"
+    },
+    {
+      "label": "image-python-dependency-check",
+      "argv": [
+        "docker",
+        "exec",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app",
+        "uv",
+        "pip",
+        "check",
+        "--python",
+        "/app/backend/.venv/bin/python"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.215,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-python-dependency-check.log",
+      "sha256": "092c5fec807e5dad39ee0ea9f660b91b79e79d46ca0fcd5d6775410fab8fdf39"
+    },
+    {
+      "label": "image-runtime-diff",
+      "argv": [
+        "docker",
+        "diff",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 4.527,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-runtime-diff.log",
+      "sha256": "c6c76eb9e643d49de9516cb3f7f0a5802d334162d06d20f42c6e5ebe5f08264a"
+    },
+    {
+      "label": "image-runtime-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-runtime-inspect.log",
+      "sha256": "0e77b6c26bb9349ca71fe29cbdb641e47c07638f3552ef60e793f7ea41433ffc"
+    },
+    {
+      "label": "neo4j-runtime-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "crowdlens-ecc-release-final-242b8999-2737e1-neo4j"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/neo4j-runtime-inspect.log",
+      "sha256": "7fe029c72a80796399ad28eb2f137e1ddbbfe6cb6cb38496de7cbde45b91381e"
+    },
+    {
+      "label": "network-runtime-inspect",
+      "argv": [
+        "docker",
+        "network",
+        "inspect",
+        "crowdlens-ecc-release-final-242b8999-2737e1-net"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-runtime-inspect.log",
+      "sha256": "86b99d6df57274ba8ca5db81b20b01c3dbec1842e82e957c56a0be03866e9b30"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-app-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-logs.log",
+      "sha256": "9cd5e613772b7fa914a646d64ee1801ec5da56c6a3fb95a44ac93612b583b271"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-app-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-final-242b8999-2737e1-app"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.967,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-app-remove.log",
+      "sha256": "4c02333a52758eb81798d562f90a370d2a488146e30f24ad7928ddf2a8449914"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-neo4j-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "crowdlens-ecc-release-final-242b8999-2737e1-neo4j"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-logs.log",
+      "sha256": "7c329a1a273dfbfc9a982e9afcbbc124232e9cdc4f9759eb385372b4e171bb19"
+    },
+    {
+      "label": "crowdlens-ecc-release-final-242b8999-2737e1-neo4j-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "crowdlens-ecc-release-final-242b8999-2737e1-neo4j"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.667,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/crowdlens-ecc-release-final-242b8999-2737e1-neo4j-remove.log",
+      "sha256": "7f397bea6970d77cf235dee91c935d75eda237e9fc7114a37fdddc66482df5b0"
+    },
+    {
+      "label": "network-remove",
+      "argv": [
+        "docker",
+        "network",
+        "rm",
+        "crowdlens-ecc-release-final-242b8999-2737e1-net"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/source",
+      "exit_code": 0,
+      "seconds": 0.266,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/network-remove.log",
+      "sha256": "872e6dc6387ab83d4fba4f2de0fd485e99d5b09d371d3d0e082242781db4a4ad"
+    }
+  ],
+  "checks": {
+    "neo4j-empty-ready": {
+      "passed": true,
+      "bolt_port": 32783
+    },
+    "backend-health": {
+      "url": "http://127.0.0.1:32785/health",
+      "status": 200,
+      "path": "/tmp/crowdlens-ecc-release-final-242b8999/logs/backend-health.response",
+      "sha256": "572c608c6ea23a7225632af7b9a28f7e71110099fce88b8910b4c791ac468954"
+    },
+    "backend-status": {
+      "url": "http://127.0.0.1:32785/api/status",
+      "status": 200,
+      "path": "/tmp/crowdlens-ecc-release-final-242b8999/logs/backend-status.response",
+      "sha256": "72b4529be60866b5920ebec745b2f5ec5d36fe6052c5b4643b4d9ed20ac0b19d"
+    },
+    "frontend-index": {
+      "url": "http://127.0.0.1:32784/",
+      "status": 200,
+      "path": "/tmp/crowdlens-ecc-release-final-242b8999/logs/frontend-index.response",
+      "sha256": "2143de6d18900a4e9f9dc064de11459fb376b68c81c38af524641669278dd2f9"
+    },
+    "frontend-status-proxy": {
+      "url": "http://127.0.0.1:32784/api/status",
+      "status": 200,
+      "path": "/tmp/crowdlens-ecc-release-final-242b8999/logs/frontend-status-proxy.response",
+      "sha256": "72b4529be60866b5920ebec745b2f5ec5d36fe6052c5b4643b4d9ed20ac0b19d"
+    },
+    "source-identity-match": {
+      "passed": true,
+      "identity": {
+        "declared_revision": "242b8999044e33c8c3217df857c06401f3efbba3",
+        "source_sha256": "a807c651b35560c12a91ec6f0b79b2d32df7bad60ebf3322d121c643d9e835fb",
+        "scope": "runtime-source-v1"
+      }
+    },
+    "readiness-boundary": {
+      "control_db_healthy": true,
+      "neo4j_healthy": true,
+      "embedding_healthy": false,
+      "full_healthy": false,
+      "vector_search_usable": false,
+      "llm_configured_is_not_inference": true
+    }
+  },
+  "started_at": "2026-10-02T20:32:39Z",
+  "real_model_calls": 0,
+  "startup_scope": "existing npm run dev command; synthetic isolated storage; provider endpoints disabled",
+  "phase": "real HTTP/Neo4j passed; waiting for exact image build",
+  "status": "passed",
+  "cleanup_passed": true,
+  "finished_at": "2026-10-02T20:33:17Z"
+}

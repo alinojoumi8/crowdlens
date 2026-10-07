@@ -1,0 +1,58 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run src/api/__tests__/generation.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/api/__tests__/generation.component.test.js (7 tests | 7 failed) 25ms
+   × does not silently repeat a generation request without an idempotency key 15ms
+   × does not silently repeat a generation request without an idempotency key 1ms
+   × does not silently repeat a generation request without an idempotency key 1ms
+   × does not silently repeat a generation request without an idempotency key 1ms
+   × does not silently repeat a generation request without an idempotency key 1ms
+   × does not silently repeat a generation request without an idempotency key 2ms
+   × does not silently repeat a generation request without an idempotency key 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/api/__tests__/generation.component.test.js:17:72
+     15|     service.mockClear(); service.post.mockClear()
+     16|     await expect(operation({ simulation_id: 'synthetic' })).rejects.to…
+     17|     expect(service.mock.calls.length + service.post.mock.calls.length)…
+       |                                                                        ^
+     18|   })
+     19|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/api/__tests__/generation.component.test.js > does not silently repeat a generation request without an idempotency key
+TypeError: operation is not a function
+ ❯ src/api/__tests__/generation.component.test.js:16:18
+     14|   'does not silently repeat a generation request without an idempotenc…
+     15|     service.mockClear(); service.post.mockClear()
+     16|     await expect(operation({ simulation_id: 'synthetic' })).rejects.to…
+       |                  ^
+     17|     expect(service.mock.calls.length + service.post.mock.calls.length)…
+     18|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  02:29:43
+   Duration  992ms (transform 85ms, setup 0ms, import 113ms, tests 25ms, environment 691ms)
+

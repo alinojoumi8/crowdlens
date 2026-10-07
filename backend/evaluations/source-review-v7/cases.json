@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v7",
+  "cases": [
+    {
+      "id": "v7_toolroom",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v7_toolroom_graph_id",
+        "case_id": "v7_toolroom_case_id",
+        "case_version_id": "v7_toolroom_case_version_id"
+      },
+      "sources": [
+        {
+          "graph_id": "v7_toolroom_graph_id",
+          "case_id": "v7_toolroom_case_id",
+          "case_version_id": "v7_toolroom_case_version_id",
+          "uuid": "toolroom_source_0",
+          "document_id": "toolroom_document_0",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cedarpoint toolroom permits three supervised assembly sessions only when a qualified facilitator is present. Unsupervised use is excluded.",
+          "fixture_text_sha256": "b90cffb08cd3570fda66727cab4898882cdb2675396bd8994d91d42c98d31dcc"
+        },
+        {
+          "graph_id": "v7_toolroom_graph_id",
+          "case_id": "v7_toolroom_case_id",
+          "case_version_id": "v7_toolroom_case_version_id",
+          "uuid": "toolroom_source_1",
+          "document_id": "toolroom_document_1",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cedarpoint participant note: Nila says the team might assist if adjustable tables are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "3237117b50a2dcdfbfb3e18c2370d237878ca994a64bb1a06db0ca7fb694c893"
+        },
+        {
+          "graph_id": "v7_toolroom_graph_id",
+          "case_id": "v7_toolroom_case_id",
+          "case_version_id": "superseded",
+          "uuid": "toolroom_source_2",
+          "document_id": "toolroom_document_2",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cedarpoint toolroom permits three supervised assembly sessions only when a qualified facilitator is present. Unsupervised use is excluded.",
+          "fixture_text_sha256": "b90cffb08cd3570fda66727cab4898882cdb2675396bd8994d91d42c98d31dcc"
+        },
+        {
+          "graph_id": "v7_toolroom_graph_id",
+          "case_id": "foreign_case",
+          "case_version_id": "v7_toolroom_case_version_id",
+          "uuid": "toolroom_source_3",
+          "document_id": "toolroom_document_3",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cedarpoint participant note: Nila says the team might assist if adjustable tables are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "3237117b50a2dcdfbfb3e18c2370d237878ca994a64bb1a06db0ca7fb694c893"
+        }
+      ],
+      "summary": "The team has committed to assist and unsupervised use is approved. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "toolroom sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The team has committed to assist and unsupervised use is approved."
+      }
+    },
+    {
+      "id": "v7_library",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v7_library_graph_id",
+        "case_id": "v7_library_case_id",
+        "case_version_id": "v7_library_case_version_id"
+      },
+      "sources": [
+        {
+          "graph_id": "v7_library_graph_id",
+          "case_id": "v7_library_case_id",
+          "case_version_id": "v7_library_case_version_id",
+          "uuid": "library_source_0",
+          "document_id": "library_document_0",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brackenport library permits two evening sorting sessions only when a staff coordinator is present. Overnight access is excluded.",
+          "fixture_text_sha256": "61aab7f6ebc77d6d94d672c6ee23e0b2789903962d91c21714facdefb2addff6"
+        },
+        {
+          "graph_id": "v7_library_graph_id",
+          "case_id": "v7_library_case_id",
+          "case_version_id": "v7_library_case_version_id",
+          "uuid": "library_source_1",
+          "document_id": "library_document_1",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brackenport participant note: Omar says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "8575e51703ef82c0f8d5d958987757d7278675854ee2bcf2787c0ab5d41bb7ef"
+        },
+        {
+          "graph_id": "v7_library_graph_id",
+          "case_id": "v7_library_case_id",
+          "case_version_id": "superseded",
+          "uuid": "library_source_2",
+          "document_id": "library_document_2",
+          "filename": "original.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brackenport library permits two evening sorting sessions only when a staff coordinator is present. Overnight access is excluded.",
+          "fixture_text_sha256": "61aab7f6ebc77d6d94d672c6ee23e0b2789903962d91c21714facdefb2addff6"
+        },
+        {
+          "graph_id": "v7_library_graph_id",
+          "case_id": "foreign_case",
+          "case_version_id": "v7_library_case_version_id",
+          "uuid": "library_source_3",
+          "document_id": "library_document_3",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brackenport participant note: Omar says the group may assist provided accessible carts are confirmed. This is possible future assistance, not an existing commitment.",
+          "fixture_text_sha256": "8575e51703ef82c0f8d5d958987757d7278675854ee2bcf2787c0ab5d41bb7ef"
+        }
+      ],
+      "summary": "The group has committed to assist and overnight access is approved. An unrelated ventilation check is pending.",
+      "section": {
+        "title": "library sessions",
+        "description": "Reconcile authorization, conditions, counts and evidence limits from the original records.",
+        "content": "The group has committed to assist and overnight access is approved."
+      }
+    }
+  ]
+}

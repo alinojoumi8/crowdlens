@@ -1,0 +1,1559 @@
+{
+  "source": {
+    "declared_revision": null,
+    "source_sha256": "42f07d59571896bb88ec5f72292841991f1f316da92a6b4e8bbf3cbf66bfc11c",
+    "scope": "runtime-source-v1"
+  },
+  "git_head": "5ca4390a924b5124959e7844d05d19dc49179933",
+  "frontend": {
+    "home-styles.css": "33a9a3cf3d347d56df1ccd733e5b1d3b48a195b766b3d4778080082acc214e41",
+    "icon.png": "2b2c19d0400056000bb88636410c71c39ec3bc6b9cc871d6b022adf8cddb6e7a",
+    "crowdlens-mark.svg": "7cedfca9c1a7a143eacb45238d11475a4dd62bc1bbd83112c11108b2fe3f7679",
+    "crowdlens-icon.svg": "62b1e7f9470a0e69ef164feba1438a4a6bf71034ae4054415c5abb836fa868b7",
+    "index.html": "c04c999f2d9cbbdd9f4d403171980cd7ca72fa3deb5357ef7f464b369bfe80c5",
+    "assets/InteractionView-ByVH7bwX.css": "cf0ea8cbc86b1d37c1cf3dd079924b74f0e3a18ff498895f65b34146364fca7b",
+    "assets/SafeMarkdown-CIyw23dV.js": "579cbb0b72d02be145fcf27152b0dd3d1e18d6e4cedf772ecd03681cce6f69bd",
+    "assets/index-ibF_rNad.css": "c1041d9ae5f21011e60bb9eb184511e1772a7e0d184cc71ca94e2410115e44fd",
+    "assets/CaseDetailView-Gbj8iRpf.js": "7196d10091c94f936a9731b0a978917997dd7cfc13d12386d4a60fb063b38a30",
+    "assets/SimulationRunView-Cj0SbMbq.css": "844ed5e2658ea8bed5ee704f547ea76d6d4ae97101d1787f358e85d4fa16a684",
+    "assets/SimulationView-v4ajHxY3.css": "b57c27140b621638c66e9543f2acdbcb2473cc487e8a65bff67eaafbf14e30bb",
+    "assets/Step2EnvSetup-0zt_Ufc0.css": "32e835c16882541392d85a720be334444c58f16a1e7de01d6181aea0118068a1",
+    "assets/SimulationRunView-BuOay49y.js": "d34526bc7508fc44c05d77b26da120d2f5d9d21d8f519f66d98906a752ecadcd",
+    "assets/graph-Cma-AEcX.js": "7cbddfe0a645199f1914dcbb2633ac66919c7c0cf90e8560ae8437ca072e28ba",
+    "assets/GraphPanel-Bx73uTCP.css": "08117969ebd0f59a2ee27ad11a743f49a8dc48d5b45ffe83de6e168ec5ac33d8",
+    "assets/SimulationView-NYxUYv4g.js": "58835b8a77a8ee139133ad9eb4b18448d3372bab67ba1ab2f7089bc3532a6753",
+    "assets/economySettings-M8O0gDiO.js": "b2f4cc8b62b57bb6d21e9527ae0e7c894cb668a441ebf6b118afd6c46682babe",
+    "assets/Home-CIdhYbE1.css": "0d4bd644e302b0764c3cd55c37c7272d8a65e52af71df177dc2485bd79d1756b",
+    "assets/pendingUpload-DuFNXON4.js": "f8a0c5c7e53bc538cf7bc205a112e020a3239457b5f6450fcc781ef1612b4283",
+    "assets/CaseDetailView-snTT7t4x.css": "20709a693327396768d8c66d8973c0c3d15ebe898f0675eb2575ed3b78518ffd",
+    "assets/InteractionView-Iyd9krrf.js": "b3c934b3fbdadb92b8fb968a4e349f4101894031946ff97342af0a401e9158a8",
+    "assets/GraphPanel-73EATsCz.js": "890101c9c0e738dcbb776ef334d3c0c92faf8cdf2810cee9c7ea90ff834a19d4",
+    "assets/ReportView-B-Sk-v6K.css": "fd952d77109633c658054bed73fd117194dd2fb3a7474b76a23529f36dd88277",
+    "assets/_plugin-vue_export-helper-CUmsg1Cw.js": "c58fa04c692928bc6df56463863551e6005e3f44c4334117a80e06704df38533",
+    "assets/report-BhwVWeSg.js": "05476f696c7949241fbbd64d945acbec8fb0760af986d2558e9f3ccaef2cda90",
+    "assets/MainView-BU36wCcT.css": "79c050dba316cb4b130218b6836c791294624a89e5e1da3b01d64fa3f098a203",
+    "assets/CaseCompareView-COpOAnvG.css": "3a04aae6634bfecd55960575ceb1e1d751677cb2db673cc4392e14e0ab54cfc7",
+    "assets/ReportView-BTVQE2Pz.js": "873a316e5fbc7611b8d2149e6df8e0e6b56e5bbf15f77518a5eee46e42b2ffb3",
+    "assets/index-DWIr_Qsm.js": "8c8d84df6bb382c2a5c207911f289b3d3393817d03e3fd3102d452ca3113ceb0",
+    "assets/CasesView-DmqA_Wrg.js": "14ba5936a396aa531aee978e48064279a4e30e983e8364e292defb4373beccaa",
+    "assets/MainView-DvVlzH9A.js": "662278c00a7b837b53faec2e626be1b0801203a6350e722019c895331fe18ee0",
+    "assets/Home-BUh8vwqM.js": "e855ecd95a7828aaf2e2679dbeea98f27c3c4f0b8be383ca6b0b309a0670cda0",
+    "assets/simulation-ChRDXt9s.js": "5471a981ce6653f3b1554ceb1a60ebcbc3ad63a67e2214ef967f6bb02a1b5988",
+    "assets/CasesView-CwHzJCV_.css": "0d2c36df725e10c5a33646e674a69343c183c26447a7246c3d242683a9449a10",
+    "assets/CaseCompareView-BMxPbiqq.js": "b9b4603ecce84fdd5c8abd9a79fa293b27ebcd15fb981e6030f8f1a4ef803e8c",
+    "assets/Step2EnvSetup-DQsS2qcl.js": "3a277fe4d29989bce3d350ec0714010a5b7ece6a09936164e4b86c675ae36d40"
+  },
+  "substitutes": [
+    "ontology generator",
+    "graph builder and storage",
+    "simulation endpoints",
+    "drafting LLM"
+  ],
+  "seeded": [
+    "original report and progress",
+    "original source chunk",
+    "graph node",
+    "simulation history"
+  ],
+  "provider_calls": 0,
+  "parent_unchanged": true,
+  "parent_digests": {
+    "progress.json": "dc291b1970060bbff010a306bbb43cf380eddf7801a8af46cf08a42491cc0606",
+    "section_02.md": "3bdfd0835821fee23bc51813455dc63b2b441e6c32f1aeba3966490d396ff79f",
+    "section_01.md": "ce26115a42ef730bde11bcf281d43b9a27a553f6585a43b40926deadfd82bf5c",
+    "full_report.md": "0feed4baa82583e7e04f2666eddbbe9a9afc10cbd5f9658f326ee7eb94552e8d",
+    "outline.json": "d34711f3f87cc9e041377677d97f81c4d362c478f5e5e5ef15e9584140ac68b6",
+    "meta.json": "f31ab1902f9eb672e6d6c93010c65eec1d342893863e3e9652d8f0e3f5eeac22"
+  },
+  "reports": [
+    {
+      "report_id": "report_f23c44c1c3694db1aa728072eb74a155",
+      "simulation_id": "sim_synthetic",
+      "graph_id": "synthetic_graph",
+      "simulation_requirement": "Review the synthetic hearing record.",
+      "report_mode": "legal_case",
+      "report_depth": "standard",
+      "status": "needs_review",
+      "outline": {
+        "title": "Synthetic hearing report",
+        "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open.",
+        "sections": [
+          {
+            "title": "Hearing",
+            "content": "Alex states that the hearing was postponed until Friday. [1]",
+            "description": "",
+            "evidence_cards": [
+              {
+                "evidence_id": "episode:one",
+                "episode_id": "one",
+                "origin": "source_document",
+                "excerpt": "Alex states that the hearing was postponed until Friday.",
+                "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                "graph_id": "synthetic_graph",
+                "case_id": "synthetic_case",
+                "case_version_id": "synthetic_v1",
+                "document_id": "synthetic_doc",
+                "filename": "synthetic-record.txt",
+                "locator": {
+                  "page": 1,
+                  "paragraph": null,
+                  "chunk_index": 0,
+                  "char_start": 0,
+                  "char_end": 56,
+                  "offset_basis": "stored_chunk"
+                },
+                "window": "Alex states that the hearing was postponed until Friday.",
+                "window_start": 0,
+                "window_end": 56,
+                "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8"
+              }
+            ],
+            "claims": [
+              {
+                "claim_id": "claim_01",
+                "kind": "attributed_allegation",
+                "text": "Alex states that the hearing was postponed until Friday.",
+                "attribution": "Alex",
+                "citation_ids": [
+                  "episode:one"
+                ],
+                "premise_claim_ids": [],
+                "quote": "",
+                "schema_version": 1,
+                "scope": {
+                  "graph_id": "synthetic_graph",
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1"
+                },
+                "checks": [],
+                "graph_id": "synthetic_graph",
+                "case_id": "synthetic_case",
+                "case_version_id": "synthetic_v1",
+                "evidence_ids": [
+                  "episode:one"
+                ]
+              }
+            ],
+            "claim_checks": [],
+            "claim_check_hash": "41a8e7a9d5f5dc14948f8895c750e985e3727cbb25e5c54d0169d2fc7a746575",
+            "claim_ledger": [
+              {
+                "claim_id": "claim_01",
+                "kind": "attributed_allegation",
+                "text": "Alex states that the hearing was postponed until Friday.",
+                "attribution": "Alex",
+                "citation_ids": [
+                  "episode:one"
+                ],
+                "premise_claim_ids": [],
+                "quote": "",
+                "schema_version": 1,
+                "scope": {
+                  "graph_id": "synthetic_graph",
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1"
+                },
+                "checks": []
+              }
+            ]
+          },
+          {
+            "title": "Unrelated contracts",
+            "content": "Unrelated contracts remain unresolved.",
+            "description": "",
+            "evidence_cards": [],
+            "claims": [],
+            "claim_checks": [],
+            "claim_check_hash": "",
+            "claim_ledger": []
+          }
+        ],
+        "summary_claims": [],
+        "summary_claim_checks": [],
+        "summary_claim_check_hash": ""
+      },
+      "markdown_content": "# Synthetic hearing report\n\n> Alex states that the hearing was postponed until Friday. Other issues remain open.\n\n## Hearing\n\nAlex states that the hearing was postponed until Friday. [1]\n\n## Unrelated contracts\n\nUnrelated contracts remain unresolved.\n\n",
+      "created_at": "2026-10-02T20:00:26.494461+00:00",
+      "completed_at": "2026-10-02T20:00:26.494461+00:00",
+      "error": null,
+      "validation_issues": [
+        {
+          "code": "procedural_source_unavailable",
+          "requires_review": true,
+          "blocking": false,
+          "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents."
+        }
+      ],
+      "quality_score": {
+        "score": 85,
+        "threshold": 80,
+        "status": "pass",
+        "deductions": [
+          {
+            "code": "procedural_source_unavailable",
+            "penalty": 5,
+            "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents."
+          },
+          {
+            "code": "thin_section_evidence",
+            "penalty": 10,
+            "message": "2 section(s) use fewer than 3 distinct evidence points."
+          }
+        ],
+        "section_count": 2,
+        "section_evidence_counts": [
+          1,
+          0
+        ]
+      },
+      "forecast": {
+        "status": "unavailable",
+        "limitations": "Synthetic source-only example; no simulation has run."
+      },
+      "timing": {},
+      "claim_checks": [],
+      "decision_config": {},
+      "source_grounding": {
+        "graph_id": "synthetic_graph",
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1"
+      },
+      "revision": {
+        "immutable": true,
+        "parent_report_id": "report_synthetic",
+        "root_report_id": "report_synthetic",
+        "proposal_id": "proposal_ba30657520d84b13939b72055de879ec",
+        "proposal_digest": "8ccd495536bbc3f91a3f0b53f718030260584ff073b77de43b51469af91ec5df",
+        "accepted_at": "2026-10-02T20:00:26.494480+00:00",
+        "section_index": 1,
+        "inherited_forecast": true,
+        "source_checked_at": "2026-10-02T20:00:26.494224+00:00",
+        "inherited_section_indices": [
+          2
+        ],
+        "summary_edits": [
+          {
+            "start": 0,
+            "end": 24,
+            "old_text": "The hearing is Thursday.",
+            "new_text": "Alex states that the hearing was postponed until Friday.",
+            "claim_ids": [
+              "claim_01"
+            ]
+          }
+        ],
+        "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+        "content_digest": "b53f645085e568d5d73fc3d0706296a1fbfa7444d51e36aa3a95f32af0545a41"
+      }
+    },
+    {
+      "report_id": "report_synthetic",
+      "simulation_id": "sim_synthetic",
+      "graph_id": "synthetic_graph",
+      "simulation_requirement": "Review the synthetic hearing record.",
+      "report_mode": "legal_case",
+      "report_depth": "standard",
+      "status": "needs_review",
+      "outline": {
+        "title": "Synthetic hearing report",
+        "summary": "The hearing is Thursday. Other issues remain open.",
+        "sections": [
+          {
+            "title": "Hearing",
+            "content": "The hearing is Thursday.",
+            "description": "",
+            "evidence_cards": [],
+            "claims": [],
+            "claim_checks": [],
+            "claim_check_hash": "",
+            "claim_ledger": []
+          },
+          {
+            "title": "Unrelated contracts",
+            "content": "Unrelated contracts remain unresolved.",
+            "description": "",
+            "evidence_cards": [],
+            "claims": [],
+            "claim_checks": [],
+            "claim_check_hash": "",
+            "claim_ledger": []
+          }
+        ],
+        "summary_claims": [],
+        "summary_claim_checks": [],
+        "summary_claim_check_hash": ""
+      },
+      "markdown_content": "# Synthetic hearing report\n\n> The hearing is Thursday. Other issues remain open.\n\n## Hearing\n\nThe hearing is Thursday.\n\n## Unrelated contracts\n\nUnrelated contracts remain unresolved.\n\n",
+      "created_at": "2026-10-02T12:00:00",
+      "completed_at": "",
+      "error": null,
+      "validation_issues": [],
+      "quality_score": {},
+      "forecast": {
+        "status": "unavailable",
+        "limitations": "Synthetic source-only example; no simulation has run."
+      },
+      "timing": {},
+      "claim_checks": [],
+      "decision_config": {},
+      "source_grounding": {
+        "graph_id": "synthetic_graph",
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1"
+      },
+      "revision": {}
+    }
+  ],
+  "proposals": [
+    {
+      "schema_version": 1,
+      "proposal_id": "proposal_55f47d61eb9940ae97868ddd43dce914",
+      "parent_report_id": "report_synthetic",
+      "revision_report_id": "report_f95a05a77b984469bedf14d48cd2d04c",
+      "request_key_hash": "369a663195bb72ac1dea5c58bdceaae619b7ba027c5848aa91cd971e049a3bea",
+      "request_digest": "7bef911825d879d77603553860c57950690717f8b100ebaf3b6e2455fdae6658",
+      "state": "rejected",
+      "phase": "review",
+      "created_at": "2026-10-02T20:00:18.634539+00:00",
+      "updated_at": "2026-10-02T20:00:23.551235+00:00",
+      "deadline_at": 1790971398.634567,
+      "before": {
+        "section": "The hearing is Thursday.",
+        "summary": "The hearing is Thursday. Other issues remain open."
+      },
+      "after": {
+        "section": "Alex states that the hearing was postponed until Friday. [1]",
+        "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open."
+      },
+      "ledger": [
+        {
+          "claim_id": "claim_01",
+          "kind": "attributed_allegation",
+          "text": "Alex states that the hearing was postponed until Friday.",
+          "attribution": "Alex",
+          "citation_ids": [
+            "episode:one"
+          ],
+          "premise_claim_ids": [],
+          "quote": "",
+          "schema_version": 1,
+          "scope": {
+            "graph_id": "synthetic_graph",
+            "case_id": "synthetic_case",
+            "case_version_id": "synthetic_v1"
+          },
+          "checks": []
+        }
+      ],
+      "sources": [
+        {
+          "evidence_id": "episode:one",
+          "episode_id": "one",
+          "origin": "source_document",
+          "excerpt": "Alex states that the hearing was postponed until Friday.",
+          "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+          "graph_id": "synthetic_graph",
+          "case_id": "synthetic_case",
+          "case_version_id": "synthetic_v1",
+          "document_id": "synthetic_doc",
+          "filename": "synthetic-record.txt",
+          "locator": {
+            "page": 1,
+            "paragraph": null,
+            "chunk_index": 0,
+            "char_start": 0,
+            "char_end": 56,
+            "offset_basis": "stored_chunk"
+          },
+          "window": "Alex states that the hearing was postponed until Friday.",
+          "window_start": 0,
+          "window_end": 56,
+          "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8"
+        }
+      ],
+      "findings": [],
+      "usage": {
+        "calls": [
+          {
+            "provider": "synthetic",
+            "model": "synthetic-no-provider",
+            "attempt_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "elapsed_ms": 0
+          },
+          {
+            "provider": "synthetic",
+            "model": "synthetic-no-provider",
+            "attempt_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "elapsed_ms": 0
+          },
+          {
+            "provider": "synthetic",
+            "model": "synthetic-no-provider",
+            "attempt_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "elapsed_ms": 0
+          }
+        ],
+        "elapsed_ms": 630.49,
+        "remaining_ms": 179368.31,
+        "cost": null
+      },
+      "timing": {
+        "retrieving": 4.44,
+        "planning": 204.77,
+        "drafting": 202.88,
+        "auditing": 203.34
+      },
+      "limitations": [
+        "semantic_retrieval_unavailable",
+        "model_audit_is_not_factual_certification"
+      ],
+      "accepted_report_id": null,
+      "proposal_digest": "b978c7ed59080e195e4af800c05ba66c22f63a2cf3cd0139b05a961c5216c2fe",
+      "scope": {
+        "graph_id": "synthetic_graph",
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1"
+      },
+      "section_index": 1,
+      "task_id": "03a33583-d743-4d8e-b995-c1b17f7f22e0",
+      "parent_digest": "30eb12ddeedb82dc1d5643d82b871b90b8327fe1407aa6bcfddb64f0e8c3d10d",
+      "policy": "evidence-draft-v1",
+      "model": "synthetic-no-provider",
+      "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+      "source_snapshot_digest": "188db7c577de1b2d9e1d8b9d78587f4873498970ccc788c3aa621c0d16c84e19",
+      "retrieval": {
+        "exact": [],
+        "lexical": [
+          "episode:one"
+        ],
+        "fused": [
+          "episode:one"
+        ],
+        "semantic_covered": 0,
+        "admitted": 1,
+        "packet_characters": 56
+      },
+      "ledger_digest": "1eb0988d1579319a7d27fab94dfde53cd6bfce81268c811d2be75bdc15ba1fb3",
+      "paragraphs": [
+        {
+          "text": "Alex states that the hearing was postponed until Friday.",
+          "kind": "attributed_allegation",
+          "claim_ids": [
+            "claim_01"
+          ]
+        }
+      ],
+      "summary_edits": [
+        {
+          "start": 0,
+          "end": 24,
+          "old_text": "The hearing is Thursday.",
+          "new_text": "Alex states that the hearing was postponed until Friday.",
+          "claim_ids": [
+            "claim_01"
+          ]
+        }
+      ],
+      "summary_unchanged": false,
+      "error_code": "stale_sources"
+    },
+    {
+      "schema_version": 1,
+      "proposal_id": "proposal_6666106f790a4a93a412b74560560e2a",
+      "parent_report_id": "report_synthetic",
+      "revision_report_id": "report_4907a5b53f5947d6af2f5ee9658416df",
+      "request_key_hash": "b29e1ac8fd7aaeaff4369cb9d85168511514c21d9e0e0b6c5c096efc3925f9ab",
+      "request_digest": "0bd265b20b7da0e86b48ac554358b6e2fd958d9330252169fcf9130be21c7990",
+      "state": "rejected",
+      "phase": "review",
+      "created_at": "2026-10-02T20:00:23.632848+00:00",
+      "updated_at": "2026-10-02T20:00:25.132912+00:00",
+      "deadline_at": 1790971403.632877,
+      "before": {
+        "section": "Unrelated contracts remain unresolved.",
+        "summary": "The hearing is Thursday. Other issues remain open."
+      },
+      "after": {},
+      "ledger": [],
+      "sources": [],
+      "findings": [
+        {
+          "code": "no_original_evidence",
+          "blocking": true
+        }
+      ],
+      "usage": {
+        "calls": [],
+        "elapsed_ms": 19.6,
+        "remaining_ms": 179979.18,
+        "cost": null
+      },
+      "timing": {
+        "retrieving": 3.7,
+        "planning": 1.95
+      },
+      "limitations": [
+        "semantic_retrieval_unavailable"
+      ],
+      "accepted_report_id": null,
+      "proposal_digest": "7dea98c73ba70e56260d92c5cda7741f792aa92d6d38e33b0f32c68f7d15699d",
+      "scope": {
+        "graph_id": "synthetic_graph",
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1"
+      },
+      "section_index": 2,
+      "task_id": "62d64e31-1473-4ce9-a6d3-d163abf219c1",
+      "parent_digest": "30eb12ddeedb82dc1d5643d82b871b90b8327fe1407aa6bcfddb64f0e8c3d10d",
+      "policy": "evidence-draft-v1",
+      "model": "synthetic-no-provider",
+      "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+      "source_snapshot_digest": "188db7c577de1b2d9e1d8b9d78587f4873498970ccc788c3aa621c0d16c84e19",
+      "retrieval": {
+        "exact": [],
+        "lexical": [],
+        "fused": [],
+        "semantic_covered": 0,
+        "admitted": 1,
+        "packet_characters": 0
+      }
+    },
+    {
+      "schema_version": 1,
+      "proposal_id": "proposal_ba30657520d84b13939b72055de879ec",
+      "parent_report_id": "report_synthetic",
+      "revision_report_id": "report_f23c44c1c3694db1aa728072eb74a155",
+      "request_key_hash": "8150d524580be3be68e9aa67a0ba0abb0349c864509338ef06a1afa18af9fd46",
+      "request_digest": "7bef911825d879d77603553860c57950690717f8b100ebaf3b6e2455fdae6658",
+      "state": "accepted",
+      "phase": "review",
+      "created_at": "2026-10-02T20:00:25.167309+00:00",
+      "updated_at": "2026-10-02T20:00:26.501034+00:00",
+      "deadline_at": 1790971405.1673303,
+      "before": {
+        "section": "The hearing is Thursday.",
+        "summary": "The hearing is Thursday. Other issues remain open."
+      },
+      "after": {
+        "section": "Alex states that the hearing was postponed until Friday. [1]",
+        "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open."
+      },
+      "ledger": [
+        {
+          "claim_id": "claim_01",
+          "kind": "attributed_allegation",
+          "text": "Alex states that the hearing was postponed until Friday.",
+          "attribution": "Alex",
+          "citation_ids": [
+            "episode:one"
+          ],
+          "premise_claim_ids": [],
+          "quote": "",
+          "schema_version": 1,
+          "scope": {
+            "graph_id": "synthetic_graph",
+            "case_id": "synthetic_case",
+            "case_version_id": "synthetic_v1"
+          },
+          "checks": []
+        }
+      ],
+      "sources": [
+        {
+          "evidence_id": "episode:one",
+          "episode_id": "one",
+          "origin": "source_document",
+          "excerpt": "Alex states that the hearing was postponed until Friday.",
+          "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+          "graph_id": "synthetic_graph",
+          "case_id": "synthetic_case",
+          "case_version_id": "synthetic_v1",
+          "document_id": "synthetic_doc",
+          "filename": "synthetic-record.txt",
+          "locator": {
+            "page": 1,
+            "paragraph": null,
+            "chunk_index": 0,
+            "char_start": 0,
+            "char_end": 56,
+            "offset_basis": "stored_chunk"
+          },
+          "window": "Alex states that the hearing was postponed until Friday.",
+          "window_start": 0,
+          "window_end": 56,
+          "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8"
+        }
+      ],
+      "findings": [],
+      "usage": {
+        "calls": [
+          {
+            "provider": "synthetic",
+            "model": "synthetic-no-provider",
+            "attempt_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "elapsed_ms": 0
+          },
+          {
+            "provider": "synthetic",
+            "model": "synthetic-no-provider",
+            "attempt_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "elapsed_ms": 0
+          },
+          {
+            "provider": "synthetic",
+            "model": "synthetic-no-provider",
+            "attempt_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "elapsed_ms": 0
+          }
+        ],
+        "elapsed_ms": 627.47,
+        "remaining_ms": 179371.82,
+        "cost": null
+      },
+      "timing": {
+        "retrieving": 3.88,
+        "planning": 204.91,
+        "drafting": 203.28,
+        "auditing": 203.71
+      },
+      "limitations": [
+        "semantic_retrieval_unavailable",
+        "model_audit_is_not_factual_certification"
+      ],
+      "accepted_report_id": "report_f23c44c1c3694db1aa728072eb74a155",
+      "proposal_digest": "8ccd495536bbc3f91a3f0b53f718030260584ff073b77de43b51469af91ec5df",
+      "scope": {
+        "graph_id": "synthetic_graph",
+        "case_id": "synthetic_case",
+        "case_version_id": "synthetic_v1"
+      },
+      "section_index": 1,
+      "task_id": "86c81a01-e248-435d-8a95-0eb1644130f6",
+      "parent_digest": "30eb12ddeedb82dc1d5643d82b871b90b8327fe1407aa6bcfddb64f0e8c3d10d",
+      "policy": "evidence-draft-v1",
+      "model": "synthetic-no-provider",
+      "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+      "source_snapshot_digest": "188db7c577de1b2d9e1d8b9d78587f4873498970ccc788c3aa621c0d16c84e19",
+      "retrieval": {
+        "exact": [],
+        "lexical": [
+          "episode:one"
+        ],
+        "fused": [
+          "episode:one"
+        ],
+        "semantic_covered": 0,
+        "admitted": 1,
+        "packet_characters": 56
+      },
+      "ledger_digest": "1eb0988d1579319a7d27fab94dfde53cd6bfce81268c811d2be75bdc15ba1fb3",
+      "paragraphs": [
+        {
+          "text": "Alex states that the hearing was postponed until Friday.",
+          "kind": "attributed_allegation",
+          "claim_ids": [
+            "claim_01"
+          ]
+        }
+      ],
+      "summary_edits": [
+        {
+          "start": 0,
+          "end": 24,
+          "old_text": "The hearing is Thursday.",
+          "new_text": "Alex states that the hearing was postponed until Friday.",
+          "claim_ids": [
+            "claim_01"
+          ]
+        }
+      ],
+      "summary_unchanged": false,
+      "source_checked_at": "2026-10-02T20:00:26.494224+00:00"
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "86c81a01-e248-435d-8a95-0eb1644130f6",
+      "task_type": "evidence_proposal",
+      "status": "completed",
+      "created_at": "2026-10-02T16:00:25.168055",
+      "updated_at": "2026-10-02T20:00:25.799792+00:00",
+      "progress": 100,
+      "message": "Task completed",
+      "progress_detail": {},
+      "result": {
+        "proposal_id": "proposal_ba30657520d84b13939b72055de879ec",
+        "state": "ready"
+      },
+      "error": null,
+      "metadata": {
+        "report_id": "report_synthetic",
+        "proposal_id": "proposal_ba30657520d84b13939b72055de879ec"
+      },
+      "execution": {
+        "attempt_id": "d9a09c873eda4461adfed572107df06b",
+        "owner": {
+          "worker_id": "80937d2300b5427aaddd0dce5af1809b",
+          "pid": 1409885
+        },
+        "heartbeat_at": 1790971225.169223,
+        "lease_until": 1790971255.1692233,
+        "resources": [
+          {
+            "key": "proposal:proposal_ba30657520d84b13939b72055de879ec",
+            "root": "/tmp/crowdlens-ecc-browser-sandbox-workflow/reports"
+          }
+        ]
+      },
+      "recovery": null
+    },
+    {
+      "task_id": "62d64e31-1473-4ce9-a6d3-d163abf219c1",
+      "task_type": "evidence_proposal",
+      "status": "completed",
+      "created_at": "2026-10-02T16:00:23.634123",
+      "updated_at": "2026-10-02T20:00:23.657228+00:00",
+      "progress": 100,
+      "message": "Task completed",
+      "progress_detail": {},
+      "result": {
+        "proposal_id": "proposal_6666106f790a4a93a412b74560560e2a",
+        "state": "blocked"
+      },
+      "error": null,
+      "metadata": {
+        "report_id": "report_synthetic",
+        "proposal_id": "proposal_6666106f790a4a93a412b74560560e2a"
+      },
+      "execution": {
+        "attempt_id": "60b75b94ba214ec7b913bdf304ff65a5",
+        "owner": {
+          "worker_id": "80937d2300b5427aaddd0dce5af1809b",
+          "pid": 1409885
+        },
+        "heartbeat_at": 1790971223.6359096,
+        "lease_until": 1790971253.6359098,
+        "resources": [
+          {
+            "key": "proposal:proposal_6666106f790a4a93a412b74560560e2a",
+            "root": "/tmp/crowdlens-ecc-browser-sandbox-workflow/reports"
+          }
+        ]
+      },
+      "recovery": null
+    },
+    {
+      "task_id": "03a33583-d743-4d8e-b995-c1b17f7f22e0",
+      "task_type": "evidence_proposal",
+      "status": "completed",
+      "created_at": "2026-10-02T16:00:18.635802",
+      "updated_at": "2026-10-02T20:00:19.269885+00:00",
+      "progress": 100,
+      "message": "Task completed",
+      "progress_detail": {},
+      "result": {
+        "proposal_id": "proposal_55f47d61eb9940ae97868ddd43dce914",
+        "state": "ready"
+      },
+      "error": null,
+      "metadata": {
+        "report_id": "report_synthetic",
+        "proposal_id": "proposal_55f47d61eb9940ae97868ddd43dce914"
+      },
+      "execution": {
+        "attempt_id": "a0d0b4e6fcec41f681e4f21b077462eb",
+        "owner": {
+          "worker_id": "80937d2300b5427aaddd0dce5af1809b",
+          "pid": 1409885
+        },
+        "heartbeat_at": 1790971218.6374326,
+        "lease_until": 1790971248.6374326,
+        "resources": [
+          {
+            "key": "proposal:proposal_55f47d61eb9940ae97868ddd43dce914",
+            "root": "/tmp/crowdlens-ecc-browser-sandbox-workflow/reports"
+          }
+        ]
+      },
+      "recovery": null
+    },
+    {
+      "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+      "task_type": "Build graph: Unnamed Project",
+      "status": "completed",
+      "created_at": "2026-10-02T16:00:04.243062",
+      "updated_at": "2026-10-02T20:00:04.639270+00:00",
+      "progress": 100,
+      "message": "Graph build completed",
+      "progress_detail": {
+        "current_chunk": 1,
+        "total_chunks": 1,
+        "document_count": 1,
+        "documents_built": 1,
+        "chunk_size": 4500,
+        "chunk_overlap": 100,
+        "batch_size": 8,
+        "build_preset": "fast_scan",
+        "build_mode": "fast_scan",
+        "incremental": true,
+        "using_existing_graph": false,
+        "max_batch_chars": 18000,
+        "llm_provider": "ollama",
+        "llm_model": "synthetic-no-provider",
+        "embedding_provider": "ollama",
+        "embedding_model": "nomic-embed-text",
+        "file_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+        "eta_seconds": null,
+        "profile": {
+          "chunking_seconds": 0.0,
+          "graph_create_seconds": 0.0,
+          "ontology_seconds": 0.0,
+          "llm_extraction_seconds": 0.0,
+          "embedding_seconds": 0.0,
+          "neo4j_write_seconds": 0.0,
+          "graph_data_seconds": 0.0,
+          "total_seconds": 0.3756,
+          "per_document": [
+            {
+              "document_id": "doc_de3d2463993c",
+              "filename": "synthetic-record.txt",
+              "document_type": "other",
+              "hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+              "text_length": 56,
+              "chunk_count": 1,
+              "cache_status": "new"
+            }
+          ],
+          "batch_wall_seconds": 0.0,
+          "cache_hits": 0,
+          "cache_misses": 0,
+          "llm_concurrency": null,
+          "total_batches": null,
+          "timing": {
+            "name": "graph_build",
+            "status": "completed",
+            "started_at": "2026-10-02T16:00:04.248854",
+            "completed_at": "2026-10-02T16:00:04.624459",
+            "total_seconds": 0.3756,
+            "phase_totals": {
+              "initialize_service": 0.0,
+              "chunking": 0.0,
+              "create_graph": 0.0,
+              "set_ontology": 0.0,
+              "extract_and_write": 0.3501,
+              "retrieve_graph_data": 0.0,
+              "graph_quality": 0.0
+            },
+            "phases": [
+              {
+                "name": "initialize_service",
+                "label": "Initialize graph builder",
+                "started_at": "2026-10-02T16:00:04.251686",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.251704",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "chunking",
+                "label": "Split documents into chunks",
+                "started_at": "2026-10-02T16:00:04.253381",
+                "metadata": {
+                  "document_count": 1
+                },
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.253414",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "create_graph",
+                "label": "Create or reuse Neo4j graph",
+                "started_at": "2026-10-02T16:00:04.255307",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.255324",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "set_ontology",
+                "label": "Store ontology on graph",
+                "started_at": "2026-10-02T16:00:04.260431",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.260449",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "extract_and_write",
+                "label": "Extract entities and write graph",
+                "started_at": "2026-10-02T16:00:04.264057",
+                "metadata": {
+                  "chunk_count": 1
+                },
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.614187",
+                "duration_seconds": 0.3501
+              },
+              {
+                "name": "retrieve_graph_data",
+                "label": "Retrieve graph data",
+                "started_at": "2026-10-02T16:00:04.624339",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.624363",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "graph_quality",
+                "label": "Summarize graph quality",
+                "started_at": "2026-10-02T16:00:04.624427",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.624441",
+                "duration_seconds": 0.0
+              }
+            ],
+            "active_phases": [],
+            "metadata": {
+              "project_id": "proj_5bf13e54e202",
+              "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+              "graph_name": "Unnamed Project",
+              "build_preset": "fast_scan",
+              "build_mode": "fast_scan",
+              "graph_id": "synthetic_graph",
+              "node_count": 1,
+              "edge_count": 0,
+              "chunk_count": 1,
+              "episode_count": 1
+            },
+            "error": null
+          }
+        },
+        "timing": {
+          "name": "graph_build",
+          "status": "completed",
+          "started_at": "2026-10-02T16:00:04.248854",
+          "completed_at": "2026-10-02T16:00:04.624459",
+          "total_seconds": 0.3756,
+          "phase_totals": {
+            "initialize_service": 0.0,
+            "chunking": 0.0,
+            "create_graph": 0.0,
+            "set_ontology": 0.0,
+            "extract_and_write": 0.3501,
+            "retrieve_graph_data": 0.0,
+            "graph_quality": 0.0
+          },
+          "phases": [
+            {
+              "name": "initialize_service",
+              "label": "Initialize graph builder",
+              "started_at": "2026-10-02T16:00:04.251686",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.251704",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "chunking",
+              "label": "Split documents into chunks",
+              "started_at": "2026-10-02T16:00:04.253381",
+              "metadata": {
+                "document_count": 1
+              },
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.253414",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "create_graph",
+              "label": "Create or reuse Neo4j graph",
+              "started_at": "2026-10-02T16:00:04.255307",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.255324",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "set_ontology",
+              "label": "Store ontology on graph",
+              "started_at": "2026-10-02T16:00:04.260431",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.260449",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "extract_and_write",
+              "label": "Extract entities and write graph",
+              "started_at": "2026-10-02T16:00:04.264057",
+              "metadata": {
+                "chunk_count": 1
+              },
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.614187",
+              "duration_seconds": 0.3501
+            },
+            {
+              "name": "retrieve_graph_data",
+              "label": "Retrieve graph data",
+              "started_at": "2026-10-02T16:00:04.624339",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.624363",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "graph_quality",
+              "label": "Summarize graph quality",
+              "started_at": "2026-10-02T16:00:04.624427",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.624441",
+              "duration_seconds": 0.0
+            }
+          ],
+          "active_phases": [],
+          "metadata": {
+            "project_id": "proj_5bf13e54e202",
+            "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+            "graph_name": "Unnamed Project",
+            "build_preset": "fast_scan",
+            "build_mode": "fast_scan",
+            "graph_id": "synthetic_graph",
+            "node_count": 1,
+            "edge_count": 0,
+            "chunk_count": 1,
+            "episode_count": 1
+          },
+          "error": null
+        },
+        "graph_quality": {
+          "status": "unknown",
+          "safe_to_report": false,
+          "deductions": []
+        }
+      },
+      "result": {
+        "project_id": "proj_5bf13e54e202",
+        "graph_id": "synthetic_graph",
+        "node_count": 1,
+        "edge_count": 0,
+        "chunk_count": 1,
+        "chunk_size": 4500,
+        "chunk_overlap": 100,
+        "batch_size": 8,
+        "build_mode": "fast_scan",
+        "llm_provider": "ollama",
+        "llm_model": "synthetic-no-provider",
+        "embedding_provider": "ollama",
+        "profile": {
+          "chunking_seconds": 0.0,
+          "graph_create_seconds": 0.0,
+          "ontology_seconds": 0.0,
+          "llm_extraction_seconds": 0.0,
+          "embedding_seconds": 0.0,
+          "neo4j_write_seconds": 0.0,
+          "graph_data_seconds": 0.0,
+          "total_seconds": 0.3756,
+          "per_document": [
+            {
+              "document_id": "doc_de3d2463993c",
+              "filename": "synthetic-record.txt",
+              "document_type": "other",
+              "hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+              "text_length": 56,
+              "chunk_count": 1,
+              "cache_status": "new"
+            }
+          ],
+          "batch_wall_seconds": 0.0,
+          "cache_hits": 0,
+          "cache_misses": 0,
+          "llm_concurrency": null,
+          "total_batches": null,
+          "timing": {
+            "name": "graph_build",
+            "status": "completed",
+            "started_at": "2026-10-02T16:00:04.248854",
+            "completed_at": "2026-10-02T16:00:04.624459",
+            "total_seconds": 0.3756,
+            "phase_totals": {
+              "initialize_service": 0.0,
+              "chunking": 0.0,
+              "create_graph": 0.0,
+              "set_ontology": 0.0,
+              "extract_and_write": 0.3501,
+              "retrieve_graph_data": 0.0,
+              "graph_quality": 0.0
+            },
+            "phases": [
+              {
+                "name": "initialize_service",
+                "label": "Initialize graph builder",
+                "started_at": "2026-10-02T16:00:04.251686",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.251704",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "chunking",
+                "label": "Split documents into chunks",
+                "started_at": "2026-10-02T16:00:04.253381",
+                "metadata": {
+                  "document_count": 1
+                },
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.253414",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "create_graph",
+                "label": "Create or reuse Neo4j graph",
+                "started_at": "2026-10-02T16:00:04.255307",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.255324",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "set_ontology",
+                "label": "Store ontology on graph",
+                "started_at": "2026-10-02T16:00:04.260431",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.260449",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "extract_and_write",
+                "label": "Extract entities and write graph",
+                "started_at": "2026-10-02T16:00:04.264057",
+                "metadata": {
+                  "chunk_count": 1
+                },
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.614187",
+                "duration_seconds": 0.3501
+              },
+              {
+                "name": "retrieve_graph_data",
+                "label": "Retrieve graph data",
+                "started_at": "2026-10-02T16:00:04.624339",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.624363",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "graph_quality",
+                "label": "Summarize graph quality",
+                "started_at": "2026-10-02T16:00:04.624427",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.624441",
+                "duration_seconds": 0.0
+              }
+            ],
+            "active_phases": [],
+            "metadata": {
+              "project_id": "proj_5bf13e54e202",
+              "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+              "graph_name": "Unnamed Project",
+              "build_preset": "fast_scan",
+              "build_mode": "fast_scan",
+              "graph_id": "synthetic_graph",
+              "node_count": 1,
+              "edge_count": 0,
+              "chunk_count": 1,
+              "episode_count": 1
+            },
+            "error": null
+          }
+        },
+        "graph_quality": {
+          "status": "unknown",
+          "safe_to_report": false,
+          "deductions": []
+        },
+        "timing": {
+          "name": "graph_build",
+          "status": "completed",
+          "started_at": "2026-10-02T16:00:04.248854",
+          "completed_at": "2026-10-02T16:00:04.624459",
+          "total_seconds": 0.3756,
+          "phase_totals": {
+            "initialize_service": 0.0,
+            "chunking": 0.0,
+            "create_graph": 0.0,
+            "set_ontology": 0.0,
+            "extract_and_write": 0.3501,
+            "retrieve_graph_data": 0.0,
+            "graph_quality": 0.0
+          },
+          "phases": [
+            {
+              "name": "initialize_service",
+              "label": "Initialize graph builder",
+              "started_at": "2026-10-02T16:00:04.251686",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.251704",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "chunking",
+              "label": "Split documents into chunks",
+              "started_at": "2026-10-02T16:00:04.253381",
+              "metadata": {
+                "document_count": 1
+              },
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.253414",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "create_graph",
+              "label": "Create or reuse Neo4j graph",
+              "started_at": "2026-10-02T16:00:04.255307",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.255324",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "set_ontology",
+              "label": "Store ontology on graph",
+              "started_at": "2026-10-02T16:00:04.260431",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.260449",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "extract_and_write",
+              "label": "Extract entities and write graph",
+              "started_at": "2026-10-02T16:00:04.264057",
+              "metadata": {
+                "chunk_count": 1
+              },
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.614187",
+              "duration_seconds": 0.3501
+            },
+            {
+              "name": "retrieve_graph_data",
+              "label": "Retrieve graph data",
+              "started_at": "2026-10-02T16:00:04.624339",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.624363",
+              "duration_seconds": 0.0
+            },
+            {
+              "name": "graph_quality",
+              "label": "Summarize graph quality",
+              "started_at": "2026-10-02T16:00:04.624427",
+              "metadata": {},
+              "status": "completed",
+              "completed_at": "2026-10-02T16:00:04.624441",
+              "duration_seconds": 0.0
+            }
+          ],
+          "active_phases": [],
+          "metadata": {
+            "project_id": "proj_5bf13e54e202",
+            "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+            "graph_name": "Unnamed Project",
+            "build_preset": "fast_scan",
+            "build_mode": "fast_scan",
+            "graph_id": "synthetic_graph",
+            "node_count": 1,
+            "edge_count": 0,
+            "chunk_count": 1,
+            "episode_count": 1
+          },
+          "error": null
+        },
+        "settings": {
+          "build_preset": "fast_scan",
+          "build_mode": "fast_scan",
+          "chunk_size": 4500,
+          "chunk_overlap": 100,
+          "batch_size": 8,
+          "llm_concurrency": null,
+          "embedding_provider": "ollama",
+          "cache_reuse": true,
+          "incremental": true,
+          "extraction_depth": "low",
+          "relation_density": "low",
+          "built_document_hashes": [
+            "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8"
+          ],
+          "last_graph_quality": {
+            "status": "unknown",
+            "safe_to_report": false,
+            "deductions": []
+          },
+          "last_build_profile": {
+            "chunking_seconds": 0.0,
+            "graph_create_seconds": 0.0,
+            "ontology_seconds": 0.0,
+            "llm_extraction_seconds": 0.0,
+            "embedding_seconds": 0.0,
+            "neo4j_write_seconds": 0.0,
+            "graph_data_seconds": 0.0,
+            "total_seconds": 0.3756,
+            "per_document": [
+              {
+                "document_id": "doc_de3d2463993c",
+                "filename": "synthetic-record.txt",
+                "document_type": "other",
+                "hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                "text_length": 56,
+                "chunk_count": 1,
+                "cache_status": "new"
+              }
+            ],
+            "batch_wall_seconds": 0.0,
+            "cache_hits": 0,
+            "cache_misses": 0,
+            "llm_concurrency": null,
+            "total_batches": null,
+            "timing": {
+              "name": "graph_build",
+              "status": "completed",
+              "started_at": "2026-10-02T16:00:04.248854",
+              "completed_at": "2026-10-02T16:00:04.624459",
+              "total_seconds": 0.3756,
+              "phase_totals": {
+                "initialize_service": 0.0,
+                "chunking": 0.0,
+                "create_graph": 0.0,
+                "set_ontology": 0.0,
+                "extract_and_write": 0.3501,
+                "retrieve_graph_data": 0.0,
+                "graph_quality": 0.0
+              },
+              "phases": [
+                {
+                  "name": "initialize_service",
+                  "label": "Initialize graph builder",
+                  "started_at": "2026-10-02T16:00:04.251686",
+                  "metadata": {},
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.251704",
+                  "duration_seconds": 0.0
+                },
+                {
+                  "name": "chunking",
+                  "label": "Split documents into chunks",
+                  "started_at": "2026-10-02T16:00:04.253381",
+                  "metadata": {
+                    "document_count": 1
+                  },
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.253414",
+                  "duration_seconds": 0.0
+                },
+                {
+                  "name": "create_graph",
+                  "label": "Create or reuse Neo4j graph",
+                  "started_at": "2026-10-02T16:00:04.255307",
+                  "metadata": {},
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.255324",
+                  "duration_seconds": 0.0
+                },
+                {
+                  "name": "set_ontology",
+                  "label": "Store ontology on graph",
+                  "started_at": "2026-10-02T16:00:04.260431",
+                  "metadata": {},
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.260449",
+                  "duration_seconds": 0.0
+                },
+                {
+                  "name": "extract_and_write",
+                  "label": "Extract entities and write graph",
+                  "started_at": "2026-10-02T16:00:04.264057",
+                  "metadata": {
+                    "chunk_count": 1
+                  },
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.614187",
+                  "duration_seconds": 0.3501
+                },
+                {
+                  "name": "retrieve_graph_data",
+                  "label": "Retrieve graph data",
+                  "started_at": "2026-10-02T16:00:04.624339",
+                  "metadata": {},
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.624363",
+                  "duration_seconds": 0.0
+                },
+                {
+                  "name": "graph_quality",
+                  "label": "Summarize graph quality",
+                  "started_at": "2026-10-02T16:00:04.624427",
+                  "metadata": {},
+                  "status": "completed",
+                  "completed_at": "2026-10-02T16:00:04.624441",
+                  "duration_seconds": 0.0
+                }
+              ],
+              "active_phases": [],
+              "metadata": {
+                "project_id": "proj_5bf13e54e202",
+                "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+                "graph_name": "Unnamed Project",
+                "build_preset": "fast_scan",
+                "build_mode": "fast_scan",
+                "graph_id": "synthetic_graph",
+                "node_count": 1,
+                "edge_count": 0,
+                "chunk_count": 1,
+                "episode_count": 1
+              },
+              "error": null
+            }
+          },
+          "last_build_timing": {
+            "name": "graph_build",
+            "status": "completed",
+            "started_at": "2026-10-02T16:00:04.248854",
+            "completed_at": "2026-10-02T16:00:04.624459",
+            "total_seconds": 0.3756,
+            "phase_totals": {
+              "initialize_service": 0.0,
+              "chunking": 0.0,
+              "create_graph": 0.0,
+              "set_ontology": 0.0,
+              "extract_and_write": 0.3501,
+              "retrieve_graph_data": 0.0,
+              "graph_quality": 0.0
+            },
+            "phases": [
+              {
+                "name": "initialize_service",
+                "label": "Initialize graph builder",
+                "started_at": "2026-10-02T16:00:04.251686",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.251704",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "chunking",
+                "label": "Split documents into chunks",
+                "started_at": "2026-10-02T16:00:04.253381",
+                "metadata": {
+                  "document_count": 1
+                },
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.253414",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "create_graph",
+                "label": "Create or reuse Neo4j graph",
+                "started_at": "2026-10-02T16:00:04.255307",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.255324",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "set_ontology",
+                "label": "Store ontology on graph",
+                "started_at": "2026-10-02T16:00:04.260431",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.260449",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "extract_and_write",
+                "label": "Extract entities and write graph",
+                "started_at": "2026-10-02T16:00:04.264057",
+                "metadata": {
+                  "chunk_count": 1
+                },
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.614187",
+                "duration_seconds": 0.3501
+              },
+              {
+                "name": "retrieve_graph_data",
+                "label": "Retrieve graph data",
+                "started_at": "2026-10-02T16:00:04.624339",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.624363",
+                "duration_seconds": 0.0
+              },
+              {
+                "name": "graph_quality",
+                "label": "Summarize graph quality",
+                "started_at": "2026-10-02T16:00:04.624427",
+                "metadata": {},
+                "status": "completed",
+                "completed_at": "2026-10-02T16:00:04.624441",
+                "duration_seconds": 0.0
+              }
+            ],
+            "active_phases": [],
+            "metadata": {
+              "project_id": "proj_5bf13e54e202",
+              "task_id": "0664e40e-561d-4f5e-ad21-ee47a49f5ca8",
+              "graph_name": "Unnamed Project",
+              "build_preset": "fast_scan",
+              "build_mode": "fast_scan",
+              "graph_id": "synthetic_graph",
+              "node_count": 1,
+              "edge_count": 0,
+              "chunk_count": 1,
+              "episode_count": 1
+            },
+            "error": null
+          }
+        }
+      },
+      "error": null,
+      "metadata": {
+        "project_id": "proj_5bf13e54e202"
+      },
+      "execution": {
+        "attempt_id": "50a7ef06b9264f73ba5cf87a37142469",
+        "owner": {
+          "worker_id": "80937d2300b5427aaddd0dce5af1809b",
+          "pid": 1409885
+        },
+        "heartbeat_at": 1790971204.2441506,
+        "lease_until": 1790971234.2441509,
+        "resources": [
+          {
+            "key": "project:proj_5bf13e54e202",
+            "root": "/tmp/crowdlens-ecc-browser-sandbox-workflow/projects"
+          }
+        ]
+      },
+      "recovery": null
+    }
+  ]
+}

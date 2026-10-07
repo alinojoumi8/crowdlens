@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "corpus_version": "source-review-v5",
+  "cases": [
+    {
+      "id": "v5_garden",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v5_graph_garden",
+        "case_id": "v5_case_garden",
+        "case_version_id": "v5_current_garden"
+      },
+      "sources": [
+        {
+          "graph_id": "v5_graph_garden",
+          "case_id": "v5_case_garden",
+          "case_version_id": "v5_current_garden",
+          "uuid": "garden_source_1",
+          "document_id": "garden_document_1",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cloverbay resolution approves a movable seed exchange table for three Saturdays with a $640 spending ceiling. Permanent construction is excluded. No spending has been recorded.",
+          "fixture_text_sha256": "faf65311b889750e793b82635ab6d620e7da73017ceefbb3b98c6d311fae1763"
+        },
+        {
+          "graph_id": "v5_graph_garden",
+          "case_id": "v5_case_garden",
+          "case_version_id": "v5_current_garden",
+          "uuid": "garden_source_2",
+          "document_id": "garden_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cloverbay supplier note: a $430 quote is awaiting approval. No purchase order has been issued. The $640 ceiling is not payment.",
+          "fixture_text_sha256": "17e3848e8006aaebdf4f01c88bee2f8b5d95929163b739d9ca4d554b0df90e55"
+        },
+        {
+          "graph_id": "v5_graph_garden",
+          "case_id": "unrelated_case",
+          "case_version_id": "v5_current_garden",
+          "uuid": "garden_foreign",
+          "document_id": "garden_foreign",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Cloverbay resolution approves a movable seed exchange table for three Saturdays with a $640 spending ceiling. Permanent construction is excluded. No spending has been recorded.",
+          "fixture_text_sha256": "faf65311b889750e793b82635ab6d620e7da73017ceefbb3b98c6d311fae1763"
+        }
+      ],
+      "summary": "A permanent seed exchange building was purchased for $3,200. An unrelated equipment inspection is pending.",
+      "section": {
+        "title": "Seed exchange trial",
+        "description": "Reconcile the original documents, preserving conditions, attribution, populations and evidence limits.",
+        "content": "A permanent seed exchange building was purchased for $3,200."
+      }
+    },
+    {
+      "id": "v5_museum",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v5_graph_museum",
+        "case_id": "v5_case_museum",
+        "case_version_id": "v5_current_museum"
+      },
+      "sources": [
+        {
+          "graph_id": "v5_graph_museum",
+          "case_id": "v5_case_museum",
+          "case_version_id": "v5_current_museum",
+          "uuid": "museum_source_1",
+          "document_id": "museum_document_1",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Meadowbank visitor log records 72 public visitors at the morning exhibition session. Four staff attended separately and are excluded from that count.",
+          "fixture_text_sha256": "8d45e4a3d0e1777217a2d5d86b7cc6a9d745a36522a6b2a71eacc09d0c47c5b1"
+        },
+        {
+          "graph_id": "v5_graph_museum",
+          "case_id": "v5_case_museum",
+          "case_version_id": "v5_current_museum",
+          "uuid": "museum_source_2",
+          "document_id": "museum_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Meadowbank follow-up note: the afternoon session had 55 public visitors. Staff attendance was not recorded for that session. Neither session was a vote or endorsement.",
+          "fixture_text_sha256": "4d224101713c9ab2b5ab9a2a1ec31c8b8765088094926f7f4316ec4c0519c6de"
+        },
+        {
+          "graph_id": "v5_graph_museum",
+          "case_id": "unrelated_case",
+          "case_version_id": "v5_current_museum",
+          "uuid": "museum_foreign",
+          "document_id": "museum_foreign",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Meadowbank visitor log records 72 public visitors at the morning exhibition session. Four staff attended separately and are excluded from that count.",
+          "fixture_text_sha256": "8d45e4a3d0e1777217a2d5d86b7cc6a9d745a36522a6b2a71eacc09d0c47c5b1"
+        }
+      ],
+      "summary": "The morning and afternoon exhibition sessions each had 90 public visitors who endorsed the exhibit. An unrelated equipment inspection is pending.",
+      "section": {
+        "title": "Museum visitor counts",
+        "description": "Reconcile the original documents, preserving conditions, attribution, populations and evidence limits.",
+        "content": "The morning and afternoon exhibition sessions each had 90 public visitors who endorsed the exhibit."
+      }
+    },
+    {
+      "id": "v5_pool",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v5_graph_pool",
+        "case_id": "v5_case_pool",
+        "case_version_id": "v5_current_pool"
+      },
+      "sources": [
+        {
+          "graph_id": "v5_graph_pool",
+          "case_id": "v5_case_pool",
+          "case_version_id": "v5_current_pool",
+          "uuid": "pool_source_1",
+          "document_id": "pool_document_1",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brookvale pool schedule permits two supervised evening sessions, only if two lifeguards are present. A permanent evening opening is not approved.",
+          "fixture_text_sha256": "28fd2ae623768e28331cf7e99a54455f725a64974fb2b2761f1c51edc8205f27"
+        },
+        {
+          "graph_id": "v5_graph_pool",
+          "case_id": "v5_case_pool",
+          "case_version_id": "v5_current_pool",
+          "uuid": "pool_source_2",
+          "document_id": "pool_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brookvale volunteer note: Nia says the group could support the two evening sessions if accessible changing facilities are confirmed. This is possible future support, not an existing endorsement.",
+          "fixture_text_sha256": "5c9b59774911458f3fb93559e7dab3ca626bbae414e0c9d3fd6ad9036dd9afc6"
+        },
+        {
+          "graph_id": "v5_graph_pool",
+          "case_id": "unrelated_case",
+          "case_version_id": "v5_current_pool",
+          "uuid": "pool_foreign",
+          "document_id": "pool_foreign",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Brookvale pool schedule permits two supervised evening sessions, only if two lifeguards are present. A permanent evening opening is not approved.",
+          "fixture_text_sha256": "28fd2ae623768e28331cf7e99a54455f725a64974fb2b2761f1c51edc8205f27"
+        }
+      ],
+      "summary": "Permanent evening pool access is approved and the volunteer group has endorsed it. An unrelated equipment inspection is pending.",
+      "section": {
+        "title": "Pool access conditions",
+        "description": "Reconcile the original documents, preserving conditions, attribution, populations and evidence limits.",
+        "content": "Permanent evening pool access is approved and the volunteer group has endorsed it."
+      }
+    },
+    {
+      "id": "v5_trail",
+      "split": "holdout",
+      "human_review_packet": true,
+      "scope": {
+        "graph_id": "v5_graph_trail",
+        "case_id": "v5_case_trail",
+        "case_version_id": "v5_current_trail"
+      },
+      "sources": [
+        {
+          "graph_id": "v5_graph_trail",
+          "case_id": "v5_case_trail",
+          "case_version_id": "v5_current_trail",
+          "uuid": "trail_source_1",
+          "document_id": "trail_document_1",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Pinebridge trail-marker design brief proposes temporary signs at six junctions, pending a site inspection. Installation approval is not documented.",
+          "fixture_text_sha256": "94c9fcdb24f1ef9d012e5bfc7c8dbae17a1950b2b567a188fc5905aafe70e400"
+        },
+        {
+          "graph_id": "v5_graph_trail",
+          "case_id": "v5_case_trail",
+          "case_version_id": "v5_current_trail",
+          "uuid": "trail_source_2",
+          "document_id": "trail_document_2",
+          "filename": "followup.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Pinebridge inspection note records a request to check sight lines. It records no inspection outcome and no installation order.",
+          "fixture_text_sha256": "1b0f149727717719e2d7ca7c9537942d2f230d5e6037376abb84761de8e61979"
+        },
+        {
+          "graph_id": "v5_graph_trail",
+          "case_id": "unrelated_case",
+          "case_version_id": "v5_current_trail",
+          "uuid": "trail_foreign",
+          "document_id": "trail_foreign",
+          "filename": "record.txt",
+          "origin": "source_document",
+          "page": 1,
+          "paragraph": 1,
+          "chunk_index": 0,
+          "data": "Fictional Pinebridge trail-marker design brief proposes temporary signs at six junctions, pending a site inspection. Installation approval is not documented.",
+          "fixture_text_sha256": "94c9fcdb24f1ef9d012e5bfc7c8dbae17a1950b2b567a188fc5905aafe70e400"
+        }
+      ],
+      "summary": "Trail markers have been installed at all six junctions after a successful inspection. An unrelated equipment inspection is pending.",
+      "section": {
+        "title": "Trail marker proposal",
+        "description": "Reconcile the original documents, preserving conditions, attribution, populations and evidence limits.",
+        "content": "Trail markers have been installed at all six junctions after a successful inspection."
+      }
+    }
+  ]
+}

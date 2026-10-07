@@ -1,0 +1,8 @@
+{
+  "private_root": "/home/ali/Documents/CrowdLens-reviews/2026-10-04-source-review-v5/astra-ai-review",
+  "files_sha256": {
+    "source-first-reference-facts.json": "2289f877f5cfd874aaedde304c75e49de3e0cfc2823fe68c1aac4f53cc68f9c9",
+    "review.md": "a302f20ffed74b53df18b20b5940c488ced8a6bd581d1c8db344d890709911c5",
+    "reviews.jsonl": "8edb63fe4892817c19f26316cfea34570bb9fb21ceafe139d0879d112971e485"
+  }
+}

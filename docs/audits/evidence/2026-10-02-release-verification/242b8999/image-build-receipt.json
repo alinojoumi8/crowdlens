@@ -1,0 +1,130 @@
+{
+  "candidate": "242b8999044e33c8c3217df857c06401f3efbba3",
+  "commands": [
+    {
+      "label": "image-source-clone",
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "--no-checkout",
+        "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+        "/tmp/crowdlens-ecc-release-final-242b8999/image-source"
+      ],
+      "cwd": "/home/ali/.codex/worktrees/crowdlens-ecc-release/mirofish-local",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-source-clone.log",
+      "sha256": "41fca289fd63c8e0f705ab8f04365b1da761c0fcb6350c1b47b6d72e4a47f2c7"
+    },
+    {
+      "label": "image-source-checkout",
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "242b8999044e33c8c3217df857c06401f3efbba3"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-source-checkout.log",
+      "sha256": "7775b232723349096dab70ebc9534dbf2b09947d062d09eeb36bc07356f8c0a2"
+    },
+    {
+      "label": "image-context-state-before",
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--ignored"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-context-state-before.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "image-context-tree",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+      "exit_code": 0,
+      "seconds": 0.004,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-context-tree.log",
+      "sha256": "07621b603e87167d9e141dd8b368179f6dbe149a99bad433e7f9018c63fbec73"
+    },
+    {
+      "label": "image-build",
+      "argv": [
+        "docker",
+        "build",
+        "--build-arg",
+        "CROWDLENS_BUILD_REVISION=242b8999044e33c8c3217df857c06401f3efbba3",
+        "--tag",
+        "crowdlens-ecc-release:242b8999044e",
+        "--iidfile",
+        "/tmp/crowdlens-ecc-release-final-242b8999/image-id.txt",
+        "/tmp/crowdlens-ecc-release-final-242b8999/image-source"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+      "exit_code": 0,
+      "seconds": 630.727,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-build.log",
+      "sha256": "9ce32b9ac0056e6864e98a9bde4aa4cbaa0dc9e3ff3321899d9e45d4659fdda3"
+    },
+    {
+      "label": "image-built-inspect",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-built-inspect.log",
+      "sha256": "609831158d03ce5b4e9fd1558810886906157de4070552429c8b29e5bb9a32e5"
+    },
+    {
+      "label": "image-context-state-after",
+      "argv": [
+        "git",
+        "status",
+        "--short",
+        "--ignored"
+      ],
+      "cwd": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "/tmp/crowdlens-ecc-release-final-242b8999/logs/image-context-state-after.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "context": "/tmp/crowdlens-ecc-release-final-242b8999/image-source",
+  "started_at": "2026-10-02T20:20:00Z",
+  "tree": "39753400064fe764b98152c2c0204005f874a9c1",
+  "context_files_sha256": {
+    "Dockerfile": "39cce30e94aaa47bee87537163c432bd2421ceae6a4fdeb7c568c99e57cf3102",
+    ".dockerignore": "a5394984c6ef96e7ea96ade8ce8b9ddd8e71c26fb19b55da707bb0e0271fb2dc",
+    "package-lock.json": "5fdcf1a09ef8beb772ed5bf2c849daab5852183cacfd81a8187f3a7fcbae7fa2",
+    "frontend/package-lock.json": "bbbcf6412b694fe8bb25c56dd4c3e8b718ea1c01777efbc6131a0cdc146d8bf3",
+    "backend/uv.lock": "1d6b2f50ff5b7dc57a9be10b3852f919d93e82cd8f862856b7e8d2581f92d88a"
+  },
+  "image_id": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+  "image_inspect_id": "sha256:9d9c9a37c6e892dacb74ca09fe7b3d55e1d5b3aa62e6f89f08b3b5f25929a253",
+  "image_size_bytes": 13794839834,
+  "runtime_command": [
+    "npm",
+    "run",
+    "dev"
+  ],
+  "context_clean_after": true,
+  "status": "passed",
+  "finished_at": "2026-10-02T20:30:32Z"
+}

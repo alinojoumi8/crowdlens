@@ -1,0 +1,182 @@
+{
+  "application_candidate": "e26e0e0c4946ca03eeb1539adfe6eca342cc9f25",
+  "delivery_tooling_commit": "bcee1c15f48787598037ec391ab50a66013a0e8d",
+  "clean_live_launch": {
+    "code_revision": "e26e0e0c4946ca03eeb1539adfe6eca342cc9f25",
+    "git_status": "",
+    "clean_launch": true
+  },
+  "ready_rate": {
+    "denominator": 4,
+    "numerator": 1
+  },
+  "requests": 11,
+  "workflow_state": "stopped",
+  "in_flight": 0,
+  "elapsed_seconds": 67.70685529708862,
+  "usage_by_stage": {
+    "proposal": {
+      "attempts": 11,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 1440,
+      "input_tokens": 22121,
+      "output_tokens": 4905,
+      "unknown_usage_attempts": 0
+    }
+  },
+  "billing_amount": null,
+  "invariants_pass": true,
+  "cases": [
+    {
+      "case_id": "v3_station",
+      "state": "blocked",
+      "finding_codes": [
+        "premise_unverified",
+        "added_fact",
+        "added_fact",
+        "added_fact"
+      ],
+      "parent_unchanged": true,
+      "original_source_scope_valid": true,
+      "document_coverage": {
+        "exact": [],
+        "lexical": [
+          "episode:station_source_1"
+        ],
+        "fused": [
+          "episode:station_source_1"
+        ],
+        "semantic_covered": 0,
+        "admitted": 2,
+        "packet_characters": 352,
+        "admitted_documents": 2,
+        "represented_documents": 2
+      },
+      "resolved_summary_edit_count": 2,
+      "summary_failure": []
+    },
+    {
+      "case_id": "v3_heritage",
+      "state": "ready",
+      "finding_codes": [
+        "premise_unverified",
+        "premise_unverified",
+        "premise_unverified",
+        "premise_unverified"
+      ],
+      "parent_unchanged": true,
+      "original_source_scope_valid": true,
+      "document_coverage": {
+        "exact": [],
+        "lexical": [
+          "episode:heritage_source_1",
+          "episode:heritage_source_2"
+        ],
+        "fused": [
+          "episode:heritage_source_1",
+          "episode:heritage_source_2"
+        ],
+        "semantic_covered": 0,
+        "admitted": 2,
+        "packet_characters": 455,
+        "admitted_documents": 2,
+        "represented_documents": 2
+      },
+      "resolved_summary_edit_count": 1,
+      "summary_failure": []
+    },
+    {
+      "case_id": "v3_lending",
+      "state": "blocked",
+      "finding_codes": [
+        "premise_unverified",
+        "premise_unverified",
+        "invalid_summary_edits"
+      ],
+      "parent_unchanged": true,
+      "original_source_scope_valid": true,
+      "document_coverage": {
+        "exact": [],
+        "lexical": [
+          "episode:lending_source_1"
+        ],
+        "fused": [
+          "episode:lending_source_1"
+        ],
+        "semantic_covered": 0,
+        "admitted": 2,
+        "packet_characters": 491,
+        "admitted_documents": 2,
+        "represented_documents": 2
+      },
+      "resolved_summary_edit_count": 0,
+      "summary_failure": [
+        {
+          "code": "invalid_summary_edits",
+          "blocking": true,
+          "field": "summary_replacements",
+          "detail": "invalid_summary_claims"
+        }
+      ]
+    },
+    {
+      "case_id": "v3_shade",
+      "state": "blocked",
+      "finding_codes": [
+        "premise_unverified",
+        "unsupported_paraphrase",
+        "summary_inconsistent"
+      ],
+      "parent_unchanged": true,
+      "original_source_scope_valid": true,
+      "document_coverage": {
+        "exact": [],
+        "lexical": [
+          "episode:shade_source_1"
+        ],
+        "fused": [
+          "episode:shade_source_1"
+        ],
+        "semantic_covered": 0,
+        "admitted": 2,
+        "packet_characters": 515,
+        "admitted_documents": 2,
+        "represented_documents": 2
+      },
+      "resolved_summary_edit_count": 1,
+      "summary_failure": []
+    }
+  ],
+  "human_labels": null,
+  "human_review_seconds": null,
+  "check": {
+    "backend": 607,
+    "node": 12,
+    "components": 54,
+    "build": "passed"
+  },
+  "review_status": "AI_REVIEW_COMPLETE",
+  "original_results_sha256": "3c6d6f75b84492c57ef35102ead861422a31bf3e251eacc406d72163c02e3657",
+  "ai_review": {
+    "review_kind": "ai",
+    "reviewer_model": "gpt-6-astra",
+    "reasoning_effort": "max",
+    "packets_reviewed": 4,
+    "claims_reviewed": 33,
+    "support_judgments": {
+      "supported": 31,
+      "unsupported": 1,
+      "ambiguous": 1,
+      "conflicting": 0
+    },
+    "incorrect_attribution_judgments": 2,
+    "incorrect_citation_support_judgments": 2,
+    "reference_facts": 28,
+    "omitted_reference_facts": 0,
+    "human_quality_status": "PENDING",
+    "human_review_seconds": null,
+    "schema_and_packet_integrity": "passed",
+    "reviews_sha256": "0f35a206d090cd367063bbb5ceb9c8a9609ed4644a41ef348e0e588439301ff0",
+    "limitation": "AI reviewer opinions, not human labels or adjudicated factual truth."
+  }
+}

@@ -1,0 +1,112 @@
+FFF..FFFF                                                                [100%]
+=================================== FAILURES ===================================
+_ test_conditional_source_paraphrases_fail_closed[Confirmation of accessible benches must hold before any group assistance could occur.] _
+
+text = 'Confirmation of accessible benches must hold before any group assistance could occur.'
+
+    @pytest.mark.parametrize('text', [
+        'Confirmation of accessible benches must hold before any group assistance could occur.',
+        'The group will assist when accessible benches are confirmed.',
+        'Sora offers unconditional assistance.',
+    ])
+    def test_conditional_source_paraphrases_fail_closed(text):
+>       assert any(f['code'] == 'conditional_source_requires_extract' and f['blocking']
+                   for f in validate_ledger([claim(text)], [source()], SCOPE))
+E       assert False
+E        +  where False = any(<generator object test_conditional_source_paraphrases_fail_closed.<locals>.<genexpr> at 0x707d764cd7d0>)
+
+tests/test_conditional_fidelity.py:21: AssertionError
+_ test_conditional_source_paraphrases_fail_closed[The group will assist when accessible benches are confirmed.] _
+
+text = 'The group will assist when accessible benches are confirmed.'
+
+    @pytest.mark.parametrize('text', [
+        'Confirmation of accessible benches must hold before any group assistance could occur.',
+        'The group will assist when accessible benches are confirmed.',
+        'Sora offers unconditional assistance.',
+    ])
+    def test_conditional_source_paraphrases_fail_closed(text):
+>       assert any(f['code'] == 'conditional_source_requires_extract' and f['blocking']
+                   for f in validate_ledger([claim(text)], [source()], SCOPE))
+E       assert False
+E        +  where False = any(<generator object test_conditional_source_paraphrases_fail_closed.<locals>.<genexpr> at 0x707ccc83c380>)
+
+tests/test_conditional_fidelity.py:21: AssertionError
+_ test_conditional_source_paraphrases_fail_closed[Sora offers unconditional assistance.] _
+
+text = 'Sora offers unconditional assistance.'
+
+    @pytest.mark.parametrize('text', [
+        'Confirmation of accessible benches must hold before any group assistance could occur.',
+        'The group will assist when accessible benches are confirmed.',
+        'Sora offers unconditional assistance.',
+    ])
+    def test_conditional_source_paraphrases_fail_closed(text):
+>       assert any(f['code'] == 'conditional_source_requires_extract' and f['blocking']
+                   for f in validate_ledger([claim(text)], [source()], SCOPE))
+E       assert False
+E        +  where False = any(<generator object test_conditional_source_paraphrases_fail_closed.<locals>.<genexpr> at 0x707ccc83d2f0>)
+
+tests/test_conditional_fidelity.py:21: AssertionError
+__________ test_conditional_premise_analysis_is_blocked_transitively ___________
+
+    def test_conditional_premise_analysis_is_blocked_transitively():
+        first = {**claim(), 'claim_id': 'a'}
+        second = {**claim('Confirmation is required.'), 'claim_id': 'b', 'kind': 'analysis',
+                  'citation_ids': [], 'premise_claim_ids': ['a']}
+        third = {**second, 'claim_id': 'c', 'premise_claim_ids': ['b']}
+        findings = validate_ledger([first, second, third], [source()], SCOPE)
+>       assert {f['claim_id'] for f in findings if f['code'] == 'conditional_analysis_requires_review'} == {'b', 'c'}
+E       AssertionError: assert set() == {'b', 'c'}
+E         
+E         Extra items in the right set:
+E         'c'
+E         'b'
+E         Use -v to get more diff
+
+tests/test_conditional_fidelity.py:38: AssertionError
+___________________ test_paragraph_cannot_strengthen_extract ___________________
+
+    def test_paragraph_cannot_strengthen_extract():
+        findings = validate_paragraphs([{'text': 'The group will assist.',
+            'kind': 'attributed_allegation', 'claim_ids': ['claim_01']}], [claim()])
+>       assert any(f['code'] == 'conditional_paragraph_requires_extract' for f in findings)
+E       assert False
+E        +  where False = any(<generator object test_paragraph_cannot_strengthen_extract.<locals>.<genexpr> at 0x707ccc680930>)
+
+tests/test_conditional_fidelity.py:43: AssertionError
+_ test_conditional_orders_and_modal_variants[Sora says the group may assist provided benches are confirmed.] _
+
+text = 'Sora says the group may assist provided benches are confirmed.'
+
+    @pytest.mark.parametrize('text', ['Sora says the group may assist provided benches are confirmed.',
+                                     'If benches are confirmed, Sora says the group might assist.'])
+    def test_conditional_orders_and_modal_variants(text):
+>       assert any(f['code'] == 'conditional_source_requires_extract' for f in
+            validate_ledger([claim('The group is committed.')], [source(text)], SCOPE))
+E       assert False
+E        +  where False = any(<generator object test_conditional_orders_and_modal_variants.<locals>.<genexpr> at 0x707ccc83edc0>)
+
+tests/test_conditional_fidelity.py:48: AssertionError
+_ test_conditional_orders_and_modal_variants[If benches are confirmed, Sora says the group might assist.] _
+
+text = 'If benches are confirmed, Sora says the group might assist.'
+
+    @pytest.mark.parametrize('text', ['Sora says the group may assist provided benches are confirmed.',
+                                     'If benches are confirmed, Sora says the group might assist.'])
+    def test_conditional_orders_and_modal_variants(text):
+>       assert any(f['code'] == 'conditional_source_requires_extract' for f in
+            validate_ledger([claim('The group is committed.')], [source(text)], SCOPE))
+E       assert False
+E        +  where False = any(<generator object test_conditional_orders_and_modal_variants.<locals>.<genexpr> at 0x707ccc681560>)
+
+tests/test_conditional_fidelity.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_conditional_fidelity.py::test_conditional_source_paraphrases_fail_closed[Confirmation of accessible benches must hold before any group assistance could occur.]
+FAILED tests/test_conditional_fidelity.py::test_conditional_source_paraphrases_fail_closed[The group will assist when accessible benches are confirmed.]
+FAILED tests/test_conditional_fidelity.py::test_conditional_source_paraphrases_fail_closed[Sora offers unconditional assistance.]
+FAILED tests/test_conditional_fidelity.py::test_conditional_premise_analysis_is_blocked_transitively
+FAILED tests/test_conditional_fidelity.py::test_paragraph_cannot_strengthen_extract
+FAILED tests/test_conditional_fidelity.py::test_conditional_orders_and_modal_variants[Sora says the group may assist provided benches are confirmed.]
+FAILED tests/test_conditional_fidelity.py::test_conditional_orders_and_modal_variants[If benches are confirmed, Sora says the group might assist.]
+7 failed, 2 passed in 1.11s

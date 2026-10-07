@@ -1,0 +1,86 @@
+{
+  "schema_version": "crowdlens.h1-recovery.v1",
+  "date": "2026-10-02",
+  "baseline_commit": "b2faedf",
+  "runtime_source_fingerprint": "7f14199ab48a04c4a99e25a5bfdea6933fb7a07c838ef90434809a82062d7a8f",
+  "status": {
+    "H1": "COMPLETE",
+    "deployment": "NOT RUN",
+    "full_model_workflow": "BLOCKED"
+  },
+  "contract": {
+    "lease_seconds": 30,
+    "monitor_interval_seconds": 5,
+    "identity": [
+      "worker_uuid",
+      "attempt_uuid",
+      "resource_binding",
+      "unexpired_lease"
+    ],
+    "legacy": "ownership_unknown; preserve status and require operator review"
+  },
+  "checks": {
+    "focused_tests": {
+      "passed": 60,
+      "exit_code": 0
+    },
+    "full_check": {
+      "backend_passed": 391,
+      "node_passed": 12,
+      "component_passed": 16,
+      "frontend_build": "PASS",
+      "exit_code": 0
+    },
+    "restart_probe": {
+      "before_exit_code": 1,
+      "before_status": "processing",
+      "after_exit_code": 0,
+      "after_status": "failed",
+      "reason": "ownership_lease_expired",
+      "elapsed_seconds": 30.1,
+      "poll_triggers_recovery": false
+    },
+    "neo4j_fence": {
+      "result": "PASS",
+      "old_attempt_rejected": true,
+      "new_generation_preserved": 2
+    }
+  },
+  "integration": {
+    "real": [
+      "HTTP",
+      "SQLite",
+      "Neo4j"
+    ],
+    "substitutes": [
+      "deterministic drafting",
+      "disabled semantic embedding"
+    ],
+    "result": "PASS",
+    "source_fingerprint": "53966506cf635497a17933f73beed5c89ad71f2470aef29eecdab7df7ebedfcf",
+    "proposal_id": "proposal_ad48a91081f74374b32c320ce9cf864f",
+    "child_report_id": "report_366fa808bd7342179b0e3d09b554ab9c",
+    "parent_unchanged": true,
+    "child_status": "needs_review",
+    "image": "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e"
+  },
+  "model_attempt": {
+    "model": "qwen2.5:3b",
+    "provider": "loopback Ollama",
+    "calls": 1,
+    "transport_timeout_seconds": 6,
+    "result": "model_not_found",
+    "hosted_calls": 0,
+    "model_downloads": 0
+  },
+  "evidence_directories": [
+    "/tmp/crowdlens-h1-evidence",
+    "/tmp/crowdlens-h1-integration"
+  ],
+  "limits": [
+    "All cooperating writers must use the protocol and shared local DB/lock with stable artifact roots.",
+    "Already issued external work is not cancelled; later protected writes are fenced.",
+    "Storage stalls and wall-clock changes can delay recovery.",
+    "Legacy uncertainty, full model quality, existing deployment and operational follow-ups remain separate."
+  ]
+}

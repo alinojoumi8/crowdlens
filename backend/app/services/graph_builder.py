@@ -4,6 +4,7 @@ Uses GraphStorage (Neo4j) to replace Zep Cloud API.
 """
 
 import time
+from contextvars import copy_context
 import logging
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -121,12 +122,8 @@ class GraphBuilderService:
         )
 
         # Execute build in background thread
-        thread = threading.Thread(
-            target=self._build_graph_worker,
-            args=(task_id, text, ontology, graph_name, chunk_size, chunk_overlap, batch_size)
-        )
-        thread.daemon = True
-        thread.start()
+        self.task_manager.start_task(task_id, self._build_graph_worker,
+            (task_id, text, ontology, graph_name, chunk_size, chunk_overlap, batch_size))
 
         return task_id
 
@@ -284,7 +281,7 @@ class GraphBuilderService:
         with ThreadPoolExecutor(max_workers=llm_concurrency) as executor:
             futures = {
                 executor.submit(
-                    self._add_batch_with_retry,
+                    copy_context().run, self._add_batch_with_retry,
                     graph_id,
                     job["chunks"],
                     job["batch_num"],

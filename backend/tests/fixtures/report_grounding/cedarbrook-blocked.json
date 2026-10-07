@@ -1,0 +1,311 @@
+{
+  "markdown_content": "## Forecast Probability Summary\n\nMode: `general`\nHorizon: `medium_term`\nConfidence: `low`\n\n| Outcome | Probability | Rationale |\n| --- | ---: | --- |\n| Base case materializes | 17.5% | Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence. |\n| Upside case materializes | 57.5% | Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence. |\n| Downside case materializes | 25.0% | Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence. |\n\nDerived from 1 non-noop recorded actions (1 agents; 1 configured supportive, 0 configured opposing; heuristic net sentiment +0.65; 0 actions have unverified legacy origins).\n\nNote: Probabilities are derived from 1 simulated agent actions across 1 agents, weighted by influence and graph-derived stance (1 supporting / 0 opposing). Treat as scenario estimates, not certainty; add external base rates for operational decisions.\n\n# Cedarbrook Bike-Lane Pilot: Simulated Two-Round Discussion Among Four Named Participants\n\nAcross two recorded rounds, three named participants restated conditional positions on the fictional Cedarbrook pilot, while the transport planner reaffirmed reversibility and pre-permanence measurement, yielding no observed opinion change, dialogue, or outcome data.\n\n---\n\n## Source Facts and Participant Positions\n\nThe Cedarbrook pilot is described in a single fictional source document, [doc_c4d0b717f56d], as an eight-week reversible trial on Main Street in which one parking lane is converted to a protected bike lane and deliveries are routed to two signed loading bays. The document explicitly states that no permanence decision has been made and that the city will publish measurements before deciding. This section establishes the minimum documentary and agent-input facts needed to frame the rest of the report; downstream sections will cover the simulated rounds and the forecast reading.\n\n**Pilot design as documented**\n\nThe source frames the pilot with three concrete parameters: a duration of eight weeks, the conversion of a single parking lane on Main Street, and the designation of two signed loading bays for deliveries. The framing is explicitly described as reversible, and the source flags that this is fictional test material rather than a real municipal proposal:\n\n> \"Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\" [doc_c4d0b717f56d]\n\nThe source also draws a hard evidentiary boundary: no survey, crash count, business-revenue measurement, or final decision is included, and \"simulated conversations are generated output, not new documentary evidence\" [doc_c4d0b717f56d]. The report treats these absences as binding, not as gaps to be filled.\n\n**Maya Chen (CyclingResident)**\n\nMaya's position is conditional support tied to intersection treatment rather than the lane itself. She records that she currently avoids Main Street because traffic feels unsafe, which sets a personal baseline against which the pilot is being judged:\n\n> \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\" [doc_c4d0b717f56d]\n\nHer scenario-input restatement reinforces that protected intersections are a non-negotiable design parameter and that reversibility is meaningful only if it is design-faithful:\n\n> \"I support the Cedarbrook pilot if the intersections are protected. Right now I avoid Main Street because traffic feels unsafe. Eight weeks is short, and reversibility matters — but only if the design actually separates cyclists from turning cars.\" [twitter:trace:5]\n\n**Leo Martin (BusinessOwner)**\n\nLeo's position is conditional concern rather than blanket opposition. His stated worry is short-stay parking loss, and his stated conditions are reliable loading access and a measurement of customer visits before any permanence reaction:\n\n> \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\" [doc_c4d0b717f56d]\n\nHis scenario-input restatement sharpens the delivery-bay requirement and the demand for measured, not inferred, customer-visit data:\n\n> \"I can back a trial on Main Street if my deliveries are not collateral damage. I need two signed loading bays that actually work during business hours, and I want customer visits counted, not guessed, before anyone reacts to a setback.\" [twitter:trace:6]\n\n**Priya Shah (AccessibilityAdvocate)**\n\nPriya's position is a requirement, not a preference: accessible pickup spaces and an unobstructed pedestrian path must remain, and a bike lane by itself does not satisfy accessibility needs:\n\n> \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\" [doc_c4d0b717f56d]\n\nHer scenario-input restatement adds a curb-cut constraint, making the pedestrian-path requirement enforceable at the level of street geometry rather than intent:\n\n> \"A bike lane on Main Street does not, by itself, answer my needs. Accessible pickup spaces and a clear, unobstructed pedestrian path must remain. If the pilot narrows the curb or moves a curb cut, that is a problem, not a trade-off.\" [twitter:trace:7]\n\n**Daniel Brooks (TransportPlanner)**\n\nDaniel's position is procedural and measurement-led. The pilot is reversible, and four specific counts — cyclists, deliveries, customer visits, and accessibility complaints — will be published before any permanence decision:\n\n> \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\" [doc_c4d0b717f56d]\n\nHis scenario-input restatement adds a temporal commitment, anchoring the data publication to the end of the eight-week window:\n\n> \"The Cedarbrook pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints at the end of eight weeks. No permanence decision will be made before that data is on the table.\" [twitter:trace:8]\n\n**Position taxonomy**\n\nEach of the four named participants frames their stance as conditional rather than fixed, but the conditions are not equivalent. Maya and Leo gate their stance on specific design parameters (protected intersections; working loading bays during business hours). Priya sets a non-negotiable floor (preserved accessible pickup, unobstructed pedestrian path, intact curb cuts). Daniel sets a procedural gate (publish four named counts before any permanence decision). The pilot's status as a reversible, measurement-first trial is therefore endorsed in principle by all four, while the substantive thresholds for what counts as a working pilot remain contested across the safety, commercial, and accessibility axes. The forecast scenarios in the later section are read against these recorded conditions rather than against any inferred shifts in the participants' positions.\n\n## Recorded Simulated Activity Across Two Rounds\n\nThe recorded simulation log contains ten logged entries across rounds 0 through 2, of which seven are generated posts that appear on the timeline and one is a no-op. The structure of what was actually executed, and what was not, is the substance of this section. A thin action surface does not describe how the four agents conversed; it describes the limited set of behaviors the simulation produced.\n\n**Round 0 — four initial restatements, no interaction**\n\nThe round-0 action surface consists of four `CREATE_POST` actions, all classified as `initial_post` (scenario inputs seeded from the source document), and zero model responses. Maya, Leo, Priya, and Daniel each emitted a single restatement of their source-document stance as seeded content rather than as model output. The four traces are [twitter:trace:5], [twitter:trace:6], [twitter:trace:7], and [twitter:trace:8]; none reference another participant's post, so no thread, reply, or quote-tweet relationship exists between them. The first round therefore adds four parallel voices to the platform but no exchange among them.\n\n**Round 1 — a scheduled framing event, one agent post, and one no-op**\n\nRound 1 introduces the simulation's first `SCHEDULED_EVENT`, titled \"Round 1 framing: conditional support, conditional opposition\" [twitter:legacy:4], which summarized the conditional alignment across the four source positions. The event was then echoed by a `CREATE_POST` from Daniel Brooks's persona at [twitter:trace:9], again originating as `scheduled_event` rather than as a model response. After that, Maya Chen's agent recorded `DO_NOTHING` at [twitter:trace:10], the only `model_action` of the round and the only no-op in the log. The no-op is not an endorsement, concession, or abstention — it is the absence of an action. Round 1 therefore adds one narrated summary and one silent model decision, with no counter-position, no question, and no reply from any participant.\n\n**Round 2 — a design-detail shock event, one agent post, and one model-action post**\n\nRound 2 opened with a second `SCHEDULED_EVENT` titled \"Round 2 design-detail push: where the pilot could break\" [twitter:legacy:7], which introduced a peak-hour loading-bay concern attributed to Leo, a curb-cut specificity concern attributed to Priya, a repetition of the protected-intersection demand attributed to Maya, and a re-affirmation of reversibility attributed to Daniel. The event was echoed by a `CREATE_POST` at [twitter:trace:11] from Leo Martin's persona, again as a `scheduled_event` rather than a model response. Maya's agent then emitted the only `model_action` `CREATE_POST` of the entire simulation at [twitter:trace:12], a post timestamped \"7:15am, foggy commute\" that reiterated her demand for protected intersections, described reversibility as a design baseline, and asked for \"measurable criteria, not rhetoric.\" That single model-action post is the only artifact in the log that originates from a model response rather than from seeding or scheduled narration. Leo and Daniel made no further model-action moves; Priya made none at all in any round.\n\n**Action-origin breakdown and what it implies**\n\nAcross ten logged entries, the action-type composition is four `initial_post` rows, two `scheduled_event` rows (each followed by a `scheduled_event`-origin `CREATE_POST`), one `model_action` `CREATE_POST`, one `model_action` `DO_NOTHING`, and two metadata counts folded into the summary. The contract embedded in the log states that \"only model_action is a model response; initial_post and scheduled_event are scenario inputs.\" Under that operational reality, the only two model-derived behaviors in the entire run are Maya's fog-commute restatement at [twitter:trace:12] and her earlier silence at [twitter:trace:10]. Every other post on the platform is seeded or narrated scenario content, not participant response. The simulation therefore offers no observed opinion change, no dialogue exchange, no counter-position, no agreement or disagreement between named agents, and no platform-visible reaction to another participant's content. What the log supports is the description of a sparse action surface, not the description of a conversation.\n\n## Forecast Reading, Assumptions, and Evidence Gaps\n\n**Reading the frozen forecast as a thin-run heuristic**\n\nThe supplied frozen forecast is a single-run, single-agent-action scenario estimate rather than a calibrated probability statement, and the section treats it accordingly. The forecast pack records `ensemble_runs: 1`, `total_actions: 1` (the model_action `CREATE_POST` at [twitter:trace:12]), `agents_supporting: 1`, and `agents_opposing: 0` — a support_weight of 0.7 and an oppose_weight of 0.0 that are not community sentiment but the product of one restating post against zero recorded opposition. With `confidence: low` attached to the base-case probability and `confidence: medium` attached to the upside and downside cases, the numerical ranking is an uncalibrated ordering at best. The forecast is therefore read directionally: scenario inputs plus the one model post are consistent with the four source-document preconditions, so the qualitative finding — that the simulated discussion centers on intersection protection, working loading bays, preserved accessibility features, and pre-permanence measurement — is supportable, but the specific probability magnitudes are not reproducible from the evidence in this packet.\n\n**Assumptions that the read depends on**\n\nThree assumptions, all drawn from the packet rather than from inferred behavior, govern how the scenario estimate should be interpreted. First, the single fictional source document [doc_c4d0b717f56d] is the only documentary authority, and the contract embedded in the log — that \"only model_action is a model response; initial_post and scheduled_event are scenario inputs\" — is accepted as binding, which is what allows the rest of the report to draw a hard line between seeded restatements and actual response. Second, the four `initial_post` rows and the two `scheduled_event` rows are treated as scenario inputs that frame the discussion rather than as reactions to one another; under that assumption, no observed opinion change, dialogue exchange, vote, or threshold exists in the run. Third, the transport planner's commitment to publish four specific counts — \"counts of cyclists, deliveries, customer visits and accessibility complaints\" [doc_c4d0b717f56d] — is treated as the load-bearing procedural anchor on which every conditional position in the run depends, including Maya's reversibility framing in her only model-action post at [twitter:trace:12], where reversibility is conditioned on \"measurable criteria, not rhetoric.\"\n\n**Evidence gaps and where the read is most sensitive**\n\nThe sensitivity analysis the report can defend is narrow because the evidence base is narrow. The source explicitly excludes a survey, a crash count, a business-revenue measurement, and any final decision, and the simulation adds no observed values for any of these; that absence is binding rather than fillable. Within those absences, two sensitivity factors dominate. The first is evidence completeness: the upside-case probability depends on whether the four published counts at the end of eight weeks meet or exceed the implicit thresholds each participant has set (protected-intersection performance for Maya, peak-hour loading-bay reliability for Leo, curb-cut preservation and pedestrian-path clearance for Priya, and a procedural publication milestone for Daniel), and the run contains no values for any of these. The second is whether the pre-permanence publication actually occurs; the entire conditional-support structure in the log is anchored to that step, and Daniel's only scheduled-event post at [twitter:trace:9] restates the commitment without executing it. A third, lower-order sensitivity is platform routing: the run uses a single platform and produces no cross-agent replies, so the simulation_signal cannot speak to how a multi-platform or threaded rollout would have shifted the recorded action distribution.\n\n**What would change the read, and what would not**\n\nAdding observed counts at the end of week eight, an explicit curb-cut specification, or a confirmed peak-hour loading-bay schedule would shift the read from directional to evidence-anchored and would allow a recalibrated scenario estimate rather than the current heuristic. Adding more agents, more rounds, or more platforms would not by itself change the read, because the binding constraint is not coverage but the absence of measurement and the absence of any observed model response from three of the four named participants; Priya, Leo, and Daniel each have zero model-action rows in the log, so even an expanded run would not, on its own, convert the current single-post signal into a community-level estimate.",
+  "forecast": {
+    "forecast_mode": "general",
+    "forecast_horizon": "medium_term",
+    "prediction_target": {
+      "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+      "outcomes": [
+        "Base case materializes",
+        "Upside case materializes",
+        "Downside case materializes"
+      ]
+    },
+    "scenario_pack": "baseline",
+    "ensemble_runs": 1,
+    "memory_mode": "off",
+    "confidence": "low",
+    "probabilities": [
+      {
+        "outcome": "Base case materializes",
+        "probability": 0.175,
+        "confidence": "low",
+        "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+      },
+      {
+        "outcome": "Upside case materializes",
+        "probability": 0.575,
+        "confidence": "medium",
+        "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+      },
+      {
+        "outcome": "Downside case materializes",
+        "probability": 0.25,
+        "confidence": "medium",
+        "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+      }
+    ],
+    "numeric": null,
+    "simulation_signal": {
+      "net_sentiment": 0.65,
+      "total_actions": 1,
+      "model_actions": 1,
+      "unknown_origin_actions": 0,
+      "active_agents": 1,
+      "support_weight": 0.7,
+      "oppose_weight": 0.0,
+      "neutral_weight": 0.0,
+      "agents_supporting": 1,
+      "agents_opposing": 0
+    },
+    "ensemble": null,
+    "assumptions": [
+      "The uploaded record is the main evidence base.",
+      "Forecasts depend on simulation assumptions and agent configuration quality."
+    ],
+    "sensitivity": [
+      {
+        "factor": "Evidence completeness",
+        "effect": "More complete graph context improves forecast stability."
+      },
+      {
+        "factor": "Agent incentives",
+        "effect": "Incorrect incentives can distort simulated behavior."
+      }
+    ],
+    "missing_information": [
+      "More high-quality evidence and agent interviews",
+      "External base rates",
+      "Recent real-world updates"
+    ],
+    "evidence_references": [
+      "Cedarbrook (the municipal authority) has Daniel Brooks oversee the reversible bike-lane pilot program.",
+      "Current Valid Facts: 10",
+      "Daniel Brooks addresses cyclists' concerns by committing to publish counts of cyclists and accessibility complaints before permanence.",
+      "Daniel Brooks is the city's transport planner working for Cedarbrook.",
+      "Daniel Brooks publicly commented on the Cedarbrook pilot, stating it is reversible and that usage and complaint counts will be published.",
+      "Daniel Brooks responds to business concerns by promising to publish delivery and customer-visit counts before permanence.",
+      "Historical/Expired Facts: 0",
+      "Involved Entities: 0",
+      "Leo Martin commented on the Cedarbrook bike-lane pilot, expressing concern about losing short-stay parking.",
+      "Leo Martin expressed opposition or significant concern about the Cedarbrook pilot due to potential loss of short-stay parking.",
+      "Maya Chen commented on the Cedarbrook bike-lane pilot, stating she supports it if intersections are protected.",
+      "Maya Chen expressed conditional support for the Cedarbrook pilot if the intersections are protected.",
+      "Priya Shah commented on the Cedarbrook bike-lane pilot, stressing that accessible pickup spaces and a clear pedestrian path must remain.",
+      "Related Prediction Facts: 10",
+      "Relationship Chains: 6",
+      "Total Edges: 10",
+      "Total Nodes: 6",
+      "episode:1bfe5a7e-78fd-445a-9e26-f32532b485e6",
+      "round-by-round simulated posts, scheduled events, and DO_NOTHING actions across Maya, Leo, Priya, Daniel"
+    ],
+    "limitations": "Probabilities are derived from 1 simulated agent actions across 1 agents, weighted by influence and graph-derived stance (1 supporting / 0 opposing). Treat as scenario estimates, not certainty; add external base rates for operational decisions."
+  },
+  "source_grounding": {
+    "report_contract": "report-grounding-v1",
+    "graph_id": "b587dfa4-8c7a-4b14-82eb-ca8accc16583",
+    "status": "available",
+    "original_sources": [
+      {
+        "evidence_id": "episode:1bfe5a7e-78fd-445a-9e26-f32532b485e6",
+        "episode_id": "1bfe5a7e-78fd-445a-9e26-f32532b485e6",
+        "origin": "source_document",
+        "excerpt": "# Cedarbrook bike-lane pilot — fictional browser test\n\nThis is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\n\nFour participants provided these statements:\n- Maya Chen, a resident who cycles to work: \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\"\n- Leo Martin, a Main Street shop owner: \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\"\n- Priya Shah, a resident with limited mobility: \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\"\n- Daniel Brooks, the city's transport planner: \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\"\n\nThe four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.",
+        "source_hash": "b55863a69d8458a232fd2a35fa35458b400576037f1e2efbe5992e493b7cf64d",
+        "graph_id": "b587dfa4-8c7a-4b14-82eb-ca8accc16583",
+        "case_id": "case_3f2b953d4f20",
+        "case_version_id": "casever_47abb67008a8",
+        "document_id": "doc_c4d0b717f56d",
+        "filename": "cedarbrook-bike-lane.md",
+        "locator": {
+          "page": null,
+          "paragraph": null,
+          "chunk_index": 0,
+          "char_start": 0,
+          "char_end": 1468,
+          "offset_basis": "stored_chunk"
+        }
+      }
+    ],
+    "limitations": [],
+    "case_id": "case_3f2b953d4f20",
+    "case_version_id": "casever_47abb67008a8",
+    "source_corpus_digest": "2b6e2cfd17d712f4568e4ed2d1c00fe49e50a16e05e6d01a746208156606c2e0",
+    "simulation_activity": {
+      "summary": {
+        "logged_entries": 10,
+        "unique_posts": 7,
+        "model_actions": 2,
+        "initial_posts": 4,
+        "scheduled_posts": 2,
+        "scheduled_events": 2,
+        "unknown_origin_actions": 0
+      },
+      "actions": [
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T13:37:03.969286",
+          "agent_id": 0,
+          "agent_name": "Maya Chen",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Maya Chen (CyclingResident): 'I support the Cedarbrook pilot if the intersections are protected. Right now I avoid Main Street because traffic feels unsafe. Eight weeks is short, and reversibility matters — but only if the design actually separates cyclists from turning cars.'",
+            "post_id": 1
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 5,
+          "platform": "twitter",
+          "reference": "twitter:trace:5"
+        },
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T13:37:03.969442",
+          "agent_id": 1,
+          "agent_name": "Leo Martin",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Leo Martin (BusinessOwner): 'I can back a trial on Main Street if my deliveries are not collateral damage. I need two signed loading bays that actually work during business hours, and I want customer visits counted, not guessed, before anyone reacts to a setback.'",
+            "post_id": 2
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 6,
+          "platform": "twitter",
+          "reference": "twitter:trace:6"
+        },
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T13:37:03.969517",
+          "agent_id": 2,
+          "agent_name": "Priya Shah",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Priya Shah (AccessibilityAdvocate): 'A bike lane on Main Street does not, by itself, answer my needs. Accessible pickup spaces and a clear, unobstructed pedestrian path must remain. If the pilot narrows the curb or moves a curb cut, that is a problem, not a trade-off.'",
+            "post_id": 3
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 7,
+          "platform": "twitter",
+          "reference": "twitter:trace:7"
+        },
+        {
+          "round": 0,
+          "timestamp": "2026-10-03T13:37:03.969584",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "Daniel Brooks (TransportPlanner): 'The Cedarbrook pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints at the end of eight weeks. No permanence decision will be made before that data is on the table.'",
+            "post_id": 4
+          },
+          "result": null,
+          "success": true,
+          "origin": "initial_post",
+          "trace_id": 8,
+          "platform": "twitter",
+          "reference": "twitter:trace:8"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T13:37:03.969910",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "SCHEDULED_EVENT",
+          "action_args": {
+            "content": "The four participants restate their positions from the source document. CyclingResident ties support to intersection protection; BusinessOwner ties support to reliable loading bays and measured customer visits; AccessibilityAdvocate ties support to preserved accessible pickup and pedestrian path; TransportPlanner reaffirms reversibility and pre-permanence measurement.",
+            "event_type": "news",
+            "title": "Round 1 framing: conditional support, conditional opposition"
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": null,
+          "platform": "twitter",
+          "reference": "twitter:legacy:4"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T13:37:06.347182",
+          "agent_id": 3,
+          "agent_name": "Daniel Brooks",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "The four participants restate their positions from the source document. CyclingResident ties support to intersection protection; BusinessOwner ties support to reliable loading bays and measured customer visits; AccessibilityAdvocate ties support to preserved accessible pickup and pedestrian path; TransportPlanner reaffirms reversibility and pre-permanence measurement.",
+            "post_id": 5
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": 9,
+          "platform": "twitter",
+          "reference": "twitter:trace:9"
+        },
+        {
+          "round": 1,
+          "timestamp": "2026-10-03T13:37:07.622893",
+          "agent_id": 0,
+          "agent_name": "Maya Chen",
+          "action_type": "DO_NOTHING",
+          "action_args": {},
+          "result": null,
+          "success": true,
+          "origin": "model_action",
+          "trace_id": 10,
+          "platform": "twitter",
+          "reference": "twitter:trace:10"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T13:37:07.623086",
+          "agent_id": 1,
+          "agent_name": "Leo Martin",
+          "action_type": "SCHEDULED_EVENT",
+          "action_args": {
+            "content": "BusinessOwner flags that one of the two signed loading bays sits outside peak delivery hours, and AccessibilityAdvocate notes that the current plan does not specify which curb cuts stay open. CyclingResident repeats the demand for protected intersections. TransportPlanner reiterates that the pilot is reversible and that no permanence decision will precede published measurements.",
+            "event_type": "shock",
+            "title": "Round 2 design-detail push: where the pilot could break"
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": null,
+          "platform": "twitter",
+          "reference": "twitter:legacy:7"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T13:37:07.773773",
+          "agent_id": 1,
+          "agent_name": "Leo Martin",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "BusinessOwner flags that one of the two signed loading bays sits outside peak delivery hours, and AccessibilityAdvocate notes that the current plan does not specify which curb cuts stay open. CyclingResident repeats the demand for protected intersections. TransportPlanner reiterates that the pilot is reversible and that no permanence decision will precede published measurements.",
+            "post_id": 6
+          },
+          "result": null,
+          "success": true,
+          "origin": "scheduled_event",
+          "trace_id": 11,
+          "platform": "twitter",
+          "reference": "twitter:trace:11"
+        },
+        {
+          "round": 2,
+          "timestamp": "2026-10-03T13:37:10.794752",
+          "agent_id": 0,
+          "agent_name": "Maya Chen",
+          "action_type": "CREATE_POST",
+          "action_args": {
+            "content": "7:15am, foggy commute through Cedarbrook this morning. Thinking about the proposed 8-week bike-lane pilot — I'm conditionally supportive if intersections get protected designs before the trial starts. Protected intersections aren't optional for me; that's the baseline. Curious how the pilot measures safety outcomes at those junctions specifically, and whether the design is reversible based on data. Reversibility matters — if it doesn't work, we should be able to restore parking/loading and vehicle lanes without a fight. Hoping the discussion stays grounded in measurable criteria, not rhetoric.",
+            "post_id": 7
+          },
+          "result": null,
+          "success": true,
+          "origin": "model_action",
+          "trace_id": 12,
+          "platform": "twitter",
+          "reference": "twitter:trace:12"
+        }
+      ],
+      "contract": "initial_post and scheduled_event are scenario inputs; only model_action is a model response; unknown is unverified legacy origin"
+    },
+    "digest": "8c1cc10056d19bfb66b30521c1b52401e4e452bf03d33f83c23feaf52e21e497"
+  },
+  "expected_quote_failures": 9,
+  "provenance": "Actual MiniMax-M3 output from the fictional Cedarbrook browser run on c35d417; failed output retained unchanged."
+}

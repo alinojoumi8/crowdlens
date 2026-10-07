@@ -1,15 +1,20 @@
 <template>
   <div class="simulation-panel">
+    <header class="simulation-guide">
+      <h1>Explore simulated reactions</h1>
+      <p>Watch activity, check the run status, then generate a report for review. Simulated posts and responses are not observed public opinion.</p>
+      <p class="run-summary" role="status"><strong>{{ runStateLabel }}</strong> · {{ progressGuidance }}</p>
+    </header>
     <!-- Top Control Bar -->
     <div class="control-bar">
       <div class="status-group">
         <!-- Twitter Platform Progress -->
-        <div class="platform-status twitter" :class="{ active: runStatus.twitter_running, completed: runStatus.twitter_completed }">
+        <div v-if="selectedPlatforms.includes('twitter')" class="platform-status twitter" :class="{ active: runStatus.twitter_running, completed: runStatus.twitter_completed }">
           <div class="platform-header">
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
             </svg>
-            <span class="platform-name">Info Plaza</span>
+            <span class="platform-name">Public feed</span>
             <span v-if="runStatus.twitter_completed" class="status-badge">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -19,15 +24,15 @@
           <div class="platform-stats">
             <span class="stat">
               <span class="stat-label">ROUND</span>
-              <span class="stat-value mono">{{ runStatus.twitter_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
+              <span class="stat-value mono">{{ runStatus.twitter_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || effectiveRounds || '-' }}</span></span>
             </span>
             <span class="stat">
               <span class="stat-label">Elapsed Time</span>
               <span class="stat-value mono">{{ twitterElapsedTime }}</span>
             </span>
             <span class="stat">
-              <span class="stat-label">ACTS</span>
-              <span class="stat-value mono">{{ runStatus.twitter_actions_count || 0 }}</span>
+              <span class="stat-label">Generated actions</span>
+              <span class="stat-value mono">{{ runStatus.platform_activity?.twitter?.model_actions ?? 0 }}</span>
             </span>
           </div>
           <!-- Available Actions Tooltip -->
@@ -45,12 +50,12 @@
         </div>
         
         <!-- Reddit Platform Progress -->
-        <div class="platform-status reddit" :class="{ active: runStatus.reddit_running, completed: runStatus.reddit_completed }">
+        <div v-if="selectedPlatforms.includes('reddit')" class="platform-status reddit" :class="{ active: runStatus.reddit_running, completed: runStatus.reddit_completed }">
           <div class="platform-header">
             <svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
-            <span class="platform-name">Topic Community</span>
+            <span class="platform-name">Discussion community</span>
             <span v-if="runStatus.reddit_completed" class="status-badge">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -60,15 +65,15 @@
           <div class="platform-stats">
             <span class="stat">
               <span class="stat-label">ROUND</span>
-              <span class="stat-value mono">{{ runStatus.reddit_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || maxRounds || '-' }}</span></span>
+              <span class="stat-value mono">{{ runStatus.reddit_current_round || 0 }}<span class="stat-total">/{{ runStatus.total_rounds || effectiveRounds || '-' }}</span></span>
             </span>
             <span class="stat">
               <span class="stat-label">Elapsed Time</span>
               <span class="stat-value mono">{{ redditElapsedTime }}</span>
             </span>
             <span class="stat">
-              <span class="stat-label">ACTS</span>
-              <span class="stat-value mono">{{ runStatus.reddit_actions_count || 0 }}</span>
+              <span class="stat-label">Generated actions</span>
+              <span class="stat-value mono">{{ runStatus.platform_activity?.reddit?.model_actions ?? 0 }}</span>
             </span>
           </div>
           <!-- Available Actions Tooltip -->
@@ -89,24 +94,24 @@
           </div>
         </div>
 
-        <div v-if="runTiming" class="platform-status runtime" :class="{ active: runStatus.runner_status === 'running', completed: runStatus.runner_status === 'completed' }">
+        <div class="platform-status runtime" :class="{ active: runStatus.runner_status === 'running', completed: runStatus.runner_status === 'completed' }">
           <div class="platform-header">
-            <span class="platform-name">Runtime</span>
+            <span class="platform-name">Run status</span>
           </div>
           <div class="platform-stats">
             <span class="stat">
-              <span class="stat-label">WALL</span>
-              <span class="stat-value mono">{{ formatWallDuration(runTiming.total_seconds || runTiming.duration_seconds) }}</span>
+              <span class="stat-label">Elapsed time</span>
+              <span class="stat-value mono">{{ formatWallDuration(runTiming?.total_seconds || runTiming?.duration_seconds) }}</span>
             </span>
             <span class="stat">
               <span class="stat-label">STATUS</span>
-              <span class="stat-value mono">{{ runStatus.runner_status || 'idle' }}</span>
+              <span class="stat-value mono">{{ runStateLabel }}</span>
             </span>
           </div>
         </div>
 
         <!-- Ensemble (multi-seed) run progress -->
-        <div v-if="ensemble.active || ensemble.done" class="platform-status ensemble-card" :class="{ active: ensemble.active, completed: ensemble.done }">
+        <div v-if="ensemble.active || ensemble.done || ensemble.message" class="platform-status ensemble-card" :class="{ active: ensemble.active, completed: ensemble.done }">
           <div class="platform-header">
             <span class="platform-name">Ensemble</span>
             <span v-if="ensemble.done" class="status-badge">
@@ -132,10 +137,12 @@
       </div>
 
       <div class="action-controls">
+        <button v-if="phase === 0" class="action-btn primary start" :disabled="isStarting" @click="doStartSimulation">Start simulation</button>
+        <button v-if="phase === 1 || isStarting" class="action-btn stop" :disabled="isStopping" @click="handleStopSimulation">{{ isStopping ? 'Stopping…' : 'Stop workflow' }}</button>
         <button
           v-if="canRunEnsemble"
           class="action-btn ensemble"
-          :disabled="ensemble.active || isGeneratingReport"
+          :disabled="ensemble.active || isGeneratingReport || isStarting || phase !== 2 || runStatus.runner_status !== 'completed'"
           :title="`Re-run the simulation ${ensembleRuns} times with different seeds and aggregate the grounded forecast into a confidence-bearing distribution`"
           @click="doRunEnsemble"
         >
@@ -146,18 +153,29 @@
         </button>
         <button
           class="action-btn primary"
+          aria-describedby="simulation-next-help"
           :disabled="phase !== 2 || isGeneratingReport"
           @click="handleNextStep"
         >
           <span v-if="isGeneratingReport" class="loading-spinner-small"></span>
-          {{ isGeneratingReport ? 'Starting...' : 'Start Generating Report' }}
+          {{ isGeneratingReport ? 'Starting...' : 'Generate review report' }}
           <span v-if="!isGeneratingReport" class="arrow-icon">→</span>
         </button>
       </div>
     </div>
 
+    <p id="simulation-next-help" class="next-help" role="status">{{ nextActionHelp }}</p>
+    <p v-if="ensemble.message" class="start-error" :role="ensemble.active || ensemble.done ? 'status' : 'alert'">{{ ensemble.message }}</p>
+    <p v-if="canRunEnsemble && runStatus.runner_status !== 'completed' && !ensemble.active" class="next-help">Complete the first simulation before running a seeded ensemble.</p>
+    <p v-if="startError" class="start-error" role="alert">{{ startError }}</p>
+    <details v-if="effectiveConfig" class="run-settings"><summary>Run settings and limits</summary>
+    <p class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
+    </details>
+    <p v-if="runStatus.activity_summary" class="activity-accounting" role="status">{{ runStatus.activity_summary.model_actions }} model actions · {{ runStatus.activity_summary.unique_posts }} unique posts ({{ runStatus.activity_summary.initial_posts }} initial, {{ runStatus.activity_summary.scheduled_posts }} scheduled) · {{ runStatus.activity_summary.logged_entries }} logged entries · {{ runStatus.activity_summary.unknown_origin_actions }} unknown-origin actions</p>
+    <p v-if="['stopped','failed'].includes(runStatus.runner_status)" class="effective-settings" role="status">Simulation {{ runStatus.runner_status }}: {{ runStatus.error || 'operator stop' }}. Partial activity is retained. Generation requires an available workflow allowance.</p>
+
     <!-- Main Content: Dual Timeline -->
-    <div class="main-content-area" ref="scrollContainer">
+    <div class="main-content-area" ref="scrollContainer" tabindex="0" role="region" aria-label="Simulation activity">
       <!-- Timeline Header -->
       <div class="timeline-header" v-if="allActions.length > 0">
         <div class="timeline-stats">
@@ -203,6 +221,7 @@
                     <svg v-if="action.platform === 'twitter'" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                     <svg v-else viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                   </div>
+                  <span class="origin-label">{{ originLabel(action.origin) }}</span>
                   <div class="action-badge" :class="getActionTypeClass(action.action_type)">
                     {{ getActionTypeLabel(action.action_type) }}
                   </div>
@@ -317,7 +336,7 @@
 
         <div v-if="allActions.length === 0" class="waiting-state">
           <div class="pulse-ring"></div>
-          <span>Waiting for agent actions...</span>
+          <span>{{ phase === 0 ? 'No activity yet. Start the simulation when you are ready.' : phase === 1 ? 'Waiting for simulated activity…' : 'This run has no recorded activity.' }}</span>
         </div>
       </div>
     </div>
@@ -372,38 +391,39 @@
 
     <div v-if="diagnostics" class="diagnostics-panel">
       <div class="diagnostics-header">
-        <span class="diagnostics-title">Agent Diagnostics</span>
+        <span class="diagnostics-title">Activity Log Diagnostics</span>
         <div class="diagnostics-header-right">
           <span class="diagnostics-badge">{{ diagnostics.quality_report?.recommended_next_run || 'none' }}</span>
           <button class="diagnostics-export-btn" title="Download full diagnostics as JSON" @click="exportDiagnostics">Export JSON</button>
         </div>
       </div>
+      <p>These counts include initial posts and scheduled events. Topic flags and activity scores are heuristics; they do not measure model-only activity or real-world influence.</p>
       <div class="diagnostics-grid">
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.summary?.actions_count || 0 }}</span>
-          <span class="metric-label">Actions</span>
+          <span class="metric-label">Log Entries</span>
         </div>
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.summary?.useful_actions_count || 0 }}</span>
-          <span class="metric-label">Useful</span>
+          <span class="metric-label">Non-idle Entries</span>
         </div>
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.off_track_agents?.length || 0 }}</span>
-          <span class="metric-label">Off Track</span>
+          <span class="metric-label">Heuristic Flags</span>
         </div>
         <div class="diagnostic-metric">
           <span class="metric-value mono">{{ diagnostics.high_impact_agents?.length || 0 }}</span>
-          <span class="metric-label">High Impact</span>
+          <span class="metric-label">Activity-ranked</span>
         </div>
       </div>
       <div class="diagnostics-lists">
         <div class="diagnostics-list">
-          <span class="list-title">High-impact agents</span>
+          <span class="list-title">Activity-ranked agents</span>
           <div v-for="agent in (diagnostics.high_impact_agents || []).slice(0, 4)" :key="`impact-${agent.agent_id}`" class="list-row">
             <span>{{ agent.agent_name }}</span>
             <span class="mono">{{ agent.influence_score }}</span>
           </div>
-          <div v-if="!(diagnostics.high_impact_agents || []).length" class="list-empty">No high-impact agents yet</div>
+          <div v-if="!(diagnostics.high_impact_agents || []).length" class="list-empty">No agents above the activity threshold yet</div>
         </div>
         <div class="diagnostics-list">
           <span class="list-title">Issues</span>
@@ -431,7 +451,7 @@
         <span class="log-title">SIMULATION MONITOR</span>
         <span class="log-id">{{ simulationId || 'NO_SIMULATION' }}</span>
       </div>
-      <div class="log-content" ref="logContent">
+      <div class="log-content" ref="logContent" tabindex="0" role="region" aria-label="System log">
         <div class="log-line" v-for="(log, idx) in systemLogs" :key="idx">
           <span class="log-time">{{ log.time }}</span>
           <span class="log-msg">{{ log.msg }}</span>
@@ -448,6 +468,7 @@ import {
   startSimulation,
   stopSimulation,
   getRunStatus,
+  getSimulationConfig,
   getRunStatusDetail,
   getRunDiagnostics,
   runEnsemble,
@@ -499,6 +520,7 @@ const router = useRouter()
 const isGeneratingReport = ref(false)
 const phase = ref(0) // 0: Not started, 1: Running, 2: Completed
 const isStarting = ref(false)
+const effectiveConfig = ref(null)
 const isStopping = ref(false)
 const startError = ref(null)
 const runStatus = ref({})
@@ -520,6 +542,37 @@ const ensemble = ref({
 })
 
 // Computed
+const runStateLabel = computed(() => {
+  if (isStarting.value) return 'Starting'
+  return ({ idle: 'Not started', running: 'Running', starting: 'Starting', stopping: 'Stopping', completed: 'Completed', stopped: 'Stopped', failed: 'Failed' })[runStatus.value.runner_status] || 'Not started'
+})
+const progressGuidance = computed(() => {
+  if (['stopped', 'failed'].includes(runStatus.value.runner_status)) return 'The run ended early. Partial activity is retained; review it before generating a report.'
+  if (phase.value === 2) return 'Activity is ready to inspect. The next step is a report for review.'
+  if (phase.value === 1 || isStarting.value) return 'Generated activity will appear below. You can stop the workflow to block new calls.'
+  return 'Review the settings, then start when a workflow allowance is available.'
+})
+const nextActionHelp = computed(() => {
+  if (isGeneratingReport.value) return 'Starting report generation. Please wait.'
+  if (phase.value !== 2) return 'Report generation becomes available after the simulation ends.'
+  if (['stopped', 'failed'].includes(runStatus.value.runner_status)) return 'A report will use partial activity from this run. Generation still requires an available workflow allowance.'
+  return 'Inspect the simulated activity, then generate a report. Generation requires an available workflow allowance.'
+})
+const selectedPlatforms = computed(() => {
+  const platform = effectiveConfig.value?.prediction_settings?.platform || 'parallel'
+  return platform === 'parallel' ? ['twitter', 'reddit'] : [platform]
+})
+const effectiveRounds = computed(() => {
+  const config = effectiveConfig.value
+  const hours = config?.time_config?.total_simulation_hours
+  const minutes = config?.time_config?.minutes_per_round
+  if (!hours || !minutes) return config?.effective_settings?.round_limit || props.maxRounds
+  const duration = Math.floor(hours * 60 / minutes)
+  const cap = props.maxRounds || config?.prediction_settings?.max_rounds
+  return cap ? Math.min(duration, cap) : duration
+})
+const originLabel = (origin) => ({ initial_post: 'Initial input', scheduled_event: 'Scheduled input', model_action: 'Model action' }[origin] || 'Unknown origin')
+
 // Display actions in chronological order (newest at the bottom)
 const chronologicalActions = computed(() => {
   return allActions.value
@@ -631,6 +684,7 @@ const resetAllState = () => {
 
 // Start simulation
 const doStartSimulation = async () => {
+  if (isStarting.value || phase.value !== 0) return
   if (!props.simulationId) {
     addLog('Error: Missing simulationId')
     return
@@ -641,22 +695,25 @@ const doStartSimulation = async () => {
 
   isStarting.value = true
   startError.value = null
-  addLog('Starting dual-platform parallel simulation...')
-  emit('update-status', 'processing')
+  addLog(`Starting ${selectedPlatforms.value.join(' + ')} simulation...`)
+  emit('update-status', 'starting')
 
   try {
     const realistic = props.runtimeMode !== 'fast'
+    const configResponse = await getSimulationConfig(props.simulationId)
+    effectiveConfig.value = configResponse.data
+    const selected = configResponse.data?.prediction_settings || {}
     const economy = normalizeEconomySettings(props.economySettings)
     const params = {
       simulation_id: props.simulationId,
-      platform: 'parallel',
-      force: true,  // Force restart
+      platform: selected.platform || 'parallel',
+      force: false,
       // Realistic mode grounds agents each round (forecast target + their graph-derived
       // stance) and writes activity back to the graph; fast mode skips both for speed.
-      enable_graph_memory_update: realistic,
-      scenario_id: 'baseline',
-      seed: Date.now() % 1000000,
-      memory_mode: realistic ? 'practical' : 'off',
+      enable_graph_memory_update: realistic && selected.memory_mode !== 'off',
+      scenario_id: configResponse.data?.active_scenario_id || 'baseline',
+      seed: configResponse.data?.seed ?? selected.seed ?? 42,
+      memory_mode: realistic ? (selected.memory_mode || 'practical') : 'off',
       economy
     }
 
@@ -666,7 +723,7 @@ const doStartSimulation = async () => {
     }
 
     addLog(realistic
-      ? 'Realistic runtime mode: per-round forecast/stance grounding and live graph updates enabled'
+      ? `Realistic runtime mode: memory ${params.memory_mode}; graph memory ${params.enable_graph_memory_update ? 'enabled' : 'disabled'}`
       : 'Fast preview mode: forecast memory and live graph updates disabled')
     addLog(
       economy.enabled
@@ -685,6 +742,7 @@ const doStartSimulation = async () => {
 
       phase.value = 1
       runStatus.value = res.data
+      emit('update-status', res.data.runner_status || 'starting')
 
       startStatusPolling()
       startDetailPolling()
@@ -716,9 +774,10 @@ const handleStopSimulation = async () => {
     if (res.success) {
       addLog('✓ Simulation stopped')
       phase.value = 2
+      runStatus.value = { ...runStatus.value, ...res.data, runner_status: 'stopped' }
       stopPolling()
       loadDiagnostics()
-      emit('update-status', 'completed')
+      emit('update-status', 'stopped')
     } else {
       addLog(`Stop failed: ${res.error || 'Unknown error'}`)
     }
@@ -743,18 +802,10 @@ const stopEnsemblePolling = () => {
 // This replaces the single stochastic run as the forecast basis: the backend persists
 // ensemble_signal.json, which the report's forecast prefers over any single run.
 const doRunEnsemble = async () => {
-  if (!props.simulationId || ensemble.value.active) return
-
-  // Stop the in-progress single run + its polling so the ensemble can restart cleanly.
+  if (!props.simulationId || ensemble.value.active || isStarting.value || phase.value !== 2 || runStatus.value.runner_status !== 'completed') return
+  const priorPhase = phase.value
+  const priorStatus = runStatus.value.runner_status
   stopPolling()
-  if (phase.value !== 2) {
-    try {
-      await stopSimulation({ simulation_id: props.simulationId })
-    } catch (err) {
-      // Best effort — the ensemble runner also resets the environment before each run.
-      console.warn('Pre-ensemble stop failed (continuing):', err)
-    }
-  }
 
   ensemble.value = {
     active: true,
@@ -786,9 +837,13 @@ const doRunEnsemble = async () => {
     }
   } catch (err) {
     ensemble.value.active = false
-    ensemble.value.message = `Ensemble failed: ${err.message}`
+    const reason = err.response?.data?.error || err.message
+    ensemble.value.message = reason === 'runtime_limit'
+      ? 'Ensemble did not start: the workflow time allowance expired. Renew the allowance above, then retry manually.'
+      : `Ensemble did not start: ${reason}`
+    phase.value = priorPhase
     addLog(`✗ Ensemble failed to start: ${err.message}`)
-    emit('update-status', 'error')
+    emit('update-status', priorStatus)
   }
 }
 
@@ -831,7 +886,9 @@ const fetchEnsembleStatus = async () => {
     } else if (task.status === 'failed') {
       stopEnsemblePolling()
       ensemble.value.active = false
-      ensemble.value.message = `Ensemble failed: ${task.error || 'Unknown error'}`
+      ensemble.value.message = `Ensemble failed: ${task.error || 'Unknown error'}. Partial activity is retained.`
+      await fetchRunStatus()
+      phase.value = 2
       addLog(`✗ Ensemble failed: ${task.error || 'Unknown error'}`)
       emit('update-status', 'error')
     }
@@ -891,7 +948,8 @@ const fetchRunStatus = async () => {
     if (res.success && res.data) {
       const data = res.data
 
-      runStatus.value = data
+      runStatus.value = { ...runStatus.value, ...data }
+      if (data.runner_status) emit('update-status', data.runner_status)
 
       // Detect round changes for each platform and output logs
       if (data.twitter_current_round > prevTwitterRound.value) {
@@ -905,22 +963,20 @@ const fetchRunStatus = async () => {
       }
 
       // Check if simulation is complete (via runner_status or platform completion status)
-      const isCompleted = data.runner_status === 'completed' || data.runner_status === 'stopped'
+      const isStopped = data.runner_status === 'stopped'
+      const isFailed = data.runner_status === 'failed'
+      const isCompleted = data.runner_status === 'completed'
 
       // Additional check: if backend hasn't updated runner_status yet, but platforms have reported completion
       // Check via twitter_completed and reddit_completed status
       const platformsCompleted = checkPlatformsCompleted(data)
 
-      if (isCompleted || platformsCompleted) {
-        if (platformsCompleted && !isCompleted) {
-          addLog('✓ Detected all platform simulations have ended')
-        }
-        addLog('✓ Simulation completed')
+      if (isStopped || isFailed || isCompleted) {
+        addLog(isStopped || isFailed ? `Simulation ${data.runner_status}: ${data.error || 'operator stop'}; partial output retained` : '✓ Simulation completed')
         phase.value = 2
         stopPolling()
         loadEconomy()
         loadDiagnostics()
-        emit('update-status', 'completed')
       }
     }
   } catch (err) {
@@ -992,12 +1048,15 @@ const fetchRunStatusDetail = async () => {
     if (res.success && res.data) {
       // Use all_actions to get complete action list
       const serverActions = res.data.all_actions || []
+      if (res.data.activity_summary) {
+        runStatus.value = { ...runStatus.value, activity_summary: res.data.activity_summary, platform_activity: res.data.platform_activity }
+      }
 
       // Incrementally add new actions (with deduplication)
       let newActionsAdded = 0
       serverActions.forEach(action => {
         // Generate unique ID
-        const actionId = action.id || `${action.timestamp}-${action.platform}-${action.agent_id}-${action.action_type}`
+        const actionId = action.id || (action.trace_id != null ? `${action.platform}:trace:${action.trace_id}` : `${action.timestamp}-${action.platform}-${action.agent_id}-${action.action_type}`)
 
         if (!actionIds.value.has(actionId)) {
           actionIds.value.add(actionId)
@@ -1114,10 +1173,27 @@ watch(() => props.systemLogs?.length, () => {
   })
 })
 
-onMounted(() => {
+onMounted(async () => {
   addLog('Step3 Simulation initialization')
   if (props.simulationId) {
-    doStartSimulation()
+    try {
+      effectiveConfig.value = (await getSimulationConfig(props.simulationId)).data
+      const response = await getRunStatus(props.simulationId)
+      if (response.success && response.data) {
+        runStatus.value = response.data
+        emit('update-status', response.data.runner_status || 'idle')
+        await fetchRunStatusDetail()
+        if (['running', 'starting', 'stopping'].includes(response.data.runner_status)) {
+          phase.value = 1
+          startStatusPolling()
+          startDetailPolling()
+        } else if (['completed', 'stopped', 'failed'].includes(response.data.runner_status)) {
+          phase.value = 2
+          loadDiagnostics()
+          emit('update-status', response.data.runner_status)
+        }
+      }
+    } catch (err) { startError.value = err.message }
   }
 })
 
@@ -1136,6 +1212,9 @@ onUnmounted(() => {
   font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
   overflow: hidden;
 }
+.activity-accounting { margin: 0; padding: 8px 16px; font-size: 12px; color: #374151; }
+.origin-label { font-size: 11px; color: #4b5563; }
+.effective-settings { padding: 8px 12px; font: 12px/1.5 system-ui, sans-serif; overflow-wrap: anywhere; flex-shrink: 0; background: #f6f8fb; color: #1f2a36; }
 
 /* --- Control Bar --- */
 .control-bar {
@@ -1163,8 +1242,8 @@ onUnmounted(() => {
   border-radius: 4px;
   background: #FAFAFA;
   border: 1px solid #EAEAEA;
-  opacity: 0.7;
-  transition: all 0.3s;
+  opacity: 1;
+  transition: background-color 0.3s, border-color 0.3s;
   min-width: 140px;
   position: relative;
   cursor: pointer;
@@ -1274,7 +1353,7 @@ onUnmounted(() => {
 
 .stat-label {
   font-size: 8px;
-  color: #999;
+  color: #626B78;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1288,7 +1367,7 @@ onUnmounted(() => {
 
 .stat-total, .stat-unit {
   font-size: 9px;
-  color: #999;
+  color: #626B78;
   font-weight: 400;
 }
 
@@ -1661,7 +1740,7 @@ onUnmounted(() => {
   border: 1px solid #EAEAEA;
   box-shadow: 0 2px 10px rgba(0,0,0,0.02);
   position: relative;
-  transition: all 0.2s;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .timeline-card:hover {
@@ -1906,5 +1985,37 @@ onUnmounted(() => {
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-right: 6px;
+}
+/* Guided simulation progress */
+.simulation-guide { padding: 16px 24px; border-bottom: 1px solid #e5e7eb; background: #f8fafc; }
+.simulation-guide h1 { font-size: 22px; margin: 0 0 8px; text-wrap: balance; }
+.simulation-guide p { font: 14px/1.5 system-ui, sans-serif; margin: 6px 0; color: #475569; }
+.run-summary strong { color: #172b42; }
+.control-bar { height: auto; flex-wrap: wrap; gap: 16px; }
+.status-group, .action-controls { flex-wrap: wrap; min-width: 0; }
+.next-help, .start-error { padding: 10px 24px; margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #475569; }
+.start-error { background: #fff4ed; color: #873e1c; }
+.run-settings { padding: 8px 24px; border-bottom: 1px solid #e5e7eb; }
+.run-settings summary { cursor: pointer; min-height: 40px; line-height: 40px; font-weight: 600; }
+.run-settings .effective-settings { margin: 0; }
+.action-btn, .diagnostics-export-btn { min-height: 44px; }
+.simulation-panel :is(button, summary):focus-visible { outline: 2px solid #c73500; outline-offset: 3px; }
+.stat-value { font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .simulation-panel { overflow-y: auto; }
+  .simulation-guide, .control-bar, .next-help, .start-error, .run-settings { padding-left: 16px; padding-right: 16px; flex-shrink: 0; }
+  .status-group { width: 100%; }
+  .platform-status { flex: 1 1 100%; min-width: 0; }
+  .action-controls { width: 100%; }
+  .action-controls .action-btn { flex: 1 1 100%; }
+  .main-content-area { min-height: 300px; flex: 0 0 auto; overflow: visible; }
+  .timeline-feed { min-height: 0; padding: 16px; }
+  .timeline-axis, .timeline-marker { display: none; }
+  .timeline-item.twitter, .timeline-item.reddit { padding: 0; }
+  .timeline-item.twitter .timeline-card, .timeline-item.reddit .timeline-card { width: 100%; margin: 0; box-sizing: border-box; }
+  .timeline-card { min-width: 0; overflow-wrap: anywhere; padding: 16px; }
+  .card-header, .header-meta { flex-wrap: wrap; gap: 8px; }
+  .timeline-header, .timeline-stats { flex-wrap: wrap; }
+  .diagnostics-grid, .diagnostics-lists { display: grid; grid-template-columns: 1fr 1fr; }
 }
 </style>

@@ -20,6 +20,8 @@ class SourceIndex:
         self.limited = len(episodes) > MAX_CHUNKS
         used = 0
         for episode in episodes[:MAX_CHUNKS]:
+            if episode.get('origin', 'source_document') != 'source_document':
+                continue
             if any(not scope.get(k) or episode.get(k) != scope[k] for k in ('graph_id', 'case_id', 'case_version_id')):
                 continue
             text = episode.get('data')

@@ -1,0 +1,18 @@
+{
+  "artifact_dir": "/tmp/crowdlens-ecc-review-ensemble-real-cleanup-ol5k_r9k",
+  "old_task_status": "failed",
+  "new_task_status": "processing",
+  "new_owner_file_preserved": false,
+  "new_owner_db_row_preserved": false,
+  "current_binding": {
+    "task_id": "new",
+    "attempt_id": "aa46d1a93a374ce390ed736262f34193"
+  },
+  "substitutions": [
+    "close_simulation_env advances controlled lease and admits replacement",
+    "get_run_state returns None to avoid live child operations"
+  ],
+  "real_cleanup_method": true,
+  "real_child_processes": 0,
+  "real_model_calls": 0
+}

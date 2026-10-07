@@ -1,0 +1,1 @@
+{"status": "failed", "error": "crowdlens-ecc-release-final-242b8999-0fa284-neo4j-port-7687 failed: 1", "receipt": "/tmp/crowdlens-ecc-release-final-242b8999/services-image-receipt.json"}

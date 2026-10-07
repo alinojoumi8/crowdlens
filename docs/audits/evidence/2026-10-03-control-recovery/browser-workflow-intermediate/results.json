@@ -1,0 +1,138 @@
+{
+  "browser": "154.0.8037.92",
+  "browserLaunch": {
+    "arguments": [
+      "/usr/bin/google-chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--enable-automation",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--user-data-dir=/tmp/playwright_chromiumdev_profile-Ut7WO7",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--noerrdialogs",
+      "--ozone-platform=headless",
+      "--ozone-override-screen-size=800,600",
+      "--use-angle=swiftshader-webgl",
+      "--flag-switches-begin",
+      "--flag-switches-end"
+    ],
+    "sandboxStatus": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tYes\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed."
+  },
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": false,
+      "error": "The expression evaluated to a falsy value:\n\n  assert(await page.getByRole('button', { name: 'Explore Scenario' }).isEnabled())\n"
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    }
+  ],
+  "console": [
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    }
+  ],
+  "pageErrors": [],
+  "network": [
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "GET",
+      "path": "/api/execution/configuration",
+      "status": 200
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "POST",
+      "path": "/api/execution/authorize",
+      "status": 201
+    }
+  ],
+  "substitutes": [
+    "Harness ontology, graph builder/storage, simulation endpoints, drafting model; no provider calls",
+    "Root generation response intercepted to open an explicitly seeded report",
+    "One acceptance response deliberately lost after its real HTTP publication",
+    "External font CSS fulfilled empty; no external browser requests"
+  ],
+  "performance": {},
+  "fatal": "The expression evaluated to a falsy value:\n\n  assert(await page.getByRole('button', { name: 'Explore Scenario' }).isEnabled())\n"
+}

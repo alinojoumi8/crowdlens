@@ -1,0 +1,12 @@
+{
+  "approved_at": "2026-10-03T08:39:40.760512+00:00",
+  "user_instruction": "I approve it you can use minimax as much as you need, also you can use minmax m3.1 flash as well",
+  "scope": "Fresh fictional Cedarbrook actual-generation visible-browser end-to-end test, local review revision; no deployment",
+  "active_provider": "minimax",
+  "active_model": "MiniMax-M3",
+  "initial_request_ceiling": 60,
+  "initial_runtime_seconds": 1800,
+  "extensions": "User permits MiniMax as needed; assess progress and explicitly extend durable ledger without resetting usage",
+  "optional_model": "MiniMax-M3.1-Flash-Preview",
+  "optional_model_used": false
+}

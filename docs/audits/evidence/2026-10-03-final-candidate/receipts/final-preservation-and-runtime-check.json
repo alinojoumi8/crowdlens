@@ -1,0 +1,228 @@
+{
+  "checked_at": "2026-10-03T10:31:21.421158+00:00",
+  "code_revision": "1f61571e7788493043f2c929ed9eaf6520a0e7b8",
+  "runtimes": [
+    {
+      "port": 18752,
+      "build": {
+        "declared_revision": "1f61571e7788493043f2c929ed9eaf6520a0e7b8",
+        "scope": "runtime-source-v1",
+        "source_sha256": "f72be2d03b85a404abf19992ddf2d86a703848bc50dbe87cf519d8c18a25333f"
+      },
+      "healthy": true,
+      "workflow_id": "wf_47f83c938e6d44888f64dd966ec7afc5",
+      "state": "stopped",
+      "admitted": 42,
+      "epoch": 4,
+      "in_flight": 0,
+      "unknown_usage_attempts": 0,
+      "root_report_id": "report_38eb8454832e",
+      "root_preservation": {
+        "checked": 9,
+        "all_unchanged": true,
+        "sha256": {
+          "section_03.md": "7138be4c7141d208504881368ae91f1e5ce69f9c480336c6b73e4ea2a1f83b49",
+          "console_log.txt": "eb7ed23e9540aaf83dc320acc6054ed707531f35b89a9132a17e5c869780faa5",
+          "section_01.md": "aae9f0d4a1a037179a04762d1cd953cd47ddb1b4ca244d5d7c6d8e9e1853284d",
+          "outline.json": "de6cbcfc9e2a107d1c7ae323198e27acb9655fa11913a60688ae57134d24f3c4",
+          "agent_log.jsonl": "797190e8ce78b9d125375a73d45bd892cb4a50cff8ef6d017e5773165deec1d3",
+          "section_02.md": "b161e7803c7c269850aca5e46c10387673a8800c3d4703fd3ba5ff3dd847d504",
+          "meta.json": "2f4da3c10f1988513dce9d2d07b10a2b3e03ee174767fd4fb4d5547e1f57868e",
+          "progress.json": "573d80fcee8d461e2966311fb6c5a94199d0dc2a712778155b6f8139e9552041",
+          "full_report.md": "cdc3e208b446a2fd630bb55958f3d51faff547188fa756354807253fd9a545f7"
+        }
+      },
+      "frontend_files": 35,
+      "all_frontend_disk_and_served_hashes_match": true,
+      "history_count": 2,
+      "history": [
+        {
+          "created_at": "2026-10-03T09:32:16.552313+00:00",
+          "report_id": "report_561a7739a24d480bb5a0ac086eec2cdf",
+          "revision": {
+            "accepted_at": "2026-10-03T09:32:16.552325+00:00",
+            "content_digest": "f2e1946d952822bebfe1545c1a90b08e2b17544f4bc7f5159d215d713b62f73c",
+            "immutable": true,
+            "inherited_forecast": true,
+            "inherited_section_indices": [
+              2,
+              3
+            ],
+            "parent_report_id": "report_38eb8454832e",
+            "proposal_digest": "279009979192e2bf1ffbe9db11c5cb8dff4dab400994617bd653cd88e8cfc29c",
+            "proposal_id": "proposal_95c5c62d4d1a4f10b03dc7c814ee5f51",
+            "root_report_id": "report_38eb8454832e",
+            "section_index": 1,
+            "source_checked_at": "2026-10-03T09:32:16.551472+00:00",
+            "source_digest": "b3f731b626eeacdbe550c2c02ca6b447891a3ad1c3ae2bde7693f3bc1835cd54",
+            "summary_edits": []
+          },
+          "status": "needs_review"
+        },
+        {
+          "created_at": "2026-10-03T05:12:46.413566",
+          "report_id": "report_38eb8454832e",
+          "revision": {},
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "port": 18756,
+      "build": {
+        "declared_revision": "1f61571e7788493043f2c929ed9eaf6520a0e7b8",
+        "scope": "runtime-source-v1",
+        "source_sha256": "f72be2d03b85a404abf19992ddf2d86a703848bc50dbe87cf519d8c18a25333f"
+      },
+      "healthy": true,
+      "workflow_id": "wf_00a49d682ed94067984ce6637a300f75",
+      "state": "stopped",
+      "admitted": 38,
+      "epoch": 1,
+      "in_flight": 0,
+      "unknown_usage_attempts": 0,
+      "root_report_id": "report_6ad447817a9b",
+      "root_preservation": {
+        "checked": 9,
+        "all_unchanged": true,
+        "sha256": {
+          "section_03.md": "d75932e540993f60cf338bfb33121b96647a7745542bb476e68e5bfe25e77c97",
+          "console_log.txt": "df551f9bcc3823cafdb188c2ff26e880a30f568c9b95d6270beec0cb0b8dcb49",
+          "section_01.md": "1ce17fdbe7e18603b1635aba9a6522bd382c8f89d0bf9328bb19bb348acffdca",
+          "outline.json": "1bc4a750a176fbc35a18549237d84aa5d5f6f4a85ea6bab923598fcaf015649c",
+          "agent_log.jsonl": "7b332096f06efa448099f2300370f449bc0cbc0ab64d05cd47c30927167a0f26",
+          "section_02.md": "772d5fd1cb1ab7e6fa1697513126ec2da39cbbf16a834fa4bfe7e9c70d256a4a",
+          "meta.json": "7e26f68d9c4baadcc4b69788e25f12059e8cd3ffaf49ee6eab952c4f7e730b43",
+          "progress.json": "887bf512983a83e9395dc7bceef3e93934d162e4005ad0b4c2836f3388587ef0",
+          "full_report.md": "d2fd1215e39aa403007ec5cabbeef564801751ca8776fd35704e3ec57716bf14"
+        }
+      },
+      "frontend_files": 35,
+      "all_frontend_disk_and_served_hashes_match": true,
+      "history_count": 1,
+      "history": [
+        {
+          "created_at": "2026-10-03T05:51:35.280613",
+          "report_id": "report_6ad447817a9b",
+          "revision": {},
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "main_overlays": {
+    "checked": 5,
+    "all_unchanged": true,
+    "sha256": {
+      "README.md": "0d61daeda861e8d3eeb7876bd4d50b24a10f633b86f28075e1419d6b4499b191",
+      "ROADMAP.md": "921a711b1f5def202957d5861bf069bf1d1a0fc71618bfc3788c5e955abc7f8e",
+      "docs/architecture.md": "7d8692aa5feeed0b13c7f7935d43e983cd4961c13a025fe4e373da90e001fea4",
+      "docs/ECC-WORKFLOW-PLAN.md": "f2ba4d3a249fde184e4dd567734661a79c6e22c7f1f2479351d8a56760d1808d",
+      "docs/product-capabilities.md": "841a5be76d90943c52dd8bf85614a82246c0cf932715390b22c6278485b58299"
+    }
+  },
+  "main_commit": "34275b75223dee82087ff6ac937c4fc6e4af9323",
+  "main_status": " M README.md\n M ROADMAP.md\n M docs/architecture.md\n?? docs/ECC-WORKFLOW-PLAN.md\n?? docs/product-capabilities.md\n",
+  "historical_files": {
+    "checked": 34,
+    "all_unchanged": true,
+    "sha256": {
+      "cedarbrook-bike-lane.md": "1d79d4a96e4af613f81a1a9195a277ee15753a154d6e2daf48ddd7fae4aaf48b",
+      "test-result.md": "7f2167b60d1bd387b0a56d620ab48254262d0fecfab23c61015d119ac5e069d9",
+      "screenshots/01-upload.jpg": "bede37f9cebffde1e2d974c23fa3ff4625c6828069b4930819fcd8988eb7829c",
+      "screenshots/02-graph.jpg": "486a8e4db4a91ded00882494be9f405679a3ef1a3b1bebb21eeb87398865d3d5",
+      "screenshots/03-settings.jpg": "7f7dba607a8f11b67826102cf35e3dec1ffec196229add86edd0f77b26644c2e",
+      "screenshots/04-prepared.jpg": "9bc6bbfd2da53ee8d5b6e16a3108e543507b6031392cca6c2c1ff6d4a6b5e3f9",
+      "screenshots/05-running.jpg": "665f00efc0fa3f747364ba727c822e8901ef5bcae48a1e6d55fad81095978ec3",
+      "screenshots/06-stopped-sample.jpg": "042ba8a454986e7928cfb7582e3c2a041c141d202c573e68799e0e8c6cdbdf6c",
+      "screenshots/07-report-interrupted.jpg": "80a49aa567304685bf9d3ecffac6f32f136624f1fe4f5203690c0b6ec44902b0",
+      "screenshots/08-review-ready.jpg": "72c8937af587f09193e4ab523d794f92cb362ed726503b5244cce1c5cf553856",
+      "evidence-at-original-limit/action-counts.json": "73cd2997de1985e5b964d53efae3eadc69829ff409a49312e8f9eb7235fae187",
+      "evidence-at-original-limit/control-db.sqlite": "891dbee1ce2aef4f47722128f17404defba289f74618843f15b8be84d99aef8c",
+      "evidence-at-original-limit/graph.json": "d38c8d5aa709a84323c56887ad4fea5cd365e88c41e79368be0c16b8f4bfeb3f",
+      "evidence-at-original-limit/health.json": "b8d44f4ae13f38dc17dec29018e085a34f308fd759cd858dc3c2b4465ed215d4",
+      "evidence-at-original-limit/neo4j-indexes.txt": "1b068e789417f9d17420e35a5b68671ee27b5196ec83e97d36e374a19c580626",
+      "evidence-at-original-limit/report-progress-error.json": "11ad87c81c60edf4cb61fdf326bc232da6fe4a5fc78de293ad94c4695a776fad",
+      "evidence-at-original-limit/reports/report_8c343d6450c0/agent_log.jsonl": "0ab3915f0109d39dbd3632d0c18cd5efd4ada5affb85336bf6b7bf49fa8777c2",
+      "evidence-at-original-limit/reports/report_8c343d6450c0/console_log.txt": "435b315a3dc360fde974a5fbbfc972f1ed461af102038ee8c242e9e22cd63599",
+      "evidence-at-original-limit/reports/report_8c343d6450c0/meta.json": "8aee7c1600b3d3b5c184defaf26226dff4d421455b55461d587c98e1e6dcd327",
+      "evidence-at-original-limit/reports/report_8c343d6450c0/outline.json": "b792dffa92364c27729b4f371a70df260cc8fbb3f9d1f29d0fa641a23c99353e",
+      "evidence-at-original-limit/reports/report_8c343d6450c0/progress.json": "891b540c8caa559a8ccacafafaf9aa0728479867da0eb97fc8e8383274bbed60",
+      "evidence-at-original-limit/simulations/sim_c59433035846/agent_memory_summaries.json": "c2c64f829a94a26c2dff56f3b5caf1f47d8fc73e76734fe920c00893d8576271",
+      "evidence-at-original-limit/simulations/sim_c59433035846/agent_short_memory.json": "6189078f11d4b953cef2b8c6b45d6318135ba6da31f3cbebd6d9a88060820af0",
+      "evidence-at-original-limit/simulations/sim_c59433035846/env_status.json": "a1f51f0276e3ab40634471d44eef8e90af49dc30131bfe5a861b1446f2a3be04",
+      "evidence-at-original-limit/simulations/sim_c59433035846/reddit/actions.jsonl": "5830256271f916ca05bb0595addc3f6a9f2f4dfcda99a1f6f8d07be9f5322a45",
+      "evidence-at-original-limit/simulations/sim_c59433035846/reddit_profiles.json": "ab4083fede51f17d8060a57d4de77d5c339f998071ec8b2415994f1b83640518",
+      "evidence-at-original-limit/simulations/sim_c59433035846/reddit_simulation.db": "3dffcab3e1a67fee52599e54dabc4727b63ccdc5b279431ee61ecd5b6aa1cc47",
+      "evidence-at-original-limit/simulations/sim_c59433035846/run_state.json": "290a42769e4885426a1044255ea6318b1dd28f330ec88767a6d5ad908d662338",
+      "evidence-at-original-limit/simulations/sim_c59433035846/simulation.log": "9c015bfb075b29b68e6aa4713888fba8f888bb4e6725367335cf8640760bdf65",
+      "evidence-at-original-limit/simulations/sim_c59433035846/simulation_config.json": "5622f89e2afe07389f0e463dfa913836e2cd255479001f0ff244d0978f9287e6",
+      "evidence-at-original-limit/simulations/sim_c59433035846/state.json": "eb968f70497ed4240cc88312ff046aa90dc61e7d338b4bb9fbbe545ec1d6334c",
+      "evidence-at-original-limit/simulations/sim_c59433035846/twitter/actions.jsonl": "d460a07418b659bb3acfbe72cd83142ed827968572e51cbe46d8a4aec182ff03",
+      "evidence-at-original-limit/simulations/sim_c59433035846/twitter_profiles.csv": "ab12cb0afbcbb5ada73f26fce95950e7e374e7c6dd2809f49e77ea8b4e1d7b92",
+      "evidence-at-original-limit/simulations/sim_c59433035846/twitter_simulation.db": "a5eac0fc1997f38218b211248435243edf1ceeeeac934f3838c9ac88f6353ac2"
+    }
+  },
+  "failed_simulation": {
+    "checked": 13,
+    "all_unchanged": true,
+    "sha256": {
+      "env_status.json": "577217d71cfd3ccc032006ac92621b9c4182e6a5606c3a996773dcb584a739a7",
+      "twitter_profiles.csv": "5ebe5c91ec0bc98611e62696c95b3a980b76ca1f1ab0c458c3180bed9debff1c",
+      "state.json": "8cb0837deb494bfb793ff34a271b5a0ceed3bf140ade93335f62161ef5bb601b",
+      "twitter_simulation.db": "c2abb43b1a6201b7f95d8d9d8df11df5e7b0f63f107c2bce477959e6fef68f98",
+      "reddit_profiles.json": "128b3bfbba8f83f29b4e77ef4bdc7915b7c15459a9eedd6a470d524be62ea3d1",
+      "run_state.json": "2b84eda2f60031fda989a8bb50c7800b201e92b835534a793c45412e52bcb6c5",
+      "simulation_config.json": "1dec61260327334a40286d60256108dbfce78fd288815119819124401a3cea70",
+      "simulation.log": "0f089c42b5d27a936d2c86b947de3d243038620105952e30cf7eec3e31a5acf8",
+      "log/social.agent.log": "27c8c6bc4d56552e5e917ed8582d3d31a468f41b1cc756bd854b6ec1f3d401d2",
+      "log/oasis.env.log": "1282d85c5d1311d976b0710f38abf2868be6106d2d779145831d18d493d74178",
+      "log/table.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log/social.rec.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log/social.twitter.log": "af219457dcc91b080dcf07fee88398c8a33076197bdbeda4a98f6ee4e816e1da"
+    }
+  },
+  "failed_scope_proposal": {
+    "checked": 1,
+    "all_unchanged": true,
+    "sha256": {
+      "/home/ali/Documents/CrowdLens-reviews/2026-10-03-live-cedarbrook/runtime/reports/.evidence-proposals/proposal_7b76f48edeb74d95a3bc6034f99f3d05/record.json": "dd9ceb40bc18e0ed1720d78dd8eeda71bf6b344fc8f5a532c6cc7a84c8d0d391"
+    }
+  },
+  "accepted_child": {
+    "checked": 10,
+    "all_unchanged": true,
+    "sha256": {
+      "section_03.md": "7138be4c7141d208504881368ae91f1e5ce69f9c480336c6b73e4ea2a1f83b49",
+      "manifest.json": "3832cd733f94b843627a02b464a4d06d422a6a37f6faf8b71a58137165526ad2",
+      "ledger.json": "b6aeff072449c92a13a7c4b1a4f9303f6b7c869918c54648b208ded1cd43cec6",
+      "provenance.json": "f185fc529571c6ba4d61fed18b4f1402a35cd0a79c034d8172ef3e5553d8e877",
+      "section_01.md": "3ff6997fa1a644718d6e0e9edb73309a1bb8540acf4d41a41ad051d386f6053c",
+      "outline.json": "c9671385f910af505753576c7aab03c12f638f8e8e7fab988fef769d9195bbd2",
+      "section_02.md": "b161e7803c7c269850aca5e46c10387673a8800c3d4703fd3ba5ff3dd847d504",
+      "meta.json": "8c9570360b58eceb7ce8a7f568a97ceab0937b954c307f055e613f9453ca6d06",
+      "progress.json": "83b509e521dfb809c098ca17cfd093c0b4123249cd3b9cebb5accf0f91966c9c",
+      "full_report.md": "79b7cf2556cf5628f10ada59ffa6d589fc03602e530f6c29d9040c16fd572f87"
+    }
+  },
+  "fresh_blocked_proposals": {
+    "proposal_41906b440b3d49758794e2ea69afb196": {
+      "files_checked": 4,
+      "record_unchanged": true,
+      "state": "blocked"
+    },
+    "proposal_20eda4b6140f4a2b8541e828165301de": {
+      "files_checked": 4,
+      "record_unchanged": true,
+      "state": "blocked"
+    },
+    "proposal_58c0cb1b68774a998250e844ae64701a": {
+      "files_checked": 4,
+      "record_unchanged": true,
+      "state": "blocked"
+    }
+  },
+  "verification_helper_limitations": [
+    "Initial read-only helper assumed revision history data was a dict; actual API returns a list. Corrected to compare list length. No application/source changes or model calls resulted."
+  ]
+}

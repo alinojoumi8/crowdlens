@@ -1,0 +1,52 @@
+{
+  "final_application_candidate": "52eeee4f30de2538ed4cd028d8d7eed6df236d07",
+  "actual_generation_candidate": "be61e79b3423de61dbcd75269efc65bda7b17a33",
+  "strict_gate_revalidation": "4 retained actual audits pass; zero new provider requests; not fresh generation",
+  "test_counts": {
+    "backend": 647,
+    "node": 12,
+    "component": 54,
+    "total": 713
+  },
+  "build": "passed",
+  "independent_code_review": "blocker fixed; final narrow review passes",
+  "live_minimax": {
+    "ready": 4,
+    "attempted": 4,
+    "requests": 12,
+    "all_eight_originals_retrieved": true,
+    "all_parents_unchanged": true,
+    "invariants_pass": true,
+    "syntax_correction_requests": 0,
+    "workflow_state": "stopped",
+    "in_flight": 0,
+    "billing_amount": null
+  },
+  "independent_ai_review": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "claims": 25,
+    "supported": 24,
+    "unsupported": 1,
+    "material_facts": 22,
+    "section_omissions": 0,
+    "summary_duplication_defects": 0,
+    "human_review_seconds": null
+  },
+  "browser": {
+    "runtime": "synthetic_provider_disabled_real_frontend_report_APIs",
+    "final_revision": "report_3984db21f70e485087eaaf6b1170bb15",
+    "parent_unchanged": true,
+    "unrelated_text_preserved": true,
+    "status": "needs_review",
+    "actual_v6_packets_navigated": 4,
+    "human_ratings_filled": false,
+    "actual_results_url": "http://127.0.0.1:18805/",
+    "source_packet_url": "http://127.0.0.1:18803/"
+  },
+  "production_acceptance": false,
+  "main_merge": false,
+  "push": false,
+  "deployment": false,
+  "release_readiness": "not_established; independent conditional claim correction remains"
+}

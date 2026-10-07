@@ -1,0 +1,142 @@
+npm notice run crowdlens-frontend@0.1.0 test:components
+npm notice run vitest run --run src/components/Step3Simulation.component.test.js src/components/ReportRecovery.component.test.js
+
+ RUN  v4.1.11 /home/ali/.codex/worktrees/crowdlens-ecc-integration/mirofish-local/frontend
+
+ ❯ src/components/ReportRecovery.component.test.js (1 test | 1 failed) 64ms
+   × ends terminal report polling and never restarts on open 63ms
+ ❯ src/components/Step3Simulation.component.test.js (3 tests | 2 failed) 166ms
+   × opening or refreshing a simulation does not schedule generation 70ms
+   × shows a usable Stop control and preserves the stopped state 65ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ReportRecovery.component.test.js > ends terminal report polling and never restarts on open
+AssertionError: expected "vi.fn()" to be called 1 times, but got 6 times
+ ❯ src/components/ReportRecovery.component.test.js:25:29
+     23|   await vi.advanceTimersByTimeAsync(10000)
+     24|   await flushPromises()
+     25|   expect(getReportProgress).toHaveBeenCalledTimes(reads)
+       |                             ^
+     26|   expect(generateReport).not.toHaveBeenCalled()
+     27|   expect(resumeReport).not.toHaveBeenCalled()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/Step3Simulation.component.test.js > opening or refreshing a simulation does not schedule generation
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "economy": Object {
+          "currency": "USD",
+          "enabled": false,
+          "initial_balance_cents": 1000000,
+          "max_decisions_per_tick": 50,
+        },
+        "enable_graph_memory_update": true,
+        "force": true,
+        "memory_mode": "practical",
+        "platform": "parallel",
+        "scenario_id": "baseline",
+        "seed": 481114,
+        "simulation_id": "sim_test",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/Step3Simulation.component.test.js:31:31
+     29|   wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test'…
+     30|   await flushPromises()
+     31|   expect(startSimulation).not.toHaveBeenCalled()
+       |                               ^
+     32| })
+     33|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/Step3Simulation.component.test.js > shows a usable Stop control and preserves the stopped state
+Error: Unable to get button.stop within: <div data-v-d173da1d="" class="simulation-panel">
+  <!-- Top Control Bar -->
+  <div data-v-d173da1d="" class="control-bar">
+    <div data-v-d173da1d="" class="status-group">
+      <!-- Twitter Platform Progress -->
+      <div data-v-d173da1d="" class="platform-status twitter">
+        <div data-v-d173da1d="" class="platform-header"><svg class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" data-v-d173da1d="">
+            <circle cx="12" cy="12" r="10" data-v-d173da1d=""></circle>
+            <line x1="2" y1="12" x2="22" y2="12" data-v-d173da1d=""></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-v-d173da1d=""></path>
+          </svg><span class="platform-name" data-v-d173da1d="">Info Plaza</span>
+          <!--v-if-->
+        </div>
+        <div data-v-d173da1d="" class="platform-stats"><span data-v-d173da1d="" class="stat"><span data-v-d173da1d="" class="stat-label">ROUND</span><span data-v-d173da1d="" class="stat-value mono">0<span data-v-d173da1d="" class="stat-total">/-</span></span></span><span data-v-d173da1d="" class="stat"><span data-v-d173da1d="" class="stat-label">Elapsed Time</span><span data-v-d173da1d="" class="stat-value mono">0h 0m</span></span><span data-v-d173da1d="" class="stat"><span data-v-d173da1d="" class="stat-label">ACTS</span><span data-v-d173da1d="" class="stat-value mono">0</span></span></div><!-- Available Actions Tooltip -->
+        <div class="actions-tooltip" data-v-d173da1d="">
+          <div class="tooltip-title" data-v-d173da1d="">Available Actions</div>
+          <div class="tooltip-actions" data-v-d173da1d=""><span class="tooltip-action" data-v-d173da1d="">POST</span><span class="tooltip-action" data-v-d173da1d="">LIKE</span><span class="tooltip-action" data-v-d173da1d="">REPOST</span><span class="tooltip-action" data-v-d173da1d="">QUOTE</span><span class="tooltip-action" data-v-d173da1d="">FOLLOW</span><span class="tooltip-action" data-v-d173da1d="">IDLE</span></div>
+        </div>
+      </div><!-- Reddit Platform Progress -->
+      <div data-v-d173da1d="" class="platform-status reddit">
+        <div data-v-d173da1d="" class="platform-header"><svg data-v-d173da1d="" class="platform-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path data-v-d173da1d="" d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg><span data-v-d173da1d="" class="platform-name">Topic Community</span>
+          <!--v-if-->
+        </div>
+        <div data-v-d173da1d="" class="platform-stats"><span data-v-d173da1d="" class="stat"><span data-v-d173da1d="" class="stat-label">ROUND</span><span data-v-d173da1d="" class="stat-value mono">0<span data-v-d173da1d="" class="stat-total">/-</span></span></span><span data-v-d173da1d="" class="stat"><span data-v-d173da1d="" class="stat-label">Elapsed Time</span><span data-v-d173da1d="" class="stat-value mono">0h 0m</span></span><span data-v-d173da1d="" class="stat"><span data-v-d173da1d="" class="stat-label">ACTS</span><span data-v-d173da1d="" class="stat-value mono">0</span></span></div><!-- Available Actions Tooltip -->
+        <div class="actions-tooltip" data-v-d173da1d="">
+          <div class="tooltip-title" data-v-d173da1d="">Available Actions</div>
+          <div class="tooltip-actions" data-v-d173da1d=""><span class="tooltip-action" data-v-d173da1d="">POST</span><span class="tooltip-action" data-v-d173da1d="">COMMENT</span><span class="tooltip-action" data-v-d173da1d="">LIKE</span><span class="tooltip-action" data-v-d173da1d="">DISLIKE</span><span class="tooltip-action" data-v-d173da1d="">SEARCH</span><span class="tooltip-action" data-v-d173da1d="">TREND</span><span class="tooltip-action" data-v-d173da1d="">FOLLOW</span><span class="tooltip-action" data-v-d173da1d="">MUTE</span><span class="tooltip-action" data-v-d173da1d="">REFRESH</span><span class="tooltip-action" data-v-d173da1d="">IDLE</span></div>
+        </div>
+      </div>
+      <!--v-if-->
+      <!-- Ensemble (multi-seed) run progress -->
+      <!--v-if-->
+    </div>
+    <div data-v-d173da1d="" class="action-controls">
+      <!--v-if--><button data-v-d173da1d="" class="action-btn primary" disabled="">
+        <!--v-if--> Start Generating Report <span data-v-d173da1d="" class="arrow-icon">→</span>
+      </button>
+    </div>
+  </div><!-- Main Content: Dual Timeline -->
+  <div data-v-d173da1d="" class="main-content-area" tabindex="0" role="region" aria-label="Simulation activity">
+    <!-- Timeline Header -->
+    <!--v-if-->
+    <!-- Timeline Feed -->
+    <div data-v-d173da1d="" class="timeline-feed">
+      <div data-v-d173da1d="" class="timeline-axis"></div>
+      <transition-group-stub data-v-d173da1d="" name="timeline-item" appear="false" persisted="false" css="true"></transition-group-stub>
+      <div data-v-d173da1d="" class="waiting-state">
+        <div data-v-d173da1d="" class="pulse-ring"></div><span data-v-d173da1d="">Waiting for agent actions...</span>
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+  <!--v-if-->
+  <!-- Bottom Info / Logs -->
+  <div data-v-d173da1d="" class="system-logs">
+    <div data-v-d173da1d="" class="log-header"><span data-v-d173da1d="" class="log-title">SIMULATION MONITOR</span><span data-v-d173da1d="" class="log-id">sim_test</span></div>
+    <div data-v-d173da1d="" class="log-content" tabindex="0" role="region" aria-label="System log"></div>
+  </div>
+</div>
+ ❯ VueWrapper.get ../../../crowdlens-ecc-release/mirofish-local/frontend/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7182:15
+ ❯ src/components/Step3Simulation.component.test.js:38:17
+     36|   wrapper = mount(Step3Simulation, { props: { simulationId: 'sim_test'…
+     37|   await flushPromises()
+     38|   await wrapper.get('button.stop').trigger('click')
+       |                 ^
+     39|   await flushPromises()
+     40|   expect(stopSimulation).toHaveBeenCalledWith({ simulation_id: 'sim_te…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 1 passed (4)
+   Start at  01:47:59
+   Duration  1.73s (transform 1.26s, setup 0ms, import 1.49s, tests 230ms, environment 1.38s)
+

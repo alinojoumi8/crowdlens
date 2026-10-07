@@ -1,0 +1,25 @@
+{
+  "image": "sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e",
+  "scope": "cold synthetic Neo4j dump/load",
+  "script_sha256": "4511d2bdbab2e437acc640fe02f5b3e7ec1631030f482e58041fbec84cbf267a",
+  "volumes": [
+    "crowdlens-ecc-release-backup-01da9cc28f01-source",
+    "crowdlens-ecc-release-backup-01da9cc28f01-archive",
+    "crowdlens-ecc-release-backup-01da9cc28f01-restore"
+  ],
+  "containers": [
+    "crowdlens-ecc-release-backup-01da9cc28f01-source-service",
+    "crowdlens-ecc-release-backup-01da9cc28f01-dump",
+    "crowdlens-ecc-release-backup-01da9cc28f01-load",
+    "crowdlens-ecc-release-backup-01da9cc28f01-restored-service"
+  ],
+  "real_model_calls": 0,
+  "dump_sha256": "2daee08f01b82ed5afc685a47dba9527f564ff79270fa0f4a2a67a6749f4d336",
+  "status": "passed",
+  "restored_graph_matches": true,
+  "nodes": 2,
+  "relationships": 1,
+  "stopped_before_dump": true,
+  "graph_sha256": "2d05f29c3e42a645825e051b1df1011ef6b67b59d5cb185288f94bb12c8fc87f",
+  "cleanup_passed": true
+}

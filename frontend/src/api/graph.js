@@ -1,4 +1,4 @@
-import service, { requestWithRetry } from './index'
+import service from './index'
 
 /**
  * Generate ontology (upload documents and simulation requirements)
@@ -6,8 +6,7 @@ import service, { requestWithRetry } from './index'
  * @returns {Promise}
  */
 export function generateOntology(formData) {
-  return requestWithRetry(() =>
-    service({
+  return service({
       url: '/api/graph/ontology/generate',
       method: 'post',
       data: formData,
@@ -15,7 +14,6 @@ export function generateOntology(formData) {
         'Content-Type': 'multipart/form-data'
       }
     })
-  )
 }
 
 /**
@@ -24,13 +22,11 @@ export function generateOntology(formData) {
  * @returns {Promise}
  */
 export function buildGraph(data) {
-  return requestWithRetry(() =>
-    service({
+  return service({
       url: '/api/graph/build',
       method: 'post',
       data
     })
-  )
 }
 
 /**

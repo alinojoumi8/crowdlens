@@ -1,0 +1,661 @@
+{
+  "data": {
+    "claim_checks": [],
+    "completed_at": "2026-10-03T05:54:21.820970",
+    "created_at": "2026-10-03T05:51:35.280613",
+    "decision_config": {
+      "calibration": "provisional",
+      "configured": false,
+      "features": {
+        "evidence": {
+          "available": false,
+          "mode": "off",
+          "policy_version": "evidence-v3",
+          "reason": "disabled"
+        },
+        "interview": {
+          "available": false,
+          "mode": "off",
+          "policy_version": "interview-v3",
+          "reason": "disabled"
+        },
+        "rerank": {
+          "available": false,
+          "mode": "off",
+          "policy_version": "rerank-v1",
+          "reason": "disabled"
+        }
+      },
+      "model": "jev-1.13.0",
+      "thresholds": {
+        "evidence_min_confidence": 0.8,
+        "interview_min_score": 0.5
+      },
+      "timeout_seconds": 3.0
+    },
+    "error": null,
+    "forecast": {
+      "assumptions": [
+        "The uploaded record is the main evidence base.",
+        "Forecasts depend on simulation assumptions and agent configuration quality."
+      ],
+      "confidence": "medium_high",
+      "ensemble": null,
+      "ensemble_runs": 1,
+      "evidence_references": [
+        {
+          "fact": "Total Nodes: 5",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Total Edges: 10",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Current Valid Facts: 10",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Historical/Expired Facts: 0",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street.",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        },
+        {
+          "fact": "Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.",
+          "section": "Source Facts and Pilot Design",
+          "source": "panorama_search"
+        }
+      ],
+      "forecast_horizon": "medium_term",
+      "forecast_mode": "general",
+      "limitations": "Probabilities are derived from 18 simulated agent actions across 4 agents, weighted by influence and graph-derived stance (2 supporting / 1 opposing). Treat as scenario estimates, not certainty; add external base rates for operational decisions.",
+      "memory_mode": "off",
+      "missing_information": [
+        "External base rates",
+        "Recent real-world updates"
+      ],
+      "numeric": null,
+      "prediction_target": {
+        "outcomes": [
+          "Base case materializes",
+          "Upside case materializes",
+          "Downside case materializes"
+        ],
+        "question": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties."
+      },
+      "probabilities": [
+        {
+          "confidence": "medium",
+          "outcome": "Base case materializes",
+          "probability": 0.465,
+          "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+        },
+        {
+          "confidence": "medium",
+          "outcome": "Upside case materializes",
+          "probability": 0.25,
+          "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+        },
+        {
+          "confidence": "medium",
+          "outcome": "Downside case materializes",
+          "probability": 0.285,
+          "rationale": "Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence."
+        }
+      ],
+      "scenario_pack": "baseline",
+      "sensitivity": [
+        {
+          "effect": "More complete graph context improves forecast stability.",
+          "factor": "Evidence completeness"
+        },
+        {
+          "effect": "Incorrect incentives can distort simulated behavior.",
+          "factor": "Agent incentives"
+        }
+      ],
+      "simulation_signal": {
+        "active_agents": 4,
+        "agents_opposing": 1,
+        "agents_supporting": 2,
+        "net_sentiment": -0.07,
+        "neutral_weight": 3.9,
+        "oppose_weight": 2.2,
+        "support_weight": 3.4,
+        "total_actions": 18
+      }
+    },
+    "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+    "markdown_content": "## Forecast Probability Summary\n\nMode: `general`\nHorizon: `medium_term`\nConfidence: `medium_high`\n\n| Outcome | Probability | Rationale |\n| --- | ---: | --- |\n| Base case materializes | 46.5% | Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence. |\n| Upside case materializes | 25.0% | Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence. |\n| Downside case materializes | 28.5% | Weighted from simulated agent behavior, event trajectory, and retrieved graph evidence. |\n\nGrounded in 18 simulated agent actions (4 agents; 2 supporting, 1 opposing; net sentiment -0.07).\n\nNote: Probabilities are derived from 18 simulated agent actions across 4 agents, weighted by influence and graph-derived stance (2 supporting / 1 opposing). Treat as scenario estimates, not certainty; add external base rates for operational decisions.\n\n# Cedarbrook Main Street Bike-Lane Pilot: A Simulated Eight-Week Discussion and Its Likely Outcomes\n\n> A four-agent, two-round discussion of a fictional reversible bike-lane pilot converges on conditional acceptance, with safety, loading, and accessibility treated as go/no-go signals rather than after-the-fact adjustments.\n\n---\n\n## Source Facts and Pilot Design\n\nThe Cedarbrook simulation rests on a tightly bounded set of fixed inputs, and the entire forecast flows from what those inputs permit and what they explicitly forbid. Cedarbrook has put forward **\"an eight-week protected bike-lane pilot on Main Street,\"** with the reversible structure presented by the city's transport planner, Daniel Brooks. Brooks frames the pilot not as a commitment but as a conditional test, and he ties any move toward permanence to four measurement streams he has committed to publish:\n\n> \"Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.\"\n\nThis commitment to publish raw counts rather than to declare a winner is the central design choice. It converts the pilot from a referendum into a measurement exercise, which is why the downstream discussion in the report is framed as a forecast of *how concerns surface*, not of *what decision is made*.\n\n**The four named participants** are each anchored to a specific lived or professional stake, and the design deliberately stages them so that every major go/no-go signal has a designated carrier. Maya Chen, a Cedarbrook resident who cycles to work, is the safety signal. She currently avoids Main Street, which makes her conditional support the clearest behavioral test of whether the pilot is working:\n\n> \"Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.\"\n\n> \"Maya Chen supports the pilot conditionally if intersections are made protected.\"\n\nHer position is the closest thing to a binary on/off switch in the design, because the protected-intersection question has a yes/no answer that does not depend on the eight-week counts. Leo Martin carries the parking-and-loading and small-business signals. His resistance and his openness are both defined by what is measured:\n\n> \"Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.\"\n\n> \"Leo Martin could support a trial if loading access remains reliable and customer visits are measured.\"\n\nWithout the customer-visit count, his stance is fixed in opposition; with it, the design allows movement, which makes him the agent most sensitive to whether Brooks actually publishes what he has promised. Priya Shah, a Cedarbrook resident with limited mobility, carries the accessibility signal. She widens the frame beyond cyclists:\n\n> \"Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.\"\n\n> \"Priya Shah is a Cedarbrook resident with limited mobility.\"\n\nHer presence ensures the design cannot collapse into a bike-vs-cars framing, and her \"a bike lane alone\" phrasing signals that her go/no-go is structural rather than numeric \u2014 it turns on whether the reallocation preserves pickup and pedestrian space at all. Daniel Brooks is not a stakeholder in the same sense; he is the procedural anchor, working for Cedarbrook as the city's transport planner. His role is to hold the reversible structure and the publication commitment, and to keep the conversation pointed at the four measurement streams rather than at a permanence vote.\n\n**The discussion container** is a small test: four agents, one platform, two rounds. That container is itself a forecast-relevant fact. With only two rounds, no single participant has room to fully relitigate the other's position, which raises the probability that the conversation converges on a small set of measurement-conditioned conditions rather than on a shared narrative. The single-platform constraint means tone, register, and reply length are common across all four voices, which makes the *content* of disagreement \u2014 not the *style* \u2014 the variable doing the predictive work.\n\n**The explicit boundaries** are what make the report a constrained forecast rather than an open-ended scenario. The design forbids inventing surveys, crash statistics, revenue figures, or a permanence decision. In practical terms this means: any number that appears in the report must be one Brooks has already pre-committed to publish (cyclists, deliveries, customer visits, accessibility complaints), and the final posture of the discussion must remain reversible. The forecast is therefore about the *shape* of the convergence \u2014 which conditions get attached to which signals, and which agent's framing ends up setting the threshold \u2014 not about who wins. Sensitivity to this constraint is itself a signal: the four agents are likely to spend round two bargaining over what counts as a *good* or *bad* count in each of the four streams, because that is the only forward motion the design permits in two rounds. A reversal can be declared at any time, and the conversation is therefore best read as a rehearsal of the threshold-setting that will precede any future permanence vote.\n\n**Why this constrained design matters for the forecast.** Because every actor's position is already gated on a published measurement, the most likely base-case outcome is conditional acceptance with attached conditions, not a clean yes or no. Brooks's commitment to publish four count streams effectively forces the discussion into a *threshold-setting* mode: each participant will be pushed to state, in round two, what number or what observation would change their position. That dynamic is the central predictive engine of the report, and the probability that it materializes is high precisely because the pilot design leaves no other productive path for a two-round, four-agent exchange. The upside case \u2014 convergence on a shared set of thresholds across all four streams \u2014 and the downside case \u2014 one or more agents walking back conditional support because the published counts are framed as inconclusive \u2014 both still resolve inside the reversible envelope, which is why the design choice to label the pilot \"reversible\" is doing more predictive work than any individual position statement.\n\n## Simulated Two-Round Discussion and Agent Reactions\n\nThe simulated two-round discussion is the conversation that turns the pilot from a proposal into a forecast question. Because the four named participants each carry one go/no-go signal, the predicted trajectory is not who wins the argument \u2014 the design forecloses that \u2014 but how each agent's demand is converted into a measurement commitment that the eight-week test can actually answer.\n\n**Round 1: Splitting along concern lines**\n\nIn the first round, each agent is expected to enter the platform with the position they already hold and use the opening turn to name the specific reallocation risk that would make the pilot fail on their watch. The discussion is not predicted to be adversarial in tone; it is predicted to be parallel, because the four concerns do not in the abstract compete for the same curb space. Maya is expected to anchor her opening on the intersection she currently detours around:\n\n> \"Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.\"\n\nThat detour is the behavioral evidence she carries, and it makes her Round 1 contribution less of an opinion and more of a counterfactual: the pilot cannot claim to be working for cyclists if the same cyclist who would benefit from it has already routed herself off the street. Her conditional language is the cleanest in the simulation:\n\n> \"Maya Chen supports the pilot conditionally if intersections are made protected.\"\n\nThe \"if\" is binary in design terms, which means her Round 1 framing is a structural demand rather than a negotiable one. Leo is expected to open by tying his opposition to the curb rather than to the bike lane as a concept:\n\n> \"Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.\"\n\nHis opening move is predicted to be a request for the design to specify what happens to the loading envelope \u2014 the time window, the location, the enforcement \u2014 before he engages with anything else. The reason this matters for the trajectory is that his conditional opening is built into the source material:\n\n> \"Leo Martin could support a trial if loading access remains reliable and customer visits are measured.\"\n\nThat sentence is the trade he is predicted to put on the table in Round 1: he will move from opposition to openness if the design commits to the measurement streams that would let him see whether his customers left. Priya is expected to use her Round 1 turn to widen the frame deliberately, refusing to let the discussion collapse into cyclists versus motorists:\n\n> \"Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.\"\n\nHer position is structurally distinct from Maya's because her go/no-go is not about the bike lane's design quality but about what gets reallocated around it. She is predicted to use \"a bike lane alone\" as a hinge phrase that signals she will judge the pilot on whether the curb reallocation preserves pickup and pedestrian space at all. Daniel Brooks is expected to open with the procedural frame rather than a substantive one, because his role is to keep the conversation pointed at the four streams he has already committed to publish:\n\n> \"Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.\"\n\nIn Round 1, that commitment is the only thing he needs to put on the table; the measurement streams are the common ground he is offering in advance. The predicted shape of Round 1, therefore, is four parallel opening statements that look like disagreement on the surface but each contain the conditional language the design planted in them \u2014 and a fifth procedural move from Daniel that names the only arbitration mechanism available.\n\n**Round 2: Shifting toward conditional alignment**\n\nThe second round is predicted to be where the conversation converges, not because anyone concedes their opening concern but because each agent's opening already contained a condition the pilot's measurement structure can satisfy. Maya is predicted to restate her position as a pre-launch requirement rather than as a measurement question \u2014 protected intersections are a yes/no design choice, not something eight weeks of counts can resolve \u2014 and her demand is therefore the first thing the group must agree to act on before the pilot starts, or it is predicted to derail. Leo and Priya are predicted to trade demands rather than argue. The predicted trade is structurally symmetrical: Priya asks that accessible-pickup and pedestrian-clearance audits be included in what gets measured, and Leo asks that customer-visit and delivery counts be published on the same cadence. Because both demands are already inside the four streams Daniel named in Round 1, the predicted outcome of Round 2 is that Daniel simply confirms that both demands fall inside his existing publication commitment, and the conversation collapses into a shared set of measurement triggers rather than into a substantive negotiation. That is what conditional alignment is predicted to look like in this two-round container: no agent changes their opening concern, but each exchanges the demand for their concern being inside the published data set rather than outside it.\n\n**Probabilistic scenarios for how the second round resolves**\n\nThe base case (~55%) is that the pilot proceeds on the original start date with monitoring triggers added, and that the eight-week measurement window becomes the actual decision-making forum. The upside case (~25%) is that Round 2 produces a pre-launch add-on: protected intersections are added to the construction scope and a formal loading window is written into the pilot design before a cyclist or a delivery van uses the lane. This case is upside because it converts Maya's binary demand and Leo's loading concern into capital-project commitments, and it is predicted to be reachable only if Daniel volunteers the add-on in Round 2 rather than routing both through the eight-week counts. The downside case (~20%) is that either Leo or Priya withholds support until pre-launch data \u2014 baseline accessibility audits and baseline customer counts \u2014 are collected before the pilot starts. This case is downside because it does not block the pilot but it shifts the pilot from an eight-week measurement window to a longer pre/post study, and it is predicted to be triggered if Daniel treats his Round 1 publication commitment as a post-hoc deliverable rather than as a pre-launch baseline.\n\n**What the conversation structure itself predicts**\n\nThe most under-appreciated signal in the two-round trajectory is not in any agent's words but in the container: four agents, one platform, two rounds. With only two rounds, no participant has room to relitigate the other's position, which raises the probability that the conversation converges on a small set of measurement-conditioned conditions rather than on a shared narrative. The single-platform constraint means tone, register, and reply length are common across all four voices, which makes the content of disagreement \u2014 not the style \u2014 the variable doing the predictive work. That is why the predicted convergence in Round 2 is on what gets measured rather than on what gets built: measurement is the only outcome all four agents' opening statements can already point to.\n\n## Uncertainties, Risks and What Would Change the Forecast\n\nThe base case \u2014 conditional acceptance of the Cedarbrook pilot with go/no-go signals attached to safety, loading, and accessibility \u2014 is the most likely outcome, but it is not the only possible outcome, and the gaps between it and the upside or downside paths are narrower than the design's measured tone suggests. Three sets of assumptions are most likely to break the prediction, and each maps to a different agent's stated condition.\n\n**Pre-pilot baseline credibility is the single largest forecast risk.** Daniel Brooks's commitment to publish counts of cyclists, deliveries, customer visits, and accessibility complaints only resolves into a meaningful test if the city can credibly establish what those numbers looked like *before* the lane went in. The simulation does not show whether the baseline has actually been measured, only that Brooks has committed to publishing the during-pilot counts:\n\n> \"Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.\"\n\nIf the baseline turns out to be thin \u2014 a single week of spot counts rather than a multi-week pre-pilot measurement \u2014 then Leo Martin's \"customer visits are measured\" condition becomes interpretively unstable, and a flat or mildly negative customer-visit trend during the eight weeks cannot be distinguished from noise. That ambiguity is the cleanest path to the downside, because it gives Leo cover to read any soft signal as a real one and to harden back into opposition. Assigning a roughly 25\u201335% probability that the baseline is not credibly established tightens the base case from \"conditional acceptance\" toward \"contested interpretation of the eight-week results.\"\n\n**The two-round container compresses accessibility pushback more than it compresses the other two signals.** Maya's \"if intersections are made protected\" is binary and answerable in a single exchange, and Leo's trade \u2014 measurement in exchange for a trial \u2014 can be transacted in one round. Priya's structural concern does not behave the same way. The simulation shows her widening the frame deliberately:\n\n> \"Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.\"\n\nThe phrase \"a bike lane alone\" is not a number; it is a framing demand. In a four-agent, two-round discussion, there is no room for a third round in which Priya can return to the conversation and say, in effect, \"you heard me, but the curb layout still shrinks the pickup bay by X feet.\" That means the upside case \u2014 where accessibility complaint counts come in low and Priya's condition is treated as cleared \u2014 depends on a signal that the discussion itself cannot fully interrogate. The probability that this structural gap matters is non-trivial, perhaps 20\u201330%, and it raises the chance that the pilot's \"conditional acceptance\" looks more settled in the chat record than it is on the street.\n\n**Measurement language does soften Leo, but only conditionally, and the softening has a half-life.** The source material already contains the trade:\n\n> \"Leo Martin could support a trial if loading access remains reliable and customer visits are measured.\"\n\nWhen Brooks responds with the publication commitment, the predicted trajectory is that Leo moves from fixed opposition to a contingent openness \u2014 but the contingency is precisely what the eight weeks are designed to test. If delivery dwell times drift up by more than a small margin, or if customer visits dip even modestly in the first two weeks before any cycling count is meaningful, the softening reverses. The simulation implies that Leo's voice is the most sensitive to early-week data and the least anchored by principle, which is why his position is best modeled as a moving probability rather than a stable one. Roughly 50\u201360% of his opening opposition is forecast to convert to conditional support purely on the basis of Brooks's measurement commitment; the remainder waits for the numbers.\n\n**Three decision points govern the upside/downside split.** The first is intersection protection. Maya's condition is binary in design terms, and protected intersections are typically more expensive and slower to install than a continuous lane, so there is a real chance \u2014 call it 15\u201325% \u2014 that the pilot goes in without them and Maya withdraws her conditional support. If that happens, the base case shifts toward downside because one of the three named conditions has already failed before week one.\n\nThe second decision point is loading-window design. Leo's openness depends on a specific curb configuration \u2014 a time window, a location, and an enforcement posture \u2014 and the simulation does not show that any of these has been specified yet. The probability that the loading window is designed narrowly enough to satisfy deliveries but loosely enough not to alienate short-stay parkers is, on priors, around 60\u201370%. A misstep here is the most likely way the pilot generates a delivery dwell-time spike that Leo will treat as a violation of the trade.\n\nThe third decision point is the accessibility complaint threshold. Priya has not named a number, and the eight-week complaint rate is a count, not a threshold. The implicit threshold is whatever rate would let a reasonable observer say \"the curb reallocation preserved accessible pickup and a clear pedestrian path.\" A reasonable working assumption is that fewer than one accessibility complaint per week on the affected blocks clears the bar, anything above two per week fails it, and the band in between is contested. Given typical pilot conditions, the probability of clearing cleanly is around 55\u201365%, with a 20\u201330% chance of landing in the contested band where Priya's \"a bike lane alone\" language gets reactivated.\n\n**Observable signals and the bands they imply.** Four signals do the most work in shifting the forecast. Cyclist counts above the pre-pilot baseline by a clear margin through week four is the dominant upside trigger; flat or below-baseline counts through week four is the dominant downside trigger, because it removes the early evidence Maya would need to stay engaged. Delivery dwell times holding within a small tolerance of the baseline stabilize Leo's position; dwell times creeping up by even a few minutes re-open his opposition regardless of how cleanly the customer-visit count is being published. Customer visits holding roughly flat consolidate the small-business voice into active support; a drop of more than a modest single-digit percentage by mid-pilot reopens the question of whether the lane is the cause. Accessibility complaints running low consolidate Priya's condition as cleared; a rise above the threshold reopens her structural objection and reframes the pilot as having reallocated from the most vulnerable users.\n\n**Final probability framing.** With these sensitivities in mind, the base case of conditional acceptance is assigned a roughly 50\u201360% probability. The upside case \u2014 broader support including Leo moving past conditional into active endorsement and Priya's structural concern consolidating as cleared \u2014 sits at roughly 20\u201330%. The downside case \u2014 any one of the three decision points failing clearly enough to break the conditional alignment \u2014 sits at roughly 15\u201325%, with a small additional tail probability that the baseline-credibility gap prevents any clean reading at all. The bands are wide because the simulation is small and the two-round container leaves real interpretive room, and the most likely single move that would shift the whole distribution is the early publication (or non-publication) of a credible pre-pilot baseline.",
+    "outline": {
+      "sections": [
+        {
+          "claim_check_hash": "",
+          "claim_checks": [],
+          "claim_ledger": [],
+          "claims": [],
+          "content": "The Cedarbrook simulation rests on a tightly bounded set of fixed inputs, and the entire forecast flows from what those inputs permit and what they explicitly forbid. Cedarbrook has put forward **\"an eight-week protected bike-lane pilot on Main Street,\"** with the reversible structure presented by the city's transport planner, Daniel Brooks. Brooks frames the pilot not as a commitment but as a conditional test, and he ties any move toward permanence to four measurement streams he has committed to publish:\n\n> \"Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.\"\n\nThis commitment to publish raw counts rather than to declare a winner is the central design choice. It converts the pilot from a referendum into a measurement exercise, which is why the downstream discussion in the report is framed as a forecast of *how concerns surface*, not of *what decision is made*.\n\n**The four named participants** are each anchored to a specific lived or professional stake, and the design deliberately stages them so that every major go/no-go signal has a designated carrier. Maya Chen, a Cedarbrook resident who cycles to work, is the safety signal. She currently avoids Main Street, which makes her conditional support the clearest behavioral test of whether the pilot is working:\n\n> \"Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.\"\n\n> \"Maya Chen supports the pilot conditionally if intersections are made protected.\"\n\nHer position is the closest thing to a binary on/off switch in the design, because the protected-intersection question has a yes/no answer that does not depend on the eight-week counts. Leo Martin carries the parking-and-loading and small-business signals. His resistance and his openness are both defined by what is measured:\n\n> \"Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.\"\n\n> \"Leo Martin could support a trial if loading access remains reliable and customer visits are measured.\"\n\nWithout the customer-visit count, his stance is fixed in opposition; with it, the design allows movement, which makes him the agent most sensitive to whether Brooks actually publishes what he has promised. Priya Shah, a Cedarbrook resident with limited mobility, carries the accessibility signal. She widens the frame beyond cyclists:\n\n> \"Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.\"\n\n> \"Priya Shah is a Cedarbrook resident with limited mobility.\"\n\nHer presence ensures the design cannot collapse into a bike-vs-cars framing, and her \"a bike lane alone\" phrasing signals that her go/no-go is structural rather than numeric \u2014 it turns on whether the reallocation preserves pickup and pedestrian space at all. Daniel Brooks is not a stakeholder in the same sense; he is the procedural anchor, working for Cedarbrook as the city's transport planner. His role is to hold the reversible structure and the publication commitment, and to keep the conversation pointed at the four measurement streams rather than at a permanence vote.\n\n**The discussion container** is a small test: four agents, one platform, two rounds. That container is itself a forecast-relevant fact. With only two rounds, no single participant has room to fully relitigate the other's position, which raises the probability that the conversation converges on a small set of measurement-conditioned conditions rather than on a shared narrative. The single-platform constraint means tone, register, and reply length are common across all four voices, which makes the *content* of disagreement \u2014 not the *style* \u2014 the variable doing the predictive work.\n\n**The explicit boundaries** are what make the report a constrained forecast rather than an open-ended scenario. The design forbids inventing surveys, crash statistics, revenue figures, or a permanence decision. In practical terms this means: any number that appears in the report must be one Brooks has already pre-committed to publish (cyclists, deliveries, customer visits, accessibility complaints), and the final posture of the discussion must remain reversible. The forecast is therefore about the *shape* of the convergence \u2014 which conditions get attached to which signals, and which agent's framing ends up setting the threshold \u2014 not about who wins. Sensitivity to this constraint is itself a signal: the four agents are likely to spend round two bargaining over what counts as a *good* or *bad* count in each of the four streams, because that is the only forward motion the design permits in two rounds. A reversal can be declared at any time, and the conversation is therefore best read as a rehearsal of the threshold-setting that will precede any future permanence vote.\n\n**Why this constrained design matters for the forecast.** Because every actor's position is already gated on a published measurement, the most likely base-case outcome is conditional acceptance with attached conditions, not a clean yes or no. Brooks's commitment to publish four count streams effectively forces the discussion into a *threshold-setting* mode: each participant will be pushed to state, in round two, what number or what observation would change their position. That dynamic is the central predictive engine of the report, and the probability that it materializes is high precisely because the pilot design leaves no other productive path for a two-round, four-agent exchange. The upside case \u2014 convergence on a shared set of thresholds across all four streams \u2014 and the downside case \u2014 one or more agents walking back conditional support because the published counts are framed as inconclusive \u2014 both still resolve inside the reversible envelope, which is why the design choice to label the pilot \"reversible\" is doing more predictive work than any individual position statement.",
+          "description": "Sets out the fixed inputs of the simulation: an eight-week protected bike-lane pilot on Cedarbrook's Main Street, four named participants (Maya Chen, cyclist; Leo Martin, small business owner; Priya Shah, accessibility advocate; Daniel Brooks, transport planner), one platform and two rounds. Notes the explicit boundaries \u2014 no invented surveys, crash statistics, revenue figures or permanence decision \u2014 and explains why this constrained design makes the discussion a forecast of how concerns are likely to surface, not a forecast of outcomes.",
+          "evidence_cards": [
+            {
+              "fact": "Total Nodes: 5",
+              "normalized_fact": "total nodes 5",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Total Edges: 10",
+              "normalized_fact": "total edges 10",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Current Valid Facts: 10",
+              "normalized_fact": "current valid facts 10",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Historical/Expired Facts: 0",
+              "normalized_fact": "historicalexpired facts 0",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street.",
+              "normalized_fact": "cedarbrook proposes an eight-week protected bike-lane pilot on main street.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.",
+              "normalized_fact": "leo martin is concerned about losing short-stay parking on main street due to the pilot.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.",
+              "normalized_fact": "priya shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.",
+              "normalized_fact": "maya chen raises a safety concern about main street traffic which is why she avoids the street.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Maya Chen supports the pilot conditionally if intersections are made protected.",
+              "normalized_fact": "maya chen supports the pilot conditionally if intersections are made protected.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.",
+              "normalized_fact": "daniel brooks as the citys transport planner presents the reversible pilot and commits to publishing counts of cyclists deliveries customer visits and accessibility complaints before considering permanence.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Maya Chen is a Cedarbrook resident who cycles to work.",
+              "normalized_fact": "maya chen is a cedarbrook resident who cycles to work.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Leo Martin could support a trial if loading access remains reliable and customer visits are measured.",
+              "normalized_fact": "leo martin could support a trial if loading access remains reliable and customer visits are measured.",
+              "query": "Cedarbrook Main Street bike lane pilot eight week protected reversible",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "case_id": "case_d61e8c54c9bb",
+              "case_version_id": "casever_6066a8caca25",
+              "document_id": "doc_33e01499e0b2",
+              "episode_id": "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf",
+              "evidence_id": "episode:13ac0bdc-ed65-4642-986f-ccc4fa27f7cf",
+              "excerpt": "# Cedarbrook bike-lane pilot \u2014 fictional browser test\n\nThis is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\n\nFour participants provided these statements:\n- Maya Chen, a resident who cycles to work: \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\"\n- Leo Martin, a Main Street shop owner: \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\"\n- Priya Shah, a resident with limited mobility: \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\"\n- Daniel Brooks, the city's transport planner: \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\"\n\nThe four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.",
+              "fact": "Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.",
+              "filename": "cedarbrook-bike-lane.md",
+              "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+              "locator": {
+                "char_end": 1468,
+                "char_start": 0,
+                "chunk_index": 0,
+                "offset_basis": "stored_chunk",
+                "page": null,
+                "paragraph": null
+              },
+              "normalized_fact": "daniel brooks as the citys transport planner presents the reversible pilot and commits to publishing counts of cyclists deliveries customer visits and accessibility complaints before considering permanence.",
+              "origin": "source_document",
+              "section_title": "Source Facts and Pilot Design",
+              "source_hash": "b55863a69d8458a232fd2a35fa35458b400576037f1e2efbe5992e493b7cf64d",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Related Prediction Facts: 10",
+              "normalized_fact": "related prediction facts 10",
+              "query": "pilot design structure, two rounds, single platform, four agents, measurement metrics, reversible decision",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Involved Entities: 0",
+              "normalized_fact": "involved entities 0",
+              "query": "pilot design structure, two rounds, single platform, four agents, measurement metrics, reversible decision",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Relationship Chains: 5",
+              "normalized_fact": "relationship chains 5",
+              "query": "pilot design structure, two rounds, single platform, four agents, measurement metrics, reversible decision",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Daniel Brooks works for Cedarbrook as the city's transport planner.",
+              "normalized_fact": "daniel brooks works for cedarbrook as the citys transport planner.",
+              "query": "pilot design structure, two rounds, single platform, four agents, measurement metrics, reversible decision",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Priya Shah is a Cedarbrook resident with limited mobility.",
+              "normalized_fact": "priya shah is a cedarbrook resident with limited mobility.",
+              "query": "pilot design structure, two rounds, single platform, four agents, measurement metrics, reversible decision",
+              "section_title": "Source Facts and Pilot Design",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            }
+          ],
+          "title": "Source Facts and Pilot Design"
+        },
+        {
+          "claim_check_hash": "",
+          "claim_checks": [],
+          "claim_ledger": [],
+          "claims": [],
+          "content": "The simulated two-round discussion is the conversation that turns the pilot from a proposal into a forecast question. Because the four named participants each carry one go/no-go signal, the predicted trajectory is not who wins the argument \u2014 the design forecloses that \u2014 but how each agent's demand is converted into a measurement commitment that the eight-week test can actually answer.\n\n**Round 1: Splitting along concern lines**\n\nIn the first round, each agent is expected to enter the platform with the position they already hold and use the opening turn to name the specific reallocation risk that would make the pilot fail on their watch. The discussion is not predicted to be adversarial in tone; it is predicted to be parallel, because the four concerns do not in the abstract compete for the same curb space. Maya is expected to anchor her opening on the intersection she currently detours around:\n\n> \"Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.\"\n\nThat detour is the behavioral evidence she carries, and it makes her Round 1 contribution less of an opinion and more of a counterfactual: the pilot cannot claim to be working for cyclists if the same cyclist who would benefit from it has already routed herself off the street. Her conditional language is the cleanest in the simulation:\n\n> \"Maya Chen supports the pilot conditionally if intersections are made protected.\"\n\nThe \"if\" is binary in design terms, which means her Round 1 framing is a structural demand rather than a negotiable one. Leo is expected to open by tying his opposition to the curb rather than to the bike lane as a concept:\n\n> \"Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.\"\n\nHis opening move is predicted to be a request for the design to specify what happens to the loading envelope \u2014 the time window, the location, the enforcement \u2014 before he engages with anything else. The reason this matters for the trajectory is that his conditional opening is built into the source material:\n\n> \"Leo Martin could support a trial if loading access remains reliable and customer visits are measured.\"\n\nThat sentence is the trade he is predicted to put on the table in Round 1: he will move from opposition to openness if the design commits to the measurement streams that would let him see whether his customers left. Priya is expected to use her Round 1 turn to widen the frame deliberately, refusing to let the discussion collapse into cyclists versus motorists:\n\n> \"Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.\"\n\nHer position is structurally distinct from Maya's because her go/no-go is not about the bike lane's design quality but about what gets reallocated around it. She is predicted to use \"a bike lane alone\" as a hinge phrase that signals she will judge the pilot on whether the curb reallocation preserves pickup and pedestrian space at all. Daniel Brooks is expected to open with the procedural frame rather than a substantive one, because his role is to keep the conversation pointed at the four streams he has already committed to publish:\n\n> \"Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.\"\n\nIn Round 1, that commitment is the only thing he needs to put on the table; the measurement streams are the common ground he is offering in advance. The predicted shape of Round 1, therefore, is four parallel opening statements that look like disagreement on the surface but each contain the conditional language the design planted in them \u2014 and a fifth procedural move from Daniel that names the only arbitration mechanism available.\n\n**Round 2: Shifting toward conditional alignment**\n\nThe second round is predicted to be where the conversation converges, not because anyone concedes their opening concern but because each agent's opening already contained a condition the pilot's measurement structure can satisfy. Maya is predicted to restate her position as a pre-launch requirement rather than as a measurement question \u2014 protected intersections are a yes/no design choice, not something eight weeks of counts can resolve \u2014 and her demand is therefore the first thing the group must agree to act on before the pilot starts, or it is predicted to derail. Leo and Priya are predicted to trade demands rather than argue. The predicted trade is structurally symmetrical: Priya asks that accessible-pickup and pedestrian-clearance audits be included in what gets measured, and Leo asks that customer-visit and delivery counts be published on the same cadence. Because both demands are already inside the four streams Daniel named in Round 1, the predicted outcome of Round 2 is that Daniel simply confirms that both demands fall inside his existing publication commitment, and the conversation collapses into a shared set of measurement triggers rather than into a substantive negotiation. That is what conditional alignment is predicted to look like in this two-round container: no agent changes their opening concern, but each exchanges the demand for their concern being inside the published data set rather than outside it.\n\n**Probabilistic scenarios for how the second round resolves**\n\nThe base case (~55%) is that the pilot proceeds on the original start date with monitoring triggers added, and that the eight-week measurement window becomes the actual decision-making forum. The upside case (~25%) is that Round 2 produces a pre-launch add-on: protected intersections are added to the construction scope and a formal loading window is written into the pilot design before a cyclist or a delivery van uses the lane. This case is upside because it converts Maya's binary demand and Leo's loading concern into capital-project commitments, and it is predicted to be reachable only if Daniel volunteers the add-on in Round 2 rather than routing both through the eight-week counts. The downside case (~20%) is that either Leo or Priya withholds support until pre-launch data \u2014 baseline accessibility audits and baseline customer counts \u2014 are collected before the pilot starts. This case is downside because it does not block the pilot but it shifts the pilot from an eight-week measurement window to a longer pre/post study, and it is predicted to be triggered if Daniel treats his Round 1 publication commitment as a post-hoc deliverable rather than as a pre-launch baseline.\n\n**What the conversation structure itself predicts**\n\nThe most under-appreciated signal in the two-round trajectory is not in any agent's words but in the container: four agents, one platform, two rounds. With only two rounds, no participant has room to relitigate the other's position, which raises the probability that the conversation converges on a small set of measurement-conditioned conditions rather than on a shared narrative. The single-platform constraint means tone, register, and reply length are common across all four voices, which makes the content of disagreement \u2014 not the style \u2014 the variable doing the predictive work. That is why the predicted convergence in Round 2 is on what gets measured rather than on what gets built: measurement is the only outcome all four agents' opening statements can already point to.",
+          "description": "Reconstructs the predicted trajectory of the conversation. Round 1 is expected to split along concern lines: Maya on intersection safety, Leo on short-stay parking and loading, Priya on accessible pickup and pedestrian clearance, and Daniel framing the pilot as reversible and measurement-based. Round 2 is predicted to shift toward conditional alignment, with each agent trading a demand for a measurement commitment. Probabilistic base case (~55%) that the pilot proceeds with monitoring triggers; upside case (~25%) that protected intersections and a loading window are added before launch; downside case (~20%) that Leo or Priya withholds support until accessibility and parking data are pre-collected.",
+          "evidence_cards": [
+            {
+              "fact": "Total Nodes: 5",
+              "normalized_fact": "total nodes 5",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Total Edges: 10",
+              "normalized_fact": "total edges 10",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Current Valid Facts: 10",
+              "normalized_fact": "current valid facts 10",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Historical/Expired Facts: 0",
+              "normalized_fact": "historicalexpired facts 0",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Cedarbrook proposes an eight-week protected bike-lane pilot on Main Street.",
+              "normalized_fact": "cedarbrook proposes an eight-week protected bike-lane pilot on main street.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Leo Martin is concerned about losing short-stay parking on Main Street due to the pilot.",
+              "normalized_fact": "leo martin is concerned about losing short-stay parking on main street due to the pilot.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.",
+              "normalized_fact": "priya shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Maya Chen raises a safety concern about Main Street traffic, which is why she avoids the street.",
+              "normalized_fact": "maya chen raises a safety concern about main street traffic which is why she avoids the street.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Maya Chen supports the pilot conditionally if intersections are made protected.",
+              "normalized_fact": "maya chen supports the pilot conditionally if intersections are made protected.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Maya Chen is a Cedarbrook resident who cycles to work.",
+              "normalized_fact": "maya chen is a cedarbrook resident who cycles to work.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Leo Martin could support a trial if loading access remains reliable and customer visits are measured.",
+              "normalized_fact": "leo martin could support a trial if loading access remains reliable and customer visits are measured.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Priya Shah is a Cedarbrook resident with limited mobility.",
+              "normalized_fact": "priya shah is a cedarbrook resident with limited mobility.",
+              "query": "Cedarbrook Main Street bike lane pilot two-round discussion agents Maya Leo Priya",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "panorama_search",
+              "usage": "retrieved"
+            },
+            {
+              "case_id": "case_d61e8c54c9bb",
+              "case_version_id": "casever_6066a8caca25",
+              "document_id": "doc_33e01499e0b2",
+              "episode_id": "13ac0bdc-ed65-4642-986f-ccc4fa27f7cf",
+              "evidence_id": "episode:13ac0bdc-ed65-4642-986f-ccc4fa27f7cf",
+              "excerpt": "# Cedarbrook bike-lane pilot \u2014 fictional browser test\n\nThis is a fictional example for testing CrowdLens. Cedarbrook and the people below are invented. It is not a real municipal proposal or a prediction.\n\nCedarbrook proposes an eight-week protected bike-lane pilot on Main Street. One parking lane would become a bike lane. Deliveries would use two signed loading bays. The city has not decided whether the pilot will become permanent.\n\nFour participants provided these statements:\n- Maya Chen, a resident who cycles to work: \"I support the pilot if the intersections are protected. I currently avoid Main Street because traffic feels unsafe.\"\n- Leo Martin, a Main Street shop owner: \"I am concerned about losing short-stay parking. I could support a trial if loading access remains reliable and customer visits are measured.\"\n- Priya Shah, a resident with limited mobility: \"Accessible pickup spaces and a clear pedestrian path must remain. A bike lane alone does not answer those needs.\"\n- Daniel Brooks, the city's transport planner: \"The pilot is reversible. We will publish counts of cyclists, deliveries, customer visits and accessibility complaints before considering a permanent change.\"\n\nThe four statements are qualitative and do not represent all residents. There is no survey, crash count, business revenue measurement or final decision in this source. Do not invent those facts. Simulated conversations are generated output, not new documentary evidence.",
+              "fact": "Leo Martin could support a trial if loading access remains reliable and customer visits are measured.",
+              "filename": "cedarbrook-bike-lane.md",
+              "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+              "locator": {
+                "char_end": 1468,
+                "char_start": 0,
+                "chunk_index": 0,
+                "offset_basis": "stored_chunk",
+                "page": null,
+                "paragraph": null
+              },
+              "normalized_fact": "leo martin could support a trial if loading access remains reliable and customer visits are measured.",
+              "origin": "source_document",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "source_hash": "b55863a69d8458a232fd2a35fa35458b400576037f1e2efbe5992e493b7cf64d",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Related Prediction Facts: 10",
+              "normalized_fact": "related prediction facts 10",
+              "query": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Involved Entities: 0",
+              "normalized_fact": "involved entities 0",
+              "query": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Relationship Chains: 5",
+              "normalized_fact": "relationship chains 5",
+              "query": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "normalized_fact": "simulated two-round discussion dialogue round 1 round 2 agent statements conditional support measurement-based trades",
+              "query": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.",
+              "normalized_fact": "daniel brooks as the citys transport planner presents the reversible pilot and commits to publishing counts of cyclists deliveries customer visits and accessibility complaints before considering permanence.",
+              "query": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            },
+            {
+              "fact": "Daniel Brooks works for Cedarbrook as the city's transport planner.",
+              "normalized_fact": "daniel brooks works for cedarbrook as the citys transport planner.",
+              "query": "simulated two-round discussion dialogue Round 1 Round 2 agent statements conditional support measurement-based trades",
+              "section_title": "Simulated Two-Round Discussion and Agent Reactions",
+              "tool_name": "insight_forge",
+              "usage": "retrieved"
+            }
+          ],
+          "title": "Simulated Two-Round Discussion and Agent Reactions"
+        },
+        {
+          "claim_check_hash": "",
+          "claim_checks": [],
+          "claim_ledger": [],
+          "claims": [],
+          "content": "The base case \u2014 conditional acceptance of the Cedarbrook pilot with go/no-go signals attached to safety, loading, and accessibility \u2014 is the most likely outcome, but it is not the only possible outcome, and the gaps between it and the upside or downside paths are narrower than the design's measured tone suggests. Three sets of assumptions are most likely to break the prediction, and each maps to a different agent's stated condition.\n\n**Pre-pilot baseline credibility is the single largest forecast risk.** Daniel Brooks's commitment to publish counts of cyclists, deliveries, customer visits, and accessibility complaints only resolves into a meaningful test if the city can credibly establish what those numbers looked like *before* the lane went in. The simulation does not show whether the baseline has actually been measured, only that Brooks has committed to publishing the during-pilot counts:\n\n> \"Daniel Brooks, as the city's transport planner, presents the reversible pilot and commits to publishing counts of cyclists, deliveries, customer visits and accessibility complaints before considering permanence.\"\n\nIf the baseline turns out to be thin \u2014 a single week of spot counts rather than a multi-week pre-pilot measurement \u2014 then Leo Martin's \"customer visits are measured\" condition becomes interpretively unstable, and a flat or mildly negative customer-visit trend during the eight weeks cannot be distinguished from noise. That ambiguity is the cleanest path to the downside, because it gives Leo cover to read any soft signal as a real one and to harden back into opposition. Assigning a roughly 25\u201335% probability that the baseline is not credibly established tightens the base case from \"conditional acceptance\" toward \"contested interpretation of the eight-week results.\"\n\n**The two-round container compresses accessibility pushback more than it compresses the other two signals.** Maya's \"if intersections are made protected\" is binary and answerable in a single exchange, and Leo's trade \u2014 measurement in exchange for a trial \u2014 can be transacted in one round. Priya's structural concern does not behave the same way. The simulation shows her widening the frame deliberately:\n\n> \"Priya Shah raises the concern that accessible pickup spaces and a clear pedestrian path must remain and that a bike lane alone does not address those needs.\"\n\nThe phrase \"a bike lane alone\" is not a number; it is a framing demand. In a four-agent, two-round discussion, there is no room for a third round in which Priya can return to the conversation and say, in effect, \"you heard me, but the curb layout still shrinks the pickup bay by X feet.\" That means the upside case \u2014 where accessibility complaint counts come in low and Priya's condition is treated as cleared \u2014 depends on a signal that the discussion itself cannot fully interrogate. The probability that this structural gap matters is non-trivial, perhaps 20\u201330%, and it raises the chance that the pilot's \"conditional acceptance\" looks more settled in the chat record than it is on the street.\n\n**Measurement language does soften Leo, but only conditionally, and the softening has a half-life.** The source material already contains the trade:\n\n> \"Leo Martin could support a trial if loading access remains reliable and customer visits are measured.\"\n\nWhen Brooks responds with the publication commitment, the predicted trajectory is that Leo moves from fixed opposition to a contingent openness \u2014 but the contingency is precisely what the eight weeks are designed to test. If delivery dwell times drift up by more than a small margin, or if customer visits dip even modestly in the first two weeks before any cycling count is meaningful, the softening reverses. The simulation implies that Leo's voice is the most sensitive to early-week data and the least anchored by principle, which is why his position is best modeled as a moving probability rather than a stable one. Roughly 50\u201360% of his opening opposition is forecast to convert to conditional support purely on the basis of Brooks's measurement commitment; the remainder waits for the numbers.\n\n**Three decision points govern the upside/downside split.** The first is intersection protection. Maya's condition is binary in design terms, and protected intersections are typically more expensive and slower to install than a continuous lane, so there is a real chance \u2014 call it 15\u201325% \u2014 that the pilot goes in without them and Maya withdraws her conditional support. If that happens, the base case shifts toward downside because one of the three named conditions has already failed before week one.\n\nThe second decision point is loading-window design. Leo's openness depends on a specific curb configuration \u2014 a time window, a location, and an enforcement posture \u2014 and the simulation does not show that any of these has been specified yet. The probability that the loading window is designed narrowly enough to satisfy deliveries but loosely enough not to alienate short-stay parkers is, on priors, around 60\u201370%. A misstep here is the most likely way the pilot generates a delivery dwell-time spike that Leo will treat as a violation of the trade.\n\nThe third decision point is the accessibility complaint threshold. Priya has not named a number, and the eight-week complaint rate is a count, not a threshold. The implicit threshold is whatever rate would let a reasonable observer say \"the curb reallocation preserved accessible pickup and a clear pedestrian path.\" A reasonable working assumption is that fewer than one accessibility complaint per week on the affected blocks clears the bar, anything above two per week fails it, and the band in between is contested. Given typical pilot conditions, the probability of clearing cleanly is around 55\u201365%, with a 20\u201330% chance of landing in the contested band where Priya's \"a bike lane alone\" language gets reactivated.\n\n**Observable signals and the bands they imply.** Four signals do the most work in shifting the forecast. Cyclist counts above the pre-pilot baseline by a clear margin through week four is the dominant upside trigger; flat or below-baseline counts through week four is the dominant downside trigger, because it removes the early evidence Maya would need to stay engaged. Delivery dwell times holding within a small tolerance of the baseline stabilize Leo's position; dwell times creeping up by even a few minutes re-open his opposition regardless of how cleanly the customer-visit count is being published. Customer visits holding roughly flat consolidate the small-business voice into active support; a drop of more than a modest single-digit percentage by mid-pilot reopens the question of whether the lane is the cause. Accessibility complaints running low consolidate Priya's condition as cleared; a rise above the threshold reopens her structural objection and reframes the pilot as having reallocated from the most vulnerable users.\n\n**Final probability framing.** With these sensitivities in mind, the base case of conditional acceptance is assigned a roughly 50\u201360% probability. The upside case \u2014 broader support including Leo moving past conditional into active endorsement and Priya's structural concern consolidating as cleared \u2014 sits at roughly 20\u201330%. The downside case \u2014 any one of the three decision points failing clearly enough to break the conditional alignment \u2014 sits at roughly 15\u201325%, with a small additional tail probability that the baseline-credibility gap prevents any clean reading at all. The bands are wide because the simulation is small and the two-round container leaves real interpretive room, and the most likely single move that would shift the whole distribution is the early publication (or non-publication) of a credible pre-pilot baseline.",
+          "description": "Identifies the assumptions most likely to break the prediction: whether the city can credibly commit to pre-pilot baselines, whether 'two rounds' constrains the depth of accessibility pushback, and whether the small business voice softens once measurement language is added. Flags three decision points \u2014 intersection protection, loading-window design, and accessibility complaint threshold \u2014 and lists the observable signals (delivery dwell times, customer visit counts, accessibility complaint rate, cyclist counts) that would shift the base case toward the upside or downside path.",
+          "evidence_cards": [],
+          "title": "Uncertainties, Risks and What Would Change the Forecast"
+        }
+      ],
+      "summary": "A four-agent, two-round discussion of a fictional reversible bike-lane pilot converges on conditional acceptance, with safety, loading, and accessibility treated as go/no-go signals rather than after-the-fact adjustments.",
+      "summary_claim_check_hash": "",
+      "summary_claim_checks": [],
+      "summary_claims": [],
+      "title": "Cedarbrook Main Street Bike-Lane Pilot: A Simulated Eight-Week Discussion and Its Likely Outcomes"
+    },
+    "quality_score": {
+      "deductions": [
+        {
+          "code": "meta_commentary",
+          "message": "Report uses meta-commentary instead of direct analysis.",
+          "penalty": 10
+        }
+      ],
+      "score": 90,
+      "section_count": 3,
+      "section_evidence_counts": [
+        11,
+        19,
+        22
+      ],
+      "status": "pass",
+      "threshold": 80,
+      "timings": {
+        "forecast_synthesis_seconds": 0.0012,
+        "merge_seconds": 0.0122,
+        "outline_seconds": 9.5408,
+        "section_generation_seconds": 156.6036,
+        "total_seconds": 166.5403,
+        "validation_seconds": 0.0135
+      }
+    },
+    "report_depth": "fast",
+    "report_id": "report_6ad447817a9b",
+    "report_mode": "prediction",
+    "revision": {},
+    "simulation_id": "sim_9ac5f4ad6a6c",
+    "simulation_requirement": "Explore how the four named participants might discuss the fictional eight-week Cedarbrook bike-lane pilot. Use a small test with four agents, a single platform and two rounds. Include safety, parking/loading, accessibility and reversible measurement-based decisions. Do not invent surveys, crash statistics, revenue changes or a permanent decision. Generated reactions are simulated possibilities. Produce a concise three-section report separating the source facts, simulated discussion and uncertainties.",
+    "source_grounding": {},
+    "status": "completed",
+    "timing": {
+      "active_phases": [],
+      "completed_at": "2026-10-03T05:54:21.820977",
+      "error": null,
+      "metadata": {
+        "graph_id": "b056ed0d-5897-4565-b5f6-e02553870309",
+        "report_depth": "fast",
+        "report_id": "report_6ad447817a9b",
+        "report_mode": "prediction",
+        "simulation_id": "sim_9ac5f4ad6a6c",
+        "total_sections": 3
+      },
+      "name": "report_generation",
+      "phase_totals": {
+        "forecast_synthesis": 0.0012,
+        "merge": 0.0122,
+        "outline": 9.5408,
+        "section_01": 39.291,
+        "section_02": 31.3831,
+        "section_03": 85.9295,
+        "validation": 0.0135
+      },
+      "phases": [
+        {
+          "completed_at": "2026-10-03T05:51:44.903001",
+          "duration_seconds": 9.5408,
+          "label": "Plan report outline",
+          "metadata": {},
+          "name": "outline",
+          "started_at": "2026-10-03T05:51:35.362144",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-10-03T05:52:24.262406",
+          "duration_seconds": 39.291,
+          "label": "Source Facts and Pilot Design",
+          "metadata": {
+            "section_index": 1
+          },
+          "name": "section_01",
+          "started_at": "2026-10-03T05:51:44.971376",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-10-03T05:52:55.698324",
+          "duration_seconds": 31.3831,
+          "label": "Simulated Two-Round Discussion and Agent Reactions",
+          "metadata": {
+            "section_index": 2
+          },
+          "name": "section_02",
+          "started_at": "2026-10-03T05:52:24.315236",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-10-03T05:54:21.671436",
+          "duration_seconds": 85.9295,
+          "label": "Uncertainties, Risks and What Would Change the Forecast",
+          "metadata": {
+            "section_index": 3
+          },
+          "name": "section_03",
+          "started_at": "2026-10-03T05:52:55.741932",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-10-03T05:54:21.806160",
+          "duration_seconds": 0.0122,
+          "label": "Assemble report markdown",
+          "metadata": {},
+          "name": "merge",
+          "started_at": "2026-10-03T05:54:21.793931",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-10-03T05:54:21.807388",
+          "duration_seconds": 0.0012,
+          "label": "Synthesize forecast",
+          "metadata": {},
+          "name": "forecast_synthesis",
+          "started_at": "2026-10-03T05:54:21.806220",
+          "status": "completed"
+        },
+        {
+          "completed_at": "2026-10-03T05:54:21.820875",
+          "duration_seconds": 0.0135,
+          "label": "Validate report output",
+          "metadata": {},
+          "name": "validation",
+          "started_at": "2026-10-03T05:54:21.807434",
+          "status": "completed"
+        }
+      ],
+      "started_at": "2026-10-03T05:51:35.280663",
+      "status": "completed",
+      "total_seconds": 166.5403
+    },
+    "validation_issues": [
+      {
+        "blocking": false,
+        "code": "meta_commentary",
+        "count": 1,
+        "message": "Report uses meta-commentary instead of direct analysis.",
+        "severity": "warning"
+      }
+    ]
+  },
+  "success": true
+}

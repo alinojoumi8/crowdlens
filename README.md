@@ -34,18 +34,24 @@ See [the rebrand plan and compatibility notes](docs/rebranding.md).
 
 ## Workflow
 
-1. **Graph Build** — Extracts entities (people, companies, events) and relationships from your document. Builds a knowledge graph with individual and group memory via Neo4j.
-2. **Env Setup** — Generates hundreds of agent personas, each with unique personality, opinion bias, reaction speed, influence level, and memory of past events.
-3. **Simulation** — Agents interact on simulated social platforms: posting, replying, arguing, shifting opinions. The system tracks sentiment evolution, topic propagation, and influence dynamics in real time.
-4. **Report** — A ReportAgent analyzes the post-simulation environment, interviews a focus group of agents, searches the knowledge graph for evidence, and generates a structured analysis.
-5. **Interaction** — Chat with any agent from the simulated world. Ask them why they posted what they posted. Full memory and personality persists.
+1. **Upload** — Provide PDF, Markdown, or text files and/or website URLs with a scenario requirement. CrowdLens stores source documents, creates project/case-version metadata, and generates an ontology.
+2. **Graph** — Build entities, relationships, and source-linked chunks in Neo4j. Inspect graph progress and embedding readiness before continuing.
+3. **Scenario** — Select entities and settings, generate agent profiles, and prepare the simulation configuration. Agent count and behavior depend on the sources and settings.
+4. **Simulation** — Run agents on the selected simulated platform and inspect effective settings, unique posts, model actions and separately labelled initial/scheduled inputs. Run metadata and artifacts persist; file-backed agent memory and optional Neo4j memory updates do not guarantee complete history or lossless restart continuity.
+5. **Report** — Generate a structured analysis with bounded original-source excerpts and actual simulation actions distinguished from graph/persona paraphrases and input posts. New reports save provenance and freeze the forecast before prose so the headline table and panel share one authority. Inspect source evidence and review warnings; mechanical checks and report completion do not certify factual correctness.
+6. **Proposal review** — On an eligible saved report, use **Draft with sources** to review a proposed section, summary changes, claim ledger, original excerpts and precise validation findings. Private diagnostics retain completion text and parsed model output. **Save as new revision** preserves the parent and creates a separate immutable report that remains `needs_review`.
+
+Report chat and agent interviews are optional follow-up tools. Agent interviews
+require an available simulation environment. See the
+[capability manifest](docs/product-capabilities.md) for API contracts, persistence
+boundaries, current verification evidence, and remaining gaps.
 
 ## Quick Start
 
 ### Prerequisites
 
 - Docker & Docker Compose (recommended), **or**
-- Python 3.11+, Node.js 20.19+ or 22.13+ (supported LTS), Neo4j 5.18+, Ollama
+- Python **3.11** (verified dependency-lock baseline), Node.js **22.13+ in the 22.x series** (CI uses Node 22), Neo4j 5.18+, Ollama. Other declared Node ranges are in `package.json`; broader Python support remains unverified.
 
 ### Option A: Docker (easiest)
 
@@ -105,7 +111,7 @@ cp .env.example .env
 # Set NEO4J_PASSWORD and edit endpoints if services use non-default ports
 
 cd backend
-uv sync --dev
+uv sync --frozen --dev
 uv run python run.py
 ```
 
@@ -113,11 +119,29 @@ uv run python run.py
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
 Open `http://localhost:3000`.
+
+### Scanned PDF evidence
+
+PDF extraction preserves page markers. Image pages with little native text use local Tesseract OCR (`tesseract` with English language data on the backend host). If OCR is unavailable or fails, ingestion reports the affected page rather than silently discarding scanned evidence. OCR text can contain recognition errors; check quotations against the original PDF during report review.
+
+Source-backed proposals can select a complete marked PDF page within a larger stored graph chunk. Page windows retain the original chunk hash, exact offsets, and PDF page number. Eligible conditional material is copied verbatim by the server; oversized or incomplete page windows remain blocked. Retrieval discloses when fragment matches are omitted or adjacent pages may contain continued attribution or conditions. A complete extracted page does not establish complete context, exhaustive document coverage, or factual accuracy; compare adjacent original pages before accepting a revision.
+
+Quotation recovery maps a unique whitespace-only variant back to exact source text and records the original offsets. It never changes wording, punctuation, case, dates, numbers, or negation. A genuine quotation mismatch permits one counted ledger correction within the workflow budget; repeated mismatches remain blocked. Corrected claims still require the normal coverage and source-first audit checks before a proposal can be saved.
+
+### Authorization fails before a website or PDF upload
+
+Workflow authorization currently covers the configured primary AI provider and local Ollama embeddings. Optional Jev modes must be off for this workflow. If the UI reports that optional Jev provider modes are enabled, restart the backend with:
+
+```bash
+JEV_INTERVIEW_MODE=off JEV_RERANK_MODE=off JEV_EVIDENCE_MODE=off uv run python run.py
+```
+
+Run this from `backend/` with the usual application environment loaded. These process overrides preserve `.env` settings for separate Jev evaluations. The UI checks configuration before authorization and displays the server's error reason when a request fails. After restarting, refresh the page and authorize your selected sources again.
 
 ## Configuration
 
@@ -183,10 +207,28 @@ SQLite control-plane, migration, and simulation-restart status. The lightweight
 container liveness endpoint is `GET /health`.
 
 Project, case, task, and simulation metadata is stored transactionally in
-the SQLite database under `backend/uploads/`. Existing JSON metadata is imported once without
+the SQLite database under `backend/uploads/`. New background tasks retain
+worker/attempt ownership; expired attempts fail honestly and require manual retry.
+Existing JSON metadata is imported once without
 being deleted; uploaded documents and generated artifacts remain on disk. See
 [`docs/control-plane-migration.md`](docs/control-plane-migration.md) for backup,
 migration, and recovery details.
+
+Root report generation assigns one `request_key` per logical browser request.
+Network retries reuse its task/report identity while the task record is retained;
+a new manual invocation receives a new key. Generation also requires an explicit
+workflow authorization in the browser, backed by the SQLite control database.
+Choose the provider/model, frozen inputs, maximum physical requests and runtime
+before upload. The aggregate allowance includes graph/profile workers, simulation
+children, memory updates, report/proposal work and actual transport retries.
+Refresh and manual retries retain consumed requests.
+
+The workflow bar displays usage, remaining requests and effective terminal reason.
+**Stop** closes admission and preserves partial output; an already submitted
+request may still incur provider billing. Interrupted reports stop polling and
+require explicit recovery with new authorization. Request/time controls do not
+enforce a dollar ceiling. See [the execution contract](docs/workflow-execution.md)
+for API use, supported providers and recovery semantics.
 
 Run the embedding benchmark from `backend/`:
 
@@ -232,7 +274,7 @@ CrowdLens uses an abstraction layer between the application and the graph databa
 **Key design decisions:**
 
 - `GraphStorage` is an abstract interface — swap Neo4j for any other graph DB by implementing one class
-- Dependency injection via Flask `app.extensions` — no global singletons
+- Flask `app.extensions` provides runtime dependencies; existing manager singletons remain process-local and coordinate durable task ownership through SQLite
 - SQLite WAL transactions for restart-safe project, case, task, and run metadata
 - Uploaded files and large generated artifacts remain on the filesystem
 - Hybrid search: 0.7 × vector similarity + 0.3 × BM25 keyword search
@@ -253,14 +295,29 @@ CPU-only mode works but is significantly slower for LLM inference. For lighter s
 ## Development checks
 
 ```bash
-npm test          # backend + frontend test suites
+UV_PYTHON=3.11 npm test # backend + frontend unit/component suites
 npm run build     # production frontend bundle
-npm run check     # both of the above
+UV_PYTHON=3.11 npm run check # tests + build
+npm audit --audit-level=moderate
+npm audit --prefix frontend --audit-level=moderate
 ```
 
 Pull requests also run backend tests, frontend unit/component tests, the
-frontend build, a production dependency audit, Compose validation, and a Docker
-image build.
+frontend build, root and frontend dependency audits, Compose validation, and a
+Docker image build. Unit/component checks and synthetic report checks do not
+establish a complete live-provider pipeline or independently measured report quality.
+
+The [2026-10-03 report reliability audit](docs/audits/2026-10-03-report-reliability.md)
+records a fresh visible MiniMax-M3 upload → graph → four personas → two OASIS
+rounds → root report → source proposal → accepted revision → reload/history reopen
+on frozen application candidate `7f4d68e`. Original reports and failed attempts
+remain preserved. **563 backend and 63 frontend tests plus build pass.** One
+fictional journey verifies that boundary; independent claim/omission quality,
+cross-packet reliability and exact-candidate release/deployment checks remain open.
+The retained report includes a Round 1 contradiction that its mechanical score
+missed; the saved revision remains Needs review. The [semantic-review follow-up](docs/audits/2026-10-03-semantic-review.md) checks explicit action counts and trace author/round/origin assertions, carries unresolved proposal findings into new revisions, and displays a read-only current assessment on retained reports. These limited checks do not certify truth or completeness. Four actual MiniMax-M3 held-out proposal drafts are now [prepared for human source review](docs/evaluations/2026-10-03-source-review-v2.md): 0/4 ready under existing gates, nine requests. Independent ratings and measured reviewer effort remain pending; application behavior is unchanged.
+The [previous live tests](docs/audits/2026-10-03-live-cedarbrook.md) retain their
+separate mixed-candidate and blocked outcomes.
 
 ## Use Cases
 
@@ -271,6 +328,20 @@ image build.
 
 ## Documentation
 
+- [Report reliability tasks and fresh actual-provider acceptance](docs/audits/2026-10-03-report-reliability.md)
+- [Completed corrective task checklist](docs/tasks/2026-10-03-report-reliability.md)
+
+- [Control/recovery repairs and exact-candidate synthetic verification](docs/audits/2026-10-03-control-recovery.md)
+- [Previous fictional live-run request accounting](docs/audits/2026-10-03-bike-lane-request-accounting.md)
+- [Real MiniMax browser tests, saved revision, blocked drafts and remaining gaps](docs/audits/2026-10-03-live-cedarbrook.md)
+- [Visible-browser acceptance plan and execution status](docs/visible-browser-acceptance.md)
+- [Workflow request/time authorization and Stop contract](docs/workflow-execution.md)
+- [Product capabilities, contracts, and verification gaps](docs/product-capabilities.md)
+- [ECC workflow and adoption plan](docs/ECC-WORKFLOW-PLAN.md)
+- [Local ECC execution handoff and exact-candidate verification](docs/audits/2026-10-02-ecc-milestones-3-5.md)
+- [Synthetic evidence evaluations and pending human review](docs/evaluations/evidence-quality.md)
+- [Browser QA, screenshots, and test substitutions](docs/audits/2026-10-02-milestone4-browser-qa.md)
+- [Local release verification and operational gaps](docs/audits/2026-10-02-milestone5-release-verification.md)
 - [Evidence-first report proposals and revisions](docs/evidence-first-reports.md)
 - [Architecture](docs/architecture.md)
 - [Storage migration, backup, and recovery](docs/control-plane-migration.md)
@@ -294,3 +365,25 @@ CrowdLens is a modified fork of the original work by [666ghj](https://github.com
 - All Zep references replaced with Neo4j across the UI
 - Rebranded the product to CrowdLens, with updated UI, visual assets, and documentation
 - Preserved original author and contributor attribution and existing runtime identifiers
+
+## Source coverage repair follow-up
+
+[Source coverage and summary repair](docs/audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.
+
+## Claim grounding and summary contract follow-up — 2026-10-04
+
+[Contract completion](docs/audits/2026-10-04-draft-contract-completion.md) requires complete explicit AI source judgments, checks resulting-summary consistency even with edits, and confines server-owned summary replacements to a unique literal selected-section span. Unmapped summaries stay unchanged for review; strict legacy contracts remain compatible. Title-topic retrieval and raw target exports are covered by separate regressions. All 694 tests and the build pass, with independent code review and a visible provider-disabled immutable-revision test. Fresh MiniMax v4/v5 each retain 0 ready out of four attempts (8/10 requests); v5 retrieves all eight originals and preserves all parents, but actual-model JSON, premise and semantic-audit reliability remain unresolved. Human labels/time remain unmeasured. These scoped fixes do not establish factual certification, end-to-end or release readiness. Next: separate development work on provider contract and audit reliability, then new frozen verification cases.
+
+## Output reliability follow-up — 2026-10-05
+
+[JSON, summary and explicit audit contracts](docs/audits/2026-10-05-output-reliability.md) now build default summary wording from selected ledger claims, retain one counted syntax correction per phase, and require complete claim/paragraph/edit/document judgments for fresh proposals. Mixed or missing protocols and negative judgments block. Final check: 713 tests/build and independent code review pass. Fresh v6 MiniMax verification retains 4/4 ready proposals, 12 requests, all eight originals and unchanged parents; the final stricter gate revalidates those retained audits without rerunning v6. Astra max covers all 22 material facts and rates 24 of 25 claims supported, but flags one conditional-to-universal inference also repeated in its summary. Ready remains reviewable, not factual approval. Human ratings/time remain unmeasured; no actual proposal was accepted or published. Followed by the conditional-correction and completion milestones below.
+
+Conditional-offer correction (2026-10-05): exact source extraction and acceptance guards prevent detected offer conditions being rewritten as prerequisites; 728 tests/build pass. Fresh v7 attempts were 0/2 ready (both conservatively blocked). A separate Elmreach correction received source-first AI support for all four claims; original evidence remains frozen. See [audit](docs/audits/2026-10-05-conditional-fidelity.md).
+
+Conditional completion (2026-10-05): server-owned complete source excerpts avoid guarded paraphrase false positives; 752 tests/build and independent code review pass. Two ready development drafts received source-first AI support (7/7 claims, 10/10 material facts); all eight development attempts remain counted. Frozen v8 stays 0/2 ready due ordinary draft omissions and no source anchor. No publication or release-readiness claim. See [audit](docs/audits/2026-10-05-conditional-completion.md).
+
+Claim coverage (2026-10-06): structurally valid drafts now receive exact persisted-ledger paragraphs for omitted claims, with recorded provenance and a 60-paragraph ceiling. Malformed drafts remain blocked; source audits still inspect every claim and paragraph. Saving rechecks complete claim linkage. See [verification receipt](docs/tasks/2026-10-06-claim-coverage.md).
+
+Source accounting (2026-10-06): each retrieved window must be represented by a ledger citation or an explicit task-irrelevance reason. One counted planning correction addresses missing windows without expanding the claim ceiling. The source audit still checks exclusions and material completeness; abstract whole-report summaries retain their existing edit boundary. See [receipt](docs/tasks/2026-10-06-source-accounting.md).
+
+Whole-report source audit (2026-10-07): corrected verified source omissions and overstatements, retained the original and frozen scenario numbers, and added bounded source prioritization, document-ID validation and legal scenario display limits. Final local validation passes 807 tests/build; dependency audits are clean. The private candidate remains `needs_review`. See [audit receipt](docs/tasks/2026-10-07-full-report-audit.md).

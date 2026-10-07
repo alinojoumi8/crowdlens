@@ -1,0 +1,1277 @@
+{
+  "browser": "154.0.8037.92",
+  "browserLaunch": {
+    "arguments": [
+      "/usr/bin/google-chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--enable-automation",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--user-data-dir=/tmp/playwright_chromiumdev_profile-RRWkxw",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--noerrdialogs",
+      "--ozone-platform=headless",
+      "--ozone-override-screen-size=800,600",
+      "--use-angle=swiftshader-webgl",
+      "--flag-switches-begin",
+      "--flag-switches-end"
+    ],
+    "sandboxStatus": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tYes\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed."
+  },
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": true
+    },
+    {
+      "name": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "passed": true
+    },
+    {
+      "name": "scenario configuration with seeded persona and simulation substitutes",
+      "passed": true
+    },
+    {
+      "name": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "passed": true
+    },
+    {
+      "name": "source review and keyboard provenance inspection",
+      "passed": true
+    },
+    {
+      "name": "changed source produces an honest 409 conflict and disables save",
+      "passed": true
+    },
+    {
+      "name": "unrelated unsupported proposal blocks saving",
+      "passed": true
+    },
+    {
+      "name": "duplicate clicks plus response-loss retry create one immutable child",
+      "passed": true
+    },
+    {
+      "name": "saved revision reload, inherited section and source ledger remain reviewable",
+      "passed": true
+    },
+    {
+      "name": "history loading, error, explicit retry and empty states",
+      "passed": true
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "scenario-ready",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "simulation-completed",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "proposal-review",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 375,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 768,
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "clipped": []
+      },
+      "a11y": []
+    },
+    {
+      "name": "saved-revision",
+      "width": 1440,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "clipped": []
+      },
+      "a11y": []
+    }
+  ],
+  "console": [
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (NOT FOUND)"
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 404\n    at Vt (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:12148)\n    at XMLHttpRequest.m (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:19524)"
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Failed to fetch diagnostics: AxiosError: Request failed with status code 404\n    at Vt (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:12148)\n    at XMLHttpRequest.m (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:19524)"
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 (CONFLICT)"
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 409\n    at Vt (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:12148)\n    at XMLHttpRequest.m (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:19524)"
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "type": "error",
+      "text": "Response error: AxiosError: Network Error\n    at u.onerror (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:19903)"
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "type": "error",
+      "text": "Network error - please check your connection"
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "type": "warning",
+      "text": "Couldn't load preload assets:  "
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "type": "error",
+      "text": "Response error: AxiosError: Request failed with status code 503\n    at Vt (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:12148)\n    at XMLHttpRequest.m (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:19524)"
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "type": "error",
+      "text": "Failed to load history projects: AxiosError: Request failed with status code 503\n    at Vt (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:12148)\n    at XMLHttpRequest.m (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:3:19524)\n    at Z.request (http://127.0.0.1:33663/assets/_plugin-vue_export-helper-CUmsg1Cw.js:5:2274)\n    at async G (http://127.0.0.1:33663/assets/Home-BgdbTM1l.js:2:5466)\n    at async http://127.0.0.1:33663/assets/Home-BgdbTM1l.js:2:6173"
+    }
+  ],
+  "pageErrors": [],
+  "network": [
+    {
+      "scenario": "home empty input cannot submit; source picker works from keyboard",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "POST",
+      "path": "/api/graph/ontology/generate",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "POST",
+      "path": "/api/graph/build",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/task/c80ba682-5edf-46c3-8266-c788ec8c60d9",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/task/c80ba682-5edf-46c3-8266-c788ec8c60d9",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/project/proj_91746849e0a3",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "method": "POST",
+      "path": "/api/simulation/create",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/prepare/status",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/env-status",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/project/proj_e118693fb02f",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/prepare",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic/profiles/realtime",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic/config/realtime",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "POST",
+      "path": "/api/simulation/start",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic/config",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/project/proj_e118693fb02f",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic/run-status",
+      "status": 200
+    },
+    {
+      "scenario": "scenario configuration with seeded persona and simulation substitutes",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic/diagnostics",
+      "status": 404
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "POST",
+      "path": "/api/report/generate",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "report navigation from seeded simulation; root generation explicitly intercepted",
+      "method": "GET",
+      "path": "/api/graph/project/proj_e118693fb02f",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals",
+      "status": 202
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_d60786eb39ae43558bc20c3fc55feb2a",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "source review and keyboard provenance inspection",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_d60786eb39ae43558bc20c3fc55feb2a/accept",
+      "status": 409
+    },
+    {
+      "scenario": "changed source produces an honest 409 conflict and disables save",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_d60786eb39ae43558bc20c3fc55feb2a/reject",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals",
+      "status": 202
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "unrelated unsupported proposal blocks saving",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_b05632f9e1814ae19d38d312495c9849",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_b05632f9e1814ae19d38d312495c9849/reject",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals",
+      "status": 202
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "POST",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e/accept",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/progress",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/graph/project/proj_e118693fb02f",
+      "status": 200
+    },
+    {
+      "scenario": "duplicate clicks plus response-loss retry create one immutable child",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/progress",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/project/proj_e118693fb02f",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_4c6601f491b64cab84bd5588371b9138/progress",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/console-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/agent-log",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/progress",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/simulation/sim_synthetic",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/synthetic_graph/quality",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/project/proj_e118693fb02f",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_31aa1358b7df4b93abae293414adf90e",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/data/synthetic_graph",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/report/report_synthetic/evidence-proposals/proposal_b05632f9e1814ae19d38d312495c9849",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    },
+    {
+      "scenario": "saved revision reload, inherited section and source ledger remain reviewable",
+      "method": "GET",
+      "path": "/api/graph/case/list",
+      "status": 200
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 503
+    },
+    {
+      "scenario": "history loading, error, explicit retry and empty states",
+      "method": "GET",
+      "path": "/api/simulation/history",
+      "status": 200
+    }
+  ],
+  "substitutes": [
+    "Harness ontology, graph builder/storage, simulation endpoints, drafting model; no provider calls",
+    "Root generation response intercepted to open an explicitly seeded report",
+    "One acceptance response deliberately lost after its real HTTP publication",
+    "External font CSS fulfilled empty; no external browser requests",
+    "History list response held, then 503, then empty 200 for state testing"
+  ],
+  "performance": {
+    "lcp": 120,
+    "cls": 0.0001177662037037037,
+    "interactionDurations": [
+      32,
+      32,
+      32
+    ],
+    "note": "Laboratory browser samples only; no field Core Web Vitals or representative INP conclusion."
+  },
+  "uploadedProject": "proj_91746849e0a3",
+  "simulationButtons": [
+    "Graph",
+    "Split",
+    "Workbench",
+    "↻Refresh",
+    "⛶",
+    "",
+    " Start Generating Report →"
+  ],
+  "acceptance": {
+    "status": 200,
+    "body": {
+      "data": {
+        "claim_checks": [],
+        "completed_at": "2026-10-02T20:21:37.325844+00:00",
+        "created_at": "2026-10-02T20:21:37.325844+00:00",
+        "decision_config": {},
+        "error": null,
+        "forecast": {
+          "limitations": "Synthetic source-only example; no simulation has run.",
+          "status": "unavailable"
+        },
+        "graph_id": "synthetic_graph",
+        "markdown_content": "# Synthetic hearing report\n\n> Alex states that the hearing was postponed until Friday. Other issues remain open.\n\n## Hearing\n\nAlex states that the hearing was postponed until Friday. [1]\n\n## Unrelated contracts\n\nUnrelated contracts remain unresolved.\n\n",
+        "outline": {
+          "sections": [
+            {
+              "claim_check_hash": "41a8e7a9d5f5dc14948f8895c750e985e3727cbb25e5c54d0169d2fc7a746575",
+              "claim_checks": [],
+              "claim_ledger": [
+                {
+                  "attribution": "Alex",
+                  "checks": [],
+                  "citation_ids": [
+                    "episode:one"
+                  ],
+                  "claim_id": "claim_01",
+                  "kind": "attributed_allegation",
+                  "premise_claim_ids": [],
+                  "quote": "",
+                  "schema_version": 1,
+                  "scope": {
+                    "case_id": "synthetic_case",
+                    "case_version_id": "synthetic_v1",
+                    "graph_id": "synthetic_graph"
+                  },
+                  "text": "Alex states that the hearing was postponed until Friday."
+                }
+              ],
+              "claims": [
+                {
+                  "attribution": "Alex",
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1",
+                  "checks": [],
+                  "citation_ids": [
+                    "episode:one"
+                  ],
+                  "claim_id": "claim_01",
+                  "evidence_ids": [
+                    "episode:one"
+                  ],
+                  "graph_id": "synthetic_graph",
+                  "kind": "attributed_allegation",
+                  "premise_claim_ids": [],
+                  "quote": "",
+                  "schema_version": 1,
+                  "scope": {
+                    "case_id": "synthetic_case",
+                    "case_version_id": "synthetic_v1",
+                    "graph_id": "synthetic_graph"
+                  },
+                  "text": "Alex states that the hearing was postponed until Friday."
+                }
+              ],
+              "content": "Alex states that the hearing was postponed until Friday. [1]",
+              "description": "",
+              "evidence_cards": [
+                {
+                  "case_id": "synthetic_case",
+                  "case_version_id": "synthetic_v1",
+                  "document_id": "synthetic_doc",
+                  "episode_id": "one",
+                  "evidence_id": "episode:one",
+                  "excerpt": "Alex states that the hearing was postponed until Friday.",
+                  "filename": "synthetic-record.txt",
+                  "graph_id": "synthetic_graph",
+                  "locator": {
+                    "char_end": 56,
+                    "char_start": 0,
+                    "chunk_index": 0,
+                    "offset_basis": "stored_chunk",
+                    "page": 1,
+                    "paragraph": null
+                  },
+                  "origin": "source_document",
+                  "source_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                  "window": "Alex states that the hearing was postponed until Friday.",
+                  "window_end": 56,
+                  "window_hash": "701245271bacf452d6419c8567dd04d08185a6837d6cd1d60fb82c9243b464f8",
+                  "window_start": 0
+                }
+              ],
+              "title": "Hearing"
+            },
+            {
+              "claim_check_hash": "",
+              "claim_checks": [],
+              "claim_ledger": [],
+              "claims": [],
+              "content": "Unrelated contracts remain unresolved.",
+              "description": "",
+              "evidence_cards": [],
+              "title": "Unrelated contracts"
+            }
+          ],
+          "summary": "Alex states that the hearing was postponed until Friday. Other issues remain open.",
+          "summary_claim_check_hash": "",
+          "summary_claim_checks": [],
+          "summary_claims": [],
+          "title": "Synthetic hearing report"
+        },
+        "quality_score": {
+          "deductions": [
+            {
+              "code": "procedural_source_unavailable",
+              "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.",
+              "penalty": 5
+            },
+            {
+              "code": "thin_section_evidence",
+              "message": "2 section(s) use fewer than 3 distinct evidence points.",
+              "penalty": 10
+            }
+          ],
+          "score": 85,
+          "section_count": 2,
+          "section_evidence_counts": [
+            1,
+            0
+          ],
+          "status": "pass",
+          "threshold": 80
+        },
+        "report_depth": "standard",
+        "report_id": "report_4c6601f491b64cab84bd5588371b9138",
+        "report_mode": "legal_case",
+        "revision": {
+          "accepted_at": "2026-10-02T20:21:37.325857+00:00",
+          "content_digest": "bd6748777dbd3a52095fb8b0fb353e9f355cc21eab6d7172895dc601cfd299cb",
+          "immutable": true,
+          "inherited_forecast": true,
+          "inherited_section_indices": [
+            2
+          ],
+          "parent_report_id": "report_synthetic",
+          "proposal_digest": "eadf2800dd2028df8365f40934d0ee953fa6d95dfe369bcde59f55be8f5613f3",
+          "proposal_id": "proposal_31aa1358b7df4b93abae293414adf90e",
+          "root_report_id": "report_synthetic",
+          "section_index": 1,
+          "source_checked_at": "2026-10-02T20:21:37.325630+00:00",
+          "source_digest": "41cf154adf3e1d06b4390cdaf608e9f36da857c828678599dccc9395101330d5",
+          "summary_edits": [
+            {
+              "claim_ids": [
+                "claim_01"
+              ],
+              "end": 24,
+              "new_text": "Alex states that the hearing was postponed until Friday.",
+              "old_text": "The hearing is Thursday.",
+              "start": 0
+            }
+          ]
+        },
+        "simulation_id": "sim_synthetic",
+        "simulation_requirement": "Review the synthetic hearing record.",
+        "source_grounding": {
+          "case_id": "synthetic_case",
+          "case_version_id": "synthetic_v1",
+          "graph_id": "synthetic_graph"
+        },
+        "status": "needs_review",
+        "timing": {},
+        "validation_issues": [
+          {
+            "blocking": false,
+            "code": "procedural_source_unavailable",
+            "message": "An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.",
+            "requires_review": true
+          }
+        ]
+      },
+      "success": true
+    }
+  },
+  "revisionId": "report_4c6601f491b64cab84bd5588371b9138",
+  "persisted": {
+    "parentUnchanged": true,
+    "reportCount": 2,
+    "parentDigests": {
+      "full_report.md": "0feed4baa82583e7e04f2666eddbbe9a9afc10cbd5f9658f326ee7eb94552e8d",
+      "meta.json": "f31ab1902f9eb672e6d6c93010c65eec1d342893863e3e9652d8f0e3f5eeac22",
+      "outline.json": "d34711f3f87cc9e041377677d97f81c4d362c478f5e5e5ef15e9584140ac68b6",
+      "progress.json": "dc291b1970060bbff010a306bbb43cf380eddf7801a8af46cf08a42491cc0606",
+      "section_01.md": "ce26115a42ef730bde11bcf281d43b9a27a553f6585a43b40926deadfd82bf5c",
+      "section_02.md": "3bdfd0835821fee23bc51813455dc63b2b441e6c32f1aeba3966490d396ff79f"
+    },
+    "source": {
+      "declared_revision": "242b8999044e33c8c3217df857c06401f3efbba3",
+      "scope": "runtime-source-v1",
+      "source_sha256": "a807c651b35560c12a91ec6f0b79b2d32df7bad60ebf3322d121c643d9e835fb"
+    },
+    "gitHead": "242b8999044e33c8c3217df857c06401f3efbba3"
+  }
+}

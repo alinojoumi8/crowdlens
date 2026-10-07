@@ -1,0 +1,14 @@
+{
+  "ui_status": "Idle",
+  "requests": 9,
+  "api": {
+    "data": {
+      "all_actions": [],
+      "reddit_actions": [],
+      "runner_status": "idle",
+      "simulation_id": "sim_2757a283087d",
+      "twitter_actions": []
+    },
+    "success": true
+  }
+}

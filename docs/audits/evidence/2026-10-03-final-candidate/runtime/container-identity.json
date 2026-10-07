@@ -1,0 +1,9 @@
+{
+  "name": "crowdlens-live-final-20261003-neo4j",
+  "container_id": "0550a0120293ff54561eca77e0c7dead37831fe25ff638cd0b02f8facdbf0b59",
+  "image": "neo4j:5.18-community",
+  "loopback_http": 18757,
+  "loopback_bolt": 18758,
+  "volume": "crowdlens-live-final-20261003-data",
+  "created_at": "2026-10-03T09:38:49.787605+00:00"
+}

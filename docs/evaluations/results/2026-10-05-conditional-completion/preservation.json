@@ -1,0 +1,15 @@
+{
+  "baselines": [
+    {
+      "manifest": "docs/evaluations/results/2026-10-05-output-reliability/source-review-v6-hashes.json",
+      "checked": 70,
+      "mismatches": []
+    },
+    {
+      "manifest": "docs/evaluations/results/2026-10-05-conditional-fidelity/private-artifact-hashes.json",
+      "checked": 33,
+      "mismatches": []
+    }
+  ],
+  "pass": true
+}

@@ -1,0 +1,52 @@
+{
+  "checks": [
+    {
+      "name": "home empty input cannot submit; source picker works from keyboard",
+      "passed": true
+    },
+    {
+      "name": "real upload/project/task APIs with explicit ontology and graph substitutes",
+      "passed": false,
+      "error": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/simulation/sim_upload\" until \"load\"\n============================================================"
+    }
+  ],
+  "fatal": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/simulation/sim_upload\" until \"load\"\n============================================================",
+  "snapshots": [
+    {
+      "name": "home",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 375,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 768,
+      "clipped": [],
+      "a11y": []
+    },
+    {
+      "name": "graph-ready",
+      "width": 1440,
+      "clipped": [],
+      "a11y": []
+    }
+  ]
+}

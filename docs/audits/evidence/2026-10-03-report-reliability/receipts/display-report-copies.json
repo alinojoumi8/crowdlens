@@ -1,0 +1,12 @@
+{
+  "report_3d12d343d6fa4c5d86998d8d88ea042a.md": {
+    "original_sha256": "d2fa253004bbd6a54a8999a2b9860d6aa34efbcadc71db6221b3974314e5c5e1",
+    "display_copy_sha256": "3c11e214a080161bf07c5c39c5cda096e91de7bc671226a929d5bcffbcf0ed47",
+    "normalization": "Remove extra terminal CR/LF characters, then add one terminal newline. Original files unchanged."
+  },
+  "report_7b90d18cdb75.md": {
+    "original_sha256": "af72632c95273e44d89425d4f22c6c47bbf418ccae36e59d2152a5b740f2dc92",
+    "display_copy_sha256": "68accb557a8bda71e34e846ae9420a06515c2747dd6b187492ef0cbdd0688914",
+    "normalization": "Remove extra terminal CR/LF characters, then add one terminal newline. Original files unchanged."
+  }
+}

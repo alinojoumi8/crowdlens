@@ -1,0 +1,10 @@
+{
+  "exact_packet_hashes": true,
+  "exact_claim_coverage": true,
+  "source_first_fact_hashes": true,
+  "ai_provenance": true,
+  "human_timing_unmeasured": true,
+  "timezone_bearing_review_timestamps": true,
+  "reviewed_drafts": 2,
+  "production_gate_override": false
+}

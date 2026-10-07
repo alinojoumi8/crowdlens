@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
-        <div class="brand" @click="router.push('/')">CrowdLens</div>
+        <a class="brand" href="/" @click.prevent="router.push('/')">CrowdLens</a>
       </div>
       
       <div class="header-center">
@@ -36,7 +36,7 @@
     <!-- Main Content Area -->
     <main class="content-area">
       <!-- Left Panel: Graph -->
-      <div class="panel-wrapper left" :style="leftPanelStyle">
+      <div class="panel-wrapper left" :style="leftPanelStyle" :inert="viewMode === 'workbench'">
         <GraphPanel 
           :graphData="graphData"
           :loading="graphLoading"
@@ -48,7 +48,7 @@
       </div>
 
       <!-- Right Panel: Step3 Simulation -->
-      <div class="panel-wrapper right" :style="rightPanelStyle">
+      <div class="panel-wrapper right" :style="rightPanelStyle" :inert="viewMode === 'graph'">
         <Step3Simulation
           :simulationId="currentSimulationId"
           :maxRounds="maxRounds"
@@ -88,7 +88,7 @@ const props = defineProps({
 })
 
 // Layout State
-const viewMode = ref('split')
+const viewMode = ref('workbench')
 
 // Data State
 const currentSimulationId = ref(route.params.simulationId)
@@ -104,7 +104,7 @@ const projectData = ref(null)
 const graphData = ref(null)
 const graphLoading = ref(false)
 const systemLogs = ref([])
-const currentStatus = ref('processing') // processing | completed | error
+const currentStatus = ref('idle') // processing | completed | error
 
 // --- Computed Layout Styles ---
 const leftPanelStyle = computed(() => {
@@ -127,10 +127,15 @@ const statusClass = computed(() => {
 const statusText = computed(() => {
   if (currentStatus.value === 'error') return 'Error'
   if (currentStatus.value === 'completed') return 'Completed'
+  if (currentStatus.value === 'stopped') return 'Stopped'
+  if (currentStatus.value === 'failed') return 'Failed'
+  if (currentStatus.value === 'idle') return 'Idle'
+  if (currentStatus.value === 'starting') return 'Starting'
+  if (currentStatus.value === 'stopping') return 'Stopping'
   return 'Running'
 })
 
-const isSimulating = computed(() => currentStatus.value === 'processing')
+const isSimulating = computed(() => ['running', 'processing'].includes(currentStatus.value))
 
 // --- Helpers ---
 const addLog = (msg) => {
@@ -184,7 +189,7 @@ const handleGoBack = async () => {
       }
     } else {
       // Environment not running, check if process needs to be stopped
-      if (isSimulating.value) {
+      if (isSimulating.value || ['starting', 'stopping'].includes(currentStatus.value)) {
         addLog('Stopping simulation process...')
         try {
           await stopSimulation({ simulation_id: currentSimulationId.value })
@@ -456,5 +461,10 @@ onUnmounted(() => {
 
 .panel-wrapper.left {
   border-right: 1px solid #EAEAEA;
+}
+@media (max-width: 700px) {
+  .app-header { height: auto; min-height: 60px; flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+  .header-right { flex-wrap: wrap; }
+  .switch-btn { min-height: 44px; }
 }
 </style>

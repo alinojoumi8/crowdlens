@@ -1,0 +1,44 @@
+
+> crowdlens@0.2.0 dev
+> concurrently --kill-others -n "backend,frontend" -c "green,cyan" "npm run backend" "npm run frontend"
+
+[backend] 
+[backend] > crowdlens@0.2.0 backend
+[backend] > cd backend && uv run python run.py
+[backend] 
+[frontend] 
+[frontend] > crowdlens@0.2.0 frontend
+[frontend] > cd frontend && npm run dev
+[frontend] 
+[backend]    Building crowdlens-backend @ file:///app/backend
+[frontend] 
+[frontend] > crowdlens-frontend@0.1.0 dev
+[frontend] > vite --host
+[frontend] 
+[frontend] 
+[frontend]   VITE v7.3.6  ready in 354 ms
+[frontend] 
+[frontend]   ➜  Local:   http://localhost:3000/
+[frontend]   ➜  Network: http://172.23.0.3:3000/
+[backend]       Built crowdlens-backend @ file:///app/backend
+[backend] Uninstalled 1 package in 1ms
+[backend] Installed 1 package in 2ms
+[backend] [20:33:08] INFO: ==================================================
+[backend] [20:33:08] INFO: CrowdLens Backend starting...
+[backend] [20:33:08] INFO: ==================================================
+[backend] [20:33:08] INFO: Control database ready: path=/app/backend/app/../uploads/mirofish.db imported={'projects': 0, 'cases': 0, 'simulation_runs': 0}
+[backend] [20:33:09] INFO: Neo4jStorage initialized (connected to bolt://neo4j:7687)
+[backend] [20:33:09] INFO: Startup status: neo4j=True embedding=False vector_search_usable=False
+[backend] [20:33:09] WARNING: Embedding provider is not ready: Ollama embedding server is not reachable at http://127.0.0.1:9: HTTPConnectionPool(host='127.0.0.1', port=9): Max retries exceeded with url: /api/tags (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=9): Failed to establish a new connection: [Errno 111] Connection refused"))
+[backend] [20:33:09] INFO: Simulation process cleanup function registered
+[backend] [20:33:09] INFO: CrowdLens Backend startup complete
+[backend]  * Serving Flask app 'app'
+[backend]  * Debug mode: off
+[backend] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[backend]  * Running on all addresses (0.0.0.0)
+[backend]  * Running on http://127.0.0.1:5001
+[backend]  * Running on http://172.23.0.3:5001
+[backend] Press CTRL+C to quit
+[backend] 172.23.0.1 - - [02/Oct/2026 20:33:10] "GET /health HTTP/1.1" 200 -
+[backend] 172.23.0.1 - - [02/Oct/2026 20:33:10] "GET /api/status HTTP/1.1" 200 -
+[backend] 127.0.0.1 - - [02/Oct/2026 20:33:10] "GET /api/status HTTP/1.1" 200 -

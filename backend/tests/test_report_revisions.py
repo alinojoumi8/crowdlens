@@ -44,6 +44,32 @@ def test_accept_is_immutable_and_preserves_parent_and_other_text(root):
             method(loaded, **kwargs)
 
 
+def test_accept_rechecks_full_ledger_coverage(root):
+    from app.services.proposal_store import proposal_digest
+    record, service = ready(root)
+    identifier = record['proposal_id']
+    ledger = record['ledger'] + [{**record['ledger'][0], 'claim_id':'claim_02'}]
+    record['ledger'] = ledger
+    record['ledger_digest'] = service.store.save_snapshot(identifier, 'ledger', ledger)
+    record['proposal_digest'] = proposal_digest(record)
+    # Simulate a digest-consistent incomplete candidate, beyond the generation gate.
+    service.store._file(identifier, 'record').write_text(json.dumps(record))
+    with pytest.raises(ProposalError, match='invalid_proposal'):
+        service.accept('report_root', identifier, record['proposal_digest'])
+    assert not (root / record['revision_report_id']).exists()
+
+
+def test_accept_rechecks_source_accounting(root):
+    from app.services.proposal_store import proposal_digest
+    record, service = ready(root)
+    record['extract_provenance']['source_exclusions'] = [{'evidence_id':'foreign','reason':'Outside the task.'}]
+    record['proposal_digest'] = proposal_digest(record)
+    service.store._file(record['proposal_id'], 'record').write_text(json.dumps(record))
+    with pytest.raises(ProposalError, match='invalid_proposal'):
+        service.accept('report_root', record['proposal_id'], record['proposal_digest'])
+    assert not (root / record['revision_report_id']).exists()
+
+
 def test_crash_after_publication_recovers_without_parent_or_sources(root, monkeypatch):
     record, service = ready(root)
     original = service.store.update
@@ -178,3 +204,28 @@ def test_concurrent_storage_probes_do_not_switch_report_roots(tmp_path, monkeypa
         results = list(pool.map(lambda _: ReportManager._get_reports_dir(), range(2)))
     assert results == [str(primary), str(primary)]
     assert not fallback.exists()
+
+
+def test_accepted_revision_export_preserves_frozen_forecast(root, monkeypatch):
+    from copy import deepcopy
+    import test_evidence_drafting
+    from app.services.forecasting import forecast_to_markdown
+    parent = sample_report()
+    parent.forecast = {'forecast_mode': 'legal_case', 'confidence': 'low',
+        'probabilities': [{'outcome': 'Scenario A', 'probability': .465,
+                           'rationale': 'Synthetic scenario only.'}],
+        'limitations': 'Uncalibrated scenario.'}
+    parent.markdown_content = forecast_to_markdown(parent.forecast) + '\n\n' + parent.outline.to_markdown()
+    ReportManager.save_report(parent)
+    monkeypatch.setattr(test_evidence_drafting, 'sample_report', lambda: deepcopy(parent))
+    record, service = ready(root)
+    original = {p.name: p.read_bytes() for p in (root / parent.report_id).iterdir()}
+    revision = service.accept(parent.report_id, record['proposal_id'], record['proposal_digest'])
+    expected = forecast_to_markdown(parent.forecast)
+    exported = (root / revision.report_id / 'full_report.md').read_text()
+    assert exported.startswith(expected + '\n\n')
+    assert exported.count('## Forecast Probability Summary') == 1
+    assert '46.5%' in exported
+    assert revision.forecast == parent.forecast
+    assert {p.name: p.read_bytes() for p in (root / parent.report_id).iterdir()} == original
+    assert service.accept(parent.report_id, record['proposal_id'], record['proposal_digest']) == revision
