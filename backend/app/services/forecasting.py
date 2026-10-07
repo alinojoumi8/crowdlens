@@ -776,6 +776,8 @@ class ForecastSynthesizer:
                 + limitations
             )
 
+        if mode == 'legal_case':
+            limitations = legal_scenario_limitations(limitations)
         return {
             "forecast_mode": mode,
             "forecast_horizon": self.settings.forecast_horizon,
@@ -917,6 +919,12 @@ class ForecastSynthesizer:
         return missing
 
 
+def legal_scenario_limitations(text: str) -> str:
+    text = re.sub(r';?\s*add external base rates for (?:operational )?decisions\.', '.', text, flags=re.I)
+    warning = 'These are uncalibrated scenario outputs, not measured court win probabilities; do not recalculate them from outside material under this report scope.'
+    return text if warning in text else text + ' ' + warning
+
+
 def forecast_to_markdown(forecast: Dict[str, Any]) -> str:
     if forecast.get("status") == "unavailable":
         return "## Forecast Availability\n\n" + forecast.get("limitations", "No supported forecast is available.")
@@ -968,5 +976,8 @@ def forecast_to_markdown(forecast: Dict[str, Any]) -> str:
             ),
         ])
     if forecast.get("limitations"):
-        lines.extend(["", f"Note: {forecast['limitations']}"])
+        limitations = forecast['limitations']
+        if forecast.get('forecast_mode') == 'legal_case':
+            limitations = legal_scenario_limitations(limitations)
+        lines.extend(["", f"Note: {limitations}"])
     return "\n".join(lines).strip()

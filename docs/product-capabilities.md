@@ -357,3 +357,5 @@ Policy v12 requires explicit accounting for every admitted source window, with o
 ### Whole-report rebuild (2026-10-06)
 
 The existing full regeneration action rebuilt a separate five-section legal report and fresh global summary from the linked sources and completed simulation after explicit broader user authorization. Persisted original and forecast values were preserved; the new candidate is `needs_review`. This resolves the summary scope choice, not factual review. See [browser and persistence receipt](tasks/2026-10-06-full-report-rebuild.md).
+
+Whole-report source audit (2026-10-07): corrected verified source omissions and overstatements, retained the original and frozen scenario numbers, and added bounded source prioritization, document-ID validation and legal scenario display limits. Final local validation passes 807 tests/build; dependency audits are clean. The private candidate remains `needs_review`. See [audit receipt](tasks/2026-10-07-full-report-audit.md).

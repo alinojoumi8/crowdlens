@@ -1237,6 +1237,9 @@ class ReportAgent:
                 "Never invent dialogue, round-by-round opinion changes, vote counts, thresholds, empirical priors or observed outcomes. "
                 "Separate fictional source positions, generated scenario inputs, actual simulated actions and your analysis. "
                 "Absent action evidence means not observed, not that an event could not happen. "
+                "A truncated original-source packet is not the full uploaded record. Describe gaps as not established "
+                "in this bounded packet; never infer that a supplied document, exhibit, order or hearing schedule is "
+                "absent from the full record merely because it is omitted from this packet. Copy document IDs exactly. "
                 "For legal sources, keep underlying claims, later motions, requested relief and actual court findings distinct.")
 
     def _bind_report_contract(self, report):

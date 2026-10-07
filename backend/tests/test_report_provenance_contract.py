@@ -47,6 +47,51 @@ def test_exact_original_and_actual_trace_quotes_pass_with_references():
     assert not any(i.get('blocking') for i in ReportManager.validate_report_output(report))
 
 
+def test_unknown_document_id_blocks_even_without_a_quotation():
+    report = report_with('Attributed source statement. [doc_11, PDF pp. 2–3]')
+    assert any(i['code'] == 'unknown_document_citation' and i['blocking'] for i in ReportManager.validate_report_output(report))
+    assert not any(i.get('blocking') for i in ReportManager.validate_report_output(report_with('Attributed statement. [doc_1, PDF p. 2]')))
+
+
+def test_report_packet_prioritizes_openings_and_filled_procedural_anchors():
+    from app.services.report_grounding import select_report_sources
+    rows = [
+        {'document_id':'doc','evidence_id':'a','excerpt':'Unrelated filler.', 'locator':{'chunk_index':1}},
+        {'document_id':'doc','evidence_id':'z','excerpt':'THE MOTION IS FOR relief.', 'locator':{'chunk_index':0}},
+        {'document_id':'doc','evidence_id':'b','excerpt':'APPROVED HEARING DATE:\n', 'locator':{'chunk_index':2}},
+        {'document_id':'doc','evidence_id':'y','excerpt':'APPROVED HEARING DATE: April 1, 2025', 'locator':{'chunk_index':8}},
+        {'document_id':'doc','evidence_id':'x','excerpt':'THIS COURT ORDERS the injunction extended to trial.', 'locator':{'chunk_index':9}},
+    ]
+    cap = sum(len(row['excerpt']) for row in [rows[1],rows[3],rows[4]])
+    selected = select_report_sources(rows, {'report_mode':'legal_case'}, maximum=cap)
+    assert [r['evidence_id'] for r in selected] == ['z','y','x']
+    assert sum(len(r['excerpt']) for r in selected) <= cap
+    assert rows[0]['evidence_id'] == 'a'
+
+
+def test_report_packet_keeps_each_document_opening_before_later_chunks():
+    from app.services.report_grounding import select_report_sources
+    rows = [
+        {'document_id':'a','evidence_id':'first','excerpt':'Opening A', 'locator':{'chunk_index':0}},
+        {'document_id':'a','evidence_id':'later','excerpt':'Later A', 'locator':{'chunk_index':1}},
+        {'document_id':'b','evidence_id':'other','excerpt':'Opening B', 'locator':{'chunk_index':0}},
+    ]
+    assert [r['evidence_id'] for r in select_report_sources(rows, {}, maximum=18)] == ['first','other']
+
+
+def test_legal_forecast_display_keeps_values_without_external_adjustment_instruction():
+    from app.services.forecasting import forecast_to_markdown, legal_scenario_limitations
+    forecast = {'forecast_mode':'legal_case','probabilities':[{'outcome':'Scenario A','probability':0.465}],
+        'limitations':'Treat as scenario estimates, not certainty; add external base rates for operational decisions.'}
+    before = deepcopy(forecast)
+    rendered = forecast_to_markdown(forecast)
+    assert '46.5%' in rendered and 'add external base rates' not in rendered
+    assert 'not measured court win probabilities' in rendered
+    assert forecast == before
+    note = legal_scenario_limitations(forecast['limitations'])
+    assert legal_scenario_limitations(note) == note
+
+
 def test_probability_prose_cannot_disagree_with_structured_forecast():
     report = report_with('The scenario has a 55% probability of support.')
     assert any(i['code'] == 'forecast_probability_mismatch' and i['blocking'] for i in ReportManager.validate_report_output(report))

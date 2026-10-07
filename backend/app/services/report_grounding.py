@@ -11,6 +11,32 @@ from .simulation_activity import read_activity, unique_actions, summarize_activi
 CONTRACT = 'report-grounding-v1'
 
 
+def select_report_sources(rows, config, maximum=60000):
+    """Keep document openings and explicit procedural anchors within the same cap."""
+    def position(row):
+        index = (row.get('locator') or {}).get('chunk_index')
+        return index if type(index) is int and index >= 0 else float('inf')
+    ordered = sorted(rows, key=lambda r: (r['document_id'], position(r), r['evidence_id']))
+    first = {}
+    for row in ordered:
+        first.setdefault(row['document_id'], row['evidence_id'])
+    legal = config.get('report_mode') == 'legal_case' or (config.get('prediction_settings') or {}).get('report_mode') == 'legal_case'
+    def priority(row):
+        text = row['excerpt']
+        opening = first[row['document_id']] == row['evidence_id']
+        anchor = legal and (bool(re.search(r'THE MOTION IS FOR', text, re.I))
+            or bool(re.search(r'(?im)^APPROVED HEARING DATE[ \t]*:[ \t]*\S[^\n]+', text))
+            or ('THIS COURT' in text and bool(re.search(r'extended to trial|Expanded Scope|amended to expand', text, re.I))))
+        return (0 if opening else 1 if anchor else 2, row['document_id'], position(row), row['evidence_id'])
+    selected, used = [], 0
+    for row in sorted(ordered, key=priority):
+        if used + len(row['excerpt']) > maximum:
+            continue
+        selected.append(row)
+        used += len(row['excerpt'])
+    return selected
+
+
 def build_report_grounding(storage, config, graph_id, simulation_dir):
     packet = {'report_contract': CONTRACT, 'graph_id': graph_id, 'status': 'unavailable',
               'original_sources': [], 'limitations': []}
@@ -19,14 +45,14 @@ def build_report_grounding(storage, config, graph_id, simulation_dir):
         packet.update(scope)
         corpus = freeze_sources(storage.get_source_chunks(**scope), scope)
         # Embeddings are retrieval machinery, not report evidence or prompt data.
-        sources, used = [], 0
-        for row in corpus['sources']:
-            if used + len(row['excerpt']) > 60000:
-                packet['limitations'].append('report_source_context_truncated')
-                break
+        selected = select_report_sources(corpus['sources'], config)
+        sources = []
+        if len(selected) < len(corpus['sources']):
+            packet['limitations'].append('report_source_context_truncated')
+        for row in selected:
             sources.append({k: v for k, v in row.items() if k not in ('embedding', 'embedding_provider_id')})
-            used += len(row['excerpt'])
         packet.update(original_sources=sources, source_corpus_digest=corpus['digest'],
+                      available_source_count=len(corpus['sources']), selected_source_count=len(sources),
                       status='available' if sources else 'unavailable')
         packet['limitations'].extend(corpus['limitations'])
     except Exception:
@@ -57,6 +83,11 @@ def provenance_issues(content, grounding, forecast):
         return []
     issues = []
     sources = grounding.get('original_sources') or []
+    known_documents = {row.get('document_id') for row in sources}
+    for identifier in set(re.findall(r'\[(doc_[A-Za-z0-9_-]+)(?=[,\]])', content)):
+        if identifier not in known_documents:
+            issues.append({'code': 'unknown_document_citation', 'blocking': True,
+                'message': 'Document citation is not an admitted original document ID.', 'document_id': identifier})
     actions = (grounding.get('simulation_activity') or {}).get('actions') or []
     normalize = lambda value: re.sub(r'\s+', ' ', value).strip()
     for paragraph in re.split(r'\n\s*\n', content):
