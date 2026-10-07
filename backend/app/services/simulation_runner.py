@@ -2162,6 +2162,39 @@ class SimulationRunner:
         )
     
     @classmethod
+    def close_completed_run_for_ensemble(cls, simulation_id):
+        """Retire a locally owned interview environment before runtime admission."""
+        from ..models.task import TaskManager
+        from .task_execution import ACTIVE, TaskBusy
+        tasks = TaskManager()
+        monitor = None
+        with tasks.runtime.gate():
+            binding = tasks.runtime.binding('simulation-runtime:' + simulation_id)
+            task = tasks.runtime.get(binding['task_id']) if binding else None
+            if not task or task['status'] not in ACTIVE or task['task_type'] != 'simulation_run':
+                return
+            state = cls.get_run_state(simulation_id)
+            execution = (getattr(state, 'execution', None) or {})
+            attempt = tasks.runtime.handles.get(task['task_id'])
+            if (not state or state.runner_status != RunnerStatus.COMPLETED or not attempt
+                    or execution.get('task_id') != attempt.task_id
+                    or execution.get('attempt_id') != attempt.attempt_id):
+                return  # Active, remote or unknown owners retain their admission fence.
+            tasks.runtime.validate(attempt)
+            process = cls._processes.get(simulation_id)
+            monitor = cls._monitor_threads.get(simulation_id)
+            if process and process.poll() is None:
+                cls.close_simulation_env(simulation_id, timeout=15)
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    raise TaskBusy('completed_environment_closing') from None
+        # The owning monitor needs the gate to publish its final completed state.
+        # Never terminalize its task ourselves or replace a still-active owner.
+        if monitor and monitor is not threading.current_thread():
+            monitor.join(timeout=5)
+
+    @classmethod
     def close_simulation_env(
         cls,
         simulation_id: str,
