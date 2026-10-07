@@ -353,3 +353,7 @@ Policy v11 appends each omitted ledger claim verbatim to a structurally valid dr
 ### Retrieved-source accounting (2026-10-06)
 
 Policy v12 requires explicit accounting for every admitted source window, with one shared quotation/coverage correction and digest-protected exclusion reasons. Invalid ledgers fail before coverage checks. Both material claims and claimed irrelevance face the same source-first audit, and acceptance rechecks the coverage contract. This is bounded packet coverage, not exhaustive PDF coverage. See [verification receipt](tasks/2026-10-06-source-accounting.md).
+
+### Whole-report rebuild (2026-10-06)
+
+The existing full regeneration action rebuilt a separate five-section legal report and fresh global summary from the linked sources and completed simulation after explicit broader user authorization. Persisted original and forecast values were preserved; the new candidate is `needs_review`. This resolves the summary scope choice, not factual review. See [browser and persistence receipt](tasks/2026-10-06-full-report-rebuild.md).
