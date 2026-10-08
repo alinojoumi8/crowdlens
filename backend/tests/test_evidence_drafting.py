@@ -244,3 +244,62 @@ def test_verifier_records_late_usage_before_deadline_fence():
     with pytest.raises(DeadlineExceeded):
         BudgetedRunner(Runner(), budget, budget.check).evaluate()
     assert budget.snapshot()['calls'][0]['input_tokens'] == 5
+
+
+def test_invented_summary_target_gets_one_structure_correction(tmp_path, monkeypatch):
+    original = FakeLLM.chat_json
+    audits = []
+    def chat(self, messages, **kwargs):
+        import json
+        result = original(self, messages, **kwargs)
+        if messages[0]['content'].startswith('EVIDENCE_AUDIT_V1'):
+            payload = json.loads(messages[1]['content'])
+            audits.append(payload)
+            if len(audits) == 1:
+                result['summary_reviews'].append({'target_index': 1, 'outcome': 'supported', 'detail': 'Invented target'})
+            else:
+                assert 'audit_structure_correction' in payload
+        return result
+    monkeypatch.setattr(FakeLLM, 'chat_json', chat)
+    result, llm = run(tmp_path)
+    assert result['state'] == 'ready'
+    assert len(audits) == 2 and len(llm.calls) == 4
+
+
+def test_persistently_invalid_audit_stays_blocked_after_one_correction(tmp_path):
+    result, llm = run(tmp_path, {'EVIDENCE_AUDIT_V1': {'audit_protocol': 'target_reviews_v1'}})
+    assert result['state'] == 'blocked'
+    assert llm.calls.count('EVIDENCE_AUDIT_V1') == 2
+
+
+def test_valid_adverse_audit_is_not_retried(tmp_path, monkeypatch):
+    original = FakeLLM.chat_json
+    def chat(self, messages, **kwargs):
+        result = original(self, messages, **kwargs)
+        if messages[0]['content'].startswith('EVIDENCE_AUDIT_V1'):
+            result['paragraph_reviews'][0].update(outcome='unsupported', detail='Not supported by source.')
+        return result
+    monkeypatch.setattr(FakeLLM, 'chat_json', chat)
+    result, llm = run(tmp_path)
+    assert result['state'] == 'blocked'
+    assert llm.calls.count('EVIDENCE_AUDIT_V1') == 1
+    assert any(f['code'] == 'target_unsupported' for f in result['findings'])
+
+
+
+def test_structure_correction_cannot_erase_adverse_claim_judgment(tmp_path, monkeypatch):
+    original = FakeLLM.chat_json
+    count = 0
+    def chat(self, messages, **kwargs):
+        nonlocal count
+        result = original(self, messages, **kwargs)
+        if messages[0]['content'].startswith('EVIDENCE_AUDIT_V1'):
+            count += 1
+            if count == 1:
+                result['summary_reviews'] = []
+                result['claim_reviews'][0].update(outcome='unsupported', detail='Source contradicts claim.')
+        return result
+    monkeypatch.setattr(FakeLLM, 'chat_json', chat)
+    result, _ = run(tmp_path)
+    assert result['state'] == 'blocked' and count == 2
+    assert any(f['code'] == 'audit_adverse_judgment_changed' for f in result['findings'])

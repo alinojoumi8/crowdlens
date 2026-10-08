@@ -11,6 +11,10 @@
               <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Scenario Analysis Report' }}</span>
               <span class="report-id">ID: {{ reportId || 'REF-2024-X92' }}</span>
             </div>
+            <a v-if="isComplete && reportId" class="report-download"
+               :href="`${reportApiBase}/api/report/${encodeURIComponent(reportId)}/download`">
+              Download report (.md)
+            </a>
             <nav v-if="reportRevision.parent_report_id" class="revision-navigation" aria-label="Report revision history">
               <strong>Saved revision · Needs review</strong>
               <a :href="`/report/${encodeURIComponent(reportRevision.parent_report_id)}`">Parent report</a>
@@ -592,6 +596,8 @@
 </template>
 
 <script setup>
+import { resolveApiBaseUrl } from '../api/baseUrl'
+const reportApiBase = resolveApiBaseUrl(import.meta.env)
 import { ref, computed, watch, onMounted, onUnmounted, nextTick, h, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { generateReport, getAgentLog, getConsoleLog, getReport, getReportProgress, regenerateReportSection, resumeReport } from '../api/report'
@@ -6044,4 +6050,9 @@ watch(() => props.reportId, (newId) => {
   .workflow-metrics { flex-wrap: wrap; }
   .section-actions { flex-wrap: wrap; }
 }
+</style>
+
+<style scoped>
+.report-download { display: inline-block; margin: 12px 0; padding: 10px 14px; border: 1px solid #6b7280; color: #111827; text-decoration: underline; }
+.report-download:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
 </style>
