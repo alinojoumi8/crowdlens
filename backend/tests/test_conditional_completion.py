@@ -241,3 +241,35 @@ def test_offer_and_payment_condition_across_complete_pages_are_preserved():
     assert len(contract) == 1
     assert 'only if the purchaser first pays $900' in contract[0]['text']
     assert '[PDF page 3]' not in contract[0]['text']
+
+
+def test_physical_pdf_cross_chunk_condition_cannot_become_partial_extract(tmp_path):
+    import fitz
+    from app.utils.file_parser import FileParser, split_text_into_chunks
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.utils.draft_budget import DraftBudget
+    path = tmp_path / 'fictional-continued-condition.pdf'
+    pdf = fitz.open()
+    page = pdf.new_page(width=612, height=1200)
+    lines = ['Fictional background remains disputed. ' * 2] * 55
+    lines += ['Sora could offer repair only if the following condition is satisfied.']
+    page.insert_text((36, 36), '\n'.join(lines), fontsize=8)
+    page = pdf.new_page()
+    page.insert_text((36, 36), 'The purchaser must first provide independent testing. No endorsement is given.', fontsize=10)
+    pdf.save(path); pdf.close()
+    text = FileParser.extract_text(str(path))
+    assert '[PDF page 1]' in text and '[PDF page 2]' in text
+    assert 'Sora could offer repair only if' in text
+    assert 'independent testing' in text
+    chunks = split_text_into_chunks(text, chunk_size=4500, overlap=100)
+    assert len(chunks) > 1
+    corpus = freeze_sources([{**SCOPE, 'uuid':str(i), 'document_id':'fictional', 'data':chunk, 'chunk_index':i} for i, chunk in enumerate(chunks)], SCOPE)
+    evidence = retrieve_sources(corpus, ['Sora repair condition independent testing'], budget=DraftBudget())['sources']
+    build, _, _ = helpers()
+    assert any('Sora could offer repair' in item['excerpt'] for item in evidence)
+    assert any('independent testing' in item['excerpt'] for item in evidence)
+    contracts = build(evidence, SCOPE)
+    assert len(contracts) == 1
+    assert 'Sora could offer repair only if' in contracts[0]['text']
+    assert 'independent testing' in contracts[0]['text']
+    assert 'No endorsement is given.' in contracts[0]['text']

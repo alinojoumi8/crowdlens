@@ -133,3 +133,25 @@ def test_exhausted_writer_does_not_publish_missing_final_answer(monkeypatch, unf
     with pytest.raises(ValueError, match="completed Final Answer"):
         agent._generate_section_react_once(section, outline, [])
     assert len(calls) == 6  # Existing bounded loop and one forced conclusion.
+
+
+@pytest.mark.parametrize("opening", ["<tool_call>", "<tool_call]"])
+def test_minimax_named_tool_envelope_retrieves_before_final_prose(monkeypatch, opening):
+    native = '<]minimax[>[' + opening + '\nCall Tool: quick_search\n{"query":"pilot", "filters":{"scope":"original"}}\n</tool_call>'
+    agent, calls = react_agent(monkeypatch, [native, "Final Answer: The source describes an eight-week pilot."])
+    section = ReportSection(title="Source facts")
+    outline = ReportOutline(title="Pilot", summary="Fictional test", sections=[section])
+    assert agent._generate_section_react_once(section, outline, []) == "The source describes an eight-week pilot."
+    assert len(calls) == 2
+    assert agent._parse_tool_calls(native)[0]['parameters']['filters'] == {"scope":"original"}
+
+
+@pytest.mark.parametrize("response", [
+    '<tool_call>Call Tool: unknown_tool\n{"query":"pilot"}</tool_call>',
+    'Call Tool: quick_search\n{"query":"pilot"}',
+    '<tool_call>Call Tool: quick_search\n{"query":"pilot"}',
+    '<tool_call>Call Tool: quick_search\n{invalid}</tool_call>',
+])
+def test_named_tool_envelope_rejects_unknown_or_incomplete_calls(monkeypatch, response):
+    agent, _ = react_agent(monkeypatch, [])
+    assert agent._parse_tool_calls(response) == []

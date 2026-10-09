@@ -64,7 +64,7 @@
                 </div>
               </div>
               <div v-if="simulationSignal" class="forecast-signal">
-                <span class="forecast-signal-count mono">{{ simulationSignal.total_actions }} actions · {{ simulationSignal.active_agents }} agents</span>
+                <span class="forecast-signal-count mono">{{ simulationSignal.total_actions }} non-noop actions · {{ simulationSignal.active_agents }} agents</span>
                 <span class="forecast-signal-split">
                   <span class="forecast-signal-support">▲ {{ simulationSignal.agents_supporting }} supporting</span>
                   <span class="forecast-signal-oppose">▼ {{ simulationSignal.agents_opposing }} opposing</span>
