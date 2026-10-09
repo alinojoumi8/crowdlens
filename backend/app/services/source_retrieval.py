@@ -5,7 +5,7 @@ from collections import Counter
 from .claim_ledger import SCOPE_KEYS, canonical_digest
 from .evidence_verifier import text_hash
 from .source_tracing import SourceIndex, tokens
-from .pdf_source_pages import page_window, complete_pages
+from .pdf_source_pages import contextual_page_window, complete_pages
 
 
 def lexical_anchor(text, query_terms):
@@ -168,7 +168,7 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         window_size = max(2000, length + 400)
         start = max(0, at - 200)
         end = min(len(text), start + window_size)
-        page = page_window(text, at)
+        page = contextual_page_window(text, at)
         if not page and not matches:
             # Rank complete pages themselves when the chunk's best hit falls
             # in a fragment. Explicit literal quotes never take this fallback.
@@ -199,7 +199,8 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         window = text[start:end]
         locator = dict(source['locator'])
         if page and (start, end) == page[1:]:
-            locator.update(page=page[0], char_start=start, char_end=end)
+            selected_pages = [n for n, a, b in complete_pages(text) if start <= a and b <= end]
+            locator.update(page=selected_pages[0], page_end=selected_pages[-1], char_start=start, char_end=end)
             limitations.append('pdf_page_context_bounded: adjacent pages may contain continued attribution or conditions')
         used += len(window)
         packet.append({k: v for k, v in source.items() if k not in {'embedding', 'embedding_provider_id'}} |

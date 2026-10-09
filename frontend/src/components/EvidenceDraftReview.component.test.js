@@ -118,3 +118,24 @@ it.each(['reject', 'accept'])('ignores an older status response after %s succeed
   expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
   wrapper.unmount()
 })
+
+it('keeps complete claims available and links to focusable page-range sources', async () => {
+  const draft = proposal()
+  const fullClaim = 'A long attributed statement. '.repeat(20)
+  draft.ledger[0].text = fullClaim
+  draft.sources[0].locator.page_end = 2
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: draft })
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_root', sectionIndex: 1 }, attachTo: document.body })
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  expect(wrapper.find('.claim summary').text().length).toBeLessThan(fullClaim.length)
+  expect(wrapper.find('.claim-text').text()).toBe(fullClaim.trim())
+  const source = wrapper.find('.source')
+  expect(wrapper.find('.claim-sources a').attributes('href')).toBe(`#${source.attributes('id')}`)
+  expect(source.text()).toContain('pages 1–2')
+  expect(source.find('blockquote').attributes('tabindex')).toBe('0')
+  source.element.parentElement.open = false
+  await wrapper.find('.claim-sources a').trigger('click')
+  expect(source.element.parentElement.open).toBe(true)
+  expect(document.activeElement).toBe(source.find('blockquote').element)
+  wrapper.unmount()
+})

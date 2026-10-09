@@ -33,7 +33,11 @@
       <details v-if="proposal.ledger?.length" class="ledger" open>
         <summary>2 / Check claims · {{ proposal.ledger.length }} statements</summary>
         <details v-for="claim in proposal.ledger" :key="claim.claim_id" class="claim">
-          <summary>{{ words(claim.kind) }} — {{ claim.text }}</summary>
+          <summary>{{ words(claim.kind) }} — {{ claimPreview(claim.text) }}</summary>
+          <p class="claim-text">{{ claim.text }}</p>
+          <nav v-if="claim.citation_ids?.length" aria-label="Claim sources" class="claim-sources">
+            <a v-for="id in claim.citation_ids" :key="id" :href="`#${sourceAnchor(id)}`" @click.prevent="revealSource(id)">Read Source {{ citationNumber(id) }}</a>
+          </nav>
           <p v-if="claim.attribution">Attributed to {{ claim.attribution }}</p>
           <p v-if="claim.premise_claim_ids?.length">Analysis based on: {{ claim.premise_claim_ids.join(', ') }}. Unresolved premises still require review.</p>
           <p v-if="!claim.checks?.length">Source support has not been independently established.</p>
@@ -43,11 +47,11 @@
       </details>
       <details v-if="proposal.sources?.length" open>
         <summary>Read original sources · {{ proposal.sources.length }}</summary>
-        <article v-for="source in proposal.sources" :key="source.evidence_id" class="source">
+        <article v-for="source in proposal.sources" :key="source.evidence_id" :id="sourceAnchor(source.evidence_id)" class="source">
           <strong>{{ citationNumber(source.evidence_id) ? `Source ${citationNumber(source.evidence_id)} · ` : 'Retrieved context · ' }}{{ source.filename || source.document_id }}</strong>
-          <span> · page {{ source.locator?.page ?? 'not recorded' }}</span>
+          <span> · {{ source.locator?.page_end > source.locator?.page ? 'pages' : 'page' }} {{ source.locator?.page ?? 'not recorded' }}<template v-if="source.locator?.page_end > source.locator?.page">–{{ source.locator.page_end }}</template></span>
           <span v-if="source.locator?.chunk_index != null"> · chunk {{ source.locator.chunk_index }}</span>
-          <blockquote>{{ source.window }}</blockquote>
+          <blockquote tabindex="0" :aria-label="`Original excerpt from ${source.filename || source.document_id}`">{{ source.window }}</blockquote>
           <details><summary>Source provenance</summary><p class="identifier">{{ source.evidence_id }} · document {{ source.document_id }} · case version {{ source.case_version_id }}<br>Original SHA-256 {{ source.source_hash }}<br>Excerpt SHA-256 {{ source.window_hash }} · offsets {{ source.window_start }}–{{ source.window_end }}</p></details>
         </article>
       </details>
@@ -77,6 +81,15 @@ import { createEvidenceProposal, getEvidenceProposal, acceptEvidenceProposal, re
 import { isProposalAcceptable } from '../utils/evidenceProposal'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
+const claimPreview = text => text?.length > 240 ? `${text.slice(0, 240)}…` : text
+const sourceAnchor = id => `${saveHelpId}-source-${proposal.value?.sources?.findIndex(source => source.evidence_id === id)}`
+const revealSource = id => {
+  const source = document.getElementById(sourceAnchor(id))
+  if (!source) return
+  source.parentElement.open = true
+  source.scrollIntoView?.({ block: 'start' })
+  source.querySelector('blockquote')?.focus({ preventScroll: true })
+}
 const props = defineProps({ reportId: String, sectionIndex: Number, initialProposalId: String })
 const saveHelpId = useId()
 const emit = defineEmits(['revision-created', 'close'])
@@ -192,6 +205,11 @@ p, blockquote { line-height: 1.65; white-space: pre-wrap; } summary { cursor: po
 details { margin: .75rem 0; } .claim { border-top: 1px solid #d6e0eb; padding: .6rem 0; }
 .source { padding: 1rem; background: white; border-left: 3px solid #8ba4bd; margin: .7rem 0; }
 blockquote { margin: .6rem 0; max-height: 20rem; overflow: auto; overflow-wrap: anywhere; }
+.claim-sources { display: flex; gap: .75rem; flex-wrap: wrap; margin: .6rem 0; }
+.claim-sources a { min-height: 40px; display: inline-flex; align-items: center; color: #254b73; }
+.source { scroll-margin-top: 1rem; }
+.source:target, .source:focus-within { outline: 3px solid #d89522; }
+blockquote:focus-visible { outline: 3px solid #d89522; outline-offset: 3px; }
 .identifier { font-size: 11px; color: #596b80; overflow-wrap: anywhere; }
 .error, .findings { color: #873e1c; } .error { padding: .6rem; background: #fff4ed; }
 .actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: 1rem; }

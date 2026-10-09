@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true', required=True)
     parser.add_argument('--model', required=True)
+    parser.add_argument('--suite', choices=['standard', 'continued-pages'], default='standard')
     parser.add_argument('--output-dir', type=Path, required=True)
     args = parser.parse_args()
     output = args.output_dir.resolve()
@@ -31,7 +32,7 @@ def main():
     from scripts.evidence_quality_support import FixtureStorage, artifact_hashes
     if Config.LLM_MODEL_NAME != args.model or Config.JEV_EVIDENCE_MODE != 'off':
         parser.error('Configured model must match explicit model; Jev evidence mode must be off')
-    fixture_path = Path(__file__).resolve().parents[1] / 'tests/fixtures/multidocument_verification/cases.json'
+    fixture_path = Path(__file__).resolve().parents[1] / 'tests/fixtures/multidocument_verification' / ('cases.json' if args.suite == 'standard' else 'continued-pages.json')
     raw = fixture_path.read_bytes()
     cases = json.loads(raw)
     output.mkdir()

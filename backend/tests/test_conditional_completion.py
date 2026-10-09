@@ -225,3 +225,19 @@ def test_all_guarded_claims_can_fill_entire_capacity_without_planner_slot(tmp_pa
     assert record['state'] == 'ready'
     assert len(record['ledger']) == 5
     assert len(record['extract_provenance']['contract']) == 5
+
+
+def test_offer_and_payment_condition_across_complete_pages_are_preserved():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.services.conditional_extracts import build_extract_contract
+    from app.utils.draft_budget import DraftBudget
+    from evidence_draft_samples import SCOPE
+    text = '[PDF page 1]\nRana could offer replacement of eight disputed panels. The conditions continue on the next page.\n[PDF page 2]\nReplacement is offered only if the purchaser first pays $900. No liability is admitted.\n[PDF page 3]\n' + ('Unrelated filing history. ' * 250) + '\n[PDF page 4]\nTail.'
+    corpus = freeze_sources([{**SCOPE,'uuid':'continued','document_id':'doc','data':text,'page':1,'chunk_index':0}], SCOPE)
+    packet = retrieve_sources(corpus, ['Rana replacement eight panels'], budget=DraftBudget())
+    source = packet['sources'][0]
+    assert source['locator']['page'] == 1 and source['locator']['page_end'] == 2
+    contract = build_extract_contract(packet['sources'], SCOPE)
+    assert len(contract) == 1
+    assert 'only if the purchaser first pays $900' in contract[0]['text']
+    assert '[PDF page 3]' not in contract[0]['text']
