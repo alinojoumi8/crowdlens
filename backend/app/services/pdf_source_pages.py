@@ -26,9 +26,32 @@ def exact_extract_range(source):
     start, end = len(text) - len(text.lstrip()), len(text.rstrip())
     if end - start <= 4000 and source['window_start'] <= start < end <= source['window_end']:
         return start, end
-    for _, start, end in complete_pages(text):
+    pages = complete_pages(text)
+    for index, (_, start, end) in enumerate(pages):
+        for _, next_start, next_end in pages[index + 1:]:
+            if next_start != end:
+                break
+            end = next_end
+            trimmed_end = len(text[:end].rstrip())
+            if (source['window_start'] == start and source['window_end'] == end
+                    and 0 < trimmed_end - start <= 4000):
+                return start, trimmed_end
+    for _, start, end in pages:
         trimmed_end = len(text[:end].rstrip())
         if (source['window_start'] == start and source['window_end'] == end
                 and 0 < trimmed_end - start <= 4000):
             return start, trimmed_end
+    return None
+
+
+def contextual_page_window(text, anchor, maximum=4000):
+    """Include complete immediate neighbor pages when they fit the extract cap."""
+    pages = complete_pages(text)
+    for index, (page, start, end) in enumerate(pages):
+        if start <= anchor < end and end - start <= maximum:
+            if index and pages[index - 1][0] == page - 1 and end - pages[index - 1][1] <= maximum:
+                start = pages[index - 1][1]
+            if index + 1 < len(pages) and pages[index + 1][0] == page + 1 and pages[index + 1][2] - start <= maximum:
+                end = pages[index + 1][2]
+            return page, start, end
     return None
