@@ -64,6 +64,7 @@ class SimulationState:
     
     # Config generation information
     config_generated: bool = False
+    participant_selection: Dict[str, Any] = field(default_factory=dict)
     config_reasoning: str = ""
     
     # Runtime data
@@ -102,6 +103,7 @@ class SimulationState:
             "entities_count": self.entities_count,
             "profiles_count": self.profiles_count,
             "entity_types": self.entity_types,
+            "participant_selection": self.participant_selection,
             "config_generated": self.config_generated,
             "config_reasoning": self.config_reasoning,
             "current_round": self.current_round,
@@ -132,6 +134,7 @@ class SimulationState:
             "entities_count": self.entities_count,
             "profiles_count": self.profiles_count,
             "entity_types": self.entity_types,
+            "participant_selection": self.participant_selection,
             "config_generated": self.config_generated,
             "error": self.error,
             "forecast_mode": self.forecast_mode,
@@ -213,6 +216,7 @@ class SimulationManager:
             entities_count=data.get("entities_count", 0),
             profiles_count=data.get("profiles_count", 0),
             entity_types=data.get("entity_types", []),
+            participant_selection=data.get("participant_selection", {}),
             config_generated=data.get("config_generated", False),
             config_reasoning=data.get("config_reasoning", ""),
             current_round=data.get("current_round", 0),
@@ -360,15 +364,10 @@ class SimulationManager:
                     defined_entity_types=defined_entity_types,
                     enrich_with_edges=True
                 )
-            agent_count = int(state.prediction_settings.get("agent_count") or 0)
-            excluded_types = set(state.prediction_settings.get("entity_types_exclude") or [])
-            if excluded_types:
-                filtered.entities = [
-                    entity for entity in filtered.entities
-                    if entity.get_entity_type() not in excluded_types
-                ]
-            if agent_count > 0 and len(filtered.entities) > agent_count:
-                filtered.entities = filtered.entities[:agent_count]
+            from .participant_selection import select_participants
+            filtered.entities, state.participant_selection = select_participants(
+                filtered.entities, state.prediction_settings,
+                legal_case=state.forecast_mode == "legal_case" or state.report_mode == "legal_case")
             filtered.filtered_count = len(filtered.entities)
             filtered.entity_types = {
                 entity.get_entity_type() or "Unknown"
@@ -517,7 +516,9 @@ class SimulationManager:
             config_path = os.path.join(sim_dir, "simulation_config.json")
             with publication_guard(), timing.time("save_config", label="Persist simulation config"):
                 with open(config_path, 'w', encoding='utf-8') as f:
-                    f.write(sim_params.to_json())
+                    config_data = sim_params.to_dict()
+                    config_data['participant_selection'] = state.participant_selection
+                    json.dump(config_data, f, ensure_ascii=False, indent=2)
             
             state.config_generated = True
             state.config_reasoning = sim_params.generation_reasoning

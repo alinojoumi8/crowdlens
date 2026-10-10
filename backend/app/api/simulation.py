@@ -509,11 +509,12 @@ def prepare_simulation():
                 enrich_with_edges=False  # No edge information，Speed up
             )
             # Save entity count to status（For frontend to get immediately）
-            excluded = set(state_prediction_settings.get("entity_types_exclude") or [])
-            preview_count = sum(entity.get_entity_type() not in excluded for entity in filtered_preview.entities)
-            cap = int(state_prediction_settings.get("agent_count") or 0)
-            state.entities_count = min(preview_count, cap) if cap > 0 else preview_count
-            state.entity_types = list(filtered_preview.entity_types)
+            from ..services.participant_selection import select_participants
+            preview, state.participant_selection = select_participants(
+                filtered_preview.entities, state_prediction_settings,
+                legal_case=raw_forecast_settings.get('forecast_mode') == 'legal_case' or state.report_mode == 'legal_case')
+            state.entities_count = len(preview)
+            state.entity_types = list(dict.fromkeys(e.get_entity_type() or 'Unknown' for e in preview))
             logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
             forecast_settings = normalize_forecast_settings(
                 raw_forecast_settings,
@@ -674,6 +675,7 @@ def prepare_simulation():
                 "status": "preparing",
                 "message": "Preparation task started，Please via /api/simulation/prepare/status Query progress",
                 "already_prepared": False,
+                "participant_selection": state.participant_selection,
                 "expected_entities_count": state.entities_count,  # Expected number of entities to process
                 "entity_types": state.entity_types,  # Entity type list
                 "forecast_settings": forecast_settings.to_dict(),

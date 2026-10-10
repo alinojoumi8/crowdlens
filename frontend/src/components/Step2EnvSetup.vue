@@ -1,6 +1,12 @@
 <template>
   <div class="env-setup-panel">
     <div class="scroll-container">
+      <section v-if="participantSelection" aria-label="Participant coverage" class="info-card">
+        <strong>Participant coverage</strong>
+        <p v-for="(count, type) in participantSelection.selected_by_type" :key="type">{{ type }}: {{ count }}</p>
+        <p>Type coverage does not establish balanced viewpoints or verified party roles.</p>
+        <p v-for="warning in participantSelection.warnings || []" :key="warning" role="status">{{ warning }}</p>
+      </section>
       <!-- Step 01: Simulation Instance -->
       <div class="step-card" :class="{ 'active': phase === 0, 'completed': phase > 0 }">
         <div class="card-header">
@@ -851,6 +857,7 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import {
   prepareSimulation,
   getPrepareStatus,
+  getSimulation,
   getSimulationProfilesRealtime,
   getSimulationConfig,
   getSimulationConfigRealtime
@@ -907,6 +914,8 @@ const marketStatus = ref(null)
 const marketStatusLoaded = ref(false)
 const memoryMode = ref('practical')
 const forecastSettings = ref(null)
+const selectionPreview = ref(null)
+const participantSelection = computed(() => simulationConfig.value?.participant_selection || selectionPreview.value)
 const predictionPreset = ref('standard_litigation_prediction')
 const agentCount = ref(48)
 const agentTypesInclude = ref([])
@@ -1153,7 +1162,7 @@ watch(predictionPreset, (preset) => {
   }
 }, { flush: 'sync' })
 
-watch(simulationConfig, config => {
+const restoreSettings = config => {
   const saved = config?.prediction_settings
   if (!saved) return
   if (saved.preset) predictionPreset.value = saved.preset
@@ -1163,7 +1172,8 @@ watch(simulationConfig, config => {
     scenario_pack:scenarioPack,memory_mode:memoryMode,report_depth:reportDepth,
     report_mode:reportMode,platform:simulationPlatform,seed:simulationSeed}
   for (const [key, field] of Object.entries(fields)) if (saved[key] !== undefined) field.value = saved[key]
-})
+}
+watch(simulationConfig, restoreSettings)
 
 // Polling timer
 let pollTimer = null
@@ -1272,6 +1282,7 @@ const startPrepareSimulation = async () => {
         return
       }
 
+      selectionPreview.value = res.data.participant_selection || null
       taskId.value = res.data.task_id
       forecastSettings.value = res.data.forecast_settings || forecastSettings.value
       if (res.data.prediction_settings) {
@@ -1564,6 +1575,17 @@ watch(() => props.systemLogs?.length, () => {
 // forecast controls (mode, macro target, etc.) before clicking Prepare. This keeps the
 // forecast settings actually editable instead of locking them on mount.
 const initPrepare = async () => {
+  try {
+    const state = await getSimulation(props.simulationId)
+    if (state?.success && state.data) {
+      selectionPreview.value = state.data.participant_selection || null
+      restoreSettings(state.data)
+      if (state.data.forecast_mode) forecastMode.value = state.data.forecast_mode
+      if (state.data.forecast_horizon) forecastHorizon.value = state.data.forecast_horizon
+    }
+  } catch {
+    // Status polling can still recover an active task if settings are unavailable.
+  }
   try {
     const res = await getPrepareStatus({ simulation_id: props.simulationId })
     const st = res?.data?.status
