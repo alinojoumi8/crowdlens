@@ -185,3 +185,17 @@ it('allows editing a new focused request after an invalid request response', asy
   expect(api.createEvidenceProposal).toHaveBeenCalledTimes(1)
   wrapper.unmount()
 })
+
+
+it('submits a bounded wording correction with an explicit kind', async () => {
+  api.createEvidenceProposal.mockResolvedValueOnce({success:true,data:proposal()})
+  const wrapper = mount(EvidenceDraftReview, {props:{reportId:'report_wording',sectionIndex:1}})
+  await wrapper.find('select').setValue('wording')
+  await wrapper.find('input').setValue('The July 4 index.')
+  await wrapper.findAll('input')[1].setValue('The index on PDF page 4.')
+  await wrapper.find('textarea').setValue('[PDF page 4] INDEX')
+  await wrapper.find('form').trigger('submit'); await flushPromises()
+  expect(api.createEvidenceProposal.mock.calls[0][1].focused_correction.kind).toBe('wording')
+  expect(wrapper.text()).toContain('Review proposed changes')
+  wrapper.unmount()
+})

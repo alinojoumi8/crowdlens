@@ -112,7 +112,7 @@ class ReportRevisionService:
             frozen = self.store.load_snapshot(proposal_id, 'parent', record['parent_digest'])
             self.store.load_snapshot(proposal_id, 'sources', record['source_snapshot_digest'])
             ledger = self.store.load_snapshot(proposal_id, 'ledger', record['ledger_digest'])
-            if record.get('policy') == 'focused-literal-correction-v1':
+            if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
                 from .focused_correction import validate_focused_record
                 try:
                     validate_focused_record(record, frozen, corpus)
@@ -171,7 +171,7 @@ class ReportRevisionService:
             'inherited_forecast': True, 'source_checked_at': checked_at,
             'inherited_section_indices': [i for i in range(1, len(parent.outline.sections)+1) if i != record['section_index']],
             'summary_edits': record['summary_edits'], 'source_digest': record['source_digest']}
-        if record.get('policy') == 'focused-literal-correction-v1':
+        if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
             revision.revision['focused_correction'] = record['focused_correction']
             revision.revision['review_scope'] = record['limitations'][0]
         section = revision.outline.sections[record['section_index'] - 1]

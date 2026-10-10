@@ -19,16 +19,19 @@ class Sources:
         return [{**SCOPE, 'uuid': 'one', 'document_id': 'doc', 'data': self.text, 'page': 6}]
 
 
-def run(tmp_path, monkeypatch, outcome='supported'):
+def run(tmp_path, monkeypatch, outcome='supported', correction=None, original=None, source_text=None):
+    correction = correction or CORRECTION
     monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(tmp_path))
     parent = sample_report()
-    parent.outline.sections[0].content = 'Alex denies signing in the May 29, 2025 affidavit. Check the May 29, 2025 affidavit. He could agree only if an original is produced.'
+    parent.outline.sections[0].content = original or 'Alex denies signing in the May 29, 2025 affidavit. Check the May 29, 2025 affidavit. He could agree only if an original is produced.'
     ReportManager.save_report(parent)
     store = ProposalStore(tmp_path)
     record, lease = store.admit('report_root', 'focused', 'request')
-    store.update(record['proposal_id'], {'queued'}, {'state': 'running', 'scope': SCOPE, 'section_index': 1, 'focused_correction': CORRECTION})
+    store.update(record['proposal_id'], {'queued'}, {'state': 'running', 'scope': SCOPE, 'section_index': 1, 'focused_correction': correction})
     llm = SimpleNamespace(model='synthetic', chat_json=lambda *a, **kw: {'outcome': outcome, 'detail': 'Both references identify the same affidavit; denial and condition are preserved.'})
     sources = Sources()
+    if source_text is not None:
+        sources.text = source_text
     try:
         result = EvidenceDraftingService(sources, llm, store).generate(record['proposal_id'], parent.to_dict(), budget=DraftBudget(seconds=10))
     finally:
@@ -74,3 +77,49 @@ def test_changed_original_sources_block_acceptance(tmp_path, monkeypatch):
 def test_only_literal_corrections_supported_by_quotation_allowed(change):
     with pytest.raises(ValueError):
         validate_request({**CORRECTION, **change})
+
+
+WORDING_CASES = [
+    ('The July 4 index lists the affidavit.', 'The index on PDF page 4 lists the affidavit.',
+     '[PDF page 4] INDEX Affidavit of Alex sworn July 25, 2024. DATE October 16, 2019.'),
+    ('Alex was sworn in Barrie on July 25, 2024.',
+     'Alex was in Toronto and the commissioner in Barrie for the remote oath on July 25, 2024.',
+     'SWORN REMOTELY by Alex stated as being in Toronto, before me in Barrie, July 25, 2024.')]
+
+
+@pytest.mark.parametrize('old,new,quote', WORDING_CASES)
+def test_wording_patch_preserves_original_and_requires_source_audit(tmp_path, monkeypatch, old, new, quote):
+    correction = dict(kind='wording', old_text=old, new_text=new, source_quote=quote)
+    parent, store, sources, result = run(tmp_path, monkeypatch, correction=correction, original=old, source_text=quote)
+    assert result['state'] == 'ready'
+    assert result['replacement_count'] == 1
+    assert result['policy'] == 'focused-wording-correction-v2'
+    tampered = copy.deepcopy(result)
+    tampered['focused_correction']['new_text'] = 'A different actor performed the oath.'
+    assert proposal_digest(tampered) != result['proposal_digest']
+    revision = ReportRevisionService(store, storage=sources).accept('report_root', result['proposal_id'], result['proposal_digest'])
+    assert revision.outline.sections[0].content == new
+    assert revision.outline.summary == parent.outline.summary
+    assert ReportManager.get_report('report_root').to_dict() == parent.to_dict()
+    assert revision.status.value == 'needs_review'
+
+
+@pytest.mark.parametrize('outcome', ['unsupported', 'unverified'])
+@pytest.mark.parametrize('old,new,quote', WORDING_CASES)
+def test_wording_audit_failure_blocks_adoption(tmp_path, monkeypatch, outcome, old, new, quote):
+    _, store, sources, result = run(tmp_path, monkeypatch, outcome, dict(kind='wording', old_text=old, new_text=new, source_quote=quote), old, quote)
+    assert result['state'] == 'blocked'
+    with pytest.raises(ProposalError):
+        ReportRevisionService(store, storage=sources).accept('report_root', result['proposal_id'], result['proposal_digest'])
+
+
+def test_wording_does_not_replace_multiple_referents(tmp_path, monkeypatch):
+    old,new,quote = WORDING_CASES[0]
+    _,_,_,result = run(tmp_path, monkeypatch, correction=dict(kind='wording', old_text=old,new_text=new,source_quote=quote), original=old+' '+old,source_text=quote)
+    assert result['state'] == 'blocked'
+
+
+@pytest.mark.parametrize('new', ['x'*601, '[PDF page 4] INDEX Full source transcription', 'Source text\nMore source text'])
+def test_wording_rejects_source_dump(new):
+    with pytest.raises(ValueError):
+        validate_request(dict(kind='wording',old_text='Incorrect sentence.',new_text=new,source_quote='Source.'))

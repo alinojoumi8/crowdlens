@@ -5,13 +5,18 @@
       {{ busy ? 'Starting draft…' : error ? 'Retry request' : 'Draft with sources' }}
     </button>
     <details v-if="!proposal" class="focused-form">
-      <summary>Correct a date or number</summary>
-      <p>Replace only the specified date or number in this section. Copy a supporting quotation from the original document. All matching occurrences are shown for review; surrounding text and the summary are preserved and remain unverified.</p>
+      <summary>Correct source-backed wording</summary>
+      <p>Choose a date/number correction or replace one short statement. Copy its supporting quotation from the original document. The full before/after section is shown for review. Model checks can miss errors; surrounding text and the summary remain unverified.</p>
       <form @submit.prevent="create(true)">
+        <label :for="`${saveHelpId}-kind`">Correction type</label>
+        <select :id="`${saveHelpId}-kind`" v-model="correctionKind" :disabled="busy || !!requestPayload">
+          <option value="numeric">Date or number</option>
+          <option value="wording">One statement</option>
+        </select>
         <label :for="`${saveHelpId}-old`">Current wording</label>
-        <input :id="`${saveHelpId}-old`" v-model="correction.old_text" :disabled="busy || !!requestPayload" maxlength="200" required />
+        <input :id="`${saveHelpId}-old`" v-model="correction.old_text" :disabled="busy || !!requestPayload" :maxlength="correctionKind === 'wording' ? 600 : 200" required />
         <label :for="`${saveHelpId}-new`">Corrected wording</label>
-        <input :id="`${saveHelpId}-new`" v-model="correction.new_text" :disabled="busy || !!requestPayload" maxlength="200" required />
+        <input :id="`${saveHelpId}-new`" v-model="correction.new_text" :disabled="busy || !!requestPayload" :maxlength="correctionKind === 'wording' ? 600 : 200" required />
         <label :for="`${saveHelpId}-quote`">Original source quotation</label>
         <textarea :id="`${saveHelpId}-quote`" v-model="correction.source_quote" :disabled="busy || !!requestPayload" maxlength="1500" required />
         <button type="submit" :disabled="busy">{{ busy ? 'Checking correction…' : 'Check focused correction' }}</button>
@@ -115,6 +120,7 @@ const props = defineProps({ reportId: String, sectionIndex: Number, initialPropo
 const saveHelpId = useId()
 const emit = defineEmits(['revision-created', 'close'])
 const proposal = ref(null), busy = ref(false), error = ref('')
+const correctionKind = ref('numeric')
 const correction = ref({ old_text: '', new_text: '', source_quote: '' })
 const requestPayload = ref(null)
 let generation = 0, timer = null, requestKey = null
@@ -160,7 +166,7 @@ async function create(focused = false) {
   const token = generation
   requestKey ||= crypto.randomUUID()
   requestPayload.value ||= { section_index: props.sectionIndex, request_key: requestKey,
-    ...(focused === true ? { focused_correction: { ...correction.value } } : {}) }
+    ...(focused === true ? { focused_correction: { ...correction.value, ...(correctionKind.value === 'wording' ? { kind: 'wording' } : {}) } } : {}) }
   remember(); busy.value = true; error.value = ''
   try {
     const result = await createEvidenceProposal(props.reportId, requestPayload.value)

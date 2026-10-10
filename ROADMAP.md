@@ -133,3 +133,13 @@ saved a narrow corrected revision and prepared six profiles including both label
 sides. Existing simulation activity and forecast calibration remain unchanged.
 Next: verify actual activity across both sides and held-out ambiguous correction
 cases. See [receipt](docs/audits/2026-10-10-focused-correction-participants.md).
+
+
+Bounded wording correction follow-up: added single-occurrence source-backed
+wording proposals with explicit before/after review, source snapshots and blocked
+adoption for unsupported/unverified audits. Synthetic regression cases cover
+page/date confusion, remote-oath locations and oversized source transcription.
+Semantic accuracy still depends on fallible source review; high structural
+scores do not certify facts.
+
+Wording correction and longer-run verification: [receipt](docs/audits/2026-10-10-wording-corrections.md).

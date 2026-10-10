@@ -141,3 +141,21 @@ Existing reports retain their saved scores, status, frozen source context, and
 text. Rechecking an older report does not silently replace its provenance or
 certify the case facts. These checks are deterministic safeguards, not general
 legal fact verification or calibrated forecasting.
+
+
+### Bounded wording corrections
+
+“Correct source-backed wording” supports the existing date/number patch and an
+explicit “One statement” option. Wording corrections replace exactly one matching
+passage (up to 600 characters) and require an exact quotation found in one source
+document. Source-window hashes, full before/after section text, and the model
+audit are preserved. Multiline replacements and obvious source-page dumps are
+rejected. A supported model audit is required before saving a separate immutable
+revision; unsupported or unverified audits block adoption. Summary and other
+sections remain inherited, and the revision stays Needs review.
+
+Audit instructions explicitly distinguish PDF page numbers from dates and a
+remote deponent’s location from the commissioner’s location. These are fallible
+model checks, not deterministic semantic validation. Synthetic tests verify the
+patch, provenance, rejection and adoption boundaries; they do not measure model
+factual accuracy. A high report score does not certify these assertions.

@@ -26,7 +26,7 @@
       <p>Stop blocks new calls. In-flight provider requests may still finish and be billed.</p>
     </template>
     <p v-else-if="!authorize && resource">No workflow allowance is attached. Viewing artifacts does not authorize generation.</p>
-    <p v-if="error" role="alert">{{ error }}</p>
+    <p v-if="error || pollError" role="alert">{{ error || pollError }}</p>
   </section>
 </template>
 
@@ -36,7 +36,7 @@ import { getExecutionConfiguration, authorizeWorkflow, resolveWorkflow, getWorkf
 const props = defineProps({ authorize: Boolean, inputDescription: String, inputFingerprint: String, resource: String, pendingId: String })
 const authorizationHelpId = useId()
 const emit = defineEmits(['authorized', 'stopped'])
-const configuration = ref(null), status = ref(null), workflowId = ref(null), error = ref(''), busy = ref(false)
+const configuration = ref(null), status = ref(null), workflowId = ref(null), error = ref(''), pollError = ref(''), busy = ref(false)
 const maxRequests = ref(60), maxMinutes = ref(30)
 const renewRequests = ref(60), renewMinutes = ref(30), acknowledgeUnknown = ref(false)
 let renewalKey = crypto.randomUUID()
@@ -74,7 +74,8 @@ const refresh = async () => {
       if (!status.value?.admission_closed && response.data.admission_closed) renewRequests.value = Math.max(response.data.max_requests, response.data.admitted + 1)
       status.value = response.data
     }
-  } catch (exc) { if (token === generation) error.value = errorMessage(exc) }
+    if (token === generation) pollError.value = ''
+  } catch (exc) { if (token === generation) pollError.value = errorMessage(exc) }
 }
 const confirmAuthorization = async () => {
   if (busy.value || workflowId.value) return

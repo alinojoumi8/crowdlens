@@ -45,7 +45,7 @@ def proposal_digest(record):
     payload = {key: record.get(key) for key in CONTENT_FIELDS}
     if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
         payload['extract_provenance'] = record.get('extract_provenance')
-    if record.get('policy') == 'focused-literal-correction-v1':
+    if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
         payload.update({k: record.get(k) for k in ('focused_correction', 'focused_audit', 'replacement_count')})
     return canonical_digest(payload)
 
