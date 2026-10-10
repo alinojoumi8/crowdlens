@@ -375,7 +375,7 @@ class EvidenceDraftingService:
                     planned = {**planned, 'claims': preliminary}
                     extract_provenance['quote_resolutions'] = quote_records
             ledger, gaps = planned.get('claims'), planned.get('gaps', [])
-            if (not isinstance(ledger, list) or (not ledger and ordinary_windows) or len(ledger) > claim_limit - len(reserved)
+            if (not isinstance(ledger, list) or (not ledger and not guarded_claims) or len(ledger) > claim_limit - len(reserved)
                     or any(not isinstance(c, dict) or not isinstance(c.get('claim_id'), str) or c['claim_id'] not in planner_context['allowed_claim_ids'] for c in ledger)
                     or any(isinstance(c.get('citation_ids'), list) and any(isinstance(i,str) and i in guarded_ids for i in c['citation_ids']) for c in ledger)
                     or not isinstance(gaps, list) or len(gaps) > 30 or any(not isinstance(g, str) or len(g) > 1000 for g in gaps)):

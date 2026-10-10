@@ -6,6 +6,7 @@ from .claim_ledger import SCOPE_KEYS, canonical_digest
 from .evidence_verifier import text_hash
 from .source_tracing import SourceIndex, tokens
 from .pdf_source_pages import contextual_page_window, complete_pages
+from .pdf_chunk_context import joined_context
 
 
 def lexical_anchor(text, query_terms):
@@ -169,6 +170,15 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
         start = max(0, at - 200)
         end = min(len(text), start + window_size)
         page = contextual_page_window(text, at)
+        if not page:
+            recovered = joined_context(source, sources.values())
+            if recovered:
+                joined, prefix = recovered
+                recovered_page = contextual_page_window(joined['excerpt'], at + prefix)
+                if recovered_page and length <= recovered_page[2] - (at + prefix):
+                    source, text, at, page = joined, joined['excerpt'], at + prefix, recovered_page
+                    matches = [(offset + prefix, size) for offset, size in matches]
+                    limitations.append('pdf_context_recovered_from_exact_overlapping_chunks')
         if not page and not matches:
             # Rank complete pages themselves when the chunk's best hit falls
             # in a fragment. Explicit literal quotes never take this fallback.
@@ -202,6 +212,12 @@ def retrieve_sources(corpus, queries, *, budget, embedder=None):
             selected_pages = [n for n, a, b in complete_pages(text) if start <= a and b <= end]
             locator.update(page=selected_pages[0], page_end=selected_pages[-1], char_start=start, char_end=end)
             limitations.append('pdf_page_context_bounded: adjacent pages may contain continued attribution or conditions')
+        if source.get('reconstruction'):
+            source = {**source, 'evidence_id': source['evidence_id'] + ':window:' + text_hash(window)}
+            if any(existing['evidence_id'] == source['evidence_id']
+                   or (existing.get('reconstruction') and existing['document_id'] == source['document_id']
+                       and existing['window'] == window) for existing in packet):
+                continue
         used += len(window)
         packet.append({k: v for k, v in source.items() if k not in {'embedding', 'embedding_provider_id'}} |
                       {'window': window, 'window_start': start, 'window_end': end, 'window_hash': text_hash(window),

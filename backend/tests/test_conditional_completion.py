@@ -100,7 +100,7 @@ def test_nonconditional_paragraphs_and_exact_legacy_claims_remain_unchanged():
     assert render(p, [{**claim('A separate fact.'), 'claim_id':'other', 'kind':'source_statement', 'citation_ids':['another']}], [source()]) == (p, [])
 
 
-def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illegal_duplicate=False, guarded_count=1):
+def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illegal_duplicate=False, guarded_count=1, exclude_ordinary=False):
     import json
     from evidence_draft_samples import sample_report, sample_claim, TEXT
     from app.services.proposal_store import ProposalStore
@@ -119,6 +119,8 @@ def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illega
                 assert ordinary and 'conditional_extract_contract' not in context
                 assert [s['evidence_id'] for s in context['sources']] == ['episode:two']
                 value = {'claims':[{**sample_claim(), 'citation_ids':['episode:one'] if illegal_duplicate else ['episode:two']}],'gaps':[]}
+                if exclude_ordinary:
+                    value = {'claims': [], 'gaps': [], 'source_exclusions':[{'evidence_id':'episode:two','reason':'Unrelated hearing date, not the selected workshop offer.'}]}
             elif phase == 'EVIDENCE_DRAFT_V1':
                 value = {'paragraphs':[{'text':'The group is committed.' if 'source_sentence_id' in c else c['text'], 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
                          'section_summary_claim_ids':['unknown'] if invalid_summary else [c['claim_id'] for c in context['ledger']]}
@@ -273,3 +275,11 @@ def test_physical_pdf_cross_chunk_condition_cannot_become_partial_extract(tmp_pa
     assert 'Sora could offer repair only if' in contracts[0]['text']
     assert 'independent testing' in contracts[0]['text']
     assert 'No endorsement is given.' in contracts[0]['text']
+
+
+def test_guarded_claims_allow_all_ordinary_windows_to_be_explicitly_excluded(tmp_path):
+    record, _, _ = generate_selected(tmp_path, ordinary=True, exclude_ordinary=True)
+    assert record['state'] == 'ready'
+    assert len(record['ledger']) == 1
+    assert 'could assist if benches are confirmed' in record['after']['section']
+    assert record['extract_provenance']['source_exclusions'][0]['evidence_id'] == 'episode:two'
