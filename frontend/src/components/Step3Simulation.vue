@@ -136,6 +136,7 @@
         </div>
       </div>
 
+      <label class="report-option"><input v-model="evidenceOnly" type="checkbox" :disabled="isGeneratingReport"> Evidence-only report (no forecast percentages)</label>
       <div class="action-controls">
         <button v-if="phase === 0" class="action-btn primary start" :disabled="isStarting" @click="doStartSimulation">Start simulation</button>
         <button v-if="phase === 1 || isStarting" class="action-btn stop" :disabled="isStopping" @click="handleStopSimulation">{{ isStopping ? 'Stopping…' : 'Stop workflow' }}</button>
@@ -171,7 +172,7 @@
     <details v-if="effectiveConfig" class="run-settings"><summary>Run settings and limits</summary>
     <p class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
     </details>
-    <p v-if="runStatus.activity_summary" class="activity-accounting" role="status">{{ runStatus.activity_summary.model_actions }} model actions · {{ runStatus.activity_summary.unique_posts }} unique posts ({{ runStatus.activity_summary.initial_posts }} initial, {{ runStatus.activity_summary.scheduled_posts }} scheduled) · {{ runStatus.activity_summary.logged_entries }} logged entries · {{ runStatus.activity_summary.unknown_origin_actions }} unknown-origin actions</p>
+    <ActivityAccounting :summary="runStatus.activity_summary" />
     <p v-if="['stopped','failed'].includes(runStatus.runner_status)" class="effective-settings" role="status">Simulation {{ runStatus.runner_status }}: {{ runStatus.error || 'operator stop' }}. Partial activity is retained. Generation requires an available workflow allowance.</p>
 
     <!-- Main Content: Dual Timeline -->
@@ -477,6 +478,7 @@ import {
   getEconomySummary,
   getEconomyEvents
 } from '../api/simulation'
+import ActivityAccounting from './ActivityAccounting.vue'
 import { generateReport } from '../api/report'
 import {
   DEFAULT_ECONOMY_SETTINGS,
@@ -571,6 +573,7 @@ const effectiveRounds = computed(() => {
   const cap = props.maxRounds || config?.prediction_settings?.max_rounds
   return cap ? Math.min(duration, cap) : duration
 })
+const evidenceOnly = ref(false)
 const originLabel = (origin) => ({ initial_post: 'Initial input', scheduled_event: 'Scheduled input', model_action: 'Model action' }[origin] || 'Unknown origin')
 
 // Display actions in chronological order (newest at the bottom)
@@ -1144,7 +1147,8 @@ const handleNextStep = async () => {
     const res = await generateReport({
       simulation_id: props.simulationId,
       force_regenerate: true,
-      strict_antirepetition: true
+      strict_antirepetition: true,
+      evidence_only: evidenceOnly.value
     })
 
     if (res.success && res.data) {
@@ -1212,7 +1216,7 @@ onUnmounted(() => {
   font-family: 'Space Grotesk', 'Noto Sans SC', system-ui, sans-serif;
   overflow: hidden;
 }
-.activity-accounting { margin: 0; padding: 8px 16px; font-size: 12px; color: #374151; }
+.report-option { margin: 0; padding: 8px 16px; font-size: 12px; color: #374151; }
 .origin-label { font-size: 11px; color: #4b5563; }
 .effective-settings { padding: 8px 12px; font: 12px/1.5 system-ui, sans-serif; overflow-wrap: anywhere; flex-shrink: 0; background: #f6f8fb; color: #1f2a36; }
 

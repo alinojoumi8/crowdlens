@@ -143,3 +143,11 @@ Semantic accuracy still depends on fallible source review; high structural
 scores do not certify facts.
 
 Wording correction and longer-run verification: [receipt](docs/audits/2026-10-10-wording-corrections.md).
+
+
+Evidence-only report and activity-accounting follow-up: an explicit persisted
+opt-out bypasses numeric forecast synthesis and survives retries/resume and
+immutable revisions. Simulation and report UI distinguish written model
+responses, other actions, and separate scheduled-input log records. Legacy
+reports retain their saved contracts. See
+[verification receipt](docs/audits/2026-10-10-evidence-only-reports.md).

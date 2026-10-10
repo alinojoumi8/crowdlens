@@ -70,3 +70,17 @@ def test_effective_activation_alias_follows_explicit_round_control():
     from app.models.case import normalize_prediction_settings
     settings = normalize_prediction_settings({'active_agents_per_round': 1, 'active_agents_per_hour': 16})
     assert settings['active_agents_per_round'] == settings['active_agents_per_hour'] == 1
+
+
+def test_written_reactions_noops_and_failures_are_not_interchangeable():
+    from app.services.simulation_activity import summarize_activity
+    def model(kind, trace, success=True):
+        return {'agent_id': 0, 'action_type': kind, 'origin': 'model_action', 'trace_id': trace, 'success': success}
+    rows = [model('CREATE_POST', 1), model('CREATE_COMMENT', 2), model('LIKE_POST', 3),
+            model('DO_NOTHING', 4), model('CREATE_COMMENT', 5, False)]
+    summary = summarize_activity(rows + [dict(rows[0])])
+    assert summary['logged_entries'] == 6
+    assert summary['model_actions'] == 5
+    assert summary['model_written_actions'] == 2
+    assert summary['model_reactions'] == 1
+    assert summary['model_noops'] == summary['model_failed_actions'] == 1

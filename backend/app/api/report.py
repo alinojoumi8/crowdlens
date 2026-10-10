@@ -113,6 +113,9 @@ def generate_report():
         if not simulation_id:
             return jsonify({"success": False, "error": "Please provide simulation_id"}), 400
 
+        evidence_only = data.get('evidence_only', False)
+        if type(evidence_only) is not bool:
+            return jsonify(success=False, error='invalid_evidence_only'), 400
         force_regenerate = data.get('force_regenerate', False)
         requested_report_mode = data.get('report_mode')
         report_mode = normalize_report_mode(requested_report_mode)
@@ -147,6 +150,7 @@ def generate_report():
         fingerprint = hashlib.sha256(json.dumps({
             'simulation_id': simulation_id, 'report_mode': report_mode,
             'report_depth': report_depth, 'force_regenerate': bool(force_regenerate),
+            **({'evidence_only': True} if evidence_only else {}),
             **{key: _json_bool(data.get(key), False) for key in
                ('disable_interviews', 'strict_antirepetition', 'allow_degraded')},
         }, sort_keys=True).encode()).hexdigest()
@@ -158,7 +162,7 @@ def generate_report():
                 return replay
 
         if not force_regenerate:
-            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth)
+            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth, evidence_only=evidence_only)
             if (
                 existing_report
                 and existing_report.report_mode == report_mode
@@ -234,6 +238,7 @@ def generate_report():
                     "report_id": report_id,
                     "report_mode": report_mode,
                     "report_depth": report_depth,
+                    "evidence_only": evidence_only,
                     "request_key": request_key,
                     "request_fingerprint": fingerprint,
                 },
@@ -253,6 +258,7 @@ def generate_report():
                     strict_antirepetition=_json_bool(data.get("strict_antirepetition"), False),
                     report_mode=report_mode,
                     report_depth=report_depth,
+                    evidence_only=evidence_only,
                 )
                 def progress_callback(stage, progress, message):
                     task_manager.update_task(task_id, progress=progress, message=f"[{stage}] {message}")
@@ -349,6 +355,7 @@ def get_report(report_id: str):
                         "graph_id": metadata.get("graph_id"), "status": "planning",
                         "report_mode": metadata.get("report_mode"),
                         "report_depth": metadata.get("report_depth"),
+                        "evidence_only": metadata.get("evidence_only", False),
                         "outline": None, "markdown_content": "", "pending": True,
                     }), 202
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
@@ -565,6 +572,7 @@ def regenerate_report_section(report_id: str, section_index: int):
             strict_antirepetition=strict_antirepetition,
             report_mode=report.report_mode,
             report_depth=report.report_depth,
+            evidence_only=report.evidence_only,
         )
         updated_report = agent.regenerate_section(
             report=report,
@@ -624,6 +632,7 @@ def resume_report(report_id: str):
                     strict_antirepetition=_json_bool(data.get("strict_antirepetition"), True),
                     report_mode=report.report_mode,
                     report_depth=report.report_depth,
+                    evidence_only=report.evidence_only,
                 )
 
                 def progress_callback(stage, progress, message):

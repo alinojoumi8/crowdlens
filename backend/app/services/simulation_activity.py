@@ -50,7 +50,13 @@ def summarize_activity(rows):
     valid = [r for r in rows if isinstance(r, dict) and r.get('agent_id') is not None and r.get('action_type')]
     unique = unique_actions(valid)
     posts = [r for r in unique if r['action_type'] == 'CREATE_POST' and r.get('success', True)]
-    return {'logged_entries': len(valid), 'unique_posts': len(posts),
+    model = [r for r in unique if r['origin'] == 'model_action']
+    successful = [r for r in model if r.get('success', True) and r['action_type'] != 'DO_NOTHING']
+    return {'model_written_actions': sum(r['action_type'] in ('CREATE_POST', 'CREATE_COMMENT') for r in successful),
+            'model_reactions': sum(r['action_type'] not in ('CREATE_POST', 'CREATE_COMMENT') for r in successful),
+            'model_noops': sum(r['action_type'] == 'DO_NOTHING' for r in model),
+            'model_failed_actions': sum(not r.get('success', True) for r in model),
+            'logged_entries': len(valid), 'unique_posts': len(posts),
             'model_actions': sum(r['origin'] == 'model_action' for r in unique),
             'initial_posts': sum(r['origin'] == 'initial_post' for r in posts),
             'scheduled_posts': sum(r['origin'] == 'scheduled_event' for r in posts),
