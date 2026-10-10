@@ -300,8 +300,14 @@ def test_focused_creation_save_and_request_key_conflict(app):
     assert client.post(url, json=changed).status_code == 409
     proposal = terminal(client, identifier)
     assert proposal['state'] == 'ready'
+    # Ready content is visible before worker cleanup releases the operation lock.
+    import threading
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal':
+            worker.join(10)
+            assert not worker.is_alive()
     accepted = client.post(url+f'/{identifier}/accept', json={'proposal_digest':proposal['proposal_digest']})
-    assert accepted.status_code == 200
+    assert accepted.status_code == 200, accepted.json
     revision = ReportManager.get_report(accepted.json['data']['report_id'])
     assert 'May 29, 2023' in revision.outline.sections[0].content
     assert revision.outline.summary == parent.outline.summary
