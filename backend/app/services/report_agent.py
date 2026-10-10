@@ -1203,22 +1203,27 @@ class ReportAgent:
                 getattr(getattr(self, "graph_tools", None), "storage", None), self.simulation_config, self.graph_id,
                 os.path.join(Config.OASIS_SIMULATION_DATA_DIR, self.simulation_id))
             if self.report_mode == "legal_case":
-                from .procedural_grounding import build_grounding
+                from .procedural_grounding import build_grounding, marked_source_openings
                 covers = []
+                retrieval_failed = False
                 try:
                     scope = self._source_grounding
                     covers = self.graph_tools.storage.get_document_covers(
                         self.graph_id, scope.get("case_id"), scope.get("case_version_id"))
                 except Exception:
+                    retrieval_failed = True
                     logger.warning("Source-cover retrieval unavailable; procedural attribution requires review")
-                roles = build_grounding(covers, self.graph_id, self._source_grounding.get("case_id"),
+                openings = marked_source_openings(self._source_grounding.get("original_sources") or [])
+                covered = {(row.get('document_id'), row.get('uuid')) for row in covers}
+                openings = [row for row in openings if (row.get('document_id'), row.get('uuid')) not in covered]
+                roles = build_grounding(covers + openings, self.graph_id, self._source_grounding.get("case_id"),
                                         self._source_grounding.get("case_version_id"))
                 self._source_grounding.update({k: v for k, v in roles.items()
                                               if k not in ("status", "graph_id", "case_id", "case_version_id")})
                 # Source availability and procedural-role coverage are separate
                 # contracts: "available" does not mean a mover was anchored.
                 self._source_grounding["procedural_status"] = roles["status"]
-                if len(covers) >= 25:
+                if len(covers) >= 25 or retrieval_failed:
                     self._source_grounding["procedural_status"] = "ambiguous"
         return self._source_grounding
 
