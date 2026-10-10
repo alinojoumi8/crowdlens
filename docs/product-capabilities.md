@@ -359,3 +359,13 @@ Policy v12 requires explicit accounting for every admitted source window, with o
 The existing full regeneration action rebuilt a separate five-section legal report and fresh global summary from the linked sources and completed simulation after explicit broader user authorization. Persisted original and forecast values were preserved; the new candidate is `needs_review`. This resolves the summary scope choice, not factual review. See [browser and persistence receipt](tasks/2026-10-06-full-report-rebuild.md).
 
 Whole-report source audit (2026-10-07): corrected verified source omissions and overstatements, retained the original and frozen scenario numbers, and added bounded source prioritization, document-ID validation and legal scenario display limits. Final local validation passes 807 tests/build; dependency audits are clean. The private candidate remains `needs_review`. See [audit receipt](tasks/2026-10-07-full-report-audit.md).
+
+Evidence-only reporting (2026-10-10): `POST /api/report/generate` accepts an
+explicit boolean `evidence_only`. The saved choice bypasses forecast synthesis,
+changes the report prompt, and persists across resume, regeneration and immutable
+revisions. Simulation UI offers an opt-in checkbox; report tools create a separate
+evidence-only report. Legacy output is retained. Source dates/amounts remain
+permitted; output is still subject to factual review. Activity accounting now
+separates successful written model responses, other actions, no-ops and failures,
+and explains scheduled post/event records. See the
+[verification receipt](audits/2026-10-10-evidence-only-reports.md).
