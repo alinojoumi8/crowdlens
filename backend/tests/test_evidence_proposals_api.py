@@ -279,3 +279,42 @@ def test_milestone2_new_store_recovers_published_revision_without_sources(app, m
     assert recovered.status_code == 200
     assert recovered.json['data']['report_id'] == proposal['revision_report_id']
     assert recovered.json['data']['status'] == 'needs_review'
+
+
+def test_focused_creation_save_and_request_key_conflict(app):
+    from types import SimpleNamespace
+    from evidence_draft_samples import SCOPE
+    from test_focused_correction import CORRECTION, Sources
+    parent = ReportManager.get_report('report_root')
+    parent.outline.sections[0].content = 'Alex denies signing in the May 29, 2025 affidavit.'
+    ReportManager.save_report(parent)
+    app.extensions['neo4j_storage'] = Sources()
+    app.extensions['evidence_llm_factory'] = lambda _: SimpleNamespace(model='synthetic', chat_json=lambda *a, **kw: {'outcome':'supported','detail':'The same affidavit is dated 2023 in the original notice.'})
+    client = app.test_client()
+    url = '/api/report/report_root/evidence-proposals'
+    body = {'section_index': 1, 'request_key': 'focused-api', 'focused_correction': CORRECTION}
+    created = client.post(url, json=body)
+    assert created.status_code == 202
+    identifier = created.json['data']['proposal_id']
+    changed = {**body, 'focused_correction': {**CORRECTION, 'old_text': 'May 29, 2024'}}
+    assert client.post(url, json=changed).status_code == 409
+    proposal = terminal(client, identifier)
+    assert proposal['state'] == 'ready'
+    # Ready content is visible before worker cleanup releases the operation lock.
+    import threading
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal':
+            worker.join(10)
+            assert not worker.is_alive()
+    accepted = client.post(url+f'/{identifier}/accept', json={'proposal_digest':proposal['proposal_digest']})
+    assert accepted.status_code == 200, accepted.json
+    revision = ReportManager.get_report(accepted.json['data']['report_id'])
+    assert 'May 29, 2023' in revision.outline.sections[0].content
+    assert revision.outline.summary == parent.outline.summary
+
+
+def test_focused_bad_request_never_admits_model(app):
+    app.extensions['evidence_llm_factory'] = lambda _: pytest.fail('must not call model')
+    response = app.test_client().post('/api/report/report_root/evidence-proposals', json={
+        'section_index':1, 'request_key':'invalid-focused', 'focused_correction':{'old_text':'could','new_text':'will','source_quote':'will'}})
+    assert response.status_code == 400

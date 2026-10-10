@@ -79,3 +79,26 @@ UV_PYTHON=3.11 uv run --frozen python scripts/evaluate_evidence_drafts.py \
 Rows need `case_id`, `split`, `reviewed`, `label_source`, `baseline`, and `proposed`. Each side supplies claim labels, retrieved/relevant source IDs, omissions, and optional measured review time, latency, and observed usage. Independent review sources are `human`, `expert`, or `independent_review`; per-claim model labels are excluded. The caller remains responsible for the authenticity of supplied labels. Zero denominators yield null rates. Optional `--prices` supplies model rates per million input/output tokens; absent prices mean unknown cost.
 
 Committed fixtures are synthetic and unreviewed. They demonstrate metric mechanics, not quality improvements. A real quality evaluation requires separately approved inputs, independent labels, measured review time, and held-out cases.
+
+## Focused date and number corrections
+
+Open **Correct a date or number** beneath the relevant report section. Enter the
+literal current wording, the corrected wording, and a quotation copied from the
+original source. Only digit changes are allowed; surrounding wording, attribution,
+conditions, summary, and forecasts are preserved. The server replaces every exact
+match in that section (at most 20) and displays the occurrence count and comparison.
+
+The quotation must resolve to one document in the report's frozen source scope.
+A bounded model check reviews all changed references against the matching stored
+chunk; unsupported, uncertain, missing, or malformed checks block saving. This is
+an AI judgment about a narrow correction, not verification of inherited prose or
+the case outcome. Adjacent chunks may contain additional context. Saving creates a
+separate **Needs review** revision and rechecks unchanged parent and source hashes.
+Retries reuse the frozen request; **New proposal** clears it without starting a call.
+
+Capped preparation now selects across explicit graph entity types rather than
+truncating the first nodes. Legal mode prioritizes labelled plaintiffs and defendants
+when the cap and filters permit. **Participant coverage** shows selected type counts
+and warns when either side is missing. Labels are not verified roles, and type
+coverage does not establish balanced activity or viewpoints. Existing simulations
+and their forecasts are not retroactively changed.

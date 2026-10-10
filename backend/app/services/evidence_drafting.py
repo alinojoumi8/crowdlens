@@ -236,6 +236,9 @@ class EvidenceDraftingService:
         self.embedder, self.evidence_runner = embedder, evidence_runner
 
     def generate(self, proposal_id, parent_snapshot, *, budget):
+        if self.store.read(proposal_id).get('focused_correction') is not None:
+            from .focused_correction import generate_focused
+            return generate_focused(self, proposal_id, parent_snapshot, budget=budget)
         store = self.store
         timing, phase_started = {}, time.monotonic()
         phase_name = 'retrieving'

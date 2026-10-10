@@ -4,6 +4,20 @@
     <button v-if="!proposal" data-test="create-proposal" :disabled="busy" @click="create">
       {{ busy ? 'Starting draft…' : error ? 'Retry request' : 'Draft with sources' }}
     </button>
+    <details v-if="!proposal" class="focused-form">
+      <summary>Correct a date or number</summary>
+      <p>Replace only the specified date or number in this section. Copy a supporting quotation from the original document. All matching occurrences are shown for review; surrounding text and the summary are preserved and remain unverified.</p>
+      <form @submit.prevent="create(true)">
+        <label :for="`${saveHelpId}-old`">Current wording</label>
+        <input :id="`${saveHelpId}-old`" v-model="correction.old_text" :disabled="busy || !!requestPayload" maxlength="200" required />
+        <label :for="`${saveHelpId}-new`">Corrected wording</label>
+        <input :id="`${saveHelpId}-new`" v-model="correction.new_text" :disabled="busy || !!requestPayload" maxlength="200" required />
+        <label :for="`${saveHelpId}-quote`">Original source quotation</label>
+        <textarea :id="`${saveHelpId}-quote`" v-model="correction.source_quote" :disabled="busy || !!requestPayload" maxlength="1500" required />
+        <button type="submit" :disabled="busy">{{ busy ? 'Checking correction…' : 'Check focused correction' }}</button>
+      </form>
+    </details>
+    <button v-if="!proposal && requestPayload && !busy" class="secondary" @click="fresh">New proposal</button>
     <p v-if="error" class="error" role="alert">{{ error }}</p>
     <section v-if="proposal" aria-label="Evidence draft review" class="review-panel">
       <div class="review-heading">
@@ -11,6 +25,8 @@
         <span class="status" role="status" aria-live="polite">{{ statusLabel }}</span>
       </div>
       <p class="review-note">Compare the wording and inspect its sources. Saving creates a separate report that remains Needs review. Model checks can miss errors.</p>
+      <p v-if="proposal.focused_correction" class="focused-summary">Focused correction: {{ proposal.focused_correction.old_text }} → {{ proposal.focused_correction.new_text }} · {{ proposal.replacement_count ?? 'Pending' }} occurrences. Only this correction is checked; all inherited text remains unverified.</p>
+      <p v-if="proposal.focused_audit">Focused source check: {{ words(proposal.focused_audit.outcome) }} — {{ proposal.focused_audit.detail }}. This is a model judgment.</p>
       <ol class="review-guide" aria-label="Proposal review steps"><li>Compare the wording</li><li>Check claims against sources</li><li>Save a revision or keep the original</li></ol>
       <h5 class="review-step">1 / Compare the wording</h5>
       <div v-if="proposal.before?.section" class="comparison" aria-label="Section comparison">
@@ -99,6 +115,8 @@ const props = defineProps({ reportId: String, sectionIndex: Number, initialPropo
 const saveHelpId = useId()
 const emit = defineEmits(['revision-created', 'close'])
 const proposal = ref(null), busy = ref(false), error = ref('')
+const correction = ref({ old_text: '', new_text: '', source_quote: '' })
+const requestPayload = ref(null)
 let generation = 0, timer = null, requestKey = null
 const active = computed(() => ['queued', 'running'].includes(proposal.value?.state))
 const canReject = computed(() => ['queued', 'running', 'ready', 'blocked', 'stale', 'accepting'].includes(proposal.value?.state))
@@ -119,7 +137,7 @@ const citationNumber = id => [...new Set((proposal.value?.ledger || []).flatMap(
 const words = text => String(text).replaceAll('_', ' ')
 const statusLabel = computed(() => ({ queued: 'Waiting', running: words(proposal.value.phase), ready: 'Ready for your review', blocked: 'Changes required', accepted: 'Revision saved', rejected: 'Original retained', failed: 'Draft failed', stale: 'Sources changed', accepting: 'Save needs recovery' })[proposal.value?.state] || '')
 const cacheKey = () => `evidence-proposal:${props.reportId}:${props.sectionIndex}`
-const remember = () => { try { sessionStorage.setItem(cacheKey(), JSON.stringify({ requestKey, proposalId: proposal.value?.proposal_id })) } catch { /* private browsing may disable storage */ } }
+const remember = () => { try { sessionStorage.setItem(cacheKey(), JSON.stringify({ requestKey, requestPayload: requestPayload.value, proposalId: proposal.value?.proposal_id })) } catch { /* private browsing may disable storage */ } }
 const stop = () => { clearTimeout(timer); timer = null }
 const message = err => {
   const code = err.response?.data?.error || err.message || 'Request failed'
@@ -137,13 +155,15 @@ async function refresh(token = generation) {
     proposal.value = result.data; error.value = ''; remember(); schedule(token)
   } catch (err) { if (token === generation) error.value = message(err) }
 }
-async function create() {
+async function create(focused = false) {
   if (busy.value) return
   const token = generation
   requestKey ||= crypto.randomUUID()
+  requestPayload.value ||= { section_index: props.sectionIndex, request_key: requestKey,
+    ...(focused === true ? { focused_correction: { ...correction.value } } : {}) }
   remember(); busy.value = true; error.value = ''
   try {
-    const result = await createEvidenceProposal(props.reportId, { section_index: props.sectionIndex, request_key: requestKey })
+    const result = await createEvidenceProposal(props.reportId, requestPayload.value)
     if (token !== generation) return
     proposal.value = result.data; remember(); schedule(token)
   } catch (err) { if (token === generation) error.value = message(err) }
@@ -181,12 +201,13 @@ async function reject() {
   } catch (err) { if (token === generation) error.value = message(err) }
   finally { if (token === generation) { busy.value = false; schedule(token) } }
 }
-function fresh() { generation++; stop(); proposal.value = null; requestKey = null; error.value = ''; remember(); create() }
+function fresh() { generation++; stop(); proposal.value = null; requestKey = null; requestPayload.value = null; error.value = ''; remember() }
 watch(() => [props.reportId, props.sectionIndex, props.initialProposalId], () => {
-  generation++; stop(); proposal.value = null; busy.value = false; error.value = ''; requestKey = null
+  generation++; stop(); proposal.value = null; busy.value = false; error.value = ''; requestKey = null; requestPayload.value = null
   let saved = {}
   try { saved = JSON.parse(sessionStorage.getItem(cacheKey()) || '{}') } catch { /* no saved request */ }
   requestKey = saved.requestKey || null
+  requestPayload.value = saved.requestPayload || null
   const identifier = props.initialProposalId || saved.proposalId
   if (identifier) { proposal.value = { proposal_id: identifier }; refresh(generation) }
 }, { immediate: true })
@@ -199,6 +220,8 @@ button { min-height: 44px; border: 1px solid #254b73; border-radius: 5px; backgr
 button:disabled { opacity: .5; cursor: not-allowed; }
 button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid #d89522; outline-offset: 3px; }
 .secondary { background: white; color: #254b73; }
+.focused-form label { display: block; margin-top: .7rem; }
+.focused-form input, .focused-form textarea { display: block; width: 100%; box-sizing: border-box; font: inherit; padding: .6rem; margin-bottom: .7rem; }
 .review-panel { border: 1px solid #cad6e2; border-radius: 8px; padding: 1.2rem; background: #f6f9fc; }
 .review-heading { display: flex; align-items: baseline; gap: 1rem; justify-content: space-between; flex-wrap: wrap; }
 h4 { font-size: 18px; margin: 0; } h5 { margin: 0 0 .6rem; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: #52647a; }

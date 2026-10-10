@@ -112,37 +112,44 @@ class ReportRevisionService:
             frozen = self.store.load_snapshot(proposal_id, 'parent', record['parent_digest'])
             self.store.load_snapshot(proposal_id, 'sources', record['source_snapshot_digest'])
             ledger = self.store.load_snapshot(proposal_id, 'ledger', record['ledger_digest'])
-            if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract', 'evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
-                from .claim_ledger import summary_edit_scope, validate_summary_edit_scope
-                contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'])
+            if record.get('policy') == 'focused-literal-correction-v1':
+                from .focused_correction import validate_focused_record
                 try:
-                    validate_summary_edit_scope(record['summary_edits'], contract)
+                    validate_focused_record(record, frozen, corpus)
                 except (ValueError, TypeError, KeyError):
-                    raise ProposalError('summary_scope_mismatch') from None
-            if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
-                from .conditional_extracts import build_extract_contract, resolve_extract_claims
-                try:
-                    contract = build_extract_contract(record['sources'], record['scope'])
-                    if record.get('extract_provenance', {}).get('contract') != contract:
-                        raise ValueError('stale_source_sentence_contract')
-                    resolved, _ = resolve_extract_claims(ledger, contract)
-                    if resolved != ledger:
-                        raise ValueError('source_sentence_text_changed')
-                except (ValueError, TypeError, KeyError, AttributeError):
                     raise ProposalError('invalid_proposal') from None
-            findings = validate_ledger(ledger, record['sources'], record['scope']) + validate_paragraphs(record['paragraphs'], ledger, record['sources'])
-            if record.get('policy') in ('evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets') and not findings:
-                covered = {identifier for paragraph in record['paragraphs'] for identifier in paragraph['claim_ids']}
-                if any(claim['claim_id'] not in covered for claim in ledger):
+            else:
+                if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract', 'evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
+                    from .claim_ledger import summary_edit_scope, validate_summary_edit_scope
+                    contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'])
+                    try:
+                        validate_summary_edit_scope(record['summary_edits'], contract)
+                    except (ValueError, TypeError, KeyError):
+                        raise ProposalError('summary_scope_mismatch') from None
+                if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
+                    from .conditional_extracts import build_extract_contract, resolve_extract_claims
+                    try:
+                        contract = build_extract_contract(record['sources'], record['scope'])
+                        if record.get('extract_provenance', {}).get('contract') != contract:
+                            raise ValueError('stale_source_sentence_contract')
+                        resolved, _ = resolve_extract_claims(ledger, contract)
+                        if resolved != ledger:
+                            raise ValueError('source_sentence_text_changed')
+                    except (ValueError, TypeError, KeyError, AttributeError):
+                        raise ProposalError('invalid_proposal') from None
+                findings = validate_ledger(ledger, record['sources'], record['scope']) + validate_paragraphs(record['paragraphs'], ledger, record['sources'])
+                if record.get('policy') in ('evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets') and not findings:
+                    covered = {identifier for paragraph in record['paragraphs'] for identifier in paragraph['claim_ids']}
+                    if any(claim['claim_id'] not in covered for claim in ledger):
+                        raise ProposalError('invalid_proposal')
+                if record.get('policy') in ('evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
+                    from .source_coverage import source_coverage
+                    if source_coverage(ledger, record.get('extract_provenance', {}).get('source_exclusions'), record['sources']):
+                        raise ProposalError('invalid_proposal')
+                if (ledger != record['ledger'] or any(f['blocking'] for f in findings)
+                        or render_paragraphs(record['paragraphs'], ledger) != record['after']['section']
+                        or apply_summary_edits(frozen['outline']['summary'], record['summary_edits'], ledger) != record['after']['summary']):
                     raise ProposalError('invalid_proposal')
-            if record.get('policy') in ('evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
-                from .source_coverage import source_coverage
-                if source_coverage(ledger, record.get('extract_provenance', {}).get('source_exclusions'), record['sources']):
-                    raise ProposalError('invalid_proposal')
-            if (ledger != record['ledger'] or any(f['blocking'] for f in findings)
-                    or render_paragraphs(record['paragraphs'], ledger) != record['after']['section']
-                    or apply_summary_edits(frozen['outline']['summary'], record['summary_edits'], ledger) != record['after']['summary']):
-                raise ProposalError('invalid_proposal')
             checked_at = now()
             revision = self._assemble(parent, record, checked_at)
             record = self.store.update(proposal_id, {'ready', 'accepting'}, {'state': 'accepting', 'source_checked_at': checked_at})
@@ -164,6 +171,9 @@ class ReportRevisionService:
             'inherited_forecast': True, 'source_checked_at': checked_at,
             'inherited_section_indices': [i for i in range(1, len(parent.outline.sections)+1) if i != record['section_index']],
             'summary_edits': record['summary_edits'], 'source_digest': record['source_digest']}
+        if record.get('policy') == 'focused-literal-correction-v1':
+            revision.revision['focused_correction'] = record['focused_correction']
+            revision.revision['review_scope'] = record['limitations'][0]
         section = revision.outline.sections[record['section_index'] - 1]
         section.content = record['after']['section']
         section.claim_ledger = record['ledger']

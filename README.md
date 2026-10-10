@@ -387,3 +387,9 @@ Claim coverage (2026-10-06): structurally valid drafts now receive exact persist
 Source accounting (2026-10-06): each retrieved window must be represented by a ledger citation or an explicit task-irrelevance reason. One counted planning correction addresses missing windows without expanding the claim ceiling. The source audit still checks exclusions and material completeness; abstract whole-report summaries retain their existing edit boundary. See [receipt](docs/tasks/2026-10-06-source-accounting.md).
 
 Whole-report source audit (2026-10-07): corrected verified source omissions and overstatements, retained the original and frozen scenario numbers, and added bounded source prioritization, document-ID validation and legal scenario display limits. Final local validation passes 807 tests/build; dependency audits are clean. The private candidate remains `needs_review`. See [audit receipt](docs/tasks/2026-10-07-full-report-audit.md).
+
+Focused corrections and participant coverage (2026-10-10): report sections support
+source-checked date/number patches saved as separate Needs review revisions. Capped
+legal preparation retains explicit plaintiff/defendant types when available and
+shows coverage warnings. See the [usage guide](docs/evidence-first-reports.md#focused-date-and-number-corrections)
+and [verification receipt](docs/audits/2026-10-10-focused-correction-participants.md).

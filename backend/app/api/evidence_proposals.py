@@ -43,10 +43,10 @@ def endpoint(function):
     return wrapped
 
 
-def body(keys):
+def body(keys, optional=()):
     request.max_content_length = 4096
     value = request.get_json()
-    if not isinstance(value, dict) or set(value) != set(keys):
+    if not isinstance(value, dict) or not set(keys) <= set(value) or not set(value) <= set(keys) | set(optional):
         raise ProposalError('invalid_request', 400)
     return value
 
@@ -113,11 +113,14 @@ def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, emb
 @report_bp.route('/<report_id>/evidence-proposals', methods=['POST'])
 @endpoint
 def create_evidence_proposal(report_id):
-    data = body({'section_index', 'request_key'})
+    data = body({'section_index', 'request_key'}, optional={'focused_correction'})
+    if 'focused_correction' in data:
+        from ..services.focused_correction import validate_request
+        validate_request(data['focused_correction'])
     if type(data['section_index']) is not int or data['section_index'] < 1:
         raise ProposalError('invalid_section', 400)
     store = store_for_app()
-    record, lease = store.admit(report_id, data['request_key'], canonical_digest({'section_index': data['section_index']}))
+    record, lease = store.admit(report_id, data['request_key'], canonical_digest({k: v for k, v in data.items() if k != 'request_key'}))
     if lease is None:
         return jsonify(success=True, data=record), 202
     handed_off = False
@@ -143,7 +146,8 @@ def create_evidence_proposal(report_id):
             resources=[{'key':'proposal:'+record['proposal_id'], 'root':str(store.root)}])
         snapshot = parent.to_dict()
         record = store.update(record['proposal_id'], {'queued'}, {'scope': scope, 'section_index': data['section_index'],
-            'task_id': task_id, 'deadline_at': time.time() + budget.remaining()})
+            'task_id': task_id, 'deadline_at': time.time() + budget.remaining(),
+            **({'focused_correction': data['focused_correction']} if 'focused_correction' in data else {})})
         llm_factory = current_app.extensions.get('evidence_llm_factory', lambda identifier: LLMClient())
         embedder_factory = current_app.extensions.get('evidence_embedder_factory', default_embedder)
         tasks.start_task(task_id, run_worker, (store, record, snapshot, lease, budget, storage,

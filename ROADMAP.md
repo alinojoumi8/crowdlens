@@ -126,3 +126,10 @@ for tracked work and [the ECC workflow](docs/ECC-WORKFLOW-PLAN.md) for delivery 
 Conditional-offer correction (2026-10-05): exact source extraction and acceptance guards prevent detected offer conditions being rewritten as prerequisites; 728 tests/build pass. Fresh v7 attempts were 0/2 ready (both conservatively blocked). A separate Elmreach correction received source-first AI support for all four claims; original evidence remains frozen. See [audit](docs/audits/2026-10-05-conditional-fidelity.md).
 
 Conditional completion (2026-10-05): server-owned complete source excerpts avoid guarded paraphrase false positives; 752 tests/build and independent code review pass. Two ready development drafts received source-first AI support (7/7 claims, 10/10 material facts); all eight development attempts remain counted. Frozen v8 stays 0/2 ready due ordinary draft omissions and no source anchor. No publication or release-readiness claim. See [audit](docs/audits/2026-10-05-conditional-completion.md).
+
+Focused correction and participant selection follow-up (2026-10-10): implemented
+literal date/number proposals and persisted type-aware capped selection. Browser QA
+saved a narrow corrected revision and prepared six profiles including both labelled
+sides. Existing simulation activity and forecast calibration remain unchanged.
+Next: verify actual activity across both sides and held-out ambiguous correction
+cases. See [receipt](docs/audits/2026-10-10-focused-correction-participants.md).

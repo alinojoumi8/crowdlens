@@ -45,6 +45,8 @@ def proposal_digest(record):
     payload = {key: record.get(key) for key in CONTENT_FIELDS}
     if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets'):
         payload['extract_provenance'] = record.get('extract_provenance')
+    if record.get('policy') == 'focused-literal-correction-v1':
+        payload.update({k: record.get(k) for k in ('focused_correction', 'focused_audit', 'replacement_count')})
     return canonical_digest(payload)
 
 
@@ -220,7 +222,7 @@ class ProposalStore:
             old, new = record['state'], changes.get('state', record['state'])
             if old not in expected_states or (new != old and new not in TRANSITIONS[old]):
                 raise ProposalError('state_conflict')
-            if old not in ACTIVE and (any(key in CONTENT_FIELDS for key in changes)
+            if old not in ACTIVE and (any(key in CONTENT_FIELDS + ('focused_correction', 'focused_audit', 'replacement_count') for key in changes)
                     or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets') and 'extract_provenance' in changes)):
                 raise ProposalError('immutable_proposal')
             if new in {'running', 'ready'} and time.time() >= record['deadline_at']:
