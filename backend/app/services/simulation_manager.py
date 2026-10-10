@@ -377,6 +377,7 @@ class SimulationManager:
             
             state.entities_count = filtered.filtered_count
             state.entity_types = list(filtered.entity_types)
+            self._save_simulation_state(state)
             
             emit_progress(
                 "reading", 100,

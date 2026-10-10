@@ -481,9 +481,8 @@ class SimulationConfigGenerator:
         remaining_length = self.MAX_CONTEXT_LENGTH - current_length - 500  # Reserve 500 characters
 
         if remaining_length > 0 and document_text:
-            doc_text = document_text[:remaining_length]
-            if len(document_text) > remaining_length:
-                doc_text += "\n...(document truncated)"
+            from .bounded_document_context import document_context
+            doc_text = document_context(document_text, remaining_length)
             context_parts.append(f"\n## Original Document Content\n{doc_text}")
 
         return "\n".join(context_parts)
@@ -614,7 +613,8 @@ class SimulationConfigGenerator:
     ) -> Dict[str, Any]:
         """Generate time configuration"""
         # Use configured context truncation length
-        context_truncated = context[:self.TIME_CONFIG_CONTEXT_LENGTH]
+        from .bounded_document_context import stage_context
+        context_truncated = stage_context(context, self.TIME_CONFIG_CONTEXT_LENGTH)
 
         # Calculate maximum allowed value (90% of agents)
         max_agents_allowed = max(1, int(num_entities * 0.9))
@@ -783,7 +783,8 @@ Field description:
         ])
 
         # Use configured context truncation length
-        context_truncated = context[:self.EVENT_CONFIG_CONTEXT_LENGTH]
+        from .bounded_document_context import stage_context
+        context_truncated = stage_context(context, self.EVENT_CONFIG_CONTEXT_LENGTH)
 
         prompt = f"""Based on the following simulation requirements, generate event configuration.
 

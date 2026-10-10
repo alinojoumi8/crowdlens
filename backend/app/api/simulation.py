@@ -473,8 +473,8 @@ def prepare_simulation():
         
         state_prediction_settings = normalize_prediction_settings(
             {
-                **(getattr(state, "prediction_settings", {}) or {}),
                 **(project.prediction_settings or {}),
+                **(getattr(state, "prediction_settings", {}) or {}),
                 **(data.get("prediction_settings") or {}),
                 **data,
             }
@@ -486,12 +486,10 @@ def prepare_simulation():
             state_prediction_settings.get("profile_parallelism", 5),
         )
         raw_forecast_settings = {
-            "forecast_mode": data.get("forecast_mode"),
-            "forecast_horizon": data.get("forecast_horizon"),
-            "prediction_target": data.get("prediction_target"),
-            "scenario_pack": data.get("scenario_pack"),
-            "ensemble_runs": data.get("ensemble_runs"),
-            "memory_mode": data.get("memory_mode"),
+            **{key: data.get(key, getattr(state, key, None))
+               for key in ("forecast_mode", "forecast_horizon", "prediction_target")},
+            **{key: data.get(key, state_prediction_settings.get(key, getattr(state, key, None)))
+               for key in ("scenario_pack", "ensemble_runs", "memory_mode")},
         }
         
         # ========== Get GraphStorage（Capture reference before background task starts） ==========
@@ -511,7 +509,10 @@ def prepare_simulation():
                 enrich_with_edges=False  # No edge information，Speed up
             )
             # Save entity count to status（For frontend to get immediately）
-            state.entities_count = filtered_preview.filtered_count
+            excluded = set(state_prediction_settings.get("entity_types_exclude") or [])
+            preview_count = sum(entity.get_entity_type() not in excluded for entity in filtered_preview.entities)
+            cap = int(state_prediction_settings.get("agent_count") or 0)
+            state.entities_count = min(preview_count, cap) if cap > 0 else preview_count
             state.entity_types = list(filtered_preview.entity_types)
             logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
             forecast_settings = normalize_forecast_settings(
