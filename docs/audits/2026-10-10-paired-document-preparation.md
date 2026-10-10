@@ -46,7 +46,11 @@ forecast calibration. The scenario probabilities remain uncalibrated.
 
 Manual source checking caught an affidavit year transcribed as 2025 instead of
 2023 in section 2. A separate source-based proposal was requested in the browser;
-the original report is retained as the comparison baseline. Automated source
+the original report is retained as the comparison baseline. The proposal removed
+the wrong-year wording but expanded into lengthy verbatim excerpts, so it was
+rejected rather than accepted as a focused correction. The original report
+therefore still contains the known year error and must remain Needs review.
+Automated source
 checks must not be treated as a guarantee of factual accuracy.
 
 No previous screenshot baseline was available, so visual regression is
