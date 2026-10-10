@@ -1,6 +1,8 @@
 from app.services.forecasting import ForecastSynthesizer, forecast_to_markdown
 from app.services.report_agent import ReportAgent, Report, ReportStatus, ReportManager
 from app.services.procedural_grounding import build_grounding, attribution_issues
+from types import SimpleNamespace
+import pytest
 
 
 def cover(role='DEFENDANTS', **extra):
@@ -89,3 +91,33 @@ def test_oversized_cover_does_not_hide_conflicting_procedural_sources():
 def test_availability_notice_is_not_scored_as_an_evidence_section():
     sections = ReportManager._extract_report_sections('## Forecast Availability\n\nNo forecast.\n\n# Audit\n\n## Parties\n\nSource facts.')
     assert len(sections) == 1 and 'Source facts.' in sections[0]
+
+
+@pytest.mark.parametrize('covers,expected', [([cover()], 'anchored'),
+    ([cover(), cover('PLAINTIFFS')], 'ambiguous'), ([], 'unavailable'),
+    ([cover()] * 25, 'ambiguous')])
+def test_report_contract_keeps_source_availability_separate_from_role_coverage(monkeypatch, covers, expected):
+    from app.services import report_grounding
+    monkeypatch.setattr(report_grounding, 'build_report_grounding', lambda *args: {
+        'report_contract': 'report-grounding-v1', 'status': 'available',
+        'case_id': 'c', 'case_version_id': 'v', 'original_sources': []})
+    agent = ReportAgent.__new__(ReportAgent)
+    agent.simulation_id, agent.graph_id = 's', 'g'
+    agent.simulation_config, agent.report_mode = {}, 'legal_case'
+    agent.graph_tools = SimpleNamespace(storage=SimpleNamespace(get_document_covers=lambda *args: covers))
+    grounding = agent._load_source_grounding()
+    assert grounding['status'] == 'available'
+    assert grounding['procedural_status'] == expected
+    issues = attribution_issues('The plaintiffs seek to set aside the injunction.', grounding)
+    assert issues[0]['code'] == ('procedural_role_conflict' if expected == 'anchored' else 'procedural_source_unavailable')
+    if expected == 'anchored':
+        assert not attribution_issues('The defendants seek to set aside the injunction.', grounding)
+
+
+def test_notice_caption_and_legacy_available_status_do_not_certify_roles():
+    notice = cover()
+    notice['data'] = 'Plaintiffs and Defendants\nNOTICE OF MOTION\nThe defendants will make a motion.'
+    grounding = build_grounding([notice], 'g', 'c', 'v')
+    assert grounding['status'] == 'unavailable'
+    assert attribution_issues('The defendants seek to set aside the injunction.', grounding)
+    assert attribution_issues('Anything', {'status': 'available', 'anchors': [cover()]})

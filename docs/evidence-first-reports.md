@@ -102,3 +102,22 @@ when the cap and filters permit. **Participant coverage** shows selected type co
 and warns when either side is missing. Labels are not verified roles, and type
 coverage does not establish balanced activity or viewpoints. Existing simulations
 and their forecasts are not retroactively changed.
+
+## Report validation coverage
+
+The repeated-fact check compares substantive sentences across sections. Reusing a
+document citation or a PDF page locator does not count as repeating a fact.
+Repeated assertions still count when their document citations differ.
+
+Original-source availability and procedural-role coverage are separate statuses.
+The narrow procedural check requires an explicit **MOTION RECORD OF THE** party
+label and recognized relief on a scoped source cover. A notice, a party caption,
+conflicting covers, or incomplete retrieval does not establish that anchor.
+`procedural_source_unavailable` means this check lacks coverage; it is not a finding
+that the report assigned relief to the wrong party. An anchored attribution
+conflict still requires review, and missing coverage is not waived by a high score.
+
+Existing reports retain their saved scores, status, frozen source context, and
+text. Rechecking an older report does not silently replace its provenance or
+certify the case facts. These checks are deterministic safeguards, not general
+legal fact verification or calibrated forecasting.

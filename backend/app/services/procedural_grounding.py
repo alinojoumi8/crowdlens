@@ -33,9 +33,12 @@ def build_grounding(episodes, graph_id, case_id, case_version_id):
 
 
 def attribution_issues(content, grounding):
-    if grounding.get('status') != 'anchored':
+    status = grounding.get('procedural_status', grounding.get('status'))
+    if status != 'anchored' or not grounding.get('anchors'):
         return [{'code': 'procedural_source_unavailable', 'requires_review': True, 'blocking': False,
-                 'message': 'An unambiguous source-cover role could not be established. Review procedural attribution against the original documents.'}]
+                 'message': 'The source-cover check could not establish one explicit moving role and relief. '
+                            'Motion notices, captions, conflicting covers, or incomplete cover retrieval do not satisfy this narrow check. '
+                            'Review procedural attribution against the original documents; this warning is not a finding of misattribution.'}]
     anchor = grounding['anchors'][0]
     others = {'plaintiffs', 'defendants', 'applicants', 'respondents'} - {anchor['moving_role']}
     relief = re.escape(anchor['relief']).replace(r'\ ', r'\s+')
