@@ -17,6 +17,7 @@
         <button type="submit" :disabled="busy">{{ busy ? 'Checking correction…' : 'Check focused correction' }}</button>
       </form>
     </details>
+    <button v-if="!proposal && requestPayload && !busy" class="secondary" @click="fresh">New proposal</button>
     <p v-if="error" class="error" role="alert">{{ error }}</p>
     <section v-if="proposal" aria-label="Evidence draft review" class="review-panel">
       <div class="review-heading">

@@ -18,7 +18,7 @@ correction path and type-aware selection without rewriting existing simulations.
 
 ## Verification
 
-Local `UV_PYTHON=3.11 npm run check`: 783 Python, 12 Node and 65 Vue tests plus
+Local `UV_PYTHON=3.11 npm run check`: 783 Python, 12 Node and 66 Vue tests plus
 production build. Regression coverage includes negative/uncertain audits, stale
 sources, immutable revisions, unchanged inherited content, request retries,
 ordering, filters, capped profile generation and persisted coverage on reload.

@@ -171,3 +171,17 @@ it('submits a focused correction separately and freezes its payload for retries'
   expect(bodies[0].section_index).toBe(2)
   wrapper.unmount()
 })
+
+it('allows editing a new focused request after an invalid request response', async () => {
+  api.createEvidenceProposal.mockRejectedValueOnce({response:{status:400,data:{error:'invalid_request'}}})
+  const wrapper = mount(EvidenceDraftReview, {props:{reportId:'report_invalid_focused',sectionIndex:1}})
+  await wrapper.find('input').setValue('an invalid date')
+  await wrapper.findAll('input')[1].setValue('another date')
+  await wrapper.find('textarea').setValue('Source quotation.')
+  await wrapper.find('form').trigger('submit'); await flushPromises()
+  expect(wrapper.find('input').element.disabled).toBe(true)
+  await button(wrapper, 'New proposal').trigger('click')
+  expect(wrapper.find('input').element.disabled).toBe(false)
+  expect(api.createEvidenceProposal).toHaveBeenCalledTimes(1)
+  wrapper.unmount()
+})
