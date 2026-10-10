@@ -108,3 +108,31 @@ def test_completed_preparation_remains_reusable(preparation):
     assert response.json['data']['status'] == 'ready'
     assert response.json['data']['already_prepared'] is True
     assert not dispatched
+
+
+@pytest.mark.parametrize('override, expected', [(None, 6), (3, 3)])
+def test_regeneration_preserves_saved_agent_cap_over_project_defaults(preparation, monkeypatch, override, expected):
+    client, runtime, clock, folder, _, _ = preparation
+    state = json.loads((folder / 'state.json').read_text())
+    state['prediction_settings'] = {'agent_count': 6, 'ensemble_runs': 1}
+    state['forecast_mode'] = 'legal_case'
+    state['forecast_horizon'] = 'Next procedural decision'
+    (folder / 'state.json').write_text(json.dumps(state))
+    monkeypatch.setattr(simulation.ProjectManager, 'get_project', lambda _: SimpleNamespace(
+        project_id='proj_synthetic', simulation_requirement='Synthetic preparation recovery.',
+        prediction_settings={'agent_count': 48}))
+    entities = [SimpleNamespace(get_entity_type=lambda: 'Person') for _ in range(40)]
+    monkeypatch.setattr(simulation, 'EntityReader', lambda _: SimpleNamespace(
+        filter_defined_entities=lambda **kw: SimpleNamespace(filtered_count=40, entity_types=['Person'], entities=entities)))
+    clock[0] = 131.0
+    runtime.reconcile()
+    body = {'simulation_id': 'sim_retry'}
+    if override is not None:
+        body['prediction_settings'] = {'agent_count': override}
+    response = client.post('/api/simulation/prepare', json=body)
+    assert response.status_code == 200
+    assert response.json['data']['expected_entities_count'] == expected
+    assert response.json['data']['prediction_settings']['agent_count'] == expected
+    assert response.json['data']['forecast_settings']['ensemble_runs'] == 1
+    assert response.json['data']['forecast_settings']['forecast_mode'] == 'legal_case'
+    assert response.json['data']['forecast_settings']['forecast_horizon'] == 'Next procedural decision'

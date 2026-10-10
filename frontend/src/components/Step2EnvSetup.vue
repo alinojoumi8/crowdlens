@@ -1571,6 +1571,16 @@ const initPrepare = async () => {
         await loadPreparedData()
       return
     }
+    if (['pending', 'processing', 'preparing'].includes(st)) {
+      awaitingConfig.value = false
+      taskId.value = res.data.task_id || null
+      startPolling()
+      startProfilesPolling()
+      await pollPrepareStatus()
+      await fetchProfilesRealtime()
+      addLog('Resumed monitoring the existing preparation task')
+      return
+    }
   } catch (e) {
     // fall through to manual configure
   }
