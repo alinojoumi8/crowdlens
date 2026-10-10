@@ -1,14 +1,14 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, expect, it, vi } from 'vitest'
 import WorkflowControls from './WorkflowControls.vue'
-import { authorizeWorkflow, getExecutionConfiguration, getWorkflow, reauthorizeWorkflow } from '../api/execution'
+import { authorizeWorkflow, getExecutionConfiguration, getWorkflow, reauthorizeWorkflow, stopWorkflow } from '../api/execution'
 vi.mock('../api/execution', () => ({
   getExecutionConfiguration: vi.fn().mockResolvedValue({success:true,data:{provider:'synthetic',model:'synthetic',controls_available:true,configured:true}}),
   authorizeWorkflow: vi.fn(), resolveWorkflow:vi.fn().mockResolvedValue({data:{workflow_id:null}}),
   getWorkflow:vi.fn(), stopWorkflow:vi.fn(), reauthorizeWorkflow:vi.fn()
 }))
 let wrapper
-afterEach(() => { wrapper?.unmount(); vi.clearAllMocks() })
+afterEach(() => { wrapper?.unmount(); vi.clearAllMocks(); vi.useRealTimers() })
 it('ignores authorization for an input that changed while the response was delayed', async () => {
   let resolve
   authorizeWorkflow.mockReturnValue(new Promise(done => { resolve = done }))
@@ -57,4 +57,20 @@ it('requires acknowledgment before renewing outstanding provider requests',async
   await flushPromises()
   expect(wrapper.findAll('button').find(button=>button.text()==='Renew workflow allowance').attributes('disabled')).toBeDefined()
   expect(reauthorizeWorkflow).not.toHaveBeenCalled()
+})
+
+
+it('clears a transient poll failure after recovery without hiding a failed stop', async () => {
+  vi.useFakeTimers()
+  const data = {workflow_id:'wf_recovery',state:'authorized',admitted:2,max_requests:60,in_flight:0,elapsed_seconds:2}
+  getWorkflow.mockRejectedValueOnce(new Error('Temporary backend outage')).mockResolvedValue({data})
+  wrapper = mount(WorkflowControls,{props:{pendingId:'wf_recovery'}})
+  await flushPromises()
+  expect(wrapper.get('[role="alert"]').text()).toContain('Temporary backend outage')
+  await vi.advanceTimersByTimeAsync(2000); await flushPromises()
+  expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  stopWorkflow.mockRejectedValueOnce(new Error('Stop was not confirmed'))
+  await wrapper.findAll('button').find(button=>button.text()==='Stop workflow').trigger('click'); await flushPromises()
+  await vi.advanceTimersByTimeAsync(2000); await flushPromises()
+  expect(wrapper.get('[role="alert"]').text()).toContain('Stop was not confirmed')
 })

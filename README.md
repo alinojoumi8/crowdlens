@@ -394,3 +394,5 @@ as separate Needs review revisions. Model audits remain fallible. Capped
 legal preparation retains explicit plaintiff/defendant types when available and
 shows coverage warnings. See the [usage guide](docs/evidence-first-reports.md#focused-date-and-number-corrections)
 and [verification receipt](docs/audits/2026-10-10-focused-correction-participants.md).
+
+Wording correction and longer-run verification: [receipt](docs/audits/2026-10-10-wording-corrections.md).

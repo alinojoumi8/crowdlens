@@ -141,3 +141,5 @@ adoption for unsupported/unverified audits. Synthetic regression cases cover
 page/date confusion, remote-oath locations and oversized source transcription.
 Semantic accuracy still depends on fallible source review; high structural
 scores do not certify facts.
+
+Wording correction and longer-run verification: [receipt](docs/audits/2026-10-10-wording-corrections.md).
