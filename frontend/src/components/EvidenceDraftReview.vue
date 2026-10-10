@@ -52,7 +52,12 @@
           <span> · {{ source.locator?.page_end > source.locator?.page ? 'pages' : 'page' }} {{ source.locator?.page ?? 'not recorded' }}<template v-if="source.locator?.page_end > source.locator?.page">–{{ source.locator.page_end }}</template></span>
           <span v-if="source.locator?.chunk_index != null"> · chunk {{ source.locator.chunk_index }}</span>
           <blockquote tabindex="0" :aria-label="`Original excerpt from ${source.filename || source.document_id}`">{{ source.window }}</blockquote>
-          <details><summary>Source provenance</summary><p class="identifier">{{ source.evidence_id }} · document {{ source.document_id }} · case version {{ source.case_version_id }}<br>Original SHA-256 {{ source.source_hash }}<br>Excerpt SHA-256 {{ source.window_hash }} · offsets {{ source.window_start }}–{{ source.window_end }}</p></details>
+          <details><summary>Source provenance</summary><p class="identifier">{{ source.evidence_id }} · document {{ source.document_id }} · case version {{ source.case_version_id }}<br>{{ source.reconstruction ? 'Reconstructed text' : 'Original' }} SHA-256 {{ source.source_hash }}<br>Excerpt SHA-256 {{ source.window_hash }} · offsets {{ source.window_start }}–{{ source.window_end }} ({{ source.locator?.offset_basis || 'stored_chunk' }})</p>
+            <template v-if="source.reconstruction">
+              <p>Recovered from consecutive original chunks using exact, unambiguous overlaps. Page boundaries do not guarantee complete meaning.</p>
+              <ul><li v-for="component in source.reconstruction.components" :key="component.episode_id" class="identifier">Original {{ component.episode_id }} · chunk {{ component.chunk_index }} · SHA-256 {{ component.source_hash }}</li></ul>
+            </template>
+          </details>
         </article>
       </details>
       <details v-if="proposal.limitations?.length" class="limitations" open>

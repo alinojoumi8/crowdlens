@@ -107,3 +107,81 @@ def test_lexical_window_includes_nonliteral_late_match_and_discloses_clipping():
                               ['Hearing schedule'], budget=DraftBudget())
     assert relevant in packet['sources'][0]['window']
     assert 'source_windows_clipped' in packet['limitations']
+
+
+def split_conditional_pdf_rows():
+    # Page 2 is cut across the stored boundary; neither chunk has it complete.
+    padding = '[PDF page 1]\n' + 'Background administrative material. ' * 140
+    page = '\n[PDF page 2]\nSora could offer repair only if the purchaser supplies independent testing. No endorsement is given.\n'
+    text = padding + page + '[PDF page 3]\nFollowing.'
+    cut = len(padding) + page.index('independent')
+    return [episode('left', text[:cut], chunk_index=0),
+            episode('right', text[cut-100:], chunk_index=1)]
+
+
+def test_recover_complete_conditional_page_from_exact_original_chunks():
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.services.conditional_extracts import build_extract_contract
+    from app.services.claim_ledger import validate_source
+    rows = split_conditional_pdf_rows()
+    packet = retrieve_sources(freeze_sources(rows, SCOPE), ['Sora repair purchaser testing'], budget=DraftBudget())
+    assert packet['sources']
+    assert len({s['evidence_id'] for s in packet['sources']}) == len(packet['sources'])
+    recovered = [s for s in packet['sources'] if s.get('reconstruction')]
+    assert recovered
+    for s in recovered:
+        assert validate_source(s, SCOPE) is None
+        assert [c['episode_id'] for c in s['reconstruction']['components']] == ['left', 'right']
+        assert s['locator']['page'] == 2
+        assert s['locator']['offset_basis'] == 'joined_original_chunks'
+    contract = build_extract_contract(recovered, SCOPE)
+    assert contract and all('only if the purchaser supplies independent testing' in c['text']
+                            and 'No endorsement is given.' in c['text'] for c in contract)
+    changed = {**recovered[0], 'reconstruction': {'kind':'exact_overlapping_original_chunks', 'components':[]}}
+    assert validate_source(changed, SCOPE) == 'invalid_chunk_reconstruction'
+
+
+@pytest.mark.parametrize('mutation', ['gap', 'foreign_document', 'foreign_version', 'wrong_overlap', 'duplicate_index'])
+def test_chunk_recovery_refuses_unproven_boundaries(mutation):
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    rows = split_conditional_pdf_rows()
+    if mutation == 'gap': rows[1]['chunk_index'] = 2
+    if mutation == 'foreign_document': rows[1]['document_id'] = 'foreign'
+    if mutation == 'foreign_version': rows[1]['case_version_id'] = 'foreign'
+    if mutation == 'wrong_overlap': rows[1]['data'] = 'Different original boundary.' + rows[1]['data']
+    if mutation == 'duplicate_index': rows.append({**rows[1], 'uuid':'duplicate'})
+    packet = retrieve_sources(freeze_sources(rows, SCOPE), ['Sora repair purchaser testing'], budget=DraftBudget())
+    assert not any(s.get('reconstruction') for s in packet['sources'])
+
+
+def test_repeated_or_short_overlap_is_not_a_reconstruction_proof():
+    from app.services.pdf_chunk_context import exact_overlap
+    assert exact_overlap('A' * 200, 'A' * 200) is None
+    assert exact_overlap('left short boundary', 'boundary right') is None
+
+
+def test_physical_pdf_recovers_a_page_split_between_stored_chunks(tmp_path):
+    import fitz
+    from app.utils.file_parser import FileParser, split_text_into_chunks
+    from app.services.source_retrieval import freeze_sources, retrieve_sources
+    from app.services.conditional_extracts import build_extract_contract
+    from app.services.pdf_source_pages import complete_pages
+    pdf = fitz.open()
+    page = pdf.new_page()
+    page.insert_text((36, 36), '\n'.join(f'Fictional background item {i} remains disputed without a finding' for i in range(25)), fontsize=9)
+    page = pdf.new_page()
+    page.insert_text((36, 36), 'Sora could offer repair only if the purchaser supplies independent testing\n' + '\n'.join(f'Fictional testing detail {i} requires a complete original review' for i in range(25)) + '\nNo endorsement is given and no testing has been received', fontsize=9)
+    page = pdf.new_page()
+    page.insert_text((36, 36), 'Following fictional material', fontsize=9)
+    path = tmp_path/'split-page.pdf'; pdf.save(path); pdf.close()
+    text = FileParser.extract_text(str(path))
+    chunks = split_text_into_chunks(text, 1100, 100)
+    assert not any(2 in [p for p, _, _ in complete_pages(c)] for c in chunks)
+    rows = [episode(f'pdf-{i}', c, chunk_index=i) for i,c in enumerate(chunks)]
+    packet = retrieve_sources(freeze_sources(rows, SCOPE), ['Sora repair independent testing'], budget=DraftBudget())
+    recovered = [s for s in packet['sources'] if s.get('reconstruction')]
+    assert len({s['window'] for s in recovered}) == len(recovered)
+    contract = build_extract_contract(recovered, SCOPE)
+    assert contract
+    assert any('only if the purchaser supplies independent testing' in c['text']
+               and 'No endorsement is given and no testing has been received' in c['text'] for c in contract)

@@ -139,3 +139,19 @@ it('keeps complete claims available and links to focusable page-range sources', 
   expect(document.activeElement).toBe(source.find('blockquote').element)
   wrapper.unmount()
 })
+
+it('distinguishes reconstructed text from its original chunk provenance', async () => {
+  const value = proposal()
+  value.sources[0] = { ...value.sources[0], reconstruction: { components: [
+    { episode_id: 'original-left', chunk_index: 3, source_hash: 'left-sha' },
+    { episode_id: 'original-right', chunk_index: 4, source_hash: 'right-sha' }
+  ] }, locator: { page: 2, offset_basis: 'joined_original_chunks' } }
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: value })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  expect(wrapper.text()).toContain('Reconstructed text SHA-256')
+  expect(wrapper.text()).toContain('Original original-left · chunk 3 · SHA-256 left-sha')
+  expect(wrapper.text()).toContain('Original original-right · chunk 4 · SHA-256 right-sha')
+  expect(wrapper.text()).toContain('joined_original_chunks')
+  wrapper.unmount()
+})

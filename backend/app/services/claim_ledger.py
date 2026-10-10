@@ -46,6 +46,13 @@ def validate_source(source, scope):
     if any(not isinstance(source.get(key), str) or not source[key] for key in
            ('evidence_id', 'document_id', 'episode_id', 'excerpt', 'window')):
         return 'missing_provenance'
+    if source.get('reconstruction') is not None:
+        from .pdf_chunk_context import reconstruct
+        provenance = source['reconstruction']
+        if (not isinstance(provenance, dict)
+                or provenance.get('kind') != 'exact_overlapping_original_chunks'
+                or reconstruct(provenance.get('components')) != source['excerpt']):
+            return 'invalid_chunk_reconstruction'
     if source.get('source_hash') != text_hash(source['excerpt']):
         return 'source_hash_mismatch'
     start, end = source.get('window_start'), source.get('window_end')
