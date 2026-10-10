@@ -110,12 +110,29 @@ document citation or a PDF page locator does not count as repeating a fact.
 Repeated assertions still count when their document citations differ.
 
 Original-source availability and procedural-role coverage are separate statuses.
-The narrow procedural check requires an explicit **MOTION RECORD OF THE** party
-label and recognized relief on a scoped source cover. A notice, a party caption,
-conflicting covers, or incomplete retrieval does not establish that anchor.
-`procedural_source_unavailable` means this check lacks coverage; it is not a finding
-that the report assigned relief to the wrong party. An anchored attribution
-conflict still requires review, and missing coverage is not waived by a high score.
+The cover check requires an explicit **MOTION RECORD OF THE** party label and
+recognized relief on a scoped source cover. The notice check recognizes a printed
+**NOTICE OF MOTION** or **NOTICE OF CROSS-MOTION** heading followed in the same
+page-one chunk by **The [party role] [optional uppercase names] will make a motion**.
+Notice anchors preserve the document, page, source hash, and explicit role. Each
+document has its own mover; paired motions do not establish one global moving or
+opposing party, and a notice mover does not establish requested relief or dates.
+When graph chunks lack page metadata, complete `[PDF page 1]` through
+`[PDF page 2]` boundaries in frozen original text can supply the opening. The
+check retains chunk hashes and page offsets and reads only page one. Missing end
+markers or chunk order alone do not establish a complete opening.
+
+Notice validation checks narrow affirmative labels such as **the defendants’
+notice** in a single assertion preceding one cited document, with only one party
+role mentioned. Multiple-assertion or multiple-role comparisons, uncited labels,
+quotations, conditional statements, prior motions,
+and arbitrary paraphrases remain outside this check's coverage. Captions alone
+are never role evidence. Conflicting declarations, unrecognized notice forms,
+mixed cover/notice packets, and incomplete retrieval still require review.
+`procedural_source_unavailable` means limited coverage rather than a finding of
+misattribution. A detected conflict requires review, and a high score cannot
+waive missing coverage. Passing these narrow checks does not certify attribution
+throughout the report.
 
 Existing reports retain their saved scores, status, frozen source context, and
 text. Rechecking an older report does not silently replace its provenance or
