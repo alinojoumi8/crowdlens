@@ -3784,6 +3784,16 @@ class ReportManager:
                 r"[ \t]*[0-9,–—\- ]+(?:,[ \t]*original record[ \t]+pp?\.[ \t]*[0-9,–—\- ]+)?\.?\))?",
                 " ", section, flags=re.I,
             )
+            # Some generated citations use filename/page addresses without an
+            # ID prefix, with square or round original-page mapping brackets.
+            # Match only address grammar; retain substantive parentheticals.
+            pages = r"[0-9]+(?:\s*(?:[,–—-]|\band\b)\s*[0-9]+)*"
+            original = r"original record\s+pp?\.\s*" + pages
+            locator = (r"\*?[^()\n;\[\]]+?\.pdf\*?,\s*(?:selected PDF|original record)\s+pp?\.\s*"
+                       + pages + r"(?:,\s*" + original + r"|\s*\[" + original
+                       + r"\]|\s*\(" + original + r"\))?")
+            prose = re.sub(r"\(" + locator + r"(?:;\s*" + locator + r")*(?:;\s*)?\.?\)",
+                           " ", prose, flags=re.I)
             for sentence in cls._extract_report_sentences(prose):
                 if not cls._looks_like_specific_evidence(sentence):
                     continue

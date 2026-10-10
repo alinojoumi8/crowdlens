@@ -111,6 +111,22 @@ def test_repeated_facts_remain_detectable_with_different_citations():
     assert ReportManager._find_repeated_facts(content) == [fact]
 
 
+def test_filename_only_and_bracketed_page_citations_are_not_facts():
+    locators = [
+        '(Notice-selected-original-pp7-14.pdf, selected PDF pp. 1–3 [original record pp. 7–9])',
+        '(*Notice.pdf*, selected PDF p. 7 (original record p. 13))',
+        '(Notice.pdf, selected PDF pp. 2 and 6–7 [original record pp. 9 and 13–14]; Cross-motion.pdf, selected PDF p. 2 [original record p. 9])',
+        '(*Notice.pdf*, selected PDF pp. 4–7 [original record pp. 10–13]; [doc_notice].)',
+    ]
+    for locator in locators:
+        content = ('## One\n\nThe defendants request production of preserved data. ' + locator
+                   + '\n\n## Two\n\nThe plaintiffs signed their notice on September 22, 2025. ' + locator)
+        assert not ReportManager._find_repeated_facts(content), locator
+        fact = 'The defendants signed their notice on April 29, 2025.'
+        repeated = '## One\n\n' + fact + ' ' + locator + '\n\n## Two\n\n' + fact + ' ' + locator
+        assert ReportManager._find_repeated_facts(repeated) == [fact], locator
+
+
 def test_citation_removal_does_not_remove_substantive_parentheticals():
     fact = 'The notice requests monetary relief ($85,000) from the plaintiffs.'
     content = '## One\n\n' + fact + '\n\n## Two\n\n' + fact
