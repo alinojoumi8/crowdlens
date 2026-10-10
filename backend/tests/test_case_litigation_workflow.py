@@ -268,3 +268,18 @@ def test_simulation_diagnostics_summarize_agent_topics_and_quality(tmp_path, mon
     assert diagnostics["topics"]["evidence"]["actions_count"] == 2
     assert diagnostics["quality_report"]["enough_signal"] is True
     assert any(agent["agent_id"] == 2 for agent in diagnostics["off_track_agents"])
+
+
+def test_notice_of_action_is_pleading_despite_default_judgment_warning(tmp_path, monkeypatch):
+    from app.models.case import classify_document_type, DocumentType
+    assert classify_document_type("Notice of Action - issued.pdf", "Judgment may be given against you.") == DocumentType.PLEADING
+    assert classify_document_type("scan.pdf", "NOTICE OF ACTION\nJudgment may be given against you.") == DocumentType.PLEADING
+    assert classify_document_type("Order.pdf", "Refers to a statement of claim and affidavit.") == DocumentType.ORDER
+
+    monkeypatch.setattr(CaseManager, "CASES_DIR", str(tmp_path / "cases"))
+    case = CaseManager.create_case(name="Fictional notice classification test")
+    version = CaseManager.create_version(case.case_id, project_id="fixture", documents=[{
+        "filename": "Notice of Action - issued.pdf", "text": "Judgment may be given against you.", "size": 99
+    }])
+    persisted = CaseManager.get_version(case.case_id, version.version_id)
+    assert persisted.documents[0].document_type == DocumentType.PLEADING

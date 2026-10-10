@@ -1485,7 +1485,8 @@ class ReportAgent:
 
         Supported formats (in priority order):
         1. <tool_call>{"name": "tool_name", "parameters": {...}}</tool_call>
-        2. Raw JSON (the entire response or a single line is a tool call JSON)
+        2. MiniMax named-call envelope with JSON parameters
+        3. Raw JSON (the entire response or a single line is a tool call JSON)
         """
         tool_calls = []
 
@@ -1495,6 +1496,19 @@ class ReportAgent:
             try:
                 call_data = json.loads(match.group(1))
                 tool_calls.append(call_data)
+            except json.JSONDecodeError:
+                pass
+
+        # MiniMax can emit its native named-call envelope instead of the
+        # prompted JSON envelope. Keep the same tool allowlist and JSON args;
+        # never execute free-form "Call Tool" prose or an incomplete envelope.
+        native_pattern = r'<tool_call[>\]]\s*Call Tool:\s*([A-Za-z_]\w*)\s*(\{.*?\})\s*</tool_call>'
+        for match in re.finditer(native_pattern, response, re.DOTALL):
+            try:
+                parameters = json.loads(match.group(2))
+                call_data = {"name": match.group(1), "parameters": parameters}
+                if isinstance(parameters, dict) and self._is_valid_tool_call(call_data):
+                    tool_calls.append(call_data)
             except json.JSONDecodeError:
                 pass
 

@@ -137,3 +137,19 @@ print(json.dumps({'http':response.status_code,'body':response.json,'dispatched':
             if child.poll() is None:
                 child.kill()
             child.communicate()
+
+
+def test_admitted_report_is_pending_before_worker_persists_outline(root_admission):
+    app, db, dispatched = root_admission
+    client = app.test_client()
+    admitted = client.post('/api/report/generate', json=ROOT_REQUEST).json['data']
+    response = client.get('/api/report/' + admitted['report_id'])
+    assert response.status_code == 202
+    assert response.json['data']['pending'] is True
+    assert response.json['data']['status'] == 'planning'
+    assert response.json['data']['simulation_id'] == ROOT_REQUEST['simulation_id']
+    assert response.json['data']['outline'] is None
+    assert len(dispatched) == 1
+    assert client.get('/api/report/report_unknown').status_code == 404
+    TaskManager().fail_task(admitted['task_id'], 'synthetic_failure')
+    assert client.get('/api/report/' + admitted['report_id']).status_code == 404

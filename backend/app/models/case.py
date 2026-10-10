@@ -157,21 +157,25 @@ def _hash_text(text: str) -> str:
 
 
 def classify_document_type(filename: str = "", text: str = "") -> DocumentType:
-    haystack = f"{filename or ''}\n{text[:2000] if text else ''}".lower()
+    haystack = (text[:2000] if text else "").lower()
     rules = [
         (DocumentType.MOTION_RECORD, r"motion\s+record|notice\s+of\s+motion|memorandum\s+of\s+motion"),
         (DocumentType.FACTUM, r"factum|memorandum\s+of\s+argument|written\s+submissions"),
         (DocumentType.AFFIDAVIT, r"affidavit|sworn|deponent"),
         (DocumentType.EXPERT_REPORT, r"expert\s+report|expert\s+opinion|curriculum\s+vitae"),
         (DocumentType.TRANSCRIPT, r"transcript|cross[-\s]?examination|examination\s+for\s+discovery"),
+        (DocumentType.PLEADING, r"notice[-\s]+of[-\s]+action"),
         (DocumentType.ORDER, r"\border\b|judgment|reasons\s+for\s+decision|endorsement"),
         (DocumentType.EXHIBIT, r"exhibit|schedule|appendix"),
         (DocumentType.CORRESPONDENCE, r"correspondence|letter|email|e-mail"),
         (DocumentType.PLEADING, r"statement[-\s]+of[-\s]+claim|statement[-\s]+of[-\s]+defen[cs]e|complaint|answer|reply|pleading"),
     ]
-    for doc_type, pattern in rules:
-        if re.search(pattern, haystack):
-            return doc_type
+    # An explicit filename takes precedence over references to other document
+    # types in the body (for example a pleading warning about default judgment).
+    for candidate in ((filename or "").lower(), haystack):
+        for doc_type, pattern in rules:
+            if re.search(pattern, candidate):
+                return doc_type
     return DocumentType.OTHER
 
 

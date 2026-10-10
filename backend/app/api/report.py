@@ -338,6 +338,19 @@ def get_report(report_id: str):
     try:
         report = ReportManager.get_report(report_id)
         if not report:
+            # Admission is durable before the worker writes its first outline.
+            # Expose that pending state rather than a transient missing report.
+            for task in TaskManager().list_tasks(task_type="report_generate"):
+                metadata = task.get("metadata") or {}
+                if (metadata.get("report_id") == report_id
+                        and task.get("status") in ("pending", "processing")):
+                    return jsonify(success=True, data={
+                        "report_id": report_id, "simulation_id": metadata.get("simulation_id"),
+                        "graph_id": metadata.get("graph_id"), "status": "planning",
+                        "report_mode": metadata.get("report_mode"),
+                        "report_depth": metadata.get("report_depth"),
+                        "outline": None, "markdown_content": "", "pending": True,
+                    }), 202
             return jsonify({"success": False, "error": f"Report does not exist: {report_id}"}), 404
         return jsonify({"success": True, "data": {**report.to_dict(), 'current_review': current_review(report, ReportManager._get_reports_dir())}})
     except Exception as e:
