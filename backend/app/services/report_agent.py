@@ -1215,8 +1215,11 @@ class ReportAgent:
                                         self._source_grounding.get("case_version_id"))
                 self._source_grounding.update({k: v for k, v in roles.items()
                                               if k not in ("status", "graph_id", "case_id", "case_version_id")})
+                # Source availability and procedural-role coverage are separate
+                # contracts: "available" does not mean a mover was anchored.
+                self._source_grounding["procedural_status"] = roles["status"]
                 if len(covers) >= 25:
-                    self._source_grounding["status"] = "ambiguous"
+                    self._source_grounding["procedural_status"] = "ambiguous"
         return self._source_grounding
 
     def _source_grounding_prompt(self):
@@ -3767,7 +3770,16 @@ class ReportManager:
         examples: Dict[str, str] = {}
         for section_index, section in enumerate(cls._extract_report_sections(content)):
             section_seen = set()
-            for sentence in cls._extract_report_sentences(section):
+            # Citation IDs and their PDF/page locators are evidence addresses,
+            # not factual assertions. Remove them before sentence splitting so
+            # abbreviations such as "PDF pp." cannot become repeated facts.
+            prose = re.sub(
+                r"\[(?:doc_[A-Za-z0-9_-]+|(?:reddit|twitter):(?:trace|legacy):[A-Za-z0-9_-]+)\]"
+                r"(?:[ \t]*\([^()\n]+\.pdf,[ \t]*(?:selected PDF|original record)[ \t]+pp?\."
+                r"[ \t]*[0-9,–—\- ]+(?:,[ \t]*original record[ \t]+pp?\.[ \t]*[0-9,–—\- ]+)?\.?\))?",
+                " ", section, flags=re.I,
+            )
+            for sentence in cls._extract_report_sentences(prose):
                 if not cls._looks_like_specific_evidence(sentence):
                     continue
                 normalized = cls._normalize_fact(sentence)

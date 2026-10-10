@@ -97,6 +97,30 @@ def test_validate_report_output_warns_about_repeated_section_facts_and_meta_comm
     assert any(issue["code"] == "meta_commentary" for issue in issues)
 
 
+def test_repeated_citation_locators_are_not_repeated_facts():
+    citation = '[doc_notice] (Notice-selected-original-pp7-14.pdf, selected PDF pp. 1–2, original record pp. 7–8.)'
+    content = ('## Chronology\n\nThe defendants signed their notice on April 29, 2025. ' + citation
+               + '\n\n## Relief\n\nThe plaintiffs request production of preserved data. ' + citation)
+    assert ReportManager._find_repeated_facts(content) == []
+
+
+def test_repeated_facts_remain_detectable_with_different_citations():
+    fact = 'The defendants signed their notice on April 29, 2025.'
+    content = ('## One\n\n' + fact + ' [doc_one] (Notice.pdf, selected PDF p. 1.)'
+               + '\n\n## Two\n\n' + fact + ' [doc_two] (Record.pdf, selected PDF pp. 2–3.)')
+    assert ReportManager._find_repeated_facts(content) == [fact]
+
+
+def test_citation_removal_does_not_remove_substantive_parentheticals():
+    fact = 'The notice requests monetary relief ($85,000) from the plaintiffs.'
+    content = '## One\n\n' + fact + '\n\n## Two\n\n' + fact
+    assert ReportManager._find_repeated_facts(content) == [fact]
+
+    content = ('## One\n\n[doc_one] (Notice.pdf establishes a request for $85,000 in damages.)'
+               '\n\n## Two\n\n[doc_two] (Notice.pdf establishes a request for $85,000 in damages.)')
+    assert ReportManager._find_repeated_facts(content)
+
+
 def test_clean_section_content_removes_stray_bold_artifact():
     cleaned = ReportManager._clean_section_content(
         "**\n\nThe adoption story starts with pricing pressure.",
