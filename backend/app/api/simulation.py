@@ -508,19 +508,19 @@ def prepare_simulation():
                 defined_entity_types=entity_types_list,
                 enrich_with_edges=False  # No edge information，Speed up
             )
-            # Save entity count to status（For frontend to get immediately）
-            from ..services.participant_selection import select_participants
-            preview, state.participant_selection = select_participants(
-                filtered_preview.entities, state_prediction_settings,
-                legal_case=raw_forecast_settings.get('forecast_mode') == 'legal_case' or state.report_mode == 'legal_case')
-            state.entities_count = len(preview)
-            state.entity_types = list(dict.fromkeys(e.get_entity_type() or 'Unknown' for e in preview))
-            logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
             forecast_settings = normalize_forecast_settings(
                 raw_forecast_settings,
                 simulation_requirement=simulation_requirement,
                 entity_types=filtered_preview.entity_types,
             )
+            # Save entity count to status（For frontend to get immediately）
+            from ..services.participant_selection import select_participants
+            preview, state.participant_selection = select_participants(
+                filtered_preview.entities, state_prediction_settings,
+                legal_case=forecast_settings.forecast_mode == 'legal_case' or state.report_mode == 'legal_case')
+            state.entities_count = len(preview)
+            state.entity_types = list(dict.fromkeys(e.get_entity_type() or 'Unknown' for e in preview))
+            logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
         except Exception as e:
             logger.warning(f"Synchronously get entity countFailed（Will retry in background task）: {e}")
             # Failure does not affect subsequent process，Background task will retry
