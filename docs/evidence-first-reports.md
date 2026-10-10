@@ -108,6 +108,9 @@ and their forecasts are not retroactively changed.
 The repeated-fact check compares substantive sentences across sections. Reusing a
 document citation or a PDF page locator does not count as repeating a fact.
 Repeated assertions still count when their document citations differ.
+Filename-only PDF addresses, italicized filenames, and original-page mappings in
+square or round brackets are also treated as locators. Substantive parentheticals
+are retained; this normalization applies only to repetition checking.
 
 Original-source availability and procedural-role coverage are separate statuses.
 The cover check requires an explicit **MOTION RECORD OF THE** party label and
