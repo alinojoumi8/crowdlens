@@ -8,7 +8,7 @@
           <!-- Report Header -->
           <div class="report-header-block">
             <div class="report-meta">
-              <span class="report-tag">{{ forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Scenario Analysis Report' }}</span>
+              <span class="report-tag">{{ evidenceOnlyReport || forecastData?.status === 'unavailable' ? 'Source Analysis Report' : 'Scenario Analysis Report' }}</span>
               <span class="report-id">ID: {{ reportId || 'REF-2024-X92' }}</span>
             </div>
             <a v-if="isComplete && reportId" class="report-download"
@@ -26,6 +26,7 @@
             <p class="report-reading-guide">Review the summary, compare proposed changes in each section, and check the original sources. Generated analysis is not a verified forecast.</p>
             <p class="sub-title">{{ reportOutline.summary }}</p>
             <ReportReview :assessment="currentReview" />
+            <ActivityAccounting :summary="activitySummary" />
             <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
             <p v-if="forecastData?.status === 'unavailable'" class="sub-title" role="status">
               {{ forecastData.limitations }}
@@ -273,6 +274,9 @@
             </button>
             <button class="operator-btn" :disabled="!reportGraphId || isRepairing" @click="repairEmbeddings">
               {{ isRepairing ? 'Repairing...' : 'Repair embeddings' }}
+            </button>
+            <button class="operator-btn" :disabled="!activeSimulationId || isRegenerating" @click="regenerateReport({ evidence_only: true, disable_interviews: true })">
+              Generate evidence-only report
             </button>
             <button class="operator-btn" :disabled="!activeSimulationId || isRegenerating" @click="regenerateReport({})">
               Regenerate
@@ -600,6 +604,7 @@ import { resolveApiBaseUrl } from '../api/baseUrl'
 const reportApiBase = resolveApiBaseUrl(import.meta.env)
 import { ref, computed, watch, onMounted, onUnmounted, nextTick, h, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import ActivityAccounting from './ActivityAccounting.vue'
 import { generateReport, getAgentLog, getConsoleLog, getReport, getReportProgress, regenerateReportSection, resumeReport } from '../api/report'
 import { benchmarkGraphEmbeddings, getGraphQuality, reembedGraph } from '../api/graph'
 import { renderSafeMarkdown as renderMarkdown } from '../utils/markdown'
@@ -648,6 +653,8 @@ const reportProgress = ref(null)
 const reportTiming = ref(null)
 const graphQuality = ref(null)
 const forecastData = ref(null)
+const evidenceOnlyReport = ref(false)
+const activitySummary = ref(null)
 const reportSimulationId = ref(props.simulationId || null)
 const reportGraphId = ref(null)
 const reportMode = ref('prediction')
@@ -1989,6 +1996,7 @@ const numericForecast = computed(() => {
 })
 
 const forecastRows = computed(() => {
+  if (evidenceOnlyReport.value) return []
   return (forecastData.value?.probabilities || []).map((row) => {
     const probability = Number(row.probability || 0)
     return {
@@ -2218,6 +2226,7 @@ const regenerateReport = async (options = {}) => {
       simulation_id: activeSimulationId.value,
       force_regenerate: true,
       report_mode: reportMode.value,
+      evidence_only: evidenceOnlyReport.value,
       ...options
     }
     addLog(`Starting report regeneration: ${JSON.stringify(options)}`)
@@ -2472,6 +2481,8 @@ const fetchReportSnapshot = async () => {
       reportStatus.value = report.status || reportStatus.value
       reportQuality.value = report.quality_score || null
       reportTiming.value = report.timing || reportTiming.value
+      evidenceOnlyReport.value = report.evidence_only === true
+      activitySummary.value = report.source_grounding?.simulation_activity?.summary || null
       forecastData.value = report.forecast || null
       reportSimulationId.value = report.simulation_id || reportSimulationId.value
       reportGraphId.value = report.graph_id || reportGraphId.value
@@ -2668,6 +2679,8 @@ watch(() => props.reportId, (newId) => {
     reportStatus.value = 'pending'
     reportQuality.value = null
     forecastData.value = null
+    evidenceOnlyReport.value = false
+    activitySummary.value = null
     reportProgress.value = null
     graphQuality.value = null
     reportMode.value = 'prediction'

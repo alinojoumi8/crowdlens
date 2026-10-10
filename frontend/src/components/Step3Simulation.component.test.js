@@ -1,3 +1,4 @@
+import { generateReport } from '../api/report'
 import { mount, flushPromises } from '@vue/test-utils'
 import { afterEach, expect, it, vi } from 'vitest'
 import Step3Simulation from './Step3Simulation.vue'
@@ -177,4 +178,16 @@ it('retains completed run state and explains a rejected ensemble admission', asy
   expect(wrapper.find('button.stop').exists()).toBe(false)
   expect(wrapper.emitted('update-status').flat().at(-1)).toBe('completed')
   expect(wrapper.get('[aria-describedby="simulation-next-help"]').attributes('disabled')).toBeUndefined()
+})
+
+
+it('passes the explicit evidence-only choice when generating a report', async () => {
+  getRunStatus.mockResolvedValueOnce({success:true,data:{runner_status:'completed'}})
+  generateReport.mockResolvedValueOnce({success:true,data:{report_id:'report_evidence'}})
+  wrapper=mount(Step3Simulation,{props:{simulationId:'sim_test'}})
+  await flushPromises()
+  await wrapper.get('input[type="checkbox"]').setValue(true)
+  const button=wrapper.findAll('button').find(b=>b.text().includes('Generate review report'))
+  await button.trigger('click'); await flushPromises()
+  expect(generateReport.mock.calls[0][0]).toMatchObject({simulation_id:'sim_test',evidence_only:true})
 })

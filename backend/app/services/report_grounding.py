@@ -105,6 +105,12 @@ def provenance_issues(content, grounding, forecast):
                 issues.append({'code': 'unverified_quotation', 'blocking': True,
                     'message': 'Quotation is not an exact referenced original-source span or recorded model response.',
                     'quote': quote[:300]})
+    if forecast.get('reason') == 'evidence_only':
+        for table in re.findall(r'(?:^\|.*\n?)+', content, re.M):
+            if (re.search(r'probabilit|likelihood|chance of|confidence', table.splitlines()[0], re.I)
+                    and re.search(r'\|\s*(?:0?\.\d+|\d+(?:\.\d+)?\s*%)\s*\|', table)):
+                issues.append({'code': 'evidence_only_probability_table', 'blocking': True,
+                    'message': 'Evidence-only reports cannot publish numerical outcome probability tables.'})
     # Generated sections must not issue a second numerical forecast. Remove
     # only the exact deterministic authority block. Other percentages need an
     # original-document reference and a matching recorded source number.

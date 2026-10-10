@@ -159,3 +159,21 @@ remote deponent’s location from the commissioner’s location. These are falli
 model checks, not deterministic semantic validation. Synthetic tests verify the
 patch, provenance, rejection and adoption boundaries; they do not measure model
 factual accuracy. A high report score does not certify these assertions.
+
+## Evidence-only reporting
+
+Select **Evidence-only report (no forecast percentages)** on the simulation page,
+or **Generate evidence-only report** under report tools. The latter creates a new
+report with interviews disabled; existing reports and revisions are preserved.
+The explicit `evidence_only: true` generation setting persists through reload,
+resume, section regeneration and accepted revisions. It bypasses forecast
+synthesis and disables probability panels and tables; source dates, amounts and
+attributed numbers remain permitted. It does not certify the resulting prose.
+Default generation retains its existing forecast behavior.
+
+Activity accounting separates successful model posts/comments from other model
+actions such as likes, no-ops and failed actions. Scheduled posts and their
+scheduled-event records are separate logged entries for planned inputs, not
+additional model responses. Unique posts and model actions are deduplicated;
+logged entries are not. Lifecycle/round markers are excluded. Frozen older
+reports may lack the newer written-action breakdown; they are not recomputed.

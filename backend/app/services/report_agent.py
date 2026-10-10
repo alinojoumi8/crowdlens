@@ -489,6 +489,7 @@ class Report:
     decision_config: Dict[str, Any] = field(default_factory=dict)
     source_grounding: Dict[str, Any] = field(default_factory=dict)
     revision: Dict[str, Any] = field(default_factory=dict)
+    evidence_only: bool = False
     
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -512,6 +513,7 @@ class Report:
             "decision_config": self.decision_config,
             "source_grounding": self.source_grounding,
             "revision": self.revision,
+            **({"evidence_only": True} if self.evidence_only else {}),
         }
 
 
@@ -978,6 +980,7 @@ class ReportAgent:
         strict_antirepetition: bool = False,
         report_mode: str = "prediction",
         report_depth: str = "standard",
+        evidence_only: bool = False,
     ):
         """
         Initialize Report Agent
@@ -992,6 +995,7 @@ class ReportAgent:
         self.graph_id = graph_id
         self.simulation_id = simulation_id
         self.simulation_requirement = simulation_requirement
+        self.evidence_only = evidence_only
         self.disable_interviews = disable_interviews
         self.strict_antirepetition = strict_antirepetition
         self.simulation_config = load_simulation_config(simulation_id)
@@ -1239,6 +1243,9 @@ class ReportAgent:
                 "Do not quote initial_post, scheduled_event, unknown-origin rows, event titles, labels, method instructions "
                 "or this contract. Paraphrase those inputs and metadata without quotation marks or blockquotes, "
                 "even when their trace references are present. Double/curly quotes and blockquotes are verbatim quotations. "
+                "Activity totals: logged_entries includes duplicate input records; scheduled_posts and scheduled_events are separate records for the same planned input. "
+                "model_written_actions counts successful posts/comments, model_reactions counts successful likes and other reactions, and model_noops are not speech. "
+                "Never equate all logged entries or all model_actions with written responses. "
                 "Only model_action rows describe model responses. initial_post and scheduled_event rows are scenario inputs, "
                 "not participant reactions. DO_NOTHING is a no-op, not expressed support. Unknown origins stay unknown. "
                 "Describe only the actual recorded rounds, agents and actions; a thin run supports a thin report. "
@@ -1251,6 +1258,7 @@ class ReportAgent:
                 "For legal sources, keep underlying claims, later motions, requested relief and actual court findings distinct.")
 
     def _bind_report_contract(self, report):
+        self.evidence_only = report.evidence_only
         # Existing reports own their forecast, including unavailable forecasts.
         # Restart/resume must bind it before any prompt or current-action read.
         if report.forecast:
@@ -1263,6 +1271,9 @@ class ReportAgent:
             report.source_grounding = deepcopy(self._load_source_grounding())
 
     def _frozen_forecast(self):
+        if getattr(self, "evidence_only", False):
+            return {"status": "unavailable", "reason": "evidence_only", "probabilities": [],
+                    "limitations": "Evidence-only report: outcome probabilities and numerical forecasts are disabled. Recorded model activity is hypothetical, not evidence of a real-world outcome."}
         if not hasattr(self, "_forecast_authority"):
             self._forecast_authority = ForecastSynthesizer(self.simulation_id, self.simulation_config).synthesize("", [])
         return deepcopy(self._forecast_authority)
@@ -1272,9 +1283,13 @@ class ReportAgent:
 
     def _report_mode_guidance(self) -> str:
         if not self._forecast_available():
-            return ("[Source-based report; no recorded simulation actions]\n"
+            heading = ("[Evidence-only report; numerical forecasts disabled]\n" if getattr(self, "evidence_only", False)
+                       else "[Source-based report; no recorded simulation actions]\n")
+            return (heading +
                     "This source-only contract overrides generic prediction or simulation wording elsewhere. "
                     "Analyze source facts, attributed assertions, uncertainties, and evidence gaps. "
+                    "Describe recorded model actions only if supplied, and distinguish them from source facts and scheduled inputs. "
+                    "Do not plan a forecast table or outcome-probability section. "
                     "Do not invent simulated events, predict a winner, or generate numerical outcome probabilities, "
                     "confidence percentages, price forecasts, or probability tables. Report source numbers only as attributed facts. "
                     "For legal records, distinguish moving parties from plaintiffs in the underlying action, "
@@ -1656,6 +1671,11 @@ class ReportAgent:
             return self._default_outline()
 
     def _default_outline(self) -> ReportOutline:
+        if getattr(self, "evidence_only", False):
+            return ReportOutline(title="Evidence Review",
+                summary="Source assertions, recorded hypothetical activity, uncertainties and verification gaps.",
+                sections=[ReportSection(title="Source Record and Attributed Positions"),
+                          ReportSection(title="Evidence Gaps and Verification Questions")])
         if self.report_mode == "legal_case":
             return ReportOutline(
                 title="Legal Case Outcome Analysis",
@@ -2216,6 +2236,7 @@ class ReportAgent:
             status=ReportStatus.PENDING,
             report_mode=self.report_mode,
             report_depth=self.report_depth,
+            evidence_only=getattr(self, "evidence_only", False),
             created_at=datetime.now().isoformat()
         )
         timing = PhaseTimer("report_generation", metadata={
@@ -3886,14 +3907,16 @@ class ReportManager:
             decision_config=data.get('decision_config', {}),
             source_grounding=data.get('source_grounding', {}),
             revision=data.get('revision', {}),
+            evidence_only=data.get('evidence_only') is True,
         )
     
     @classmethod
-    def get_report_by_simulation(cls, simulation_id: str, *, report_mode=None, report_depth=None) -> Optional[Report]:
+    def get_report_by_simulation(cls, simulation_id: str, *, report_mode=None, report_depth=None, evidence_only=None) -> Optional[Report]:
         reports = [report for report in cls.list_reports(simulation_id, limit=None)
                    if not report.revision.get('parent_report_id')
                    and (report_mode is None or report.report_mode == report_mode)
-                   and (report_depth is None or report.report_depth == report_depth)]
+                   and (report_depth is None or report.report_depth == report_depth)
+                   and (evidence_only is None or report.evidence_only == evidence_only)]
         return reports[0] if reports else None
 
     @classmethod

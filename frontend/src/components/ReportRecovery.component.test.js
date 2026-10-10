@@ -60,3 +60,36 @@ it('current review survives historical completed progress and never regenerates 
   expect(generateReport).not.toHaveBeenCalled()
   expect(resumeReport).not.toHaveBeenCalled()
 })
+
+it('evidence-only reports hide stale numeric payloads and retain choice on regenerate', async () => {
+  vi.useFakeTimers()
+  getReport.mockResolvedValue({success:true,data:{status:'needs_review',simulation_id:'sim_evidence',evidence_only:true,
+    outline:{title:'Evidence Review',summary:'Attributed claims.',sections:[]},
+    forecast:{probabilities:[{outcome:'Success',probability:0.9}]},
+    source_grounding:{simulation_activity:{summary:{model_actions:8,model_written_actions:6,model_reactions:2,
+      model_noops:0,model_failed_actions:0,unique_posts:13,initial_posts:3,scheduled_posts:7,scheduled_events:7,logged_entries:25,unknown_origin_actions:0}}}}})
+  getReportProgress.mockResolvedValue({success:true,data:{effective_status:'needs_review',terminal:true}})
+  generateReport.mockResolvedValue({success:true,data:{report_id:'report_new'}})
+  wrapper=mount(Step4Report,{props:{reportId:'report_evidence',systemLogs:[]},global:{stubs:{EvidenceDraftReview:true,ClaimEvidence:true,SafeMarkdown:true}}})
+  await flushPromises()
+  expect(wrapper.find('.forecast-summary-panel').exists()).toBe(false)
+  expect(wrapper.get('[aria-label="Activity accounting"]').text()).toContain('6 written posts/comments')
+  expect(wrapper.get('[aria-label="Activity accounting"]').text()).toContain('7 scheduled-event records')
+  const regenerate=wrapper.findAll('button').find(b=>b.text()==='Regenerate')
+  await regenerate.trigger('click'); await flushPromises()
+  expect(generateReport.mock.calls[0][0].evidence_only).toBe(true)
+})
+
+it('explicit evidence-only generation opts out without changing an old report', async () => {
+  vi.useFakeTimers()
+  getReport.mockResolvedValue({success:true,data:{status:'needs_review',simulation_id:'sim_old',
+    outline:{title:'Old report',summary:'',sections:[]},forecast:{probabilities:[{outcome:'Scenario A',probability:0.416}]}}})
+  getReportProgress.mockResolvedValue({success:true,data:{effective_status:'needs_review',terminal:true}})
+  generateReport.mockResolvedValue({success:true,data:{report_id:'report_new'}})
+  wrapper=mount(Step4Report,{props:{reportId:'report_old',systemLogs:[]},global:{stubs:{EvidenceDraftReview:true,ClaimEvidence:true,SafeMarkdown:true}}})
+  await flushPromises()
+  expect(wrapper.find('.forecast-summary-panel').exists()).toBe(true)
+  const button=wrapper.findAll('button').find(b=>b.text()==='Generate evidence-only report')
+  await button.trigger('click'); await flushPromises()
+  expect(generateReport.mock.calls[0][0]).toMatchObject({simulation_id:'sim_old',evidence_only:true,disable_interviews:true,force_regenerate:true})
+})
