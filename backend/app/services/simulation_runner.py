@@ -181,6 +181,7 @@ class SimulationRunState:
 
     # Process ID (for stopping)
     process_pid: Optional[int] = None
+    process_identity: Optional[Dict[str, Any]] = None
     timing: Dict[str, Any] = field(default_factory=dict)
     execution: Dict[str, Any] = field(default_factory=dict)
     
@@ -232,6 +233,7 @@ class SimulationRunState:
             "completed_at": self.completed_at,
             "error": self.error,
             "process_pid": self.process_pid,
+            "process_identity": self.process_identity,
             "execution": self.execution,
             "timing": timing,
         }
@@ -348,6 +350,7 @@ class SimulationRunner:
                 execution=data.get('execution') or {},
                 error=data.get("error"),
                 process_pid=data.get("process_pid"),
+                process_identity=data.get("process_identity"),
                 timing=data.get("timing", {}),
         )
 
@@ -404,44 +407,75 @@ class SimulationRunner:
 
     @classmethod
     def reconcile_persisted_runs(cls) -> Dict[str, int]:
-        """Reconcile running metadata with recorded operating-system processes."""
-        result = {"checked": 0, "alive": 0, "interrupted": 0}
+        """Verify process birth identity; PID existence is only an unknown owner."""
+        from ..utils.process_identity import process_identity
+        from ..models.task import TaskManager
+        from .task_execution import TaskBusy
+        def save_recovery(state, observed_payload):
+            # All cooperating publishers share this gate. Do not overwrite a
+            # newer completed record or a resource still owned by an active task.
+            with TaskManager().runtime.gate():
+                if cls._repository.get_simulation_run(state.simulation_id) != observed_payload:
+                    return False
+                try:
+                    cls._save_run_state(state)
+                except TaskBusy:
+                    return False
+                return True
+        result = {"checked": 0, "alive": 0, "interrupted": 0, "unknown": 0}
         if cls._repository is None:
             return result
-
         for payload in cls._repository.list_simulation_runs():
             if payload.get("runner_status") not in {
-                RunnerStatus.STARTING.value,
-                RunnerStatus.RUNNING.value,
-                RunnerStatus.PAUSED.value,
-                RunnerStatus.STOPPING.value,
+                RunnerStatus.STARTING.value, RunnerStatus.RUNNING.value,
+                RunnerStatus.PAUSED.value, RunnerStatus.STOPPING.value,
             }:
                 continue
             result["checked"] += 1
-            pid = payload.get("process_pid")
-            alive = False
-            if pid:
+            try:
+                pid = int(payload.get("process_pid") or 0)
+                if isinstance(payload.get("process_pid"), bool): pid = 0
+            except (ValueError, TypeError):
+                pid = 0
+            present = False
+            if pid > 0:
                 try:
-                    os.kill(int(pid), 0)
-                    alive = True
-                except (OSError, TypeError, ValueError):
-                    alive = False
-            if alive:
-                result["alive"] += 1
+                    os.kill(pid, 0)
+                    present = True
+                except ProcessLookupError:
+                    pass
+                except OSError:
+                    present = True  # Permission/inspection failure is not proof of death.
+            observed = process_identity(pid) if present else None
+            recorded = payload.get('process_identity')
+            if present and observed and recorded == observed:
+                result['alive'] += 1
                 continue
-
-            state = cls._state_from_dict(payload["simulation_id"], payload)
+            state = cls._state_from_dict(payload['simulation_id'], payload)
+            state.execution = {**(state.execution or {}), 'restart_recovery': {
+                'recorded_pid': payload.get('process_pid'), 'recorded_identity': recorded,
+                'observed_identity': observed,
+                'reason': 'ownership_unknown' if present and (not observed or not recorded) else 'process_missing_or_replaced',
+            }}
+            if present and (not observed or not recorded):
+                state.error = 'Simulation process ownership is unknown after restart; verify the actual worker before stopping or retrying. A PID alone is not ownership.'
+                save_recovery(state, payload)
+                result['unknown'] += 1
+                continue
             state.runner_status = RunnerStatus.STOPPED
             state.twitter_running = False
             state.reddit_running = False
             state.process_pid = None
+            state.process_identity = None
             state.completed_at = datetime.now().isoformat()
             state.updated_at = state.completed_at
-            state.error = "Simulation interrupted during backend restart; recorded process is no longer running"
-            cls._save_run_state(state)
-            result["interrupted"] += 1
+            state.error = 'Simulation interrupted during backend restart; recorded process is missing or its birth identity changed'
+            if save_recovery(state, payload):
+                result['interrupted'] += 1
+            else:
+                result['unknown'] += 1
         return result
-    
+
     @classmethod
     @owned_run_start
     def start_simulation(
@@ -644,7 +678,9 @@ class SimulationRunner:
             cls._stdout_files[simulation_id] = main_log_file
             cls._stderr_files[simulation_id] = None  # No longer need separate stderr
             
+            from ..utils.process_identity import process_identity
             state.process_pid = process.pid
+            state.process_identity = process_identity(process.pid)
             state.runner_status = RunnerStatus.RUNNING
             state.timing = {
                 **(state.timing or {}),

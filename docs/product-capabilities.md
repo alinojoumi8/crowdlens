@@ -134,6 +134,11 @@ UI routes are defined in [routes.js](../frontend/src/router/routes.js): `/`,
 
 ### Failure, retry, and data ownership
 
+The [coordinated backup tool and runbook](coordinated-backup.md) cover cold bundle
+manifests, checksums, hidden review databases, safe new-target restoration and
+recorded quiescence. Simulation restart uses process birth identity; unverified
+ownership and newer active/completed writers are preserved for manual review.
+
 Back up SQLite, uploaded files, simulation artifacts, report roots including
 hidden proposal directories, and Neo4j together using their documented safe
 procedures. There is no single cross-store transaction or established universal

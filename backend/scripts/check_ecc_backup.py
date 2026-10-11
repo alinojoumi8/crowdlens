@@ -35,8 +35,9 @@ def synthetic_process(root, mode):
     from app.services.report_agent import ReportManager, ReportStatus
     from app.services.proposal_store import ProposalStore, ProposalError
     from app.services.report_revisions import ReportRevisionService
+    from app.services.human_reviews import HumanReviewStore
     from app.services.task_execution import TaskRuntime
-    from evidence_draft_samples import sample_report
+    from evidence_draft_samples import sample_report, sample_source, TEXT
     from test_evidence_drafting import run, SourceStorage
     ReportManager.REPORTS_DIR = ReportManager.FALLBACK_REPORTS_DIR = str(root / "reports")
     database = ControlDatabase(root / "control.db")
@@ -46,13 +47,18 @@ def synthetic_process(root, mode):
         database.put_task({"task_id": "synthetic_backup_task", "status": "completed"})
         database.put_simulation_run({"simulation_id": "synthetic_backup_run", "status": "completed"})
         root.joinpath("documents").mkdir()
-        root.joinpath("documents/source.txt").write_text("Synthetic hearing notice.\n")
+        root.joinpath("documents/source.txt").write_text(TEXT)
         ReportManager.save_report(sample_report())
         original = hashes(root / "reports/report_root")
         record, llm = run(root / "reports")
         service = ReportRevisionService(ProposalStore(root / "reports"), storage=SourceStorage())
         revision = service.accept("report_root", record["proposal_id"], record["proposal_digest"])
         assert hashes(root / "reports/report_root") == original
+        review_store = HumanReviewStore(ProposalStore(root / 'reports'))
+        form = review_store.view(record)['blank_form']
+        form.update(reviewer_id='synthetic-backup-fixture', reviewer_kind='human', notes='Synthetic pending form, not collected human review')
+        review_store.save(record, form, 0)
+        review_packet = review_store.view(record)['packet_sha256']
         # Controlled lease clocks make cold-restore recovery deterministic. The
         # separate H1 probe measures the production 30-second expiry interval.
         clock = [100.0]
@@ -73,7 +79,8 @@ def synthetic_process(root, mode):
                       [{"key": "project:newer_project", "root": str(root / "projects")}])
         database.put_project({"project_id": "newer_project", "status": "graph_building",
                               "graph_build_task_id": newer_id, "marker": "preserve_valid_lease"})
-        receipt = {"proposal_id": record["proposal_id"], "digest": record["proposal_digest"],
+        receipt = {"review_packet_sha256": review_packet, "retained_source": sample_source(),
+                   "proposal_id": record["proposal_id"], "digest": record["proposal_digest"],
                    "revision_id": revision.report_id, "parent_hashes": original,
                    "revision_hashes": hashes(root / "reports" / revision.report_id),
                    "expired_owned_tasks": [graph_id, report_id], "valid_lease_task": newer_id,
@@ -122,6 +129,10 @@ def synthetic_process(root, mode):
     assert hashes(root / "reports/report_root") == receipt["parent_hashes"]
     # Recovery of an already published revision needs neither source storage nor inference.
     store = ProposalStore(root / "reports")
+    review = HumanReviewStore(store).view(store.read(receipt['proposal_id']))
+    assert review['packet_sha256'] == receipt['review_packet_sha256']
+    assert len(review['reviews']) == len(review['history']) == 1
+    assert review['assessment']['status'] == 'PENDING'
     recovered = ReportRevisionService(store, storage=None).accept("report_root", receipt["proposal_id"], receipt["digest"])
     assert recovered.report_id == revision.report_id
     try:
