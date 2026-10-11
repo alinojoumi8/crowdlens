@@ -350,6 +350,8 @@ separate mixed-candidate and blocked outcomes.
 - [Evidence-first report proposals and revisions](docs/evidence-first-reports.md)
 - [Architecture](docs/architecture.md)
 - [Storage migration, backup, and recovery](docs/control-plane-migration.md)
+- [Coordinated cold backup and recovery](docs/coordinated-backup.md)
+- [Coordinated restore verification](docs/audits/2026-10-10-coordinated-recovery.md)
 - [Economic twin scenarios](docs/economic-twin-v1.md)
 - [Jev evaluation and promotion boundaries](docs/jev-evaluation.md)
 - [Roadmap](ROADMAP.md)

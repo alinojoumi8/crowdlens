@@ -1,9 +1,11 @@
 # CrowdLens Roadmap
 
-2026-10-10 update: workspace/runtime reconciliation and production serving are
-complete, with green candidate/merged-main CI at `71545e2`. Persistent claim
-reviews are implemented and verified offline, including browser save/reopen and
-downloaded rubric exports. Independent human ratings remain pending. Current
+2026-10-10 update: workspace/runtime reconciliation, production serving, saved
+claim reviews and non-generation readiness are deployed through `555a7a5`, with
+green candidate and merged-main CI. Browser review exports and readiness states
+are verified. Coordinated cold restore and process-ownership recovery now pass
+the [synthetic rehearsal](docs/audits/2026-10-10-coordinated-recovery.md).
+Independent human ratings remain pending. Current
 ordered delivery status is maintained in the [delivery ledger](docs/tasks/2026-10-10-delivery-sequence.md);
 the baseline below records the earlier audit and its then-current limits.
 
