@@ -239,29 +239,18 @@ class EmbeddingService:
         return results  # type: ignore
 
     def health_check(self) -> bool:
-        """Return whether the configured embedding provider can generate vectors."""
+        """Return whether the configured embedding model passes metadata checks."""
         try:
             return self.health_status()["healthy"]
         except Exception:
             return False
 
     def health_status(self) -> Dict[str, Any]:
-        """Detailed status used by /api/status."""
-        status = self.info.to_dict()
-        status.update({
-            "healthy": False,
-            "ready": False,
-            "error": None,
-        })
-        try:
-            self.ensure_ready(check_only=True)
-            vec = self.embed("health check", task_type=RETRIEVAL_QUERY)
-            status["healthy"] = len(vec) == self.dimensions
-            status["ready"] = True
-            status["vector_length"] = len(vec)
-        except Exception as exc:
-            status["error"] = str(exc)
-        return status
+        """Model metadata only: polling must never embed text or pull models."""
+        from ..services.readiness import model_metadata
+        status = model_metadata(self.provider, self.base_url, self.model, self.api_key)
+        return {**self.info.to_dict(), **status, 'ready': status.get('healthy', False),
+                'error': None if status.get('healthy') else status.get('message')}
 
     def ensure_ready(self, check_only: bool = False) -> None:
         """Verify provider availability; optionally pull the local Ollama model."""

@@ -71,6 +71,10 @@ class Config:
     )
     STARTUP_STATUS_CHECK = os.environ.get('STARTUP_STATUS_CHECK', 'True').lower() == 'true'
 
+    # Metadata-only readiness checks; low disk is reported without a restart loop.
+    DISK_CRITICAL_BYTES = max(1, int(os.environ.get('DISK_CRITICAL_BYTES', str(512 * 1024**2))))
+    DISK_WARNING_BYTES = max(DISK_CRITICAL_BYTES, int(os.environ.get('DISK_WARNING_BYTES', str(2 * 1024**3))))
+
     # File upload configuration
     MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '../uploads')

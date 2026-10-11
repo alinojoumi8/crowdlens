@@ -1,6 +1,8 @@
 from flask import Flask
 
-def test_status_has_nonsecret_source_identity():
+def test_status_has_nonsecret_source_identity(monkeypatch):
+    monkeypatch.setattr('app.api.status.model_metadata', lambda *a: {'healthy':False,'state':'unconfigured'})
+    monkeypatch.setattr('app.api.status.storage_readiness', lambda *a: {'healthy':True,'state':'ready'})
     from app.api import status_bp
     app = Flask(__name__); app.register_blueprint(status_bp, url_prefix='/api')
     data = app.test_client().get('/api/status').json['data']['build']

@@ -53,7 +53,7 @@
             <span :style="s.statusDot">■</span> System Status
           </div>
 
-          <h2 class="section-title" :style="s.sectionTitle">Ready</h2>
+          <SystemReadiness />
           <p class="section-desc" :style="s.sectionDesc">
             Upload documents to start exploring a scenario. Simulated reactions help you examine possibilities; they are not verified forecasts.
           </p>
@@ -164,6 +164,7 @@
 <script setup>
 import { ref, computed, reactive, watch } from 'vue'
 import WorkflowControls from '../components/WorkflowControls.vue'
+import SystemReadiness from '../components/SystemReadiness.vue'
 import { workflowInputFingerprint } from '../utils/workflowInput'
 import { useRouter } from 'vue-router'
 import HistoryDatabase from '../components/HistoryDatabase.vue'

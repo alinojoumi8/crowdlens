@@ -158,8 +158,9 @@ cleanup prevent promising complete history or lossless restart continuity.
 `GET /health` establishes HTTP liveness. `GET /api/status` reports Neo4j,
 embedding/vector readiness, control database/import/reconciliation state, model
 configuration, and decision-policy configuration. HTTP 200 is not proof that
-dependencies are healthy. `llm.configured` is not an inference probe; disk usage
-is not currently reported. Workflow progress and request IDs aid diagnosis.
+dependencies are healthy. The home page and API now expose cached storage writes,
+free space and non-generation model metadata states; `inference_verified` stays
+false. See [readiness](readiness.md). Workflow progress and request IDs aid diagnosis.
 
 Proposal drafting has bounded source admission, retrieval, model calls, deadline,
 and worker capacity. Hosted work already submitted may complete after local
