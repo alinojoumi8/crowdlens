@@ -61,19 +61,19 @@ identities; they are not current-candidate model verification.
 - [x] Define and enforce whole-workflow physical-request/time limits, counted retries, Stop, explicit recovery authorization and retained partial outputs. [Contract](docs/workflow-execution.md) and [synthetic verification](docs/audits/2026-10-03-control-recovery.md) cover concurrent admission, restart, delayed responses and terminal polling.
 - [x] Define and implement optional USD reservation admission with frozen pricing and unresolved-usage retention. The [contract](docs/workflow-execution.md#optional-usd-admission-policy-version-1) expressly excludes provider invoice and subscription-quota guarantees; no dollar billing ceiling is promised.
 - [x] Verify subprocess birth identity, interrupted restart, failed writes and preservation of newer owners/completions in the [coordinated recovery work](docs/audits/2026-10-10-coordinated-recovery.md).
-- [ ] Verify corrupt memory, optional graph-memory outages and scoped cleanup; lossless continuation remains unpromised.
+- [x] Verify corrupt memory quarantine/atomic writes, graph-memory retry identity and owned graph outages; [evidence and limits](docs/recovery-retention.md). Lossless continuation remains unpromised.
 - [x] Verify supported report/proposal states in the built UI at 375/768/1440px: keyboard/focus, blocked/stale proposals, lost acceptance response/retry, reopen, unknown metrics, and real owned-task failure/manual retry. [QA evidence](docs/audits/2026-10-02-milestone4-browser-qa.md) identifies all seeded and substituted stages.
 - [x] Complete the [fresh visible-browser acceptance plan](docs/visible-browser-acceptance.md) on `7f4d68e` through local test revision acceptance/reload/history. No generation was seeded or substituted. Historical-copy paid recovery remains separate and was not run.
 - [x] Rehearse cold synthetic SQLite/artifact restore, same-root expired-task recovery, and separate Neo4j dump/load into new volumes.
 - [x] Define and rehearse coordinated cold cross-store backup/restore with checksummed manifests and fresh targets. Online atomic backup and active-task relocation remain unverified.
-- [ ] Finish scoped retention/deletion verification without altering unrelated cases.
+- [x] Verify project/graph deletion scope and unrelated case/artifact preservation; [retention boundaries](docs/recovery-retention.md) exclude a universal case cascade.
 - [x] Promote the selected `898bb25` revision after exact-candidate/main remote CI and authorized deployment verification; repeat this gate for every new candidate. Local clean-install, audit, build, recovery, and image results are recorded in the [release evidence](docs/audits/2026-10-02-milestone5-release-verification.md).
 
 ## Stability and performance backlog
 
 - [ ] Verify Python 3.12+ compatibility for the pinned CAMEL/OASIS dependency set; retain Python 3.11 as the verified baseline until then.
 - [ ] Add GPU auto-detection if needed; current Compose uses an explicit GPU override with CPU-compatible defaults.
-- [ ] Verify transient Neo4j reconnect behavior before adding or promising resilience changes.
+- [x] Verify stopped/restarted disposable Neo4j reconnect using the same driver; [rehearsal](docs/audits/2026-10-11-recovery-retention.md). Production outage timing remains unmeasured.
 - [x] Extend status with disk/write capacity and separately defined non-generation provider readiness; actual inference remains separately authorized.
 - [ ] Add optional JSON structured logging; request IDs and timing logs already exist.
 - [ ] Measure throughput, memory use, latency, and model calls per workload/hardware tier before setting performance targets.

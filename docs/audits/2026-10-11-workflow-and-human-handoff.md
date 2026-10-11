@@ -29,7 +29,10 @@ backend/.venv/bin/python -m pytest backend/tests/test_offline_workflow.py -q
 The full local check passed 918 backend and 95 frontend tests plus the production
 build. The final small harness correction (idle before explicit Start and saved
 settings echo) was followed by both targeted PDF/text tests passing again.
-Remote CI verifies the committed candidate separately.
+[PR #22](https://github.com/alinojoumi8/crowdlens/pull/22) merged at
+`66af7dd021563ed0f1b85e2430f2e14e59c144e6` after
+[candidate CI](https://github.com/alinojoumi8/crowdlens/actions/runs/38131155158)
+passed backend, frontend and Docker jobs. Deployment follows the batch.
 
 ![Source-backed proposal in the offline fixture](evidence/2026-10-11-workflow/proposal-ready.png)
 

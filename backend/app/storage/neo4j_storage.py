@@ -1185,7 +1185,7 @@ class Neo4jStorage(GraphStorage):
         now = datetime.now(timezone.utc).isoformat()
         rows = []
         for memory, text, embedding in zip(clean_memories, texts, embeddings):
-            memory_uuid = str(uuid.uuid4())
+            memory_uuid = memory.get('memory_id') or str(uuid.uuid4())
             attrs = {
                 "agent_id": memory.get("agent_id"),
                 "agent_name": memory.get("agent_name"),
@@ -1214,9 +1214,8 @@ class Neo4jStorage(GraphStorage):
             tx.run(
                 """
                 UNWIND $rows AS row
-                CREATE (m:Entity:AgentMemory {
-                    uuid: row.uuid,
-                    graph_id: $gid,
+                MERGE (m:Entity:AgentMemory {uuid: row.uuid, graph_id: $gid})
+                ON CREATE SET m += {
                     name: row.name,
                     summary: row.summary,
                     embedding: row.embedding,
@@ -1226,7 +1225,7 @@ class Neo4jStorage(GraphStorage):
                     source: row.source,
                     visibility: row.visibility,
                     created_at: row.created_at
-                })
+                }
                 """,
                 gid=graph_id,
                 rows=rows,

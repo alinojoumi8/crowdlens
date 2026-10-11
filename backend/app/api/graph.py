@@ -92,7 +92,13 @@ def delete_project(project_id: str):
     """
     Delete project
     """
-    success = ProjectManager.delete_project(project_id)
+    try:
+        success = ProjectManager.delete_project(project_id)
+    except ValueError as exc:
+        return jsonify(success=False, error=str(exc)), 400
+    except OSError:
+        logger.exception('Project deletion failed: %s', project_id)
+        return jsonify(success=False, error='Project files could not be removed; metadata was retained. Check storage permissions and retry.'), 503
 
     if not success:
         return jsonify({
