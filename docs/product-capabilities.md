@@ -1,5 +1,13 @@
 # CrowdLens product capabilities
 
+2026-10-10 delivery update: the canonical deployment is now reconciled to
+`71545e2`; exact-candidate and merged-main CI and offline production-image smoke
+passed. Gunicorn serves built assets as a non-root user. Saved claim reviews now
+persist separately from sealed reports/proposals, with partial values, version
+history, disagreements and rubric-compatible exports. See the [delivery ledger](tasks/2026-10-10-delivery-sequence.md)
+and [review guide](human-claim-review.md). Independent human quality measurement
+remains pending. The dated baseline below retains its original evidence limits.
+
 Evidence date: 2026-10-03. Original Milestone 1 baseline: `main` at `34275b7`.
 Method: ECC `product-capability`, followed by installed ECC 2.2.3 audit/evaluation,
 browser and verification workflows. Current application candidate is `7f4d68e`;

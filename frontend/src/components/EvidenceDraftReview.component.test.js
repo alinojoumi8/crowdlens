@@ -2,7 +2,8 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import EvidenceDraftReview from './EvidenceDraftReview.vue'
 import * as api from '../api/report'
-vi.mock('../api/report', () => ({ createEvidenceProposal: vi.fn(), getEvidenceProposal: vi.fn(), acceptEvidenceProposal: vi.fn(), rejectEvidenceProposal: vi.fn() }))
+vi.mock('../api/report', () => ({ createEvidenceProposal: vi.fn(), getEvidenceProposal: vi.fn(), listEvidenceProposals: vi.fn(), acceptEvidenceProposal: vi.fn(), rejectEvidenceProposal: vi.fn() }))
+vi.mock('./HumanClaimReview.vue', () => ({ default: { template: '<div />' } }))
 const proposal = (state = 'ready') => ({ proposal_id: 'proposal_1', state, phase: 'review', proposal_digest: 'digest',
   before: { section: 'Original section.', summary: 'Original summary.' }, after: { section: 'Alex says Friday.', summary: 'Updated summary.' }, findings: [], limitations: [],
   ledger: [{ claim_id: 'claim_01', text: 'Alex says Friday.', kind: 'attributed_allegation', attribution: 'Alex', citation_ids: ['episode:one'], checks: [] }],
@@ -197,5 +198,16 @@ it('submits a bounded wording correction with an explicit kind', async () => {
   await wrapper.find('form').trigger('submit'); await flushPromises()
   expect(api.createEvidenceProposal.mock.calls[0][1].focused_correction.kind).toBe('wording')
   expect(wrapper.text()).toContain('Review proposed changes')
+  wrapper.unmount()
+})
+
+it('finds saved proposals without relying on browser session storage', async () => {
+  api.listEvidenceProposals.mockResolvedValue({data:[{proposal_id:'proposal_1',section_index:1,state:'ready',created_at:'2026-10-10T12:00:00Z'}]})
+  api.getEvidenceProposal.mockResolvedValue({data:proposal()})
+  const wrapper = mountReview(); await flushPromises()
+  expect(wrapper.text()).toContain('Saved proposals for this section')
+  await wrapper.find('.saved-proposals select').setValue('proposal_1'); await flushPromises()
+  expect(wrapper.text()).toContain('Original section.')
+  expect(api.createEvidenceProposal).not.toHaveBeenCalled()
   wrapper.unmount()
 })
