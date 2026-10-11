@@ -152,4 +152,8 @@ def create_app(config_class=Config):
     if should_log_startup:
         logger.info("CrowdLens Backend startup complete")
 
+    if app.config.get('FRONTEND_DIST_DIR'):
+        from .frontend import install_frontend
+        install_frontend(app, app.config['FRONTEND_DIST_DIR'])
+
     return app

@@ -27,6 +27,7 @@ class Config:
     # Flask configuration
     SECRET_KEY = os.environ.get('SECRET_KEY')
     DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    FRONTEND_DIST_DIR = os.environ.get('FRONTEND_DIST_DIR', '')
     CORS_ORIGINS = _csv_list(os.environ.get(
         'CORS_ORIGINS',
         'http://127.0.0.1:3000,http://localhost:3000',

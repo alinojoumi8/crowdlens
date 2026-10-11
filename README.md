@@ -55,6 +55,10 @@ boundaries, current verification evidence, and remaining gaps.
 
 ### Option A: Docker (easiest)
 
+The container serves the built frontend and API with Gunicorn. See the
+[production release and rollback guide](docs/CI-AND-RELEASE-WORKFLOW.md) for
+image verification, upload ownership, release gates and recovery.
+
 ```bash
 git clone https://github.com/alinojoumi8/crowdlens.git crowdlens
 cd crowdlens
@@ -69,7 +73,7 @@ openssl rand -hex 24
 # For MiniMax M3, use the hosted configuration below instead.
 
 # Start all services in CPU-compatible mode
-docker compose up -d
+CROWDLENS_BUILD_REVISION="$(git rev-parse HEAD)" docker compose up -d --build
 
 # Pull the required models into Ollama
 docker compose exec ollama ollama pull qwen2.5:32b

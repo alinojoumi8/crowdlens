@@ -1,6 +1,9 @@
 services:
   mirofish:
-    build: .
+    build:
+      context: .
+      args:
+        CROWDLENS_BUILD_REVISION: ${CROWDLENS_BUILD_REVISION:-}
     # Or use pre-built image (when available):
     # image: ghcr.io/nikmcfly/mirofish-offline:latest
     container_name: mirofish-offline
@@ -22,6 +25,8 @@ services:
       - "127.0.0.1:3000:3000"
       - "127.0.0.1:5001:5001"
     restart: unless-stopped
+    stop_grace_period: 60s
+    user: "${CROWDLENS_UID:-1000}:${CROWDLENS_GID:-1000}"
     volumes:
       - ./backend/uploads:/app/backend/uploads
     depends_on:

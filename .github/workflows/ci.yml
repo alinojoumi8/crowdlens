@@ -4,6 +4,14 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_call:
+    inputs:
+      revision:
+        type: string
+        default: ''
+      skip_image:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -16,6 +24,8 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -30,6 +40,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -51,9 +63,14 @@ jobs:
           NEO4J_PASSWORD=ci-only-password docker compose config --quiet
 
   docker:
+    if: ${{ !inputs.skip_image }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Reserve image-build space on the disposable runner
+        run: bash scripts/prepare_ci_disk.sh
       - uses: docker/setup-buildx-action@v3
       - name: Build image
         uses: docker/build-push-action@v5
@@ -61,3 +78,16 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
+          load: true
+          tags: crowdlens:ci
+          build-args: CROWDLENS_BUILD_REVISION=${{ inputs.revision || github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke-test the built image offline
+        env:
+          REVISION: ${{ inputs.revision || github.sha }}
+        run: python scripts/smoke_container.py --image crowdlens:ci --revision "$REVISION" --output container-smoke.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: container-smoke
+          path: container-smoke.json
