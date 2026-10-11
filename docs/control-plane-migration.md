@@ -22,17 +22,21 @@ metadata after migration.
 
 ## Back up safely
 
-Stop the application before copying the database so its WAL is fully
-checkpointed, then copy the database and artifacts together:
+Stop all application writers before copying the database and artifacts together.
+Retain SQLite WAL, shared-memory and rollback-journal sidecars when present;
+an abrupt stop does not guarantee checkpointing:
 
 ```bash
 cp -a backend/uploads /path/to/backup/
 # If CONTROL_DB_PATH points outside uploads, copy that database as well.
 ```
 
-For Docker, stop the application with `docker compose stop` first and back up the bind-mounted
-`backend/uploads` directory. Neo4j data remains in its separate named volume and
-needs its own backup strategy.
+For Docker, stop only the application with `docker compose stop mirofish` and
+verify its workers have exited before copying the bind-mounted uploads root.
+Coordinate separately with the owner of shared Neo4j. The
+[coordinated cold-backup runbook](coordinated-backup.md) inventories all roots,
+records image and ownership metadata, verifies a complete bundle, and restores
+into new destinations without overwriting live data.
 
 ## Observe the migration
 

@@ -77,16 +77,28 @@ smoke, runtime identity and all 140 preserved-file hashes passed.
 Verified 874 backend and 92 frontend tests/build; fictional browser checks cover
 ready, missing model and low storage. The configured MiniMax endpoint currently
 returns unsupported metadata, so readiness remains unverified and inference untested.
-See [readiness](../readiness.md). Candidate CI/integration follows separately.
+See [readiness](../readiness.md). [PR #19](https://github.com/alinojoumi8/crowdlens/pull/19) passed candidate CI
+38104725626 and merged/deployed at `555a7a5`. Runtime identity, production browser
+readiness and all 140 preserved-file hashes passed.
 
 ## 5. Coordinated backup and recovery
 
-- [ ] Document cold-backup ownership, quiescence, store inventory and restore
+- [x] Document cold-backup ownership, quiescence, store inventory and restore
   order, including externally managed Neo4j state.
-- [ ] Verify a coordinated synthetic restore with original/revision hashes and
+- [x] Verify a coordinated synthetic restore with original/revision hashes and
   graph content intact.
-- [ ] Exercise interrupted workers, failed writes and stale ownership; define
+- [x] Exercise interrupted workers, failed writes and stale ownership; define
   retained state and manual recovery without promising lossless continuation.
+
+Recovery implementation adds a verified bundle manifest and fresh-target restore,
+process birth identity, preservation of newer owners/completions, failed-write
+regressions and a coordinated synthetic graph/artifact rehearsal. Verification
+passed 887 backend tests, 92 frontend tests/build, offline image smoke and the
+full coordinated restore: 29 files, two SQLite databases, four graph nodes and
+two relationships; review labels, original/revision hashes and the newer valid
+lease were preserved. All owned rehearsal resources were removed and real model
+calls were zero. Remote integration/deployment is pending. See the
+[runbook](../coordinated-backup.md) and [verification](../audits/2026-10-10-coordinated-recovery.md).
 
 ## Preservation receipt
 
