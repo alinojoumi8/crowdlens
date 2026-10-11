@@ -1,49 +1,125 @@
-name: Build and push Docker image
+name: Publish validated release image
 
 on:
   push:
-    tags: ["*"]
+    tags: ["v*.*.*"]
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing stable release tag (vX.Y.Z) on main
+        required: true
+        type: string
+      promote_latest:
+        description: Also promote latest (candidate must still be main HEAD)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
-  packages: write
+
+concurrency:
+  group: crowdlens-release
+  cancel-in-progress: false
 
 jobs:
-  build-and-push:
+  candidate:
     runs-on: ubuntu-latest
+    outputs:
+      revision: ${{ steps.verify.outputs.revision }}
+      tag: ${{ steps.verify.outputs.tag }}
+      image: ${{ steps.verify.outputs.image }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Resolve a stable tag from canonical main
+        id: verify
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+          PROMOTE_LATEST: ${{ inputs.promote_latest }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          git fetch origin +refs/heads/main:refs/remotes/origin/main --tags
+          revision=$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")
+          git merge-base --is-ancestor "$revision" origin/main
+          if [[ "$PROMOTE_LATEST" == true ]]; then
+            test "$revision" = "$(git rev-parse origin/main)"
+          fi
+          echo "revision=$revision" >> "$GITHUB_OUTPUT"
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+  validate:
+    needs: candidate
+    uses: ./.github/workflows/ci.yml
+    with:
+      revision: ${{ needs.candidate.outputs.revision }}
+      skip_image: true
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
+  publish:
+    needs: [candidate, validate]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REVISION: ${{ needs.candidate.outputs.revision }}
+      RELEASE_TAG: ${{ needs.candidate.outputs.tag }}
+      IMAGE: ${{ needs.candidate.outputs.image }}
+      PROMOTE_LATEST: ${{ inputs.promote_latest }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.candidate.outputs.revision }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/crowdlens
-          tags: |
-            type=ref,event=tag
-            type=sha
-            type=raw,value=latest
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: Refuse an existing version or an unverifiable registry response
+        shell: bash
+        run: |
+          set -euo pipefail
+          if docker manifest inspect "$IMAGE:$RELEASE_TAG" > /dev/null 2> registry-error.txt; then
+            echo 'Release version already exists; choose a new version.' >&2
+            exit 1
+          fi
+          if ! grep -Eq 'manifest unknown|no such manifest' registry-error.txt; then
+            cat registry-error.txt >&2
+            exit 1
+          fi
+      - uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          load: true
+          push: false
+          tags: crowdlens:release-candidate
+          build-args: CROWDLENS_BUILD_REVISION=${{ needs.candidate.outputs.revision }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke-test the exact candidate before publishing
+        run: python scripts/smoke_container.py --image crowdlens:release-candidate --revision "$REVISION" --output release-receipt.json
+      - name: Publish the tested image and optional latest promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$PROMOTE_LATEST" == true ]]; then
+            test "$REVISION" = "$(git ls-remote origin refs/heads/main | cut -f1)"
+          fi
+          docker tag crowdlens:release-candidate "$IMAGE:$RELEASE_TAG"
+          docker push "$IMAGE:$RELEASE_TAG"
+          docker image inspect "$IMAGE:$RELEASE_TAG" --format '{{json .RepoDigests}}' > release-digests.json
+          if [[ "$PROMOTE_LATEST" == true ]]; then
+            docker tag crowdlens:release-candidate "$IMAGE:latest"
+            docker push "$IMAGE:latest"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-receipt
+          path: |
+            release-receipt.json
+            release-digests.json

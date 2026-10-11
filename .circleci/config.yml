@@ -1,0 +1,101 @@
+version: 2.1
+
+# Opt in for backup validation or a scheduled rehearsal. Normal pushes do not
+# duplicate GitHub Actions. Configure triggers separately in CircleCI.
+parameters:
+  run_validation:
+    type: boolean
+    default: false
+
+jobs:
+  backend:
+    docker:
+      - image: cimg/python:3.11
+    resource_class: medium
+    environment:
+      UV_PYTHON: "3.11"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-uv-0.9.26-py311-{{ arch }}-{{ checksum "backend/uv.lock" }}
+      - run:
+          name: Install frozen backend dependencies
+          command: |
+            python -m pip install uv==0.9.26
+            cd backend
+            uv sync --frozen --dev
+      - save_cache:
+          key: v1-uv-0.9.26-py311-{{ arch }}-{{ checksum "backend/uv.lock" }}
+          paths:
+            - ~/.cache/uv
+      - run:
+          name: Backend tests
+          command: |
+            mkdir -p test-results/backend
+            cd backend
+            uv run --frozen pytest -q --junitxml=../test-results/backend/pytest.xml
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+
+  frontend:
+    docker:
+      - image: cimg/node:22.22
+    resource_class: medium
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-npm-node22-{{ arch }}-{{ checksum "package-lock.json" }}-{{ checksum "frontend/package-lock.json" }}
+      - run:
+          name: Install and audit launcher dependencies
+          command: npm ci && npm audit --audit-level=moderate
+      - run:
+          name: Install frontend dependencies
+          command: npm ci --prefix frontend
+      - save_cache:
+          key: v1-npm-node22-{{ arch }}-{{ checksum "package-lock.json" }}-{{ checksum "frontend/package-lock.json" }}
+          paths:
+            - ~/.npm
+      - run:
+          name: Frontend unit and component tests
+          command: npm test --prefix frontend
+      - run:
+          name: Build frontend
+          command: npm run build --prefix frontend
+      - run:
+          name: Audit frontend dependencies
+          command: npm audit --prefix frontend --audit-level=moderate
+      - store_artifacts:
+          path: frontend/dist
+          destination: frontend-build
+
+  docker:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Validate Compose configuration
+          command: |
+            cp .env.example .env
+            NEO4J_PASSWORD=ci-only-password docker compose config --quiet
+      - run:
+          name: Build image without publishing
+          command: |
+            docker build --build-arg CROWDLENS_BUILD_REVISION="$CIRCLE_SHA1" --tag crowdlens:ci .
+            python3 scripts/smoke_container.py --image crowdlens:ci --revision "$CIRCLE_SHA1" --output container-smoke.json
+
+workflows:
+  backup-validation:
+    when: << pipeline.parameters.run_validation >>
+    jobs:
+      - backend
+      - frontend
+      - docker:
+          requires:
+            - backend
+            - frontend
