@@ -1,0 +1,14 @@
+{
+  "status": "PENDING",
+  "pending_forms": 4,
+  "review_rows": 0,
+  "packets": 4,
+  "source_documents": 8,
+  "claims": 19,
+  "human_labels": 0,
+  "new_model_requests": 0,
+  "reviewer_zip_sha256": "829dc35b0b64f825812c5f0f38ffa11bce7e25d9adc1c93e5a9055d2c8913460",
+  "scope": "historical actual-model drafts; not current-preview quality",
+  "source_files_preserved": 9,
+  "reviewer_zip_excludes_administrator_mapping": true
+}
