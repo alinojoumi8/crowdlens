@@ -113,3 +113,7 @@ and database integrity, then tests expired-worker recovery at the original
 absolute root. A fresh valid lease and archived original remain unchanged.
 Only rehearsal-owned containers/volumes are removed. Existing services, operator
 files and provider generation are not used.
+
+For damaged optional memory, scoped deletion and retained-store decisions, see
+[recovery and retention](recovery-retention.md). Quarantined memory copies remain
+part of the private backup; project deletion is not a complete case purge.

@@ -35,7 +35,8 @@ production build. See [the contract](../workflow-execution.md) and
 - [ ] Obtain the pending explicit allowance before hosted execution. No response
   to the question has been received; no hosted calls were made.
 
-Offline evidence is in [the workflow audit](../audits/2026-10-11-workflow-and-human-handoff.md).
+PR #22 merged at `66af7dd021563ed0f1b85e2430f2e14e59c144e6` after all three
+candidate CI jobs passed. Offline evidence is in [the workflow audit](../audits/2026-10-11-workflow-and-human-handoff.md).
 Generation, graph storage, preparation and simulation are scripted substitutes,
 so this does not close the hosted workflow acceptance criterion.
 
@@ -51,6 +52,10 @@ so this does not close the hosted workflow acceptance criterion.
 
 ## 4. Recovery and retention (T07/T09)
 
-- [ ] Exercise corrupt optional memory and Neo4j outages with preserved outputs.
-- [ ] Verify scoped deletion preserves unrelated cases, graphs and artifacts;
-  record ownership and retention boundaries.
+- [x] Exercise corrupt optional memory and Neo4j outages with preserved outputs;
+  quarantine/atomic writes and stable graph-memory retry IDs implemented.
+- [x] Verify scoped deletion preserves unrelated cases, graphs and artifacts;
+  reject unsafe project paths before mutation and retain metadata on disk errors.
+  See [the contract](../recovery-retention.md) and
+  [rehearsal evidence](../audits/2026-10-11-recovery-retention.md).
+- [ ] Finish candidate CI, integration and one final preserved-data deployment.

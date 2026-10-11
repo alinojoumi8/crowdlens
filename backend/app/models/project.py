@@ -5,6 +5,8 @@ Persists project state on server to avoid frontend passing large data between in
 
 import os
 import json
+import re
+import logging
 import uuid
 import shutil
 from datetime import datetime
@@ -13,6 +15,8 @@ from enum import Enum
 from dataclasses import dataclass, field, asdict
 from ..config import Config
 from ..services.task_execution import project_write
+
+logger = logging.getLogger('mirofish.project')
 
 
 class ProjectStatus(str, Enum):
@@ -140,8 +144,15 @@ class ProjectManager:
 
     @classmethod
     def _get_project_dir(cls, project_id: str) -> str:
-        """Get project directory path"""
-        return os.path.join(cls.PROJECTS_DIR, project_id)
+        """Resolve a single project directory without following a project alias."""
+        if not isinstance(project_id, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,127}', project_id):
+            raise ValueError('Invalid project ID')
+        project_dir = os.path.join(cls.PROJECTS_DIR, project_id)
+        root = os.path.realpath(cls.PROJECTS_DIR)
+        target = os.path.realpath(project_dir)
+        if os.path.islink(project_dir) or target == root or os.path.commonpath([root, target]) != root:
+            raise ValueError('Project path must remain inside project storage without a symlink')
+        return project_dir
 
     @classmethod
     def _get_project_meta_path(cls, project_id: str) -> str:
@@ -253,7 +264,10 @@ class ProjectManager:
         cls._ensure_projects_dir()
         projects = []
         for project_id in os.listdir(cls.PROJECTS_DIR):
-            project = cls.get_project(project_id)
+            try:
+                project = cls.get_project(project_id)
+            except ValueError:
+                continue  # Ignore invalid names and symlinked directories in legacy storage.
             if project:
                 projects.append(project)
 
@@ -273,18 +287,20 @@ class ProjectManager:
         Returns:
             Whether deletion succeeded
         """
+        # Validate before any mutation. A disk failure must not remove metadata.
+        project_dir = cls._get_project_dir(project_id)
+        files_deleted = os.path.exists(project_dir)
+        if files_deleted:
+            shutil.rmtree(project_dir)
         repository_deleted = (
             cls._repository.delete_project(project_id)
             if cls._repository is not None
             else False
         )
 
-        project_dir = cls._get_project_dir(project_id)
-        if not os.path.exists(project_dir):
-            return repository_deleted
-
-        shutil.rmtree(project_dir)
-        return True
+        if files_deleted or repository_deleted:
+            logger.info('Deleted project %s files and metadata; cases, graphs, simulations and reports retained', project_id)
+        return files_deleted or repository_deleted
 
     @classmethod
     def save_file_to_project(cls, project_id: str, file_storage, original_filename: str) -> Dict[str, str]:

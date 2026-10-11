@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import logging
 import os
 import random
 import sqlite3
+import tempfile
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -21,6 +24,112 @@ SHORT_MEMORY_FILE = "agent_short_memory.json"
 SUMMARY_MEMORY_FILE = "agent_memory_summaries.json"
 MAX_MEMORY_ITEMS = 8
 SUMMARY_INTERVAL_ROUNDS = 5
+logger = logging.getLogger('mirofish.forecast_memory')
+
+
+def _validate_memory(data: Any, *, summary: bool) -> None:
+    if not isinstance(data, dict):
+        raise ValueError('Memory must be an agent mapping')
+    for agent_id, entry in data.items():
+        if not isinstance(agent_id, str) or not agent_id:
+            raise ValueError('Memory agent IDs must be nonempty strings')
+        records = [entry] if summary else entry
+        if not isinstance(records, list):
+            raise ValueError('Short memory must contain lists of records')
+        for record in records:
+            if not isinstance(record, dict):
+                raise ValueError('Memory records must be objects')
+            fields = ('summary', 'updated_at') if summary else ('content', 'action_type', 'platform', 'recorded_at')
+            for field in fields:
+                if record.get(field) is not None and not isinstance(record[field], str):
+                    raise ValueError('Memory text fields must be strings')
+            if 'round' in record and (type(record['round']) is not int or record['round'] < 0):
+                raise ValueError('Memory round must be a nonnegative integer')
+
+
+def _decode_memory(raw: bytes, *, summary: bool) -> dict:
+    def reject_constant(value):
+        raise ValueError('Non-finite value in memory')
+    data = json.loads(raw.decode('utf-8'), parse_constant=reject_constant)
+    _validate_memory(data, summary=summary)
+    return data
+
+
+def _preserve_invalid_memory(path: str, raw: bytes) -> bool:
+    """Retain exact invalid bytes before permitting a replacement cache."""
+    retained = path + '.corrupt-' + hashlib.sha256(raw).hexdigest()
+    created = False
+    try:
+        try:
+            fd = os.open(retained, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:
+            with open(retained, 'rb') as stream:
+                if stream.read() != raw:
+                    raise OSError('Existing quarantine differs from damaged memory')
+        else:
+            created = True
+            with os.fdopen(fd, 'wb') as stream:
+                stream.write(raw)
+                stream.flush()
+                os.fsync(stream.fileno())
+        logger.warning('Invalid optional memory %s; original bytes preserved at %s; using empty memory', path, retained)
+        return True
+    except OSError as exc:
+        if created:
+            try:
+                os.unlink(retained)
+            except OSError:
+                pass
+        logger.warning('Optional memory preservation failed for %s (%s); replacement will not be saved', path, type(exc).__name__)
+        return False
+
+
+def _load_memory(path: str, *, summary: bool) -> dict:
+    try:
+        with open(path, 'rb') as stream:
+            raw = stream.read()
+    except FileNotFoundError:
+        return {}
+    except OSError as exc:
+        logger.warning('Optional memory read failed for %s (%s); using empty memory', path, type(exc).__name__)
+        return {}
+    try:
+        return _decode_memory(raw, summary=summary)
+    except (ValueError, UnicodeError):
+        _preserve_invalid_memory(path, raw)
+        return {}
+
+
+def _save_memory(path: str, data: dict, *, summary: bool) -> None:
+    temporary = None
+    try:
+        _validate_memory(data, summary=summary)
+        encoded = json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False).encode('utf-8')
+        try:
+            with open(path, 'rb') as stream:
+                previous = stream.read()
+        except FileNotFoundError:
+            pass
+        else:
+            try:
+                _decode_memory(previous, summary=summary)
+            except (ValueError, UnicodeError):
+                if not _preserve_invalid_memory(path, previous):
+                    return
+        fd, temporary = tempfile.mkstemp(prefix='.' + os.path.basename(path) + '.', suffix='.tmp', dir=os.path.dirname(path))
+        with os.fdopen(fd, 'wb') as stream:
+            stream.write(encoded)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    except (OSError, ValueError, UnicodeError) as exc:
+        logger.warning('Optional memory write failed for %s (%s); new memory not saved', path, type(exc).__name__)
+    finally:
+        if temporary and os.path.exists(temporary):
+            try:
+                os.unlink(temporary)
+            except OSError:
+                logger.warning('Optional memory temporary file retained at %s', temporary)
 
 
 def _memory_path(simulation_dir: str) -> str:
@@ -28,23 +137,11 @@ def _memory_path(simulation_dir: str) -> str:
 
 
 def load_short_memory(simulation_dir: str) -> Dict[str, List[Dict[str, Any]]]:
-    path = _memory_path(simulation_dir)
-    if not os.path.exists(path):
-        return {}
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data if isinstance(data, dict) else {}
-    except (OSError, json.JSONDecodeError):
-        return {}
+    return _load_memory(_memory_path(simulation_dir), summary=False)
 
 
 def save_short_memory(simulation_dir: str, memory: Dict[str, List[Dict[str, Any]]]) -> None:
-    try:
-        with open(_memory_path(simulation_dir), "w", encoding="utf-8") as f:
-            json.dump(memory, f, ensure_ascii=False, indent=2)
-    except OSError:
-        pass
+    _save_memory(_memory_path(simulation_dir), memory, summary=False)
 
 
 def _summary_path(simulation_dir: str) -> str:
@@ -52,23 +149,11 @@ def _summary_path(simulation_dir: str) -> str:
 
 
 def load_memory_summaries(simulation_dir: str) -> Dict[str, Dict[str, Any]]:
-    path = _summary_path(simulation_dir)
-    if not os.path.exists(path):
-        return {}
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data if isinstance(data, dict) else {}
-    except (OSError, json.JSONDecodeError):
-        return {}
+    return _load_memory(_summary_path(simulation_dir), summary=True)
 
 
 def save_memory_summaries(simulation_dir: str, summaries: Dict[str, Dict[str, Any]]) -> None:
-    try:
-        with open(_summary_path(simulation_dir), "w", encoding="utf-8") as f:
-            json.dump(summaries, f, ensure_ascii=False, indent=2)
-    except OSError:
-        pass
+    _save_memory(_summary_path(simulation_dir), summaries, summary=True)
 
 
 def record_actions_to_short_memory(

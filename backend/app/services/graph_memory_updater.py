@@ -7,6 +7,7 @@ Replaces zep_graph_memory_updater.py — Zep client replaced by GraphStorage.
 import os
 import time
 import threading
+import uuid
 from contextvars import copy_context
 import json
 from typing import Dict, Any, List, Optional, Callable
@@ -365,6 +366,8 @@ class GraphMemoryUpdater:
 
         episode_texts = [activity.to_episode_text() for activity in activities]
         combined_text = "\n".join(episode_texts)
+        # Stable within this batch, including retries after a later stage fails.
+        memories = [dict(activity.to_memory_record(), memory_id=str(uuid.uuid4())) for activity in activities]
 
         for attempt in range(self.MAX_RETRIES):
             if self._stopping:
@@ -373,7 +376,7 @@ class GraphMemoryUpdater:
                 if hasattr(self.storage, "add_agent_memories"):
                     self.storage.add_agent_memories(
                         self.graph_id,
-                        [activity.to_memory_record() for activity in activities],
+                        memories,
                     )
                 self.storage.add_text(self.graph_id, combined_text)
 
