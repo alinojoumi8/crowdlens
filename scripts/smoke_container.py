@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import runpy
 import subprocess
 import time
 import uuid
@@ -21,6 +22,9 @@ def main():
     name = 'crowdlens-smoke-' + uuid.uuid4().hex[:12]
     volume = name + '-data'
     receipt = {'image': args.image, 'revision': args.revision, 'network': 'none'}
+    root = Path(__file__).resolve().parents[1]
+    source_identity = runpy.run_path(str(root / 'backend/app/utils/build_identity.py'))['source_identity']
+    expected_identity = source_identity(root, args.revision)
     probe = '''
 import json, re, urllib.request, urllib.error
 get = lambda path, port=3000: urllib.request.urlopen(f'http://127.0.0.1:{port}{path}', timeout=8)
@@ -61,6 +65,7 @@ print(json.dumps({'build': health['build'], 'asset': asset, 'control_db_healthy'
         else:
             raise RuntimeError('Image did not start within 90 seconds')
         receipt['first_start'] = json.loads(docker('exec', name, 'python', '-c', probe))
+        assert receipt['first_start']['build'] == expected_identity, 'Image source differs from checkout'
         docker('exec', name, 'python', '-c', '''
 import sqlite3
 from pathlib import Path
