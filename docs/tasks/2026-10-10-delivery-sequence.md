@@ -63,14 +63,21 @@ fictional browser journey retained two reviewers, three versions, one disagreeme
 and partial/unmeasured values across a fresh tab. The actual downloaded ZIP passed
 the rubric importer, parent hashes stayed unchanged and external provider calls
 were zero. These synthetic labels do not establish factual quality. See the
-[review guide](../human-claim-review.md). Remote CI/integration follow separately.
+[review guide](../human-claim-review.md). [PR #18](https://github.com/alinojoumi8/crowdlens/pull/18) passed candidate CI
+38103809157 and merged at `4af0f6e`; the merged image is deployed after offline
+smoke, runtime identity and all 140 preserved-file hashes passed.
 
 ## 4. Startup and readiness
 
-- [ ] Report storage capacity and actionable write/low-space failures.
-- [ ] Distinguish configured, reachable, unavailable and unverified generation
+- [x] Report storage capacity and actionable write/low-space failures.
+- [x] Distinguish configured, reachable, unavailable and unverified generation
   states using bounded non-generation checks; never bill from normal polling.
-- [ ] Verify success, timeout, missing-model and low-space cases and their UI.
+- [x] Verify success, timeout, missing-model and low-space cases and their UI.
+
+Verified 874 backend and 92 frontend tests/build; fictional browser checks cover
+ready, missing model and low storage. The configured MiniMax endpoint currently
+returns unsupported metadata, so readiness remains unverified and inference untested.
+See [readiness](../readiness.md). Candidate CI/integration follows separately.
 
 ## 5. Coordinated backup and recovery
 

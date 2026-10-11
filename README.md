@@ -209,7 +209,7 @@ Embeddings default to local Ollama. To benchmark Gemini, set `EMBEDDING_PROVIDER
 
 Runtime readiness is exposed at `GET /api/status`. It reports Neo4j, embedding,
 SQLite control-plane, migration, and simulation-restart status. The lightweight
-container liveness endpoint is `GET /health`.
+container liveness endpoint is `GET /health`. The home page shows [storage and model metadata readiness](docs/readiness.md); status polling never generates text or embeddings. A listed model is not an inference test.
 
 Project, case, task, and simulation metadata is stored transactionally in
 the SQLite database under `backend/uploads/`. New background tasks retain

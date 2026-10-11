@@ -156,7 +156,9 @@ def test_cors_allows_configured_local_origin(app_client):
     assert response.headers["Access-Control-Allow-Origin"] == "http://127.0.0.1:3000"
 
 
-def test_status_includes_control_plane_in_overall_readiness(app_client):
+def test_status_includes_control_plane_in_overall_readiness(app_client, monkeypatch):
+    monkeypatch.setattr('app.api.status.model_metadata', lambda *a: {'healthy':True,'state':'reachable'})
+    monkeypatch.setattr('app.api.status.storage_readiness', lambda *a: {'healthy':True,'state':'ready'})
     response = app_client.get("/api/status")
 
     assert response.status_code == 200

@@ -82,6 +82,13 @@ def create_app(config_class=Config):
     proposal_store = ProposalStore(ReportManager._get_reports_dir())
     app.extensions['evidence_proposal_store'] = proposal_store
     proposal_store.reconcile()
+    if should_log_startup and Config.STARTUP_STATUS_CHECK:
+        from .api.status import storage_readiness
+        disk = storage_readiness(app)
+        logger.info('Startup storage readiness: %s', disk['state'])
+        for area in disk.get('areas', []):
+            if area['state'] != 'ready':
+                logger.warning('Storage %s: %s', area['name'], area['message'])
 
     # Request logging middleware
     @app.before_request
