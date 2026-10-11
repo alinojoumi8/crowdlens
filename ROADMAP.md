@@ -1,5 +1,12 @@
 # CrowdLens Roadmap
 
+2026-10-10 update: workspace/runtime reconciliation and production serving are
+complete, with green candidate/merged-main CI at `71545e2`. Persistent claim
+reviews are implemented and verified offline, including browser save/reopen and
+downloaded rubric exports. Independent human ratings remain pending. Current
+ordered delivery status is maintained in the [delivery ledger](docs/tasks/2026-10-10-delivery-sequence.md);
+the baseline below records the earlier audit and its then-current limits.
+
 Reconciled 2026-10-03 against application candidate `7f4d68e`, routes, persistence,
 tests and [fresh actual MiniMax acceptance](docs/audits/2026-10-03-report-reliability.md).
 The unchanged-candidate fictional workflow completed through source proposal,

@@ -171,6 +171,17 @@ def get_evidence_proposal(report_id, proposal_id):
     return jsonify(success=True, data=store_for_app().get(report_id, proposal_id))
 
 
+@report_bp.route('/<report_id>/evidence-proposals', methods=['GET'])
+@endpoint
+def list_evidence_proposals(report_id):
+    store = store_for_app()
+    store.identifier(report_id)
+    records = [{key: row.get(key) for key in ('proposal_id', 'section_index', 'state', 'created_at')}
+               for row in store.records() if row['parent_report_id'] == report_id]
+    records.sort(key=lambda row: row.get('created_at') or '', reverse=True)
+    return jsonify(success=True, data=records)
+
+
 def revisions_service():
     return ReportRevisionService(store_for_app(), storage=current_app.extensions.get('neo4j_storage'))
 
