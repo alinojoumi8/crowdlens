@@ -16,6 +16,7 @@ import time
 import uuid
 from functools import wraps
 import inspect
+from .workflow_spend import price_terms, micro_usd, estimated_micro_usd, token_counts
 
 _SCOPE = ContextVar('workflow_execution', default=None)
 _ISSUER = ContextVar('workflow_issuing_owner', default=None)
@@ -78,7 +79,7 @@ class WorkflowLedger:
                    (json.dumps(record), record['workflow_id']))
 
     def _expire(self, record):
-        if record['state'] in ('authorized', 'request_limit') and record.get('deadline_at') is not None:
+        if record['state'] in ('authorized', 'request_limit', 'spend_limit', 'spend_estimate_exceeded') and record.get('deadline_at') is not None:
             if self.clock() >= record['deadline_at']:
                 record['state'] = 'runtime_limit'
                 record['reason'] = 'runtime_limit'
@@ -93,7 +94,7 @@ class WorkflowLedger:
             raise ValueError('invalid_max_seconds')
 
     def authorize(self, *, request_key, provider, model, base_url, input_description,
-                  max_requests, max_seconds, confirmed, consumed_requests=0, input_fingerprint=None, resources=()):
+                  max_requests, max_seconds, confirmed, consumed_requests=0, input_fingerprint=None, resources=(), spend=None):
         self._limits(max_requests, max_seconds, confirmed)
         if not all(isinstance(x, str) and 0 < len(x) <= 500 for x in
                    (request_key, provider, model, base_url, input_description)):
@@ -103,6 +104,10 @@ class WorkflowLedger:
         identity = dict(provider=provider, model=model, endpoint_identity=endpoint_identity(base_url),
                         input_description=input_description, max_requests=max_requests,
                         max_seconds=max_seconds, imported_requests=consumed_requests, input_fingerprint=input_fingerprint)
+        if spend is not None:
+            if consumed_requests:
+                raise ValueError('legacy_usage_cannot_be_priced')
+            identity['spend'] = price_terms(spend)
         if input_fingerprint is not None and (not isinstance(input_fingerprint, str) or len(input_fingerprint) != 64
                 or any(c not in '0123456789abcdef' for c in input_fingerprint)):
             raise ValueError('invalid_input_fingerprint')
@@ -119,6 +124,8 @@ class WorkflowLedger:
                           initial_authorization=identity, authorizations=[dict(identity, at=self.clock(), epoch=1)],
                           state='authorized', reason=None, epoch=1, admitted=consumed_requests,
                           created_at=self.clock(), started_at=None, deadline_at=None)
+            if spend is not None:
+                record['spend'] = dict(identity['spend'], estimated_micro_usd=0, reserved_micro_usd=0, overrun_attempts=0)
             db.execute('INSERT INTO workflows VALUES(?,?,?)',
                        (record['workflow_id'], request_key, json.dumps(record)))
             for resource in resources:
@@ -153,7 +160,7 @@ class WorkflowLedger:
             self._save(db, record)
         if epoch != record['epoch']:
             raise WorkflowHalt('authorization_superseded', wid)
-        if record['state'] in ('stopped', 'runtime_limit'):
+        if record['state'] in ('stopped', 'runtime_limit', 'spend_estimate_exceeded'):
             raise WorkflowHalt(record['reason'], wid)
         return record
 
@@ -176,6 +183,10 @@ class WorkflowLedger:
                 reason = record['reason'] or record['state']
             elif record['admitted'] >= record['max_requests']:
                 reason = record['state'] = record['reason'] = 'request_limit'
+            spend = record.get('spend')
+            if reason is None and spend and (spend['estimated_micro_usd'] + spend['reserved_micro_usd']
+                    + spend['reserve_micro_usd'] > spend['budget_micro_usd']):
+                reason = record['state'] = record['reason'] = 'spend_limit'
             if reason is None:
                 now = self.clock()
                 if record['started_at'] is None:
@@ -186,6 +197,10 @@ class WorkflowLedger:
                     sequence=record['admitted'], stage=stage, model=model, task_id=task_id,
                     owner_attempt=owner_attempt, attempt_number=attempt_number, admitted_at=now,
                     finished_at=None, status='in_flight', usage=None, http_status=None)
+                if spend:
+                    ticket['spend'] = dict(reserved_micro_usd=spend['reserve_micro_usd'],
+                                           estimated_micro_usd=None, reservation_exceeded=False)
+                    spend['reserved_micro_usd'] += spend['reserve_micro_usd']
                 db.execute('INSERT INTO workflow_requests VALUES(?,?,?)',
                            (ticket['request_id'], wid, json.dumps(ticket)))
                 if record['admitted'] == record['max_requests']:
@@ -196,12 +211,35 @@ class WorkflowLedger:
         return ticket
 
     def finish(self, ticket, *, status, usage=None, http_status=None):
+        if not isinstance(usage, dict):
+            usage = None
+        try:
+            json.dumps(usage, allow_nan=False)
+        except (TypeError, ValueError):
+            usage = None  # Invalid provider usage cannot release a reservation.
         with self.transaction() as db:
             row = db.execute('SELECT payload FROM workflow_requests WHERE request_id=?', (ticket['request_id'],)).fetchone()
             record = json.loads(row[0])
             if record['finished_at'] is not None:
                 return
-            record.update(finished_at=self.clock(), status=status, usage=usage or None, http_status=http_status)
+            record.update(finished_at=self.clock(), status=status, usage=usage if isinstance(usage, dict) else None, http_status=http_status)
+            if record.get('spend'):
+                workflow = self._read(db, record['workflow_id'])
+                spend = workflow['spend']
+                estimate = estimated_micro_usd(usage, spend)
+                if estimate is not None:
+                    reserved = record['spend']['reserved_micro_usd']
+                    record['spend'].update(estimated_micro_usd=estimate, reserved_micro_usd=0,
+                                          reservation_exceeded=estimate > reserved)
+                    spend['reserved_micro_usd'] -= reserved
+                    spend['estimated_micro_usd'] += estimate
+                    if estimate > reserved:
+                        spend['overrun_attempts'] += 1
+                        # A bad reservation invalidates the assumptions. Never
+                        # silently reopen Stop or an expired/superseded allowance.
+                        if workflow['state'] not in ('stopped', 'runtime_limit'):
+                            workflow['state'] = workflow['reason'] = 'spend_estimate_exceeded'
+                self._save(db, workflow)
             record['elapsed_seconds'] = max(0, self.clock() - record['admitted_at'])
             db.execute('UPDATE workflow_requests SET payload=? WHERE request_id=?',
                        (json.dumps(record), record['request_id']))
@@ -214,13 +252,20 @@ class WorkflowLedger:
         return self.status(wid)
 
     def reauthorize(self, wid, *, max_requests, max_seconds, confirmed,
-                    acknowledge_unknown=False, request_key):
+                    acknowledge_unknown=False, request_key, budget_usd=None):
         self._limits(max_requests, max_seconds, confirmed)
         if not isinstance(request_key, str) or not 1 <= len(request_key) <= 128:
             raise ValueError('invalid_reauthorization_key')
         with self.transaction() as db:
             record = self._read(db, wid)
             terms = dict(max_requests=max_requests, max_seconds=max_seconds, request_key=request_key)
+            spend = record.get('spend')
+            if budget_usd is not None and not spend:
+                raise ValueError('cannot_add_pricing_to_existing_workflow')
+            if spend:
+                if budget_usd is None:
+                    raise ValueError('explicit_spend_budget_required')
+                terms['budget_micro_usd'] = micro_usd(budget_usd, positive=True)
             replay = next((item for item in record['authorizations'] if item.get('request_key') == request_key), None)
             if replay:
                 if any(replay[k] != v for k, v in terms.items()):
@@ -228,6 +273,10 @@ class WorkflowLedger:
                 return record
             if max_requests <= record['admitted']:
                 raise ValueError('new_total_ceiling_must_exceed_consumed')
+            if spend:
+                if terms['budget_micro_usd'] < (spend['estimated_micro_usd'] + spend['reserved_micro_usd'] + spend['reserve_micro_usd']):
+                    raise ValueError('budget_cannot_reserve_next_request')
+                spend['budget_micro_usd'] = terms['budget_micro_usd']
             uncertain = any(json.loads(row[0])['finished_at'] is None for row in db.execute(
                 'SELECT payload FROM workflow_requests WHERE workflow_id=?', (wid,)))
             if uncertain and acknowledge_unknown is not True:
@@ -254,7 +303,7 @@ class WorkflowLedger:
             if not self.usage_complete(item['usage']):
                 stage['unknown_usage_attempts'] += 1
             for key, value in (item['usage'] or {}).items():
-                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                if type(value) is int and value >= 0:
                     stage[key] = stage.get(key, 0) + value
         record.update(remaining_requests=max(0, record['max_requests'] - record['admitted']),
             elapsed_seconds=max(0, self.clock() - record['started_at']) if record['started_at'] else 0,
@@ -263,14 +312,16 @@ class WorkflowLedger:
             unknown_usage_attempts=record['imported_requests'] + sum(not self.usage_complete(item['usage']) for item in attempts),
             usage_by_stage=stages, attempts=sorted(attempts, key=lambda item: item['sequence']),
             admission_closed=record['state'] != 'authorized', billing_amount=None)
+        if record.get('spend'):
+            spend = record['spend']
+            spend['available_micro_usd'] = max(0, spend['budget_micro_usd'] - spend['estimated_micro_usd'] - spend['reserved_micro_usd'])
+            spend['unpriced_attempts'] = sum(item.get('spend', {}).get('estimated_micro_usd') is None for item in attempts)
+            spend['guarantee'] = 'admission_reservations_only_not_provider_billing'
         return record
 
     @staticmethod
     def usage_complete(usage):
-        usage = usage or {}
-        return any(all(isinstance(usage.get(key), (int, float)) and not isinstance(usage[key], bool)
-                       for key in pair) for pair in
-                   [('input_tokens', 'output_tokens'), ('prompt_tokens', 'completion_tokens')])
+        return token_counts(usage) is not None
 
 
 @dataclass(frozen=True)

@@ -97,7 +97,10 @@ passed 887 backend tests, 92 frontend tests/build, offline image smoke and the
 full coordinated restore: 29 files, two SQLite databases, four graph nodes and
 two relationships; review labels, original/revision hashes and the newer valid
 lease were preserved. All owned rehearsal resources were removed and real model
-calls were zero. Remote integration/deployment is pending. See the
+calls were zero. [PR #20](https://github.com/alinojoumi8/crowdlens/pull/20) merged and deployed at
+`898bb25` after candidate CI 38105843532 and main CI 38106414688 passed. Runtime
+identity and all 140 preserved-file hashes passed; the other 11 containers
+remained unchanged. See the
 [runbook](../coordinated-backup.md) and [verification](../audits/2026-10-10-coordinated-recovery.md).
 
 ## Preservation receipt

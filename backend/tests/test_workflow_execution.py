@@ -93,12 +93,14 @@ def test_unscoped_application_transport_requires_authorization(monkeypatch):
 
 
 @pytest.mark.parametrize('kind',['openai','oasis-anthropic','oasis-openai'])
-def test_transport_retries_share_physical_allowance(tmp_path,monkeypatch,kind):
+@pytest.mark.parametrize('budget', [False, True])
+def test_transport_retries_share_physical_allowance(tmp_path,monkeypatch,kind,budget):
     import httpx, requests, json
     from openai import OpenAI
     ledger=WorkflowLedger(tmp_path/'transport.sqlite')
     base='http://127.0.0.1:1/anthropic' if kind=='oasis-anthropic' else 'http://127.0.0.1:1/v1'
-    wid=ledger.authorize(request_key='transport',provider='synthetic',model='synthetic',base_url=base,input_description='fictional',max_requests=2,max_seconds=60,confirmed=True)['workflow_id']
+    prices = dict(currency='USD', budget_usd='0.002', reserve_usd='0.001', input_usd_per_million='1', output_usd_per_million='2', price_reference='fictional v1')
+    wid=ledger.authorize(request_key='transport',provider='synthetic',model='synthetic',base_url=base,input_description='fictional',max_requests=20 if budget else 2,max_seconds=60,confirmed=True,spend=prices if budget else None)['workflow_id']
     calls=[]
     reply={'id':'chat_fixture','object':'chat.completion','created':0,'model':'synthetic','choices':[{'index':0,'message':{'role':'assistant','content':'fixture'},'finish_reason':'stop'}],'usage':{'prompt_tokens':4,'completion_tokens':2,'total_tokens':6}}
     monkeypatch.setattr('time.sleep',lambda seconds:None)
@@ -121,9 +123,12 @@ def test_transport_retries_share_physical_allowance(tmp_path,monkeypatch,kind):
         generate=lambda:model.run([{'role':'user','content':'fixture'}])
     with execution_scope(ledger,wid,'simulation'):
         assert generate()
-        with pytest.raises(WorkflowHalt,match='request_limit'):generate()
+        with pytest.raises(WorkflowHalt,match='spend_limit' if budget else 'request_limit'):generate()
     status=ledger.status(wid)
     assert len(calls)==status['admitted']==2
+    if budget:
+        assert status['spend']['reserved_micro_usd'] == 1000
+        assert status['spend']['estimated_micro_usd'] == 8
     assert status['unknown_usage_attempts']==1
     assert len([item for item in status['attempts'] if item['stage']=='simulation'])==2
 

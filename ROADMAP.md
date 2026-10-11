@@ -1,7 +1,7 @@
 # CrowdLens Roadmap
 
-2026-10-10 update: workspace/runtime reconciliation, production serving, saved
-claim reviews and non-generation readiness are deployed through `555a7a5`, with
+2026-10-11 update: workspace/runtime reconciliation, production serving, saved
+claim reviews, readiness and coordinated recovery are deployed through `898bb25`, with
 green candidate and merged-main CI. Browser review exports and readiness states
 are verified. Coordinated cold restore and process-ownership recovery now pass
 the [synthetic rehearsal](docs/audits/2026-10-10-coordinated-recovery.md).
@@ -25,7 +25,9 @@ review, using Neo4j, SQLite, and filesystem artifacts. Ollama can keep generatio
 and embeddings local; hosted providers, website ingestion, and enabled market
 lookups use the network. The historical bike-lane browser served hosted generation
 on `242b899`; it differs from the new repair candidate and remains unchanged.
-Current production/deployment equivalence remains unverified.
+The selected `898bb25` deployment has verified source/runtime identity and
+preserved artifact hashes. Earlier live-model journeys retain their own revision
+identities; they are not current-candidate model verification.
 
 | Capability | Current status | Remaining boundary |
 | --- | --- | --- |
@@ -34,11 +36,11 @@ Current production/deployment equivalence remains unverified.
 | Scenario profiles/settings, simulation and ensembles | Implemented; four named profiles, two Twitter rounds, origin counts and effective settings verified | Broader lifecycle/memory/ensemble quality and independent persona fidelity. |
 | Root reports, progress, resume and section regeneration | Implemented; fresh three-section report with frozen original/action provenance and forecast authority | Independently labelled semantic support, omissions and forecast calibration; broader recovery paths. |
 | Source-scoped proposals and immutable revisions | Implemented; fresh actual proposal accepted/reopened with private response diagnostics and parent unchanged | Cross-packet contract reliability and independent source/claim quality. |
-| `/api/status` readiness endpoint | Implemented | Disk usage and actual generation-provider readiness are not reported/probed. |
+| `/api/status` readiness endpoint | Disk/write capacity and non-generation provider checks implemented and deployed | A configured provider with unsupported metadata remains unverified until separately authorized inference. |
 | Agent memory persistence | Partial | File-backed short memory/summaries and optional graph memories exist; lossless restart continuity is unverified. |
 | Automated checks | Implemented | Frozen-candidate results are in the ECC handoff; deterministic checks do not establish full model E2E or factual quality. |
 | Provider selection | Partial | Local/OpenAI-compatible/Anthropic adapters and Ollama/Gemini embeddings exist; per-task routing and broader backend compatibility remain future work. |
-| Workflow request/time controls and Stop | Implemented; fresh acceptance and all stopped partial-attempt ledgers retained | Monetary admission and broader provider accounting remain planned. |
+| Workflow request/time controls and Stop | Implemented; fresh acceptance and all stopped partial-attempt ledgers retained | Optional USD reservation admission implemented; provider invoices, subscription quotas and broader billing remain outside its guarantee. |
 | Graph visualization and comparison | Partial | Visualization and case-version comparison exist; whole-graph snapshots, temporal views, and simulation graph diffs remain future work. |
 
 ## Next: verify the existing product
@@ -46,7 +48,7 @@ Current production/deployment equivalence remains unverified.
 ### P1 — deployment, full workflow, and evidence quality
 
 - [x] Establish the historical bike-lane browser's commit/image/source fingerprint and preserve its original evidence. See [runtime identity and accounting](docs/audits/2026-10-03-control-recovery.md).
-- [ ] Reconcile a chosen deployed revision with the intended source under a separately authorized deployment task.
+- [x] Reconcile the selected deployed revision with source: `898bb25`, exact main CI, runtime fingerprint and retained artifacts verified in the [delivery ledger](docs/tasks/2026-10-10-delivery-sequence.md).
 - [x] Exercise a bounded fictional document through actual upload, graph, scenario, OASIS, report and proposal review with visible MiniMax generation. [Real results](docs/audits/2026-10-03-live-cedarbrook.md) distinguish the repaired/reopened journey from the fresh blocked run; all original hashes remain intact.
 - [x] Repair source/action provenance, exact quotation checks and one frozen forecast authority; bounded invalid-passage correction keeps the guards. See [the reliability audit](docs/audits/2026-10-03-report-reliability.md). Semantic quality remains independently unmeasured.
 - [x] Preserve completion/parsed audit snapshots and precise contract findings; reproduce failures and complete one fresh proposal acceptance/reopen without weakening guards. Cross-packet reliability remains open.
@@ -57,20 +59,22 @@ Current production/deployment equivalence remains unverified.
 
 - [x] Audit agent/tool/source-scope boundaries and repair reproduced high-priority failures, including owned-task recovery, duplicate root admission, preparation readiness, and stale ensemble cleanup. See [audit follow-ups](docs/audits/2026-10-02-h1-integration-review.md).
 - [x] Define and enforce whole-workflow physical-request/time limits, counted retries, Stop, explicit recovery authorization and retained partial outputs. [Contract](docs/workflow-execution.md) and [synthetic verification](docs/audits/2026-10-03-control-recovery.md) cover concurrent admission, restart, delayed responses and terminal polling.
-- [ ] Define monetary admission before promising a dollar ceiling; measured tokens, pricing estimates and request/time limits do not establish one.
-- [ ] Verify subprocess restart, failed writes, optional graph memory, and forced-run cleanup. Define the memory retention and continuation promise before strengthening it.
+- [x] Define and implement optional USD reservation admission with frozen pricing and unresolved-usage retention. The [contract](docs/workflow-execution.md#optional-usd-admission-policy-version-1) expressly excludes provider invoice and subscription-quota guarantees; no dollar billing ceiling is promised.
+- [x] Verify subprocess birth identity, interrupted restart, failed writes and preservation of newer owners/completions in the [coordinated recovery work](docs/audits/2026-10-10-coordinated-recovery.md).
+- [ ] Verify corrupt memory, optional graph-memory outages and scoped cleanup; lossless continuation remains unpromised.
 - [x] Verify supported report/proposal states in the built UI at 375/768/1440px: keyboard/focus, blocked/stale proposals, lost acceptance response/retry, reopen, unknown metrics, and real owned-task failure/manual retry. [QA evidence](docs/audits/2026-10-02-milestone4-browser-qa.md) identifies all seeded and substituted stages.
 - [x] Complete the [fresh visible-browser acceptance plan](docs/visible-browser-acceptance.md) on `7f4d68e` through local test revision acceptance/reload/history. No generation was seeded or substituted. Historical-copy paid recovery remains separate and was not run.
 - [x] Rehearse cold synthetic SQLite/artifact restore, same-root expired-task recovery, and separate Neo4j dump/load into new volumes.
-- [ ] Define retention/deletion ownership and coordinated cross-store backup procedures; online atomic backup and active-task relocation remain unverified.
-- [ ] Promote only after exact-candidate remote CI and explicitly authorized deployment verification. Local clean-install, audit, build, recovery, and image results are recorded in the [release evidence](docs/audits/2026-10-02-milestone5-release-verification.md).
+- [x] Define and rehearse coordinated cold cross-store backup/restore with checksummed manifests and fresh targets. Online atomic backup and active-task relocation remain unverified.
+- [ ] Finish scoped retention/deletion verification without altering unrelated cases.
+- [x] Promote the selected `898bb25` revision after exact-candidate/main remote CI and authorized deployment verification; repeat this gate for every new candidate. Local clean-install, audit, build, recovery, and image results are recorded in the [release evidence](docs/audits/2026-10-02-milestone5-release-verification.md).
 
 ## Stability and performance backlog
 
 - [ ] Verify Python 3.12+ compatibility for the pinned CAMEL/OASIS dependency set; retain Python 3.11 as the verified baseline until then.
 - [ ] Add GPU auto-detection if needed; current Compose uses an explicit GPU override with CPU-compatible defaults.
 - [ ] Verify transient Neo4j reconnect behavior before adding or promising resilience changes.
-- [ ] Extend status with disk capacity and a separately defined generation-provider readiness check.
+- [x] Extend status with disk/write capacity and separately defined non-generation provider readiness; actual inference remains separately authorized.
 - [ ] Add optional JSON structured logging; request IDs and timing logs already exist.
 - [ ] Measure throughput, memory use, latency, and model calls per workload/hardware tier before setting performance targets.
 

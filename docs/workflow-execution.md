@@ -8,8 +8,9 @@ reopening an existing immutable revision does not authorize generation.
 
 Implemented and synthetically verified at `34ad6d2` on 2026-10-03. The
 [audit](audits/2026-10-03-control-recovery.md) records exact identity, failing
-before regressions, final checks and real-provider limits. Monetary admission
-and a fresh complete live workflow remain unverified or future scope.
+before regressions, final checks and real-provider limits. The optional USD
+admission policy below was added on 2026-10-11; it does not establish a provider
+invoice ceiling. A fresh complete hosted workflow remains separately gated.
 
 - The operator confirms a provider endpoint identity, model, input description,
   maximum physical generation requests, and wall-time allowance. A fresh workflow
@@ -20,7 +21,7 @@ and a fresh complete live workflow remain unverified or future scope.
   atomic write transaction immediately before each transport attempt. SDK retries
   are disabled; supported transports implement visible, counted retries.
 - Failed attempts, timeouts, uncertain delivery, and retries consume requests.
-  Reservations are never refunded. Missing token usage remains unknown. Measured
+  Physical request counts are never refunded. Missing token usage remains unknown. Measured
   token categories are retained separately; they are not billing amounts.
 - The clock begins with the first admitted request. Its persisted deadline covers
   all stages and pauses, including retries and child processes. Refresh, repeated
@@ -47,7 +48,8 @@ and a fresh complete live workflow remain unverified or future scope.
   embeddings require a separate supported accounting design. This contract does
   not claim a monetary ceiling or a forecast-quality guarantee.
 
-Expected states are `authorized`, `stopped`, `request_limit`, and `runtime_limit`.
+Expected states are `authorized`, `stopped`, `request_limit`, `runtime_limit`,
+`spend_limit`, and `spend_estimate_exceeded`.
 The status includes admitted, finished, in-flight/unknown attempts, elapsed time,
 remaining requests, terminal reason, and usage by stage. Report interruption is
 terminal for polling and retains partial sections. Manual recovery creates a new
@@ -90,3 +92,80 @@ For a paid test, use the [visible acceptance plan](visible-browser-acceptance.md
 and obtain new approval before submitting an authorization operation. The old
 fictional bike-lane allowance is exhausted. No recovery or new spending is
 implied by the prepared input packet or a visible synthetic preview.
+
+## Optional USD admission policy (version 1)
+
+A fresh authorization can include an operator-supplied `spend` object. The UI
+leaves prices blank: an exact preview-model/plan price must not be inferred from
+a similarly named model. The current MiniMax documentation lists
+[Flash Preview as M Plan/Code only](https://platform.minimax.io/docs/api-reference/text-chat-openai);
+its [pay-as-you-go pricing](https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise)
+does not establish this account's effective preview-model rate. Rates, cache
+premiums, context bands, service tier and subscription quota must be checked for
+the actual account. No metadata check or price entry calls a model.
+
+```json
+{
+  "spend": {
+    "currency": "USD",
+    "budget_usd": "1.00",
+    "reserve_usd": "0.10",
+    "input_usd_per_million": "1.25",
+    "output_usd_per_million": "10",
+    "price_reference": "Fictional example v1; replace with exact model/plan pricing"
+  }
+}
+```
+
+All amounts are decimal strings, at most six places and at most USD 1,000,000.
+Budget and per-attempt reserve must be positive. Internally, integer microdollars
+avoid floating-point admission errors. The identity-bound authorization freezes
+rates, source/version text, policy version and authorization timestamp. This
+example is **not MiniMax pricing**. Request/time-only workflows remain supported,
+including local generation; no USD policy is silently added to old workflows.
+Legacy imported consumption cannot be retroactively treated as free or priced
+from a count alone, so it cannot be combined with a new USD budget.
+
+Immediately before every physical attempt, including SDK-adapter retries,
+corrections, graph memory and concurrent phases, the same SQLite transaction
+checks `estimated + unresolved reservations + next reservation <= budget`.
+The transaction increments both the request count and the reserved amount before
+transport. Insufficient funds block that request with `spend_limit`; a refund
+from another request does not silently resume the workflow. Already admitted
+results can still finish. Reservations survive worker crashes and restart.
+
+A complete, valid token receipt replaces that attempt's reservation with the
+rounded-up estimate. Anthropic cache-read and cache-write input tokens are added
+to uncached input; OpenAI input and output totals already include cached and
+reasoning tokens. All input uses the supplied input rate; use a rate that covers
+any cache-write premium. Missing, partial, negative, fractional, nonfinite or
+malformed token counts retain the entire reservation. No automatic refund is
+made for timeouts, uncertain delivery, HTTP failures without usage, or cancelled
+local work. Repeated completion notifications cannot settle twice. Late usage
+settles against the original workflow even after Stop or a new epoch.
+
+An estimate greater than its reservation records the overrun and closes
+admission with `spend_estimate_exceeded`. Actual estimates remain visible even
+above the total budget. Other admitted requests may still accrue cost. Stopped
+or expired state is never reopened by reconciliation. Renewal explicitly supplies
+`budget_usd`, covering prior estimates, unresolved reservations and another
+request; it retains the original rates/reservation and all history. An operator
+who needs different pricing or reservation assumptions must begin a new workflow
+and retain the previous receipt. Renewal does not generate or retry anything.
+
+**Guarantee:** admission is limited using the operator's reservation and pricing
+assumptions. This is **not a provider invoice cap**, preflight token forecast or
+subscription-quota enforcement. The reservation is a chosen allowance, not a
+verified maximum request price. Provider-specific charges, wrong/stale rates,
+output beyond assumptions and unresolved delivery may cost more. No server-side
+tool, media, separate embedding or secondary-provider billing is supported by
+this policy. Use provider-side account controls where a hard billing cap is
+required. `billing_amount` remains null.
+
+The existing status endpoint is the receipt: it includes frozen pricing/history,
+per-attempt reservation/estimate/overrun, aggregate estimated/reserved/available
+microdollars, unpriced attempts and the guarantee label. It contains no prompts
+or provider keys. The UI shows these values after reload and before renewal.
+Tests use fictional rates and no hosted inference; they cover separate-process
+concurrency, retries at the transport boundary, cache accounting, Stop/late usage,
+renewal/idempotency, overrun and persisted restart state.

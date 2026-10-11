@@ -113,7 +113,7 @@ def install_workflow_controls(app):
                 input_description=data.get('input_description'), max_requests=data.get('max_requests'),
                 max_seconds=data.get('max_seconds'), confirmed=data.get('confirmed'),
                 input_fingerprint=data.get('input_fingerprint'), resources=resources,
-                consumed_requests=data.get('consumed_requests', 0))
+                consumed_requests=data.get('consumed_requests', 0), spend=data.get('spend'))
             return jsonify(success=True, data=ledger.status(record['workflow_id'])), 201
         except ValueError as exc:
             return jsonify(success=False, error=str(exc)), 400
@@ -156,7 +156,7 @@ def install_workflow_controls(app):
                 old_epoch = ledger.status(wid)['epoch']
                 record = ledger.reauthorize(wid, max_requests=data.get('max_requests'), max_seconds=data.get('max_seconds'),
                     confirmed=data.get('confirmed'), acknowledge_unknown=data.get('acknowledge_unknown', False),
-                    request_key=data.get('request_key'))
+                    request_key=data.get('request_key'), budget_usd=data.get('budget_usd'))
                 if record['epoch'] > old_epoch:
                     cancel_owned(wid, 'authorization_superseded', old_epoch)
             return jsonify(success=True, data=ledger.status(wid))
