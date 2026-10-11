@@ -30,6 +30,7 @@ def configure(output):
     from app.services.simulation_manager import SimulationManager
     from app.storage.control_db import ControlDatabase
     Config.UPLOAD_FOLDER = str(output / 'uploads')
+    Config.OASIS_SIMULATION_DATA_DIR = str(output / 'simulations')
     Config.LLM_API_KEY = 'synthetic-no-provider'
     Config.LLM_MODEL_NAME = 'synthetic-no-provider'
     Config.LLM_DEFAULT_PROVIDER = 'synthetic'
@@ -74,6 +75,8 @@ def main():
     parser.add_argument('--synthetic', required=True, action='store_true')
     parser.add_argument('--output-dir', required=True, type=Path)
     parser.add_argument('--port', type=int, default=0)
+    parser.add_argument('--workflow', action='store_true', help='Wire uploaded projects through a scripted root report; no model inference')
+    parser.add_argument('--api-only', action='store_true', help='Permit backend integration checks without built frontend assets')
     parser.add_argument('--seed-owner', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args()
     output = args.output_dir.resolve()
@@ -85,7 +88,7 @@ def main():
     if output.exists():
         parser.error('Output directory must not already exist.')
     frontend = BACKEND.parent / 'frontend' / 'dist'
-    if not (frontend / 'index.html').is_file():
+    if not args.api_only and not (frontend / 'index.html').is_file():
         parser.error('Build the current frontend first.')
     output.mkdir(parents=True)
     database = configure(output)
@@ -132,7 +135,17 @@ def main():
              'nodes': [{'uuid': 'synthetic_alex', 'name': 'Alex', 'labels': ['Entity', 'Person'],
                         'summary': 'Synthetic graph fixture; extraction was not run.'}], 'edges': []}
     class Storage:
+        def get_embedding_status(self, graph_id):
+            return {'safe_to_report': True, 'status':'synthetic'}
         def get_source_chunks(self, **kwargs):
+            if args.workflow and kwargs.get('graph_id') != SCOPE['graph_id']:
+                projects = [p for p in ProjectManager.list_projects() if p.graph_id == kwargs.get('graph_id')]
+                if not projects:
+                    return []
+                selected = projects[0]
+                return [{'graph_id':selected.graph_id, 'case_id':selected.case_id, 'case_version_id':selected.case_version_id,
+                         'uuid':'one', 'document_id':'synthetic_doc', 'filename':'uploaded-fictional-source',
+                         'data':ProjectManager.get_extracted_text(selected.project_id), 'page':1, 'chunk_index':0, 'origin':'source_document'}]
             return [{**SCOPE, 'uuid': 'one', 'document_id': 'synthetic_doc', 'filename': 'synthetic-record.txt',
                      'data': TEXT + (' Updated source.' if changed[0] else ''), 'page': 1, 'chunk_index': 0,
                      'origin': 'source_document'}]
@@ -194,6 +207,29 @@ def main():
                   'current_round': 2, 'total_rounds': 2, 'files': [{'filename': 'synthetic-record.txt'}]}
     fixture_run = {'sim_synthetic': 'completed', 'sim_control': 'idle'}
     upload_simulation = {}
+    if args.workflow:
+        import app.api.report as report_api
+        from app.services.simulation_manager import SimulationManager
+        class ScriptedReportAgent:
+            def __init__(self, **kwargs):
+                self.options = kwargs
+            def generate_report(self, progress_callback=None, report_id=None):
+                measured('report')
+                state = SimulationManager().get_simulation(self.options['simulation_id'])
+                selected = ProjectManager.get_project(state.project_id)
+                report = Report(report_id, state.simulation_id, state.graph_id, selected.simulation_requirement,
+                    ReportStatus.NEEDS_REVIEW, report_mode=self.options['report_mode'], report_depth=self.options['report_depth'],
+                    source_grounding={'graph_id':selected.graph_id, 'case_id':selected.case_id, 'case_version_id':selected.case_version_id, 'project_id':selected.project_id},
+                    forecast={'status':'unavailable', 'limitations':'Scripted fixture; no real simulation or generation.'},
+                    outline=ReportOutline('Scripted fictional hearing report', 'The hearing is Thursday. Other issues remain open.',
+                        [ReportSection('Hearing', content='The hearing is Thursday.'),
+                         ReportSection('Other issues', content='Other issues remain open.')]))
+                report.markdown_content = report.outline.to_markdown()
+                for index, section in enumerate(report.outline.sections, 1):
+                    ReportManager.save_section(report_id, index, section)
+                upload_simulation.update(report_id=report_id, report_status='needs_review')
+                return report
+        report_api.ReportAgent = ScriptedReportAgent
     control_report = Report('report_interrupted_synthetic', 'sim_control', SCOPE['graph_id'],
         'Synthetic Stop demonstration; no live simulation.', ReportStatus.INTERRUPTED,
         report_mode='prediction', outline=ReportOutline('Interrupted synthetic report',
@@ -210,11 +246,20 @@ def main():
             return jsonify(success=True, data={'simulations': [simulation]})
         if rest == 'create':
             project_id = (request.get_json() or {}).get('project_id')
-            upload_simulation.update({**simulation, 'simulation_id':'sim_upload',
+            identifier = 'sim_upload'
+            if args.workflow:
+                state = SimulationManager().create_simulation(project_id, ProjectManager.get_project(project_id).graph_id,
+                    enable_twitter=True, enable_reddit=False, prediction_settings={'platform':'twitter','memory_mode':'off'})
+                identifier = state.simulation_id
+                fixture_run[identifier] = 'idle'
+            upload_simulation.update({**simulation, 'simulation_id':identifier,
                 'project_id':project_id, 'graph_id':ProjectManager.get_project(project_id).graph_id,
                 'report_id':None, 'report_status':None})
             return jsonify(success=True, data=upload_simulation)
         if rest == 'prepare':
+            if args.workflow:
+                measured_fixture('preparation')
+                upload_simulation['prediction_settings'] = (request.get_json() or {}).get('prediction_settings', {})
             return jsonify(success=True, data={'already_prepared': True, **upload_simulation})
         if rest == 'prepare/status':
             return jsonify(success=True, data={'status': 'not_started', 'progress': 0})
@@ -230,6 +275,12 @@ def main():
                 'seed': 42, 'report_mode': 'prediction', 'report_depth': 'fast',
                 'agent_configs': [], 'event_config': {'initial_posts': [], 'scheduled_events': []},
                 'reddit_config': {}, 'twitter_config': {}}
+            if args.workflow and rest.startswith(str(upload_simulation.get('simulation_id')) + '/'):
+                settings = upload_simulation.get('prediction_settings', {})
+                config['prediction_settings'].update(settings)
+                for key in ('report_mode', 'report_depth', 'seed'):
+                    config[key] = settings.get(key, config[key])
+                config['time_config']['agents_per_hour_max'] = 1
             return jsonify(success=True, data={**config, 'config_generated': True, 'config': config})
         if rest.endswith('/run-status') or rest.endswith('/run-status/detail'):
             identifier = rest.split('/')[0]
@@ -246,6 +297,8 @@ def main():
         if rest in {'start', 'stop', 'close-env'}:
             identifier = (request.get_json() or {}).get('simulation_id', 'sim_synthetic')
             if rest == 'start':
+                if args.workflow:
+                    measured_fixture('simulation')
                 fixture_run[identifier] = 'running' if identifier == 'sim_control' else 'completed'
             if rest == 'stop':
                 fixture_run[identifier] = 'stopped'
@@ -253,8 +306,8 @@ def main():
                 if wid:
                     ledger.stop(wid)
             return jsonify(success=True, data={'status':fixture_run[identifier]})
-        if rest in {simulation['simulation_id'], 'sim_control', 'sim_upload'}:
-            return jsonify(success=True, data=upload_simulation if rest == 'sim_upload' else {**simulation, 'simulation_id': rest})
+        if rest in {simulation['simulation_id'], 'sim_control', upload_simulation.get('simulation_id')}:
+            return jsonify(success=True, data=upload_simulation if rest == upload_simulation.get('simulation_id') else {**simulation, 'simulation_id': rest})
         if rest.endswith('/actions'):
             return jsonify(success=True, data={'actions': [], 'total': 0})
         if rest.endswith('/timeline'):
@@ -283,7 +336,9 @@ def main():
                      for path in frontend.rglob('*') if path.is_file()},
         'substitutes': ['ontology generator', 'graph builder and storage', 'simulation endpoints', 'drafting LLM'],
         'seeded': ['original report and progress', 'original source chunk', 'graph node', 'simulation history'],
-        'provider_calls': 0}
+        'provider_calls': 0, 'workflow_mode':args.workflow}
+    if args.workflow:
+        identity['substitutes'].append('scripted root report generator')
     (output / 'identity.json').write_text(json.dumps(identity, indent=2))
     @app.get('/__synthetic/evidence')
     def evidence():
@@ -302,6 +357,12 @@ def main():
     from app.services.workflow_execution import transport_attempt
     install_workflow_controls(app)
     ledger = app.extensions['workflow_ledger']
+    def measured_fixture(stage):
+        from app.services.workflow_execution import execution_scope
+        identifier = (request.get_json() or {}).get('simulation_id')
+        wid = ledger.resolve('simulation:' + str(identifier))
+        with execution_scope(ledger, wid, stage):
+            measured(stage)
     def measured(stage):
         with transport_attempt(Config.LLM_MODEL_NAME, Config.LLM_BASE_URL) as receipt:
             receipt.update(http_status=200, usage={'input_tokens':0, 'output_tokens':0})

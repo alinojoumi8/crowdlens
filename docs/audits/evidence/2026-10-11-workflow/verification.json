@@ -1,0 +1,37 @@
+{
+  "source": {
+    "declared_revision": null,
+    "scope": "runtime-source-v2",
+    "source_sha256": "3013a5e0204d069f9f904f897666f36c943ce91e0412f92dbffa9ae4c3c61d36"
+  },
+  "application_base": "61a65f13e4358c081635b1fe73a81d6d4180c98c",
+  "harness": "workflow mode; explicit substitutes listed",
+  "substitutes": [
+    "ontology generator",
+    "graph builder and storage",
+    "simulation endpoints",
+    "drafting LLM",
+    "scripted root report generator"
+  ],
+  "source_format": "PDF",
+  "input_sha256": "4343914867c05564e7300a44431dfcd38185952a9103d0595670330fcbf10484",
+  "root_report_id": "report_7523d3f926dc",
+  "proposal_id": "proposal_7c2214649de843149fd42826bd9f0d0c",
+  "revision_id": "report_c09276eaa943464d99023dd3ea91915e",
+  "parent_selected_text_unchanged": true,
+  "revision_reloaded": true,
+  "viewports": [
+    375,
+    768,
+    1440
+  ],
+  "horizontal_overflow": false,
+  "downloads": {
+    "report_c09276eaa943464d99023dd3ea91915e.md": "6b5598aca28bf2f0312809af2e8c4181d5a5d719f0ec790501a1f38a2f4a9692",
+    "review-proposal_7c2214649de843149fd42826bd9f0d0c.zip": "8e5c704b0f822cc16dc7d8e7948001040d4e3a2f2718491fd33ea2ab977ebf4f"
+  },
+  "zip_integrity": "passed",
+  "human_review_status": "PENDING",
+  "provider_calls": 0,
+  "workflow_id": "wf_99cb1664ad3f4437a166524a577155ef"
+}

@@ -16,7 +16,8 @@ not verified Jira issue keys.
 - [x] Reconcile stale deployment, readiness and coordinated-backup roadmap items.
 - [x] Verify browser authorization, upload/project binding, blocked-budget reload,
   retained estimates/reservations and explicit renewal at 375/768/1440px.
-- [ ] Finish exact-candidate CI and integration.
+- [x] Finish exact-candidate CI and integration: PR #21 merged at `61a65f1`;
+  candidate and main CI passed all three jobs. Deployment follows the batch.
 
 Request/time controls remain supported without pricing. The spending policy
 limits admission using the selected assumptions, not provider invoices or M Plan
@@ -27,16 +28,24 @@ production build. See [the contract](../workflow-execution.md) and
 
 ## 2. Current workflow verification (T06)
 
-- [ ] Refresh offline PDF/text upload through review/export evidence against
+- [x] Refresh offline PDF/text upload through review/export evidence against
   the candidate, identifying every substituted/seeded stage.
-- [ ] Prepare a concrete fictional hosted canary with explicit request/time
-  allowance and account-appropriate cost/quota terms; obtain separate approval
-  before new MiniMax calls.
+- [x] Prepare the fictional Cedarbrook hosted canary: 60 requests, 30 minutes,
+  four agents and two rounds on the existing MiniMax M Plan.
+- [ ] Obtain the pending explicit allowance before hosted execution. No response
+  to the question has been received; no hosted calls were made.
+
+Offline evidence is in [the workflow audit](../audits/2026-10-11-workflow-and-human-handoff.md).
+Generation, graph storage, preparation and simulation are scripted substitutes,
+so this does not close the hosted workflow acceptance criterion.
 
 ## 3. Human quality baseline (T08)
 
-- [ ] Verify existing blinded packet preparation and import/scoring on frozen
-  sources; prepare a concrete reviewer handoff.
+- [x] Verify existing blinded packet preparation and import/scoring on frozen
+  sources; prepare a concrete reviewer handoff. Four historical actual-model
+  packets, eight original documents and 19 claims have blank human forms. The
+  importer returns PENDING with zero human rows and null metrics. These packets
+  do not measure the current MiniMax preview model.
 - [ ] Import actual independent human ratings when supplied. Never substitute
   model labels or synthetic checks for human quality measurements.
 
