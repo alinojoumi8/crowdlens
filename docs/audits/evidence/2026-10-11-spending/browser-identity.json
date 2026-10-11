@@ -1,0 +1,60 @@
+{
+  "source": {
+    "declared_revision": null,
+    "source_sha256": "de21f777afdc25cdf090f451552df8ba6856ed6827356e833b6a55c90003da51",
+    "scope": "runtime-source-v2"
+  },
+  "git_head": "898bb25ac6ee00453acc8f71b68d5fec70bd02e0",
+  "frontend": {
+    "home-styles.css": "3641f54ae097a8372075cfa4c44581c6ec97342362527b17442ad1418a260428",
+    "icon.png": "2b2c19d0400056000bb88636410c71c39ec3bc6b9cc871d6b022adf8cddb6e7a",
+    "crowdlens-mark.svg": "7cedfca9c1a7a143eacb45238d11475a4dd62bc1bbd83112c11108b2fe3f7679",
+    "crowdlens-icon.svg": "62b1e7f9470a0e69ef164feba1438a4a6bf71034ae4054415c5abb836fa868b7",
+    "index.html": "f560db84fe507bbb809ce9b2f6871530217daa7e49275940bec786219419ad3f",
+    "assets/InteractionView-ByVH7bwX.css": "cf0ea8cbc86b1d37c1cf3dd079924b74f0e3a18ff498895f65b34146364fca7b",
+    "assets/CasesView-ki1JRXGN.js": "3af021828c6e9398e5b926f8f3c06053f5e0c619142cd7c9a6b299d704ffa9aa",
+    "assets/Home-CDyEkQxm.js": "6e7e7e3b270ce10d5a19a3874ca7c42d914250f1f483b6bcfeaac1630619b3ea",
+    "assets/ActivityAccounting-CnLVd3RG.js": "e0f786e44192639ca813a999e6c0ca34c74e9f7f4798904954384215cf177f5e",
+    "assets/ReportView-ByRu-6sw.css": "e179c2ca38e8ae67d7d762f25942556796952ae05c25f7a4cafec3853c534d17",
+    "assets/InteractionView-B3UjQhdf.js": "1445e41fe58811c4e9568721c32f35a0b6c4a8f37ca90e3a9f1170fb98f05257",
+    "assets/report-1R3i3ske.js": "deea62e022d0cf36a50f3bb33158f6cb8541dcbc5aad46367d1344f2fc6e4b21",
+    "assets/SimulationView-v4ajHxY3.css": "b57c27140b621638c66e9543f2acdbcb2473cc487e8a65bff67eaafbf14e30bb",
+    "assets/Step2EnvSetup-cQRn1zf8.js": "c22ae5c95def418b324b26ab5a32950a0817523a14ab7a16e57856b7b1d8bf85",
+    "assets/CaseDetailView-kW29mnMh.js": "7d7d11a3d225838f3ae5f02134ef35ed384f9f32b39440bc64865e8f6c1a16c9",
+    "assets/graph-D9G9RrhM.js": "6cb770b9c9f3731dc53489ecc993bd40090f616c9fae1b574a6f64bd6d8a01a9",
+    "assets/Home-ehZOIWg4.css": "bde464386e97e4b12fabafbc2a98be66b811da63f896c3d3763a014aa2931cb3",
+    "assets/simulation-DnCOsr0a.js": "a99823e58508b15ff108efa2f0d786a50b4a231014bbfe562595d6630e406770",
+    "assets/ReportView-CCI0diYL.js": "781cdb71caf9ac4a1b291a7f79ae6f3523481d13c54efa7f77c5492d25b502d2",
+    "assets/GraphPanel-BrW_UL1d.css": "bb712520fe6552f0475d67499e5c78bff4ad082dd6a41f14b0d6ef658ba69fec",
+    "assets/economySettings-M8O0gDiO.js": "b2f4cc8b62b57bb6d21e9527ae0e7c894cb668a441ebf6b118afd6c46682babe",
+    "assets/workflowInput-2Usd-cif.js": "b894faa7f9f6677ceb6d119e48e5ddcfca1ffbe891551956e563a7478bbbec7c",
+    "assets/CaseCompareView-B0ZAwcBM.js": "e4196be42c088902a72c76717711c084b5a188cd4f00b296f6e69d256952ad42",
+    "assets/index-haLTyytg.js": "9cb7ee429721999041238879059f0ebfe948195bf037faecd46d8f27eb8f3344",
+    "assets/GraphPanel-BtwzgxGq.js": "a9a9fd33d169c202f4d226e4587481255a9c40d2f9aeea6e612c604ad68aa251",
+    "assets/SimulationRunView-CRz51j3p.js": "258e4430a92de39114c68f3e554a42539112935e5bb2d205a2133d9c5454f818",
+    "assets/ActivityAccounting-BM23yevc.css": "642e8b327b88156ec839226b72db52e5a6cec1fbbcaabe4adbe506cdda7ea4e6",
+    "assets/CaseCompareView-COpOAnvG.css": "3a04aae6634bfecd55960575ceb1e1d751677cb2db673cc4392e14e0ab54cfc7",
+    "assets/CaseDetailView-BjDDspP6.css": "f3e8f009888266b197c50c32fcc19899d84b373de65e85682b6e6765a6624796",
+    "assets/SimulationView-SKXKCeee.js": "a213976eddb4372f884f248d255684c03da34984e2d6ed93bcc30fd855d43c12",
+    "assets/index-Btgt5DRV.css": "e0c073a6c894f4cf5a75097e7f98a71c61f47c4aa4dea6f6fbb778259cb9e1b0",
+    "assets/SimulationRunView-DgIozjJm.css": "87bdffd8665057aafd70db502d9a439153625e94d442b535084a9de5c50c70dc",
+    "assets/MainView-B_q9gheH.js": "4f9022d49d6fe83d3a5d1c128e78add7c839a5e111c4d815a69ef578239f26c8",
+    "assets/MainView-B9zbc17M.css": "5fd5467085785f17fb2e8aa6adfd975c4003ba9da774c6ff04d85d38d3adda80",
+    "assets/Step2EnvSetup-s-_i5ArW.css": "82664584f3c7b89b61800e6a6648c47e256dd175e90c2e296ebed012fb180b92",
+    "assets/CasesView-CwHzJCV_.css": "0d2c36df725e10c5a33646e674a69343c183c26447a7246c3d242683a9449a10",
+    "assets/SafeMarkdown-DiTI930L.js": "4697ef50e8d6b8c798b4f2ef7258ee86fae2a3ddf8aec64e9af49a97ecdee34c"
+  },
+  "substitutes": [
+    "ontology generator",
+    "graph builder and storage",
+    "simulation endpoints",
+    "drafting LLM"
+  ],
+  "seeded": [
+    "original report and progress",
+    "original source chunk",
+    "graph node",
+    "simulation history"
+  ],
+  "provider_calls": 0
+}

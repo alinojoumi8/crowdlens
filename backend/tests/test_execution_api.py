@@ -289,3 +289,27 @@ def test_configuration_explains_secondary_provider_blocker(controlled, monkeypat
     monkeypatch.setattr(Config, mode, 'off')
     assert client.get('/api/execution/configuration').json['data']['authorization_blocker'] is None
     assert client.post('/api/execution/authorize', json=terms()).status_code == 201
+
+
+def test_http_spend_terms_and_renewal_are_explicit_and_persisted(controlled):
+    client, ledger, runtime, calls = controlled
+    data = terms('usd')
+    data['spend'] = dict(currency='USD', budget_usd='1', reserve_usd='0.1',
+        input_usd_per_million='1', output_usd_per_million='2', price_reference='Fictional v1')
+    response = client.post('/api/execution/authorize', json=data)
+    assert response.status_code == 201
+    wid = response.json['data']['workflow_id']
+    assert response.json['data']['spend']['budget_micro_usd'] == 1_000_000
+    assert client.post('/api/execution/authorize', json=data).json['data']['workflow_id'] == wid
+    altered = {**data, 'spend': {**data['spend'], 'budget_usd':'2'}}
+    assert client.post('/api/execution/authorize', json=altered).status_code == 400
+    ticket = ledger.admit(wid, 1, 'report', 'synthetic', Config.LLM_BASE_URL)
+    ledger.finish(ticket, status='response', usage={'input_tokens':3,'output_tokens':2})
+    client.post('/api/execution/'+wid+'/stop')
+    renew = dict(max_requests=5, max_seconds=60, confirmed=True, request_key='renew-usd')
+    assert client.post('/api/execution/'+wid+'/reauthorize', json=renew).json['error'] == 'explicit_spend_budget_required'
+    response = client.post('/api/execution/'+wid+'/reauthorize', json={**renew, 'budget_usd':'1'})
+    assert response.status_code == 200
+    assert response.json['data']['spend']['estimated_micro_usd'] == 7
+    assert client.get('/api/execution/'+wid).json['data']['spend']['price_reference'] == 'Fictional v1'
+    assert calls == []

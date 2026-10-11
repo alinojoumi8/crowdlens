@@ -1,0 +1,206 @@
+{
+  "provider": "synthetic",
+  "model": "synthetic-no-provider",
+  "endpoint_identity": "be7edb7f7f875c4864e2f8ceeaa113f6f4de116ac7e31e429b42ade0923cb776",
+  "input_description": "fictional-source.txt (144 bytes); Explore the fictional hearing disagreement; retain uncertainty.",
+  "max_requests": 60,
+  "max_seconds": 1800,
+  "imported_requests": 0,
+  "input_fingerprint": "de948452a1cad90ce0b8864cf8eae0b25253fd86fda5d6c04ffc0c1eba28d246",
+  "spend": {
+    "currency": "USD",
+    "policy_version": 1,
+    "price_reference": "Fictional UI test v1; no provider billing",
+    "budget_micro_usd": 100000,
+    "reserve_micro_usd": 50000,
+    "input_rate_micro_usd": 1250000,
+    "output_rate_micro_usd": 10000000,
+    "estimated_micro_usd": 2250,
+    "reserved_micro_usd": 50000,
+    "overrun_attempts": 0,
+    "available_micro_usd": 47750,
+    "unpriced_attempts": 1,
+    "guarantee": "admission_reservations_only_not_provider_billing"
+  },
+  "workflow_id": "wf_f312e978e2df41cea948d670ca6d5edc",
+  "request_key": "564e9134-5b41-4493-9b95-ae18552202b5",
+  "initial_authorization": {
+    "provider": "synthetic",
+    "model": "synthetic-no-provider",
+    "endpoint_identity": "be7edb7f7f875c4864e2f8ceeaa113f6f4de116ac7e31e429b42ade0923cb776",
+    "input_description": "fictional-source.txt (144 bytes); Explore the fictional hearing disagreement; retain uncertainty.",
+    "max_requests": 60,
+    "max_seconds": 1800,
+    "imported_requests": 0,
+    "input_fingerprint": "de948452a1cad90ce0b8864cf8eae0b25253fd86fda5d6c04ffc0c1eba28d246",
+    "spend": {
+      "currency": "USD",
+      "policy_version": 1,
+      "price_reference": "Fictional UI test v1; no provider billing",
+      "budget_micro_usd": 100000,
+      "reserve_micro_usd": 50000,
+      "input_rate_micro_usd": 1250000,
+      "output_rate_micro_usd": 10000000
+    }
+  },
+  "authorizations": [
+    {
+      "provider": "synthetic",
+      "model": "synthetic-no-provider",
+      "endpoint_identity": "be7edb7f7f875c4864e2f8ceeaa113f6f4de116ac7e31e429b42ade0923cb776",
+      "input_description": "fictional-source.txt (144 bytes); Explore the fictional hearing disagreement; retain uncertainty.",
+      "max_requests": 60,
+      "max_seconds": 1800,
+      "imported_requests": 0,
+      "input_fingerprint": "de948452a1cad90ce0b8864cf8eae0b25253fd86fda5d6c04ffc0c1eba28d246",
+      "spend": {
+        "currency": "USD",
+        "policy_version": 1,
+        "price_reference": "Fictional UI test v1; no provider billing",
+        "budget_micro_usd": 100000,
+        "reserve_micro_usd": 50000,
+        "input_rate_micro_usd": 1250000,
+        "output_rate_micro_usd": 10000000
+      },
+      "at": 1791711777.7871118,
+      "epoch": 1
+    }
+  ],
+  "state": "spend_limit",
+  "reason": "spend_limit",
+  "epoch": 1,
+  "admitted": 4,
+  "created_at": 1791711777.7871137,
+  "started_at": 1791711789.600464,
+  "deadline_at": 1791713589.600464,
+  "remaining_requests": 56,
+  "elapsed_seconds": 35.22542333602905,
+  "in_flight": 0,
+  "finished": 4,
+  "unknown_usage_attempts": 1,
+  "usage_by_stage": {
+    "ontology": {
+      "attempts": 1,
+      "unknown_usage_attempts": 0,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "graph": {
+      "attempts": 1,
+      "unknown_usage_attempts": 0,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "simulation": {
+      "attempts": 1,
+      "unknown_usage_attempts": 1
+    },
+    "report": {
+      "attempts": 1,
+      "unknown_usage_attempts": 0,
+      "input_tokens": 1000,
+      "output_tokens": 100
+    }
+  },
+  "attempts": [
+    {
+      "request_id": "req_c15b91aaf67b49809d7e787e2ed8a7c0",
+      "workflow_id": "wf_f312e978e2df41cea948d670ca6d5edc",
+      "epoch": 1,
+      "sequence": 1,
+      "stage": "ontology",
+      "model": "synthetic-no-provider",
+      "task_id": null,
+      "owner_attempt": null,
+      "attempt_number": 1,
+      "admitted_at": 1791711789.600464,
+      "finished_at": 1791711789.6016223,
+      "status": "response",
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "http_status": 200,
+      "spend": {
+        "reserved_micro_usd": 0,
+        "estimated_micro_usd": 0,
+        "reservation_exceeded": false
+      },
+      "elapsed_seconds": 0.0014042854309082031
+    },
+    {
+      "request_id": "req_3918f14d85414591886c24536e181bbc",
+      "workflow_id": "wf_f312e978e2df41cea948d670ca6d5edc",
+      "epoch": 1,
+      "sequence": 2,
+      "stage": "graph",
+      "model": "synthetic-no-provider",
+      "task_id": "8dbfa304-b500-4933-acf4-934003f8b217",
+      "owner_attempt": "dd34fdcf769d4f5d8ff081709d6ab3ea",
+      "attempt_number": 1,
+      "admitted_at": 1791711790.0262744,
+      "finished_at": 1791711790.0272365,
+      "status": "response",
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "http_status": 200,
+      "spend": {
+        "reserved_micro_usd": 0,
+        "estimated_micro_usd": 0,
+        "reservation_exceeded": false
+      },
+      "elapsed_seconds": 0.0011341571807861328
+    },
+    {
+      "request_id": "req_445bef64731949b3a95312fa4c6dd253",
+      "workflow_id": "wf_f312e978e2df41cea948d670ca6d5edc",
+      "epoch": 1,
+      "sequence": 3,
+      "stage": "simulation",
+      "model": "synthetic-no-provider",
+      "task_id": null,
+      "owner_attempt": null,
+      "attempt_number": 1,
+      "admitted_at": 1791711824.8233073,
+      "finished_at": 1791711824.8238382,
+      "status": "delivery_or_usage_unknown",
+      "usage": null,
+      "http_status": null,
+      "spend": {
+        "reserved_micro_usd": 50000,
+        "estimated_micro_usd": null,
+        "reservation_exceeded": false
+      },
+      "elapsed_seconds": 0.0006072521209716797
+    },
+    {
+      "request_id": "req_424319c41dac4f4886a9588e5f4a95f3",
+      "workflow_id": "wf_f312e978e2df41cea948d670ca6d5edc",
+      "epoch": 1,
+      "sequence": 4,
+      "stage": "report",
+      "model": "synthetic-no-provider",
+      "task_id": null,
+      "owner_attempt": null,
+      "attempt_number": 1,
+      "admitted_at": 1791711824.8243077,
+      "finished_at": 1791711824.8247795,
+      "status": "response",
+      "usage": {
+        "input_tokens": 1000,
+        "output_tokens": 100
+      },
+      "http_status": null,
+      "spend": {
+        "reserved_micro_usd": 0,
+        "estimated_micro_usd": 2250,
+        "reservation_exceeded": false
+      },
+      "elapsed_seconds": 0.0005576610565185547
+    }
+  ],
+  "admission_closed": true,
+  "billing_amount": null
+}
