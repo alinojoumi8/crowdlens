@@ -12,9 +12,10 @@ creating a background task or generating profiles, and returns 503 when the grap
 cannot validate an explicit roster. The worker repeats validation against its
 current graph read before profile generation. Names and types of selected entities
 persist in the coverage receipt; omitted eligible entities are listed explicitly.
-Saved prediction settings restore the exact selection in the UI.
+Saved prediction settings restore the exact selection in the UI. Reusing an already
+prepared simulation rejects a changed explicit roster instead of returning old profiles.
 
-Validation: 961 backend tests; 12 frontend unit tests and 85 component tests;
+Validation: 962 backend tests; 12 frontend unit tests and 85 component tests;
 production frontend build. Regressions cover the Cedarbrook four-person roster
 through profiles, config and persisted state, stale/missing IDs, filter conflicts,
 cap overflow, graph outage before dispatch, duplicate names distinguished by IDs,

@@ -160,3 +160,18 @@ def test_explicit_roster_rejected_before_dispatch(preparation, monkeypatch, sett
     assert response.status_code == expected, response.json
     assert not dispatched
     assert (folder / 'state.json').read_bytes() == before
+
+
+def test_reusing_prepared_simulation_cannot_silently_ignore_new_roster(preparation):
+    client, runtime, _, folder, dispatched, attempt = preparation
+    state = json.loads((folder/'state.json').read_text())
+    state['status'] = 'ready'
+    (folder/'state.json').write_text(json.dumps(state))
+    runtime.update(attempt, {'status': 'completed'})
+    before = (folder/'state.json').read_bytes()
+    response = client.post('/api/simulation/prepare', json={'simulation_id':'sim_retry',
+        'prediction_settings':{'participant_ids':['leo']}})
+    assert response.status_code == 409, response.json
+    assert 'differs' in response.json['error']
+    assert dispatched == []
+    assert (folder/'state.json').read_bytes() == before
