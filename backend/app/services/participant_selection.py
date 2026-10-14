@@ -18,7 +18,9 @@ def select_participants(entities, settings, *, legal_case=False):
     excluded = set(settings.get('entity_types_exclude') or [])
     included = set(settings.get('entity_types_include') or [])
     eligible = [e for e in entities if e.get_entity_type() not in excluded
-                and (not included or e.get_entity_type() in included)]
+                and (not included or included.intersection(
+                    label for label in getattr(e, 'labels', [e.get_entity_type()])
+                    if label not in ('Entity', 'Node')))]
     groups = {}
     for entity in eligible:
         groups.setdefault(entity.get_entity_type() or 'Unknown', []).append(entity)

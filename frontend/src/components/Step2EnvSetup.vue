@@ -932,13 +932,14 @@ const agentTypesInclude = ref([])
 const participantIds = ref([])
 const availableParticipants = computed(() => (props.graphData?.nodes || [])
   .map(node => ({uuid: node.uuid, name: node.name || 'Unnamed',
+    kinds: (node.labels || []).filter(label => !['Entity', 'Node'].includes(label)),
     kind: (node.labels || []).find(label => !['Entity', 'Node'].includes(label)) || ''}))
   .filter(node => node.uuid && node.kind)
   .sort((a, b) => a.name.localeCompare(b.name) || a.uuid.localeCompare(b.uuid)))
 const participantError = computed(() => {
   if (participantIds.value.length > agentCount.value) return 'Selected participant count exceeds the agent limit. Increase the limit or change the selection.'
   const unavailable = participantIds.value.filter(id => !availableParticipants.value.some(person =>
-    person.uuid === id && (!agentTypesInclude.value.length || agentTypesInclude.value.includes(person.kind))))
+    person.uuid === id && (!agentTypesInclude.value.length || person.kinds.some(kind => agentTypesInclude.value.includes(kind)))))
   return unavailable.length ? 'Some selected participants are unavailable or excluded by agent types. Restore those types or change the selection.' : ''
 })
 const availableAgentTypes = computed(() => [...new Set([
