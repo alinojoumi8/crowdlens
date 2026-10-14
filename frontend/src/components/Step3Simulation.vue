@@ -172,6 +172,7 @@
     <details v-if="effectiveConfig" class="run-settings"><summary>Run settings and limits</summary>
     <p class="effective-settings" role="status">Effective run: {{ effectiveConfig.prediction_settings?.platform || 'parallel' }} · {{ effectiveConfig.time_config?.total_simulation_hours }} hours · {{ effectiveConfig.time_config?.minutes_per_round }} min/round · effective rounds {{ effectiveRounds }} (requested cap {{ maxRounds || effectiveConfig.prediction_settings?.max_rounds || 'none' }}) · seed {{ effectiveConfig.seed ?? effectiveConfig.prediction_settings?.seed ?? 42 }} · memory {{ runtimeMode === 'fast' ? 'off (Fast override)' : effectiveConfig.prediction_settings?.memory_mode || 'practical' }} · report {{ effectiveConfig.report_mode }} / {{ effectiveConfig.report_depth }}</p>
     </details>
+    <p v-if="effectiveConfig?.prediction_settings?.activation_mode === 'smoke_round_robin'" class="effective-settings" role="status">Deterministic smoke test: agents rotate up to the active-per-round limit regardless of sleep hours or activation probability. This tests execution, not realistic activity. Workflow limits still apply.</p>
     <ActivityAccounting :summary="runStatus.activity_summary" />
     <p v-if="['stopped','failed'].includes(runStatus.runner_status)" class="effective-settings" role="status">Simulation {{ runStatus.runner_status }}: {{ runStatus.error || 'operator stop' }}. Partial activity is retained. Generation requires an available workflow allowance.</p>
 
@@ -546,11 +547,13 @@ const ensemble = ref({
 // Computed
 const runStateLabel = computed(() => {
   if (isStarting.value) return 'Starting'
-  return ({ idle: 'Not started', running: 'Running', starting: 'Starting', stopping: 'Stopping', completed: 'Completed', stopped: 'Stopped', failed: 'Failed' })[runStatus.value.runner_status] || 'Not started'
+  if (runStatus.value.runner_status === 'completed' && runStatus.value.activity_summary?.activity_outcome === 'no_autonomous_activity') return 'Rounds ended — no autonomous activity'
+  return ({ idle: 'Not started', running: 'Running', starting: 'Starting', stopping: 'Stopping', completed: 'Rounds ended', stopped: 'Stopped', failed: 'Failed' })[runStatus.value.runner_status] || 'Not started'
 })
 const progressGuidance = computed(() => {
   if (['stopped', 'failed'].includes(runStatus.value.runner_status)) return 'The run ended early. Partial activity is retained; review it before generating a report.'
-  if (phase.value === 2) return 'Activity is ready to inspect. The next step is a report for review.'
+  if (phase.value === 2 && runStatus.value.activity_summary?.activity_outcome !== 'responses_recorded') return 'The run ended without verified written responses. Inspect the activity evidence; a source-only report remains available. A new run requires an available workflow allowance.'
+  if (phase.value === 2) return 'Recorded responses are ready to inspect. Their quality and coverage still need review.'
   if (phase.value === 1 || isStarting.value) return 'Generated activity will appear below. You can stop the workflow to block new calls.'
   return 'Review the settings, then start when a workflow allowance is available.'
 })
@@ -975,7 +978,7 @@ const fetchRunStatus = async () => {
       const platformsCompleted = checkPlatformsCompleted(data)
 
       if (isStopped || isFailed || isCompleted) {
-        addLog(isStopped || isFailed ? `Simulation ${data.runner_status}: ${data.error || 'operator stop'}; partial output retained` : '✓ Simulation completed')
+        addLog(isStopped || isFailed ? `Simulation ${data.runner_status}: ${data.error || 'operator stop'}; partial output retained` : `Simulation rounds ended; activity result: ${data.activity_summary?.activity_outcome || 'unverified'}`)
         phase.value = 2
         stopPolling()
         loadEconomy()

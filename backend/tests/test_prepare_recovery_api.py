@@ -175,3 +175,14 @@ def test_reusing_prepared_simulation_cannot_silently_ignore_new_roster(preparati
     assert 'differs' in response.json['error']
     assert dispatched == []
     assert (folder/'state.json').read_bytes() == before
+
+
+def test_prepared_activation_mode_change_requires_explicit_regeneration(preparation):
+    client, runtime, _, folder, dispatched, attempt = preparation
+    state = json.loads((folder/'state.json').read_text()); state['status'] = 'ready'
+    (folder/'state.json').write_text(json.dumps(state)); runtime.update(attempt, {'status':'completed'})
+    before = (folder/'state.json').read_bytes()
+    response = client.post('/api/simulation/prepare', json={'simulation_id':'sim_retry',
+        'prediction_settings':{'activation_mode':'smoke_round_robin'}})
+    assert response.status_code == 409
+    assert not dispatched and (folder/'state.json').read_bytes() == before

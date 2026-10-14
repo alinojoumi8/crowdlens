@@ -225,6 +225,8 @@
             <div class="forecast-settings-summary">
               <label>Platform <select v-model="simulationPlatform" :disabled="forecastControlsLocked"><option value="parallel">Both platforms</option><option value="twitter">Public feed</option><option value="reddit">Topic community</option></select></label>
               <label>Seed <input v-model.number="simulationSeed" type="number" :disabled="forecastControlsLocked" /></label>
+              <label>Activation <select v-model="activationMode" aria-label="Activation mode" :disabled="forecastControlsLocked"><option value="stochastic">Normal activity schedule</option><option value="smoke_round_robin">Deterministic smoke test</option></select></label>
+              <span v-if="activationMode === 'smoke_round_robin'">Test schedule: rotates agents up to the active-per-round limit, ignoring sleep hours and activation probability. Real model calls still require an allowance; responses are not guaranteed. This is not a realistic activity sample.</span>
               <span>Presets replace the numeric controls, scenario, memory and depth. Fast runtime overrides memory to Off. Active agents are capped at the available persona count.</span>
               <span>Agent types: {{ agentTypesInclude.length ? agentTypesInclude.join(', ') : 'all source types' }}. Select types to filter before the agent limit; leave empty to include all.</span>
               <span v-if="simulationConfig">Effective: {{ simulationConfig.time_config?.total_simulation_hours }} hours, {{ simulationConfig.time_config?.minutes_per_round }} min/round, up to {{ simulationConfig.time_config?.agents_per_hour_max }} active agents; report {{ simulationConfig.report_mode }} / {{ simulationConfig.report_depth }}. Legacy legal aliases use the shared Legal case mode.</span>
@@ -954,6 +956,7 @@ const scenarioPack = ref('baseline_adverse_favorable')
 const reportMode = ref('legal_case')
 const simulationPlatform = ref('parallel')
 const simulationSeed = ref(42)
+const activationMode = ref('stochastic')
 const reportDepth = ref('standard')
 
 // Log deduplication：Record key information from last output
@@ -1130,7 +1133,8 @@ const buildForecastPayload = () => {
     report_mode: reportMode.value,
     report_depth: reportDepth.value,
     platform: simulationPlatform.value,
-    seed: simulationSeed.value
+    seed: simulationSeed.value,
+    activation_mode: activationMode.value
   }
   const predictionTarget = (macroEnabled.value && forecastMode.value === 'market_economy')
     ? buildMacroTarget(targetQuestion)
@@ -1194,7 +1198,7 @@ const restoreSettings = config => {
     simulation_duration:simulationDuration,minutes_per_round:minutesPerRoundSetting,
     active_agents_per_round:activeAgentsPerRound,ensemble_runs:ensembleRuns,
     scenario_pack:scenarioPack,memory_mode:memoryMode,report_depth:reportDepth,
-    report_mode:reportMode,platform:simulationPlatform,seed:simulationSeed}
+    report_mode:reportMode,platform:simulationPlatform,seed:simulationSeed,activation_mode:activationMode}
   for (const [key, field] of Object.entries(fields)) if (saved[key] !== undefined) field.value = saved[key]
 }
 watch(simulationConfig, restoreSettings)

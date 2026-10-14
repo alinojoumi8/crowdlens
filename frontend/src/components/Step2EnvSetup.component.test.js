@@ -79,3 +79,16 @@ it('allows an explicit participant when the type filter matches a secondary labe
   expect(prepareSimulation).toHaveBeenCalledWith(expect.objectContaining({participant_ids:['leo'],
     prediction_settings:expect.objectContaining({entity_types_include:['RetailBusinessOwner']})}))
 })
+
+it('restores and submits the explicit smoke activation mode without starting a run', async () => {
+  getSimulation.mockResolvedValue({success:true,data:{prediction_settings:{activation_mode:'smoke_round_robin'}}})
+  getPrepareStatus.mockResolvedValue({success:true,data:{status:'not_started'}})
+  prepareSimulation.mockResolvedValue({success:false,error:'fixture stops before generation'})
+  wrapper=mount(Step2EnvSetup,{props:{simulationId:'sim_smoke',systemLogs:[]}})
+  await flushPromises()
+  expect(wrapper.get('select[aria-label="Activation mode"]').element.value).toBe('smoke_round_robin')
+  expect(wrapper.text()).toContain('not a realistic activity sample')
+  await wrapper.findAll('button').find(b=>b.text()==='Prepare environment →').trigger('click')
+  await flushPromises()
+  expect(prepareSimulation).toHaveBeenCalledWith(expect.objectContaining({prediction_settings:expect.objectContaining({activation_mode:'smoke_round_robin'})}))
+})

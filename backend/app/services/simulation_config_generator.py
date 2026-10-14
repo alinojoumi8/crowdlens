@@ -230,6 +230,7 @@ class SimulationParameters:
                 "duration_rounds": duration_rounds, "requested_round_cap": cap,
                 "round_limit": effective_rounds,
                 "active_agents_per_round": self.time_config.agents_per_hour_max,
+                "activation_mode": self.prediction_settings.get('activation_mode', 'stochastic'),
                 "hour_fields_are_compatibility_aliases": True,
             },
             "report_mode": self.report_mode,

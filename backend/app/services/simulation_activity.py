@@ -51,10 +51,28 @@ def summarize_activity(rows):
     unique = unique_actions(valid)
     posts = [r for r in unique if r['action_type'] == 'CREATE_POST' and r.get('success', True)]
     model = [r for r in unique if r['origin'] == 'model_action']
-    successful = [r for r in model if r.get('success', True) and r['action_type'] != 'DO_NOTHING']
-    return {'model_written_actions': sum(r['action_type'] in ('CREATE_POST', 'CREATE_COMMENT') for r in successful),
+    successful = [r for r in model if r.get('success', True) and r['action_type'] not in ('DO_NOTHING', 'IDLE')]
+    # Acceptance requires explicit provenance and a successful runtime action.
+    # Legacy/default success and setup records must not establish a response.
+    autonomous = [r for r in model if r.get('success') is True
+                  and type(r.get('agent_id')) is int and r['agent_id'] >= 0
+                  and type(r.get('round_num', r.get('round'))) is int
+                  and r.get('round_num', r.get('round')) > 0
+                  and r['action_type'] not in ('DO_NOTHING', 'IDLE', 'SCHEDULED_EVENT')]
+    def has_written_response(row):
+        args = row.get('action_args') if isinstance(row.get('action_args'), dict) else {}
+        text = args.get('quote_content') if row['action_type'] == 'QUOTE_POST' else args.get('content')
+        return row['action_type'] in ('CREATE_POST', 'CREATE_COMMENT', 'QUOTE_POST') and isinstance(text, str) and bool(text.strip())
+    written = sum(has_written_response(r) for r in autonomous)
+    uncertain = any(r['origin'] == 'unknown' for r in unique) or any(
+        r.get('success') is None or type(r.get('round_num', r.get('round'))) is not int for r in model)
+    outcome = ('responses_recorded' if written else 'actions_only' if autonomous
+               else 'unverified' if uncertain else 'no_autonomous_activity')
+    return {'activity_outcome': outcome, 'autonomous_actions': len(autonomous),
+            'autonomous_written_responses': written,
+            'model_written_actions': sum(r['action_type'] in ('CREATE_POST', 'CREATE_COMMENT') for r in successful),
             'model_reactions': sum(r['action_type'] not in ('CREATE_POST', 'CREATE_COMMENT') for r in successful),
-            'model_noops': sum(r['action_type'] == 'DO_NOTHING' for r in model),
+            'model_noops': sum(r['action_type'] in ('DO_NOTHING', 'IDLE') for r in model),
             'model_failed_actions': sum(not r.get('success', True) for r in model),
             'logged_entries': len(valid), 'unique_posts': len(posts),
             'model_actions': sum(r['origin'] == 'model_action' for r in unique),

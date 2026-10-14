@@ -72,8 +72,11 @@ def build_report_grounding(storage, config, graph_id, simulation_dir):
         used += size
     if any(row['origin'] == 'unknown' for row in all_unique):
         packet['limitations'].append('legacy_action_origins_unverified')
-    packet['simulation_activity'] = {'summary': summarize_activity(raw), 'actions': actions,
-        'contract': 'initial_post and scheduled_event are scenario inputs; only model_action is a model response; unknown is unverified legacy origin'}
+    activation_mode = (config.get('prediction_settings') or {}).get('activation_mode', 'stochastic')
+    if activation_mode == 'smoke_round_robin':
+        packet['limitations'].append('deterministic_smoke_activation_not_realistic_activity')
+    packet['simulation_activity'] = {'summary': {**summarize_activity(raw), 'activation_mode': activation_mode}, 'actions': actions,
+        'contract': 'initial_post and scheduled_event are scenario inputs; only successful runtime model_action records with nonempty authored text establish written responses; unknown is unverified legacy origin; smoke_round_robin deliberately schedules agents for an execution test, not a realistic activity sample'}
     packet['digest'] = canonical_digest(packet)
     return packet
 
