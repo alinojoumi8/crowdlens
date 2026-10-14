@@ -34,3 +34,9 @@ claimed by these local tests. The previous live artifacts remain unchanged.
 This fixes roster control, not prompt-based name extraction, balanced viewpoints,
 zero-reaction runs, terminal-state cleanup, or summary-scope validation. Those
 follow-up items remain in the Confluence delivery backlog.
+
+The first two candidate Docker CI jobs stopped before build at the existing
+35-GiB disk guard. Extend the disposable-runner-only cleanup to unused GHCup and
+PowerShell installations and the apt cache; keep the threshold and hosted-Linux
+restriction. Shell syntax and refusal on the operator host were checked. This
+script was not allowed to perform cleanup on the operator host.
