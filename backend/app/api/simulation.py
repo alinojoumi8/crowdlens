@@ -12,6 +12,7 @@ from . import simulation_bp
 from ..config import Config
 from ..services.task_execution import TaskBusy
 from ..services.entity_reader import EntityReader
+from ..services.participant_selection import ParticipantSelectionError, validate_participant_ids
 from ..services.oasis_profile_generator import OasisProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner, RunnerStatus
@@ -438,6 +439,11 @@ def prepare_simulation():
             is_prepared, prepare_info = _check_simulation_prepared(simulation_id)
             logger.debug(f"Check result: is_prepared={is_prepared}, prepare_info={prepare_info}")
             if is_prepared:
+                requested_settings = {**(data.get('prediction_settings') or {}), **data}
+                if 'participant_ids' in requested_settings:
+                    requested_ids = validate_participant_ids(requested_settings['participant_ids'])
+                    if requested_ids != (state.prediction_settings or {}).get('participant_ids', []):
+                        return jsonify(success=False, error='Participant selection differs from the prepared roster. Create a new simulation or explicitly regenerate preparation.'), 409
                 logger.info(f"Simulation {simulation_id} has preparation complete, no need to regenerate")
                 return jsonify({
                     "success": True,
@@ -521,7 +527,11 @@ def prepare_simulation():
             state.entities_count = len(preview)
             state.entity_types = list(dict.fromkeys(e.get_entity_type() or 'Unknown' for e in preview))
             logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
+        except ParticipantSelectionError:
+            raise
         except Exception as e:
+            if state_prediction_settings.get('participant_ids'):
+                return jsonify(success=False, error='Unable to validate selected participants; retry when the graph is available'), 503
             logger.warning(f"Synchronously get entity countFailed（Will retry in background task）: {e}")
             # Failure does not affect subsequent process，Background task will retry
             forecast_settings = normalize_forecast_settings(
@@ -683,6 +693,8 @@ def prepare_simulation():
             }
         })
         
+    except ParticipantSelectionError as e:
+        return jsonify(success=False, error=str(e)), 400
     except ValueError as e:
         return jsonify({
             "success": False,

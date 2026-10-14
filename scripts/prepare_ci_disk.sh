@@ -7,7 +7,9 @@ if [[ "${GITHUB_ACTIONS:-}" != true || "${RUNNER_ENVIRONMENT:-}" != github-hoste
 fi
 # CrowdLens needs Python/Node/Docker; these preinstalled SDKs are unused.
 sudo rm -rf /usr/local/lib/android /usr/share/dotnet /usr/share/swift \
-  "${RUNNER_TOOL_CACHE:?}/CodeQL" "${HOME:?}/.rustup" /opt/ghc
+  "${RUNNER_TOOL_CACHE:?}/CodeQL" "${HOME:?}/.rustup" /opt/ghc \
+  /usr/local/.ghcup /usr/local/share/powershell
+sudo apt-get clean
 available_kib=$(df -Pk / | awk 'NR == 2 {print $4}')
 if (( available_kib < 35 * 1024 * 1024 )); then
   echo 'At least 35 GiB free is required for dependency cache, image export and smoke loading.' >&2

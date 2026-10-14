@@ -3,6 +3,7 @@
     <div class="scroll-container">
       <section v-if="participantSelection" aria-label="Participant coverage" class="info-card">
         <strong>Participant coverage</strong>
+        <p v-for="person in participantSelection.selected_entities || []" :key="person.uuid">{{ person.name }} · {{ person.entity_type }}</p>
         <p v-for="(count, type) in participantSelection.selected_by_type" :key="type">{{ type }}: {{ count }}</p>
         <p>Type coverage does not establish balanced viewpoints or verified party roles.</p>
         <p v-for="warning in participantSelection.warnings || []" :key="warning" role="status">{{ warning }}</p>
@@ -174,6 +175,13 @@
                 <input v-model.number="profileParallelism" :disabled="forecastControlsLocked" type="number" min="1" max="20" />
               </label>
               <label class="forecast-field">
+                <span class="forecast-label">Specific participants</span>
+                <select v-model="participantIds" multiple aria-label="Specific participants" :disabled="forecastControlsLocked">
+                  <option v-for="person in availableParticipants" :key="person.uuid" :value="person.uuid">{{ person.name }} · {{ person.kind }} · {{ person.uuid }}</option>
+                </select>
+                <small>Select the exact roster. Leave empty for automatic type coverage. Selected people are never silently replaced or truncated.</small>
+              </label>
+              <label class="forecast-field">
                 <span class="forecast-label">Duration</span>
                 <input v-model.number="simulationDuration" :disabled="forecastControlsLocked" type="number" min="1" max="240" />
               </label>
@@ -231,8 +239,10 @@
               v-if="awaitingConfig && !forecastControlsLocked"
               type="button"
               class="prepare-env-btn"
+              :disabled="Boolean(participantError)"
               @click="startPrepareSimulation"
             >Prepare environment →</button>
+            <p v-if="participantError" role="alert">{{ participantError }}</p>
           </div>
 
           <!-- Profiles Stats -->
@@ -919,6 +929,18 @@ const participantSelection = computed(() => simulationConfig.value?.participant_
 const predictionPreset = ref('standard_litigation_prediction')
 const agentCount = ref(48)
 const agentTypesInclude = ref([])
+const participantIds = ref([])
+const availableParticipants = computed(() => (props.graphData?.nodes || [])
+  .map(node => ({uuid: node.uuid, name: node.name || 'Unnamed',
+    kind: (node.labels || []).find(label => !['Entity', 'Node'].includes(label)) || ''}))
+  .filter(node => node.uuid && node.kind)
+  .sort((a, b) => a.name.localeCompare(b.name) || a.uuid.localeCompare(b.uuid)))
+const participantError = computed(() => {
+  if (participantIds.value.length > agentCount.value) return 'Selected participant count exceeds the agent limit. Increase the limit or change the selection.'
+  const unavailable = participantIds.value.filter(id => !availableParticipants.value.some(person =>
+    person.uuid === id && (!agentTypesInclude.value.length || agentTypesInclude.value.includes(person.kind))))
+  return unavailable.length ? 'Some selected participants are unavailable or excluded by agent types. Restore those types or change the selection.' : ''
+})
 const availableAgentTypes = computed(() => [...new Set([
   ...(props.graphData?.nodes || []).flatMap(node => node.labels || []),
   ...agentTypesInclude.value
@@ -1096,6 +1118,7 @@ const buildForecastPayload = () => {
     preset: predictionPreset.value,
     agent_count: agentCount.value,
     entity_types_include: [...agentTypesInclude.value],
+    participant_ids: [...participantIds.value],
     profile_parallelism: profileParallelism.value,
     simulation_duration: simulationDuration.value,
     minutes_per_round: minutesPerRoundSetting.value,
@@ -1166,7 +1189,7 @@ const restoreSettings = config => {
   const saved = config?.prediction_settings
   if (!saved) return
   if (saved.preset) predictionPreset.value = saved.preset
-  const fields = {agent_count:agentCount,entity_types_include:agentTypesInclude,profile_parallelism:profileParallelism,
+  const fields = {agent_count:agentCount,entity_types_include:agentTypesInclude,participant_ids:participantIds,profile_parallelism:profileParallelism,
     simulation_duration:simulationDuration,minutes_per_round:minutesPerRoundSetting,
     active_agents_per_round:activeAgentsPerRound,ensemble_runs:ensembleRuns,
     scenario_pack:scenarioPack,memory_mode:memoryMode,report_depth:reportDepth,
@@ -1255,6 +1278,7 @@ const selectProfile = (profile) => {
 
 // Automatically start preparing simulation
 const startPrepareSimulation = async () => {
+  if (participantError.value) return
   if (!props.simulationId) {
     addLog('Error：Missing simulationId')
     emit('update-status', 'error')
