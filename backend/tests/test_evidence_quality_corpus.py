@@ -28,7 +28,12 @@ def test_frozen_source_and_revision_contract(fixture, tmp_path, monkeypatch, rec
                    'quality_labels': None, 'human_review_seconds': None}
     # Persist the observed result before assertions so failures retain useful evidence.
     record_property('corpus_observation', json.dumps(observation, sort_keys=True))
-    expected = fixture['expected']
+    expected = copy.deepcopy(fixture['expected'])
+    # Frozen v1 fixtures predate the v14 fail-closed mapping gate. Keep their
+    # source/expected snapshots intact; record the explicit policy delta here.
+    if expected['state'] == 'ready' and result['before']['summary_scope_contract']['unmapped_summary_requires_review']:
+        expected['state'] = 'blocked'
+        expected['finding_codes'].append('summary_scope_unmapped')
     assert result['state'] == expected['state']
     assert observation['finding_codes'] == sorted(expected['finding_codes'])
     assert observation['selected_source_ids'] == sorted(expected['selected_source_ids'])

@@ -28,7 +28,7 @@ class FakeLLM:
                 'summary_edits': [{'start': 0, 'end': 24, 'old_text': 'The hearing is Thursday.',
                     'new_text': TEXT, 'claim_ids': ['claim_01']}]}
         else:
-            value = {'audit_protocol':'target_reviews_v1', 'summary_consistent':True,
+            value = {'audit_protocol':'target_reviews_v1', 'summary_consistent':True, 'summary_assessment':{'outcome':'consistent','detail':'The selected summary matches the source account.','evidence_ids':['episode:one']},
                      'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched source.'}],
                      'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic matched source.'}],
                      'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Synthetic source covered.'}],
@@ -170,7 +170,7 @@ def test_source_exclusion_is_still_subject_to_document_audit(tmp_path, monkeypat
             assert json.loads(messages[1]['content'])['source_exclusions'] == [exclusion]
         return original(self, messages, **kwargs)
     monkeypatch.setattr(FakeLLM, 'chat_json', chat)
-    audit = {'audit_protocol':'target_reviews_v1','summary_consistent':True,
+    audit = {'audit_protocol':'target_reviews_v1','summary_consistent':True, 'summary_assessment':{'outcome':'consistent','detail':'The selected summary matches the source account.','evidence_ids':['episode:one']},
         'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Source matched.'}],
         'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Source matched.'}],
         'claim_reviews':[{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],'detail':'Source matched.'}],
@@ -214,7 +214,7 @@ def test_scope_crosscheck():
 
 def test_unchanged_inconsistent_summary_blocks(tmp_path):
     draft = {'paragraphs': [{'text': TEXT, 'kind': 'attributed_allegation', 'claim_ids': ['claim_01']}], 'summary_edits': []}
-    audit = {'audit_protocol':'target_reviews_v1','summary_consistent':False,
+    audit = {'audit_protocol':'target_reviews_v1','summary_consistent':False, 'summary_assessment':{'outcome':'contradicted','detail':'Source reports postponement rather than Thursday.','evidence_ids':['episode:one']},
              'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic source match.'}],
              'summary_reviews':[], 'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Source covered.'}],
              'claim_reviews':[{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],'detail':'Source match.'}]}

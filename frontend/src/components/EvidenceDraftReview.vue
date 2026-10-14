@@ -51,10 +51,16 @@
           <article><h5>Proposed summary</h5><p>{{ proposal.after?.summary || (active ? 'Draft in progress…' : 'No proposed summary available.') }}</p></article>
         </div>
       </details>
+      <p v-if="proposal.before?.summary_scope_contract?.unmapped_summary_requires_review">Summary scope needs review: no unique passage maps to this section. The original summary is retained. This mapping gap alone does not establish a factual contradiction.</p>
+      <p v-if="proposal.summary_assessment" aria-label="AI summary assessment">AI summary assessment: {{ words(proposal.summary_assessment.outcome) }} — {{ proposal.summary_assessment.detail }} This is a model judgment, not factual certification.</p>
+      <nav v-if="proposal.summary_assessment?.evidence_ids?.length" aria-label="Summary assessment sources" class="claim-sources">
+        <a v-for="id in proposal.summary_assessment.evidence_ids" :key="id" :href="`#${sourceAnchor(id)}`" @click.prevent="revealSource(id)">{{ citationNumber(id) ? `Read Source ${citationNumber(id)}` : 'Read retrieved source' }}</a>
+      </nav>
       <ul v-if="proposal.findings?.length" class="findings" aria-label="Review findings">
         <li v-for="(finding, index) in proposal.findings" :key="index">
           <strong>{{ finding.blocking ? 'Blocks saving' : 'Review needed' }}:</strong>
-          {{ words(finding.code) }}<span v-if="Number.isInteger(finding.paragraph_index)"> (paragraph {{ finding.paragraph_index + 1 }})</span><span v-if="finding.detail"> — {{ finding.detail }}</span>
+          {{ finding.code === 'summary_inconsistent' && !proposal.summary_assessment ? 'Summary consistency not established by AI audit' : words(finding.code) }}<span v-if="Number.isInteger(finding.paragraph_index)"> (paragraph {{ finding.paragraph_index + 1 }})</span><span v-if="finding.detail"> — {{ finding.detail }}</span>
+          <p v-if="finding.next_action">Next step: {{ finding.next_action }}</p>
         </li>
       </ul>
       <details v-if="proposal.ledger?.length" class="ledger" open>

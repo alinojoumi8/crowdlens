@@ -6,7 +6,7 @@ from test_evidence_drafting import run
 
 
 def audit(consistent=True, reviews=None):
-    return {'audit_protocol':'target_reviews_v1','summary_consistent':consistent,
+    return {'audit_protocol':'target_reviews_v1','summary_consistent':consistent, 'summary_assessment':{'outcome':'consistent' if consistent else 'contradicted','detail':'Synthetic source comparison.','evidence_ids':['episode:one']},
         'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic source match.'}],
         'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'Synthetic source match.'}],
         'document_reviews':[{'document_id':'doc','outcome':'complete','detail':'Synthetic source covered.'}],

@@ -211,3 +211,53 @@ it('finds saved proposals without relying on browser session storage', async () 
   expect(api.createEvidenceProposal).not.toHaveBeenCalled()
   wrapper.unmount()
 })
+
+it('separates unmapped scope from an AI contradiction and keeps saving blocked', async () => {
+  const record = proposal('blocked')
+  record.summary_assessment = { outcome: 'contradicted', detail: 'The source says Friday, not Thursday.', evidence_ids: ['episode:one'] }
+  record.findings = [{ code: 'summary_scope_unmapped', blocking: true,
+    detail: 'The mapping failure does not establish a factual contradiction.',
+    next_action: 'Use a focused source-backed correction.' },
+    { code: 'summary_inconsistent', blocking: true, detail: record.summary_assessment.detail }]
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: record })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  expect(wrapper.text()).toContain('summary scope unmapped')
+  expect(wrapper.text()).toContain('AI summary assessment: contradicted')
+  expect(wrapper.text()).toContain('Next step: Use a focused source-backed correction.')
+  expect(wrapper.text()).toContain('not factual certification')
+  expect(wrapper.find('[aria-label="Summary assessment sources"] a').text()).toBe('Read Source 1')
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  expect(api.acceptEvidenceProposal).not.toHaveBeenCalled()
+  wrapper.unmount()
+})
+
+
+it('does not present a historical boolean audit as proof of contradiction', async () => {
+  const record = proposal('blocked')
+  record.before.summary_scope_contract = { unmapped_summary_requires_review: true }
+  record.findings = [{ code: 'summary_inconsistent', blocking: true }]
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: record })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  expect(wrapper.text()).toContain('Summary scope needs review')
+  expect(wrapper.text()).toContain('Summary consistency not established by AI audit')
+  expect(wrapper.text()).not.toContain('AI summary assessment: contradicted')
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  wrapper.unmount()
+})
+
+
+it('links summary contradiction evidence outside the ledger without source zero', async () => {
+  const record = proposal('blocked')
+  record.sources.push({ evidence_id: 'episode:context', filename: 'context.txt', window: 'Friday.' })
+  record.summary_assessment = { outcome: 'contradicted', detail: 'Retrieved context conflicts.', evidence_ids: ['episode:context'] }
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: record })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  const link = wrapper.find('[aria-label="Summary assessment sources"] a')
+  expect(link.text()).toBe('Read retrieved source')
+  expect(wrapper.text()).not.toContain('Read Source 0')
+  expect(wrapper.find(link.attributes('href')).exists()).toBe(true)
+  wrapper.unmount()
+})

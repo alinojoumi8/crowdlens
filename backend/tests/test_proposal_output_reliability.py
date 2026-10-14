@@ -74,7 +74,7 @@ def test_non_json_contract_error_is_not_retried(tmp_path,monkeypatch):
 
 
 def explicit_audit():
-    return {'audit_protocol':'target_reviews_v1','summary_consistent':True,
+    return {'audit_protocol':'target_reviews_v1','summary_consistent':True, 'summary_assessment':{'outcome':'consistent','detail':'The selected summary matches the source account.','evidence_ids':['episode:one']},
       'claim_reviews':[{'claim_id':'claim_01','outcome':'supported','evidence_ids':['episode:one'],'detail':'The original states Alex reports postponement.'}],
       'paragraph_reviews':[{'target_index':0,'outcome':'supported','detail':'Attribution matches original.'}],
       'summary_reviews':[{'target_index':0,'outcome':'supported','detail':'The selected summary matches original.'}],
@@ -115,7 +115,7 @@ def test_missing_protocol_never_discards_negative_target_reviews(tmp_path):
 
 
 def test_fresh_proposal_requires_new_audit_coverage(tmp_path):
-    value={'summary_consistent':True,'findings':[],'covered_paragraph_indices':[0],'covered_summary_edit_indices':[0],
+    value={'summary_consistent':True, 'summary_assessment':{'outcome':'consistent','detail':'The selected summary matches the source account.','evidence_ids':['episode:one']},'findings':[],'covered_paragraph_indices':[0],'covered_summary_edit_indices':[0],
            'claim_reviews':explicit_audit()['claim_reviews']}
     result,_=run(tmp_path,{'EVIDENCE_AUDIT_V1':value})
     assert result['state']=='blocked'
