@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+import pytest
 from app.services.participant_selection import select_participants
 
 
@@ -69,3 +70,13 @@ def test_explicit_roster_fails_closed_instead_of_truncating_or_falling_back():
 def test_normalization_preserves_ids_without_parsing_names():
     from app.models.case import normalize_prediction_settings
     assert normalize_prediction_settings({'participant_ids': ['leo', 'maya']})['participant_ids'] == ['leo', 'maya']
+
+
+@pytest.mark.parametrize('participant_ids', [[], ['leo']])
+def test_inclusion_matches_secondary_custom_labels(participant_ids):
+    from app.services.entity_reader import EntityNode
+    leo = EntityNode(uuid='leo', name='Leo', labels=['Entity', 'Person', 'RetailBusinessOwner'], summary='', attributes={})
+    maya = EntityNode(uuid='maya', name='Maya', labels=['Entity', 'Person', 'Resident'], summary='', attributes={})
+    selected, _ = select_participants([leo, maya], {
+        'participant_ids': participant_ids, 'entity_types_include': ['RetailBusinessOwner'], 'agent_count': 4})
+    assert selected == [leo]

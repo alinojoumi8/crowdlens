@@ -64,3 +64,18 @@ it('blocks preparation when an exact selection exceeds the cap or conflicts with
   await button.trigger('click')
   expect(prepareSimulation).not.toHaveBeenCalled()
 })
+
+it('allows an explicit participant when the type filter matches a secondary label', async () => {
+  getSimulation.mockResolvedValue({success:true,data:{prediction_settings:{agent_count:4,participant_ids:['leo'],entity_types_include:['RetailBusinessOwner']}}})
+  getPrepareStatus.mockResolvedValue({success:true,data:{status:'not_started'}})
+  prepareSimulation.mockResolvedValue({success:false,error:'fixture stops before generation'})
+  wrapper = mount(Step2EnvSetup,{props:{simulationId:'sim_roster',systemLogs:[],graphData:{nodes:[
+    {uuid:'leo',name:'Leo',labels:['Entity','Person','RetailBusinessOwner']}
+  ]}}})
+  await flushPromises()
+  const button=wrapper.findAll('button').find(b=>b.text()==='Prepare environment →')
+  expect(button.attributes('disabled')).toBeUndefined()
+  await button.trigger('click'); await flushPromises()
+  expect(prepareSimulation).toHaveBeenCalledWith(expect.objectContaining({participant_ids:['leo'],
+    prediction_settings:expect.objectContaining({entity_types_include:['RetailBusinessOwner']})}))
+})

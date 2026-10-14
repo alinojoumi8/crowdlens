@@ -15,7 +15,7 @@ persist in the coverage receipt; omitted eligible entities are listed explicitly
 Saved prediction settings restore the exact selection in the UI. Reusing an already
 prepared simulation rejects a changed explicit roster instead of returning old profiles.
 
-Validation: 962 backend tests; 12 frontend unit tests and 85 component tests;
+Validation: 964 backend tests; 12 frontend unit tests and 86 component tests;
 production frontend build. Regressions cover the Cedarbrook four-person roster
 through profiles, config and persisted state, stale/missing IDs, filter conflicts,
 cap overflow, graph outage before dispatch, duplicate names distinguished by IDs,
@@ -34,6 +34,12 @@ claimed by these local tests. The previous live artifacts remain unchanged.
 This fixes roster control, not prompt-based name extraction, balanced viewpoints,
 zero-reaction runs, terminal-state cleanup, or summary-scope validation. Those
 follow-up items remain in the Confluence delivery backlog.
+
+Independent subagent code review caught a secondary-label inclusion regression
+before deployment: the entity reader matches any custom type label, while the new
+roster filter initially matched only the first. Backend and UI inclusion now use
+all custom labels. Regressions cover both automatic and explicit rosters plus the
+UI request with a second-label match. Existing exclusion semantics are unchanged.
 
 The first two candidate Docker CI jobs stopped before build at the existing
 35-GiB disk guard. Extend the disposable-runner-only cleanup to unused GHCup and
