@@ -733,6 +733,7 @@ class SimulationRunner:
     @classmethod
     def _monitor_simulation(cls, simulation_id: str, expected_process=None, expected_state=None):
         """Monitor simulation process and parse action logs"""
+        from ..models.task import TaskManager
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
         
         # New log structure: per-platform action logs
@@ -757,10 +758,16 @@ class SimulationRunner:
                     try:
                         scope.checkpoint()
                     except WorkflowHalt as exc:
-                        with without_execution_scope():
-                            if state.runner_status in {RunnerStatus.RUNNING, RunnerStatus.PAUSED}:
+                        with TaskManager().runtime.gate(), without_execution_scope():
+                            if cls._processes.get(simulation_id) is not process:
+                                return
+                            if state.runner_status in {RunnerStatus.STARTING, RunnerStatus.RUNNING, RunnerStatus.PAUSED}:
                                 cls.stop_simulation(simulation_id)
-                            if state.runner_status not in {RunnerStatus.COMPLETED, RunnerStatus.FAILED}:
+                                state.error = exc.reason
+                            elif process.poll() is None:
+                                # Expiry also closes completed interview environments.
+                                cls._terminate_process(process, simulation_id)
+                            if state.runner_status not in {RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED}:
                                 state.error = exc.reason
                         break
                 owner = current_attempt()
@@ -788,7 +795,6 @@ class SimulationRunner:
                 cls._save_run_state(state)
                 time.sleep(2)
             
-            from ..models.task import TaskManager
             with TaskManager().runtime.gate():
                 # After process ends, read logs one more time
                 if cls._processes.get(simulation_id) is not process:
@@ -842,7 +848,6 @@ class SimulationRunner:
             return  # Recovery already terminalized this attempt; never publish stale state.
         except Exception as e:
             logger.error(f"Monitor thread exception: {simulation_id}, error={str(e)}")
-            from ..models.task import TaskManager
             with TaskManager().runtime.gate():
                 if state.runner_status not in {RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED}:
                     state.runner_status = RunnerStatus.FAILED

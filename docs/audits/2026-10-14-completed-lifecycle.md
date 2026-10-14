@@ -15,13 +15,14 @@ place; persisted PIDs are not used to signal unknown workers. The legacy Stop AP
 also retains a completed simulation's manager status. Graph-memory interruption
 remains recorded separately without replacing a completed run's diagnostic.
 
-Validation: 14 new provider-free cases cover repeated idle closure, zero/nonzero
+Validation: 16 new provider-free cases cover repeated idle closure, zero/nonzero
 process exit, active cancellation followed by late events, cleanup exceptions,
 legacy API status, and real control-database closure with admission denial,
 byte-equivalent persisted outcome and revoked-owner write rejection. The full
-local check passed 981 backend cases plus 101 frontend tests and the production
-build before the final four cases were added; those four also passed as part of
-the final 14-case lifecycle suite. Existing replacement-owner, recovery and
+local check passed 987 backend cases, 101 frontend tests and the production build.
+Expired/closed allowances also terminate completed idle workers before releasing
+their tracking, with a repeated process-identity check protecting replacements.
+Existing replacement-owner, recovery and
 publication-order tests passed. Independent AI subagent review reported no
 blocking findings and independently passed the affected control suites.
 

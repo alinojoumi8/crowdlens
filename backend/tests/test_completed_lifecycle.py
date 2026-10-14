@@ -129,3 +129,43 @@ def test_legacy_stop_preserves_completed_simulation_status(monkeypatch):
     assert response.json['data']['runner_status'] == 'completed'
     assert state.status == SimulationStatus.COMPLETED
     assert saves == []
+
+
+def test_expired_allowance_closes_idle_completed_worker_without_rewriting_outcome(tmp_path, monkeypatch):
+    from app.services.workflow_execution import WorkflowLedger
+    from test_workflow_execution import authorize
+    state = SimulationRunState('sim_expired', runner_status=RunnerStatus.COMPLETED,
+        completed_at='2026-10-14T01:00:00', error='original diagnostic')
+    process = SimpleNamespace(poll=lambda: None, returncode=-15)
+    runner(monkeypatch, tmp_path, state, process)
+    terminated = []
+    def terminate(*args):
+        terminated.append(True)
+        process.poll = lambda: -15
+    monkeypatch.setattr(SimulationRunner, '_terminate_process', terminate)
+    ledger = WorkflowLedger(tmp_path/'ledger.db')
+    wid = authorize(ledger)
+    before = state.to_detail_dict()
+    with execution_scope(ledger, wid, 'simulation'):
+        ledger.stop(wid)
+        SimulationRunner._monitor_simulation(state.simulation_id)
+    assert terminated == [True]
+    assert state.to_detail_dict() == before
+    assert state.simulation_id not in SimulationRunner._processes
+
+
+def test_halt_cannot_terminate_or_remove_replacement_worker(tmp_path, monkeypatch):
+    state = SimulationRunState('sim_replaced', runner_status=RunnerStatus.COMPLETED)
+    original = SimpleNamespace(poll=lambda: None)
+    replacement = SimpleNamespace(poll=lambda: None)
+    runner(monkeypatch, tmp_path, state, original)
+    terminated = []
+    monkeypatch.setattr(SimulationRunner, '_terminate_process', lambda *args: terminated.append(args))
+    def halt():
+        SimulationRunner._processes[state.simulation_id] = replacement
+        raise WorkflowHalt('stopped')
+    monkeypatch.setattr('app.services.simulation_runner.current_scope', lambda:
+        SimpleNamespace(workflow_id='synthetic', checkpoint=halt))
+    SimulationRunner._monitor_simulation(state.simulation_id, original, state)
+    assert terminated == []
+    assert SimulationRunner._processes[state.simulation_id] is replacement
