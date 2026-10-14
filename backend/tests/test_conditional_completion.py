@@ -125,7 +125,7 @@ def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illega
                 value = {'paragraphs':[{'text':'The group is committed.' if 'source_sentence_id' in c else c['text'], 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
                          'section_summary_claim_ids':['unknown'] if invalid_summary else [c['claim_id'] for c in context['ledger']]}
             else:
-                value = {'audit_protocol':'target_reviews_v1','summary_consistent':True,
+                value = {'audit_protocol':'target_reviews_v1','summary_consistent':True, 'summary_assessment':{'outcome':'consistent','detail':'Synthetic source comparison only.','evidence_ids':[]},
                     'claim_reviews':[{'claim_id':c['claim_id'],'outcome':'supported','evidence_ids':c['citation_ids'],'detail':'Synthetic exact sentence comparison.'} for c in context['ledger']],
                     'paragraph_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic exact sentence.'} for i,p in enumerate(context['paragraphs'])],
                     'summary_reviews':[{'target_index':i,'outcome':'supported','detail':'Synthetic exact summary.'} for i,e in enumerate(context['summary_edits'])],
