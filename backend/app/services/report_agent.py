@@ -728,6 +728,8 @@ Current Section Assignment:
 A simulated run is a fictional scenario, not an observed or calibrated forecast of real people.
 Describe the original packet, generated scenario inputs, actual recorded model actions and your analysis separately.
 A sparse run supports a short report with explicit limitations, not an invented narrative of evolving opinions.
+When the executed-action packet identifies smoke_round_robin activation, disclose that agents were
+deliberately scheduled for an execution test; this is not a realistic activity or participation sample.
 
 [Evidence rules]
 1. Use the bounded original-source and executed-action packet supplied with this request.
@@ -1327,6 +1329,10 @@ class ReportAgent:
         forecast_markdown = forecast_to_markdown(report.forecast)
         if forecast_markdown and "## Forecast Probability Summary" not in (report.markdown_content or ""):
             report.markdown_content = f"{forecast_markdown}\n\n{report.markdown_content or ''}".strip()
+        if ((report.source_grounding.get('simulation_activity') or {}).get('summary') or {}).get('activation_mode') == 'smoke_round_robin':
+            notice = '**Deterministic smoke test:** Agents were deliberately scheduled to exercise execution. This is not a realistic activity or participation sample; recorded responses do not establish discussion quality or forecast accuracy.'
+            if notice not in (report.markdown_content or ''):
+                report.markdown_content = notice + '\n\n' + (report.markdown_content or '')
     
     def _define_tools(self) -> Dict[str, Dict[str, Any]]:
         """Define available tools"""

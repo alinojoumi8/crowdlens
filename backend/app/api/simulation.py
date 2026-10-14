@@ -440,6 +440,10 @@ def prepare_simulation():
             logger.debug(f"Check result: is_prepared={is_prepared}, prepare_info={prepare_info}")
             if is_prepared:
                 requested_settings = {**(data.get('prediction_settings') or {}), **data}
+                if 'activation_mode' in requested_settings:
+                    requested_mode = normalize_prediction_settings({'activation_mode': requested_settings['activation_mode']})['activation_mode']
+                    if requested_mode != (state.prediction_settings or {}).get('activation_mode', 'stochastic'):
+                        return jsonify({'success': False, 'error': 'Prepared activation mode differs; create a new simulation or explicitly regenerate preparation.'}), 409
                 if 'participant_ids' in requested_settings:
                     requested_ids = validate_participant_ids(requested_settings['participant_ids'])
                     if requested_ids != (state.prediction_settings or {}).get('participant_ids', []):

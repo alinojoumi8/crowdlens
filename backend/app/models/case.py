@@ -238,6 +238,7 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
 
     settings = dict(PREDICTION_PRESETS[preset_name])
     settings['platform'] = 'parallel'
+    settings['activation_mode'] = 'stochastic'
     for key, value in raw.items():
         if key in settings or key in {
             "agent_count",
@@ -304,6 +305,8 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
         raise ValueError('unsupported_report_depth')
     if settings['platform'] not in {'parallel', 'twitter', 'reddit'}:
         raise ValueError('unsupported_platform')
+    if not isinstance(settings['activation_mode'], str) or settings['activation_mode'] not in {'stochastic', 'smoke_round_robin'}:
+        raise ValueError('unsupported_activation_mode')
     return settings
 
 

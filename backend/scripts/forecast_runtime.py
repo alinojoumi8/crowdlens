@@ -232,6 +232,20 @@ def select_active_agents_for_round(
     time_config = config.get("time_config", {})
     agent_configs = config.get("agent_configs", [])
 
+    mode = config.get('prediction_settings', {}).get('activation_mode', 'stochastic')
+    if mode not in ('stochastic', 'smoke_round_robin'):
+        raise ValueError('unsupported_activation_mode')
+    if mode == 'smoke_round_robin':
+        # Explicit test schedule: exercise real agents without fabricating actions
+        # or changing transport admission, round limits or the ordinary scheduler.
+        ids = sorted({c['agent_id'] for c in agent_configs if type(c.get('agent_id')) is int and c['agent_id'] >= 0})
+        count = min(len(ids), max(0, int(time_config.get('agents_per_hour_max', 1))))
+        if not count:
+            return []
+        offset = (max(0, round_num) * count) % len(ids)
+        return [(agent_id, env.agent_graph.get_agent(agent_id))
+                for agent_id in (ids + ids)[offset:offset + count]]
+
     base_min = time_config.get("agents_per_hour_min", 5)
     base_max = time_config.get("agents_per_hour_max", 20)
     peak_hours = time_config.get("peak_hours", [9, 10, 11, 14, 15, 20, 21, 22])

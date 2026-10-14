@@ -191,3 +191,24 @@ it('passes the explicit evidence-only choice when generating a report', async ()
   await button.trigger('click'); await flushPromises()
   expect(generateReport.mock.calls[0][0]).toMatchObject({simulation_id:'sim_test',evidence_only:true})
 })
+
+it('shows ended rounds with no autonomous activity without claiming a discussion', async () => {
+  getRunStatus.mockResolvedValueOnce({success:true,data:{runner_status:'completed',
+    activity_summary:{activity_outcome:'no_autonomous_activity',autonomous_actions:0,autonomous_written_responses:0,
+      model_actions:0,unique_posts:8,initial_posts:4,scheduled_posts:4,logged_entries:12,unknown_origin_actions:0}}})
+  wrapper=mount(Step3Simulation,{props:{simulationId:'sim_test'}})
+  await flushPromises()
+  expect(wrapper.get('.run-summary').text()).toContain('Rounds ended — no autonomous activity')
+  expect(wrapper.get('.activity-accounting').text()).toContain('do not establish a discussion')
+  expect(wrapper.text()).toContain('source-only report remains available')
+  expect(startSimulation).not.toHaveBeenCalled()
+})
+
+it('labels deterministic smoke activation as a test schedule', async () => {
+  getSimulationConfig.mockResolvedValueOnce({success:true,data:{prediction_settings:{platform:'twitter',activation_mode:'smoke_round_robin'}}})
+  getRunStatus.mockResolvedValueOnce({success:true,data:{runner_status:'idle'}})
+  wrapper=mount(Step3Simulation,{props:{simulationId:'sim_test'}})
+  await flushPromises()
+  expect(wrapper.text()).toContain('This tests execution, not realistic activity')
+  expect(wrapper.get('.run-summary').text()).not.toContain('run ended')
+})
