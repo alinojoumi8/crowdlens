@@ -1903,7 +1903,7 @@ def stop_simulation():
         # Update simulation status
         manager = SimulationManager()
         state = manager.get_simulation(simulation_id)
-        if state:
+        if state and run_state.runner_status == RunnerStatus.STOPPED:
             state.status = SimulationStatus.PAUSED
             manager._save_simulation_state(state)
         

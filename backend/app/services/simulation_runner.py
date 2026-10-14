@@ -33,6 +33,16 @@ from .workflow_execution import current_scope, WorkflowHalt, without_execution_s
 from .task_execution import current_attempt, OwnershipLost, run_state_write, recovery_context
 
 
+def runner_state_gate(function):
+    """Serialize local lifecycle mutations with workflow cancellation/publication."""
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        from ..models.task import TaskManager
+        with TaskManager().runtime.gate():
+            return function(*args, **kwargs)
+    return wrapped
+
+
 def owned_run_start(function):
     @wraps(function)
     def wrapped(cls, simulation_id, *args, **kwargs):
@@ -723,6 +733,7 @@ class SimulationRunner:
     @classmethod
     def _monitor_simulation(cls, simulation_id: str, expected_process=None, expected_state=None):
         """Monitor simulation process and parse action logs"""
+        from ..models.task import TaskManager
         sim_dir = os.path.join(cls.RUN_STATE_DIR, simulation_id)
         
         # New log structure: per-platform action logs
@@ -747,10 +758,17 @@ class SimulationRunner:
                     try:
                         scope.checkpoint()
                     except WorkflowHalt as exc:
-                        with without_execution_scope():
-                            if state.runner_status in {RunnerStatus.RUNNING, RunnerStatus.PAUSED}:
+                        with TaskManager().runtime.gate(), without_execution_scope():
+                            if cls._processes.get(simulation_id) is not process:
+                                return
+                            if state.runner_status in {RunnerStatus.STARTING, RunnerStatus.RUNNING, RunnerStatus.PAUSED}:
                                 cls.stop_simulation(simulation_id)
-                            state.error = exc.reason
+                                state.error = exc.reason
+                            elif process.poll() is None:
+                                # Expiry also closes completed interview environments.
+                                cls._terminate_process(process, simulation_id)
+                            if state.runner_status not in {RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED}:
+                                state.error = exc.reason
                         break
                 owner = current_attempt()
                 if owner:
@@ -777,49 +795,52 @@ class SimulationRunner:
                 cls._save_run_state(state)
                 time.sleep(2)
             
-            # After process ends, read logs one more time
-            if cls._processes.get(simulation_id) is not process:
-                return
-            owner = current_attempt()
-            if owner:
-                owner.runtime.release_child(owner, process)
-            if os.path.exists(twitter_actions_log):
-                cls._read_action_log(twitter_actions_log, twitter_position, state, "twitter")
-            if os.path.exists(reddit_actions_log):
-                cls._read_action_log(reddit_actions_log, reddit_position, state, "reddit")
+            with TaskManager().runtime.gate():
+                # After process ends, read logs one more time
+                if cls._processes.get(simulation_id) is not process:
+                    return
+                owner = current_attempt()
+                if owner:
+                    owner.runtime.release_child(owner, process)
+                if os.path.exists(twitter_actions_log):
+                    cls._read_action_log(twitter_actions_log, twitter_position, state, "twitter")
+                if os.path.exists(reddit_actions_log):
+                    cls._read_action_log(reddit_actions_log, reddit_position, state, "reddit")
             
-            # Process ended
-            exit_code = process.returncode
+                # Process ended
+                exit_code = process.returncode
             
-            if state.runner_status in {RunnerStatus.STOPPING, RunnerStatus.STOPPED}:
-                state.runner_status = RunnerStatus.STOPPED
-                logger.info(f"Stopped simulation exited: {simulation_id}")
-            elif exit_code == 0 and (state.total_rounds <= 0 or
-                    ((not state.twitter_running or state.twitter_completed or state.twitter_current_round >= state.total_rounds)
-                     and (not state.reddit_running or state.reddit_completed or state.reddit_current_round >= state.total_rounds))):
-                state.runner_status = RunnerStatus.COMPLETED
-                state.completed_at = datetime.now().isoformat()
-                logger.info(f"Simulation completed: {simulation_id}")
-            else:
-                state.runner_status = RunnerStatus.FAILED
-                scope = current_scope()
-                record = scope.ledger.status(scope.workflow_id) if scope and scope.workflow_id else {}
-                # Read error info from main log file
-                main_log_path = os.path.join(sim_dir, "simulation.log")
-                error_info = ""
-                try:
-                    if os.path.exists(main_log_path):
-                        with open(main_log_path, 'r', encoding='utf-8') as f:
-                            error_info = f.read()[-2000:]  # Take last 2000 characters
-                except Exception:
-                    pass
-                state.error = record.get('reason') or (f"Process exit code: {exit_code}, error: {error_info}"
-                    if exit_code else 'incomplete_simulation')
-                logger.error(f"Simulation failed: {simulation_id}, error={state.error}")
+                if state.runner_status in {RunnerStatus.COMPLETED, RunnerStatus.FAILED}:
+                    pass  # Closing an idle environment cannot change the recorded outcome.
+                elif state.runner_status in {RunnerStatus.STOPPING, RunnerStatus.STOPPED}:
+                    state.runner_status = RunnerStatus.STOPPED
+                    logger.info(f"Stopped simulation exited: {simulation_id}")
+                elif exit_code == 0 and (state.total_rounds <= 0 or
+                        ((not state.twitter_running or state.twitter_completed or state.twitter_current_round >= state.total_rounds)
+                         and (not state.reddit_running or state.reddit_completed or state.reddit_current_round >= state.total_rounds))):
+                    state.runner_status = RunnerStatus.COMPLETED
+                    state.completed_at = datetime.now().isoformat()
+                    logger.info(f"Simulation completed: {simulation_id}")
+                else:
+                    state.runner_status = RunnerStatus.FAILED
+                    scope = current_scope()
+                    record = scope.ledger.status(scope.workflow_id) if scope and scope.workflow_id else {}
+                    # Read error info from main log file
+                    main_log_path = os.path.join(sim_dir, "simulation.log")
+                    error_info = ""
+                    try:
+                        if os.path.exists(main_log_path):
+                            with open(main_log_path, 'r', encoding='utf-8') as f:
+                                error_info = f.read()[-2000:]  # Take last 2000 characters
+                    except Exception:
+                        pass
+                    state.error = record.get('reason') or (f"Process exit code: {exit_code}, error: {error_info}"
+                        if exit_code else 'incomplete_simulation')
+                    logger.error(f"Simulation failed: {simulation_id}, error={state.error}")
             
-            state.twitter_running = False
-            state.reddit_running = False
-            cls._save_run_state(state)
+                state.twitter_running = False
+                state.reddit_running = False
+                cls._save_run_state(state)
             
         except OwnershipLost:
             if cls._processes.get(simulation_id) is process and process.poll() is None:
@@ -827,9 +848,11 @@ class SimulationRunner:
             return  # Recovery already terminalized this attempt; never publish stale state.
         except Exception as e:
             logger.error(f"Monitor thread exception: {simulation_id}, error={str(e)}")
-            state.runner_status = RunnerStatus.FAILED
-            state.error = str(e)
-            cls._save_run_state(state)
+            with TaskManager().runtime.gate():
+                if state.runner_status not in {RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED}:
+                    state.runner_status = RunnerStatus.FAILED
+                    state.error = str(e)
+                    cls._save_run_state(state)
         
         finally:
             if cls._processes.get(simulation_id) is not process:
@@ -840,7 +863,8 @@ class SimulationRunner:
                     GraphMemoryManager.stop_updater(simulation_id, drain=state.runner_status == RunnerStatus.COMPLETED)
                     logger.info(f"Graph memory update stopped: simulation_id={simulation_id}")
                 except WorkflowHalt as exc:
-                    state.error = 'graph_memory_interrupted: ' + exc.reason
+                    if state.runner_status != RunnerStatus.COMPLETED:
+                        state.error = 'graph_memory_interrupted: ' + exc.reason
                     state.execution['graph_memory'] = 'interrupted'
                     try:
                         with without_execution_scope():
@@ -872,6 +896,7 @@ class SimulationRunner:
                 cls._stderr_files.pop(simulation_id, None)
     
     @classmethod
+    @runner_state_gate
     def _read_action_log(
         cls, 
         log_path: str, 
@@ -912,7 +937,7 @@ class SimulationRunner:
                                 
                                 # Detect simulation_end event, mark platform completed
                                 if (event_type == "simulation_end"
-                                        and state.runner_status not in {RunnerStatus.STOPPING, RunnerStatus.STOPPED}
+                                        and state.runner_status in {RunnerStatus.STARTING, RunnerStatus.RUNNING, RunnerStatus.PAUSED}
                                         and (state.total_rounds <= 0 or
                                              getattr(state, platform + '_current_round') >= state.total_rounds)):
                                     if platform == "twitter":
@@ -1069,18 +1094,21 @@ class SimulationRunner:
                 process.wait(timeout=5)
     
     @classmethod
+    @runner_state_gate
     def stop_simulation(cls, simulation_id: str) -> SimulationRunState:
         """Stop simulation"""
         state = cls.get_run_state(simulation_id)
         if not state:
             raise ValueError(f"Simulation does not exist: {simulation_id}")
         
-        if (state.runner_status not in [RunnerStatus.STARTING, RunnerStatus.RUNNING, RunnerStatus.PAUSED, RunnerStatus.COMPLETED]
+        if (state.runner_status not in [RunnerStatus.STARTING, RunnerStatus.RUNNING, RunnerStatus.PAUSED, RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED]
                 and simulation_id not in cls._processes):
             raise ValueError(f"Simulation not running: {simulation_id}, status={state.runner_status}")
         
-        state.runner_status = RunnerStatus.STOPPING
-        cls._save_run_state(state)
+        terminal = state.runner_status in {RunnerStatus.COMPLETED, RunnerStatus.FAILED, RunnerStatus.STOPPED}
+        if not terminal:
+            state.runner_status = RunnerStatus.STOPPING
+            cls._save_run_state(state)
         
         # Terminate process
         process = cls._processes.get(simulation_id)
@@ -1099,10 +1127,11 @@ class SimulationRunner:
                 except Exception:
                     process.kill()
         
-        state.runner_status = RunnerStatus.STOPPED
+        if not terminal:
+            state.runner_status = RunnerStatus.STOPPED
+            state.completed_at = datetime.now().isoformat()
         state.twitter_running = False
         state.reddit_running = False
-        state.completed_at = datetime.now().isoformat()
         cls._save_run_state(state)
         
         # Stop graph memory updater
