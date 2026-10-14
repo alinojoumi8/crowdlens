@@ -92,3 +92,34 @@ def test_legal_preparation_persists_both_party_types_under_cap(tmp_path, monkeyp
     assert len(profiles) == 2
     reloaded = SimulationManager().get_simulation(state.simulation_id)
     assert reloaded.participant_selection == prepared.participant_selection
+
+
+def test_exact_roster_persists_through_profiles_config_and_reload(tmp_path, monkeypatch):
+    import json
+    monkeypatch.setattr(SimulationManager, 'SIMULATION_DATA_DIR', str(tmp_path))
+    monkeypatch.setattr('app.services.simulation_config_generator.Config.LLM_API_KEY', 'unit-test-key')
+    monkeypatch.setattr(SimulationConfigGenerator, 'generate_config', lambda self, **kw:
+        SimulationParameters(simulation_id=kw['simulation_id'], project_id=kw['project_id'],
+                             graph_id=kw['graph_id'], simulation_requirement=kw['simulation_requirement'],
+                             prediction_settings=kw['prediction_settings']))
+    names = ['Cedarbrook', 'Maya', 'Leo', 'Priya', 'Daniel']
+    class CedarbrookGraph(FakeGraphStorage):
+        def get_all_nodes(self, graph_id):
+            return [{'uuid':name.lower(), 'name':name, 'labels':['Entity',kind],
+                     'summary':'Fictional participant.', 'attributes':{}}
+                    for name,kind in zip(names,['MunicipalGovernment','ResidentCyclist','RetailBusinessOwner',
+                                                'ResidentWithLimitedMobility','CityTransportPlanner'])]
+    ids = ['maya','leo','priya','daniel']
+    manager = SimulationManager()
+    state = manager.create_simulation(project_id='project', graph_id='graph',
+        prediction_settings={'agent_count':4,'participant_ids':ids,'report_mode':'prediction'})
+    prepared = manager.prepare_simulation(state.simulation_id, simulation_requirement='Four named participants.',
+        document_text='Fictional Cedarbrook.', use_llm_for_profiles=False, storage=CedarbrookGraph())
+    assert prepared.status == SimulationStatus.READY
+    folder = tmp_path / state.simulation_id
+    profiles = json.loads((folder/'reddit_profiles.json').read_text())
+    assert [p['name'] for p in profiles] == names[1:]
+    config = json.loads((folder/'simulation_config.json').read_text())
+    assert config['prediction_settings']['participant_ids'] == ids
+    assert [e['uuid'] for e in config['participant_selection']['selected_entities']] == ids
+    assert SimulationManager().get_simulation(state.simulation_id).prediction_settings['participant_ids'] == ids

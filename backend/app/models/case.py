@@ -241,6 +241,7 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
     for key, value in raw.items():
         if key in settings or key in {
             "agent_count",
+            "participant_ids",
             "entity_types_include",
             "entity_types_exclude",
             "profile_parallelism",
@@ -260,6 +261,8 @@ def normalize_prediction_settings(raw: Optional[Dict[str, Any]] = None) -> Dict[
         }:
             settings[key] = value
 
+    from ..services.participant_selection import validate_participant_ids
+    settings['participant_ids'] = validate_participant_ids(settings.get('participant_ids', []))
     settings["preset"] = preset_name
     for key in (
         "agent_count",

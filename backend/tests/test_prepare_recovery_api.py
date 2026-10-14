@@ -136,3 +136,27 @@ def test_regeneration_preserves_saved_agent_cap_over_project_defaults(preparatio
     assert response.json['data']['forecast_settings']['ensemble_runs'] == 1
     assert response.json['data']['forecast_settings']['forecast_mode'] == 'legal_case'
     assert response.json['data']['forecast_settings']['forecast_horizon'] == 'Next procedural decision'
+
+
+@pytest.mark.parametrize('settings,graph_failure,expected', [
+    ({'participant_ids': ['missing']}, False, 400),
+    ({'participant_ids': ['leo'], 'entity_types_exclude': ['Owner']}, False, 400),
+    ({'participant_ids': ['leo', 'maya'], 'agent_count': 1}, False, 400),
+    ({'participant_ids': ['leo']}, True, 503),
+])
+def test_explicit_roster_rejected_before_dispatch(preparation, monkeypatch, settings, graph_failure, expected):
+    client, runtime, clock, folder, dispatched, _ = preparation
+    clock[0] = 131.0
+    runtime.reconcile()
+    before = (folder / 'state.json').read_bytes()
+    def read(**kwargs):
+        if graph_failure:
+            raise RuntimeError('graph offline')
+        return SimpleNamespace(filtered_count=2, entity_types=['Owner','Person'], entities=[
+            SimpleNamespace(uuid='leo', name='Leo', get_entity_type=lambda:'Owner'),
+            SimpleNamespace(uuid='maya', name='Maya', get_entity_type=lambda:'Person')])
+    monkeypatch.setattr(simulation, 'EntityReader', lambda _: SimpleNamespace(filter_defined_entities=read))
+    response = client.post('/api/simulation/prepare', json={'simulation_id':'sim_retry','prediction_settings':settings})
+    assert response.status_code == expected, response.json
+    assert not dispatched
+    assert (folder / 'state.json').read_bytes() == before

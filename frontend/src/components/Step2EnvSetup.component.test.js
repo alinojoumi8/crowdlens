@@ -27,3 +27,40 @@ it('refresh resumes preparation monitoring without admitting another generation'
   expect(getSimulationProfilesRealtime.mock.calls.length).toBeGreaterThan(1)
   expect(prepareSimulation).not.toHaveBeenCalled()
 })
+
+it('sends an exact four-person roster including the shop owner and restores it on reload', async () => {
+  const ids = ['maya','leo','priya','daniel']
+  getSimulation.mockResolvedValue({success:true,data:{prediction_settings:{agent_count:4,participant_ids:ids}}})
+  getPrepareStatus.mockResolvedValue({success:true,data:{status:'not_started'}})
+  prepareSimulation.mockResolvedValue({success:false,error:'fixture stops before generation'})
+  wrapper = mount(Step2EnvSetup,{props:{simulationId:'sim_roster',systemLogs:[],graphData:{nodes:[
+    {uuid:'city',name:'Cedarbrook',labels:['Entity','MunicipalGovernment']},
+    ...ids.map(uuid => ({uuid,name:uuid,labels:['Entity',uuid==='leo'?'RetailBusinessOwner':'Person']}))
+  ]}}})
+  await flushPromises()
+  const select = wrapper.get('select[aria-label="Specific participants"]')
+  expect([...select.element.selectedOptions].map(option=>option.value).sort()).toEqual([...ids].sort())
+  const button = wrapper.findAll('button').find(b=>b.text()==='Prepare environment →')
+  await button.trigger('click'); await flushPromises()
+  expect(prepareSimulation).toHaveBeenCalledWith(expect.objectContaining({participant_ids:ids,
+    prediction_settings:expect.objectContaining({agent_count:4,participant_ids:ids})}))
+})
+
+it('blocks preparation when an exact selection exceeds the cap or conflicts with type filters', async () => {
+  getSimulation.mockResolvedValue({success:true,data:{prediction_settings:{agent_count:1,participant_ids:['one','two']}}})
+  getPrepareStatus.mockResolvedValue({success:true,data:{status:'not_started'}})
+  wrapper = mount(Step2EnvSetup,{props:{simulationId:'sim_roster',systemLogs:[],graphData:{nodes:[
+    {uuid:'one',name:'Same name',labels:['Entity','Person']},
+    {uuid:'two',name:'Same name',labels:['Entity','Owner']}
+  ]}}})
+  await flushPromises()
+  const button=wrapper.findAll('button').find(b=>b.text()==='Prepare environment →')
+  expect(button.attributes('disabled')).toBeDefined()
+  expect(wrapper.get('[role="alert"]').text()).toContain('exceeds')
+  await wrapper.get('select[aria-label="Specific participants"]').setValue(['two'])
+  await wrapper.get('select[aria-label="Agent types"]').setValue(['Person'])
+  expect(button.attributes('disabled')).toBeDefined()
+  expect(wrapper.get('[role="alert"]').text()).toContain('excluded')
+  await button.trigger('click')
+  expect(prepareSimulation).not.toHaveBeenCalled()
+})

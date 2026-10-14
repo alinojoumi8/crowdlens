@@ -12,6 +12,7 @@ from . import simulation_bp
 from ..config import Config
 from ..services.task_execution import TaskBusy
 from ..services.entity_reader import EntityReader
+from ..services.participant_selection import ParticipantSelectionError
 from ..services.oasis_profile_generator import OasisProfileGenerator
 from ..services.simulation_manager import SimulationManager, SimulationStatus
 from ..services.simulation_runner import SimulationRunner, RunnerStatus
@@ -521,7 +522,11 @@ def prepare_simulation():
             state.entities_count = len(preview)
             state.entity_types = list(dict.fromkeys(e.get_entity_type() or 'Unknown' for e in preview))
             logger.info(f"Expected entity count: {filtered_preview.filtered_count}, [type][model]: {filtered_preview.entity_types}")
+        except ParticipantSelectionError:
+            raise
         except Exception as e:
+            if state_prediction_settings.get('participant_ids'):
+                return jsonify(success=False, error='Unable to validate selected participants; retry when the graph is available'), 503
             logger.warning(f"Synchronously get entity countFailed（Will retry in background task）: {e}")
             # Failure does not affect subsequent process，Background task will retry
             forecast_settings = normalize_forecast_settings(
@@ -683,6 +688,8 @@ def prepare_simulation():
             }
         })
         
+    except ParticipantSelectionError as e:
+        return jsonify(success=False, error=str(e)), 400
     except ValueError as e:
         return jsonify({
             "success": False,
