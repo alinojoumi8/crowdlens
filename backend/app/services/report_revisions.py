@@ -102,7 +102,11 @@ class ReportRevisionService:
                 self.store.update(proposal_id, {'ready', 'accepting'}, {'state': 'stale', 'error_code': 'stale_parent'})
                 raise ProposalError('stale_parent')
             try:
-                corpus = freeze_sources(self.storage.get_source_chunks(**record['scope']), record['scope'])
+                if record.get('policy') == 'evidence-draft-v15-source-completeness':
+                    from .source_completeness import freeze_review_sources
+                    corpus = freeze_review_sources(self.storage, record['scope'])
+                else:
+                    corpus = freeze_sources(self.storage.get_source_chunks(**record['scope']), record['scope'])
             except Exception:
                 raise ProposalError('source_revalidation_unavailable', 503) from None
             if corpus['digest'] != record['source_digest']:
@@ -112,6 +116,11 @@ class ReportRevisionService:
             frozen = self.store.load_snapshot(proposal_id, 'parent', record['parent_digest'])
             self.store.load_snapshot(proposal_id, 'sources', record['source_snapshot_digest'])
             ledger = self.store.load_snapshot(proposal_id, 'ledger', record['ledger_digest'])
+            if record.get('policy') == 'evidence-draft-v15-source-completeness':
+                from .source_completeness import source_completeness
+                coverage = source_completeness(corpus, record['sources'])
+                if not coverage['complete'] or coverage != record.get('source_completeness'):
+                    raise ProposalError('source_completeness_unresolved')
             if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
                 from .focused_correction import validate_focused_record
                 try:
@@ -119,10 +128,10 @@ class ReportRevisionService:
                 except (ValueError, TypeError, KeyError):
                     raise ProposalError('invalid_proposal') from None
             else:
-                if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract', 'evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment'):
+                if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract', 'evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
                     from .claim_ledger import summary_edit_scope, validate_summary_edit_scope
                     contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'])
-                    if record.get('policy') == 'evidence-draft-v14-summary-assessment':
+                    if record.get('policy') in ('evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
                         if contract['unmapped_summary_requires_review']:
                             raise ProposalError('summary_scope_unmapped')
                         from .evidence_drafting import validate_summary_assessment
@@ -134,7 +143,7 @@ class ReportRevisionService:
                         validate_summary_edit_scope(record['summary_edits'], contract)
                     except (ValueError, TypeError, KeyError):
                         raise ProposalError('summary_scope_mismatch') from None
-                if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment'):
+                if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
                     from .conditional_extracts import build_extract_contract, resolve_extract_claims
                     try:
                         contract = build_extract_contract(record['sources'], record['scope'])
@@ -146,11 +155,11 @@ class ReportRevisionService:
                     except (ValueError, TypeError, KeyError, AttributeError):
                         raise ProposalError('invalid_proposal') from None
                 findings = validate_ledger(ledger, record['sources'], record['scope']) + validate_paragraphs(record['paragraphs'], ledger, record['sources'])
-                if record.get('policy') in ('evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment') and not findings:
+                if record.get('policy') in ('evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness') and not findings:
                     covered = {identifier for paragraph in record['paragraphs'] for identifier in paragraph['claim_ids']}
                     if any(claim['claim_id'] not in covered for claim in ledger):
                         raise ProposalError('invalid_proposal')
-                if record.get('policy') in ('evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment'):
+                if record.get('policy') in ('evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
                     from .source_coverage import source_coverage
                     if source_coverage(ledger, record.get('extract_provenance', {}).get('source_exclusions'), record['sources']):
                         raise ProposalError('invalid_proposal')

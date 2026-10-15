@@ -78,6 +78,22 @@
           <p class="identifier">{{ claim.claim_id }} · sources: {{ claim.citation_ids?.join(', ') || 'See linked premises' }}</p>
         </details>
       </details>
+      <details v-if="proposal.source_completeness" open aria-label="Source coverage">
+        <summary>Stored source coverage · {{ proposal.source_completeness.complete ? 'complete' : 'unresolved' }}</summary>
+        <p>This checks the case version’s expected documents and stored passages. It does not establish extraction accuracy or factual support.</p>
+        <p v-if="!proposal.source_completeness.inventory_available">The expected document inventory is unavailable.</p>
+        <p v-if="proposal.source_completeness.corpus_limited">The source set exceeds the review limit.</p>
+        <ul>
+          <li v-for="document in proposal.source_completeness.documents" :key="document.document_id">
+            {{ document.filename || document.document_id }} · {{ document.admitted_chunks }} of {{ document.expected_chunks ?? 'unknown' }} expected passages · {{ document.complete ? 'fully supplied to review' : 'coverage unresolved' }}
+            <span v-if="!document.inventory_verified"> · extraction or passage inventory needs checking</span>
+            <ul v-if="document.chunks.some(chunk => chunk.omitted_characters)">
+              <li v-for="chunk in document.chunks.filter(chunk => chunk.omitted_characters)" :key="chunk.episode_id">{{ chunk.episode_id }} · {{ chunk.omitted_characters }} characters outside review</li>
+            </ul>
+          </li>
+        </ul>
+        <p v-if="proposal.source_completeness.rejected_sources.length">{{ proposal.source_completeness.rejected_sources.length }} source passage(s) could not be admitted. Restore their text before creating a new proposal.</p>
+      </details>
       <details v-if="proposal.sources?.length" open>
         <summary>Read original sources · {{ proposal.sources.length }}</summary>
         <article v-for="source in proposal.sources" :key="source.evidence_id" :id="sourceAnchor(source.evidence_id)" class="source">

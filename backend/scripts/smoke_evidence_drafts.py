@@ -49,7 +49,8 @@ def main():
     from app.services.proposal_store import ProposalStore
     store = ProposalStore(ReportManager.REPORTS_DIR)
     changed = [False]
-    class Storage:
+    from scripts.evidence_quality_support import FixtureInventory
+    class Storage(FixtureInventory):
         def get_source_chunks(self, **kw):
             return [{**scope,'uuid':'one','document_id':'synthetic_doc','filename':'synthetic-record.txt',
                      'data': text + (' Updated source.' if changed[0] else ''),'page':1,'chunk_index':0}]

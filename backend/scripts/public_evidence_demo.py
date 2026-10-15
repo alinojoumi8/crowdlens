@@ -249,7 +249,8 @@ def main():
         for index, section in enumerate(report.outline.sections, 1):
             ReportManager.save_section(report.report_id, index, section)
     store = ProposalStore(ReportManager.REPORTS_DIR)
-    class PublicStorage:
+    from scripts.evidence_quality_support import FixtureInventory
+    class PublicStorage(FixtureInventory):
         def get_source_chunks(self, **scope):
             return [dict(row) for row in chunks if all(row.get(key) == value for key, value in scope.items())]
     from flask import Flask, jsonify, send_file, send_from_directory
