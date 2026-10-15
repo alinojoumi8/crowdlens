@@ -43,12 +43,14 @@ def now():
 
 def proposal_digest(record):
     payload = {key: record.get(key) for key in CONTENT_FIELDS}
-    if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment'):
+    if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
         payload['extract_provenance'] = record.get('extract_provenance')
     if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
         payload.update({k: record.get(k) for k in ('focused_correction', 'focused_audit', 'replacement_count')})
-    if record.get('policy') == 'evidence-draft-v14-summary-assessment':
+    if record.get('policy') in ('evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
         payload['summary_assessment'] = record.get('summary_assessment')
+    if record.get('policy') == 'evidence-draft-v15-source-completeness':
+        payload['source_completeness'] = record.get('source_completeness')
     return canonical_digest(payload)
 
 
@@ -224,8 +226,8 @@ class ProposalStore:
             old, new = record['state'], changes.get('state', record['state'])
             if old not in expected_states or (new != old and new not in TRANSITIONS[old]):
                 raise ProposalError('state_conflict')
-            if old not in ACTIVE and (any(key in CONTENT_FIELDS + ('focused_correction', 'focused_audit', 'replacement_count', 'summary_assessment') for key in changes)
-                    or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment') and 'extract_provenance' in changes)):
+            if old not in ACTIVE and (any(key in CONTENT_FIELDS + ('focused_correction', 'focused_audit', 'replacement_count', 'summary_assessment', 'source_completeness') for key in changes)
+                    or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness') and 'extract_provenance' in changes)):
                 raise ProposalError('immutable_proposal')
             if new in {'running', 'ready'} and time.time() >= record['deadline_at']:
                 raise ProposalError('deadline_exceeded')

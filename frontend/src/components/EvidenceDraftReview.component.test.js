@@ -261,3 +261,22 @@ it('links summary contradiction evidence outside the ledger without source zero'
   expect(wrapper.find(link.attributes('href')).exists()).toBe(true)
   wrapper.unmount()
 })
+
+it('explains omitted passages and missing extraction while blocking saving', async () => {
+  const record = proposal('blocked')
+  record.findings = [{ code: 'source_completeness_unresolved', blocking: true, next_action: 'Restore missing source text.' }]
+  record.source_completeness = { complete: false, inventory_available: true, corpus_limited: false,
+    rejected_sources: [{ document_id: 'empty' }], documents: [
+      { document_id: 'doc', filename: 'notes.txt', admitted_chunks: 2, expected_chunks: 2, inventory_verified: true,
+        complete: false, chunks: [{ episode_id: 'late', omitted_characters: 120 }] },
+      { document_id: 'empty', admitted_chunks: 0, expected_chunks: null, inventory_verified: false, complete: false, chunks: [] }] }
+  api.createEvidenceProposal.mockResolvedValue({ success: true, data: record })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  expect(wrapper.get('[aria-label="Source coverage"]').text()).toContain('120 characters outside review')
+  expect(wrapper.text()).toContain('0 of unknown expected passages')
+  expect(wrapper.text()).toContain('1 source passage(s) could not be admitted')
+  expect(wrapper.text()).toContain('Restore missing source text.')
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  wrapper.unmount()
+})

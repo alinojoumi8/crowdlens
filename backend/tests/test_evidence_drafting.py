@@ -5,7 +5,8 @@ from app.services.proposal_store import ProposalStore
 from app.utils.draft_budget import DraftBudget
 
 
-class SourceStorage:
+from scripts.evidence_quality_support import FixtureInventory
+class SourceStorage(FixtureInventory):
     def get_source_chunks(self, **scope):
         return [{**SCOPE, 'uuid': 'one', 'document_id': 'doc', 'data': TEXT, 'page': 1}]
 

@@ -1352,6 +1352,28 @@ class Neo4jStorage(GraphStorage):
             )
             return [dict(row["episode"]) for row in rows]
 
+    def get_source_inventory(self, graph_id, case_id, case_version_id):
+        """Expected documents from the exact case version, independent of graph rows."""
+        from ..models.case import CaseManager
+        case = CaseManager.get_case(case_id)
+        matches = [v for v in case.versions if v.version_id == case_version_id
+                   and v.graph_id == graph_id] if case else []
+        if len(matches) != 1:
+            return None
+        version = matches[0]
+        profile = version.build_profile if isinstance(version.build_profile, dict) else {}
+        profiles = profile.get('per_document', [])
+        profiles = profiles if isinstance(profiles, list) else []
+        inventory = []
+        for document in version.documents:
+            matching = [p for p in profiles if isinstance(p, dict) and p.get('document_id') == document.document_id
+                        and p.get('hash') == document.hash and p.get('text_length') == document.text_length]
+            count = matching[0].get('chunk_count') if len(matching) == 1 else None
+            inventory.append({'document_id': document.document_id, 'filename': document.filename,
+                              'text_length': document.text_length, 'source_hash': document.hash,
+                              'chunk_count': count, 'chunk_indices': list(range(count)) if type(count) is int and 0 <= count <= 2000 else None})
+        return inventory
+
     def get_document_covers(self, graph_id, case_id, case_version_id):
         """Bounded original page-one chunks, strictly scoped to a case version."""
         if not case_id or not case_version_id:

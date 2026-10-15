@@ -107,7 +107,8 @@ def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illega
     from app.services.evidence_drafting import EvidenceDraftingService
     from app.utils.draft_budget import DraftBudget
     text = 'Fictional hearing workshop note: Sora says the group could assist if benches are confirmed. This is possible assistance, not a commitment.'
-    class Storage:
+    from scripts.evidence_quality_support import FixtureInventory
+    class Storage(FixtureInventory):
         def get_source_chunks(self, **scope):
             return [{**SCOPE, 'uuid':'one'+str(i) if guarded_count>1 else 'one','document_id':'doc','data':text,'page':1} for i in range(guarded_count)] + ([{**SCOPE,'uuid':'two','document_id':'doc2','data':TEXT,'page':1}] if ordinary else [])
     class LLM:

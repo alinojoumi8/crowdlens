@@ -134,7 +134,8 @@ def main():
     graph = {'graph_id': SCOPE['graph_id'], 'node_count': 1, 'edge_count': 0,
              'nodes': [{'uuid': 'synthetic_alex', 'name': 'Alex', 'labels': ['Entity', 'Person'],
                         'summary': 'Synthetic graph fixture; extraction was not run.'}], 'edges': []}
-    class Storage:
+    from scripts.evidence_quality_support import FixtureInventory
+    class Storage(FixtureInventory):
         def get_embedding_status(self, graph_id):
             return {'safe_to_report': True, 'status':'synthetic'}
         def get_source_chunks(self, **kwargs):

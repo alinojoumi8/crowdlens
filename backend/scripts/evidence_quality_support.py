@@ -32,7 +32,21 @@ def artifact_hashes(directory):
             for path in sorted(directory.rglob('*')) if path.is_file()}
 
 
-class FixtureStorage:
+class FixtureInventory:
+    """Fixtures explicitly declare their supplied rows to be the complete input."""
+    def get_source_inventory(self, **scope):
+        grouped = {}
+        for row in self.get_source_chunks(**scope):
+            if any(row.get(k) != v for k, v in scope.items()) or row.get('origin', 'source_document') != 'source_document':
+                continue
+            doc = grouped.setdefault(row['document_id'], {'document_id': row['document_id'],
+                                     'filename': row.get('filename'), 'chunk_count': 0, 'text_length': 0})
+            doc['chunk_count'] += 1
+            doc['text_length'] += len(row.get('data') or '')
+        return sorted(grouped.values(), key=lambda d: d['document_id'])
+
+
+class FixtureStorage(FixtureInventory):
     """Returns all supplied rows so application admission, not this fake, isolates scope."""
     def __init__(self, rows):
         self.rows = copy.deepcopy(rows)
