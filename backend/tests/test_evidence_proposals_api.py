@@ -62,6 +62,41 @@ def test_create_poll_accept_retry_and_guards(app):
     assert client.get(f'/api/report/other/evidence-proposals/{identifier}').status_code == 404
 
 
+def test_staged_continuation_is_explicit_idempotent_and_reopens(app):
+    from test_staged_source_review import large_storage, StagedLLM
+    import threading
+    store = app.extensions['evidence_proposal_store']
+    app.extensions.update(neo4j_storage=large_storage(), evidence_llm_factory=lambda identifier: StagedLLM(store, identifier))
+    client = app.test_client()
+    url = '/api/report/report_root/evidence-proposals'
+    identifier = client.post(url, json={'section_index': 1, 'request_key': 'staged'}).json['data']['proposal_id']
+    record = terminal(client, identifier)
+    assert record['state'] == 'review_pending'
+    snapshot = store.read(identifier)
+    storage = app.extensions.pop('neo4j_storage')
+    unavailable = client.post(url + f'/{identifier}/continue', json={'proposal_digest': record['proposal_digest']})
+    assert unavailable.status_code == 503 and unavailable.json['error'] == 'sources_unavailable'
+    assert store.read(identifier) == snapshot
+    app.extensions['neo4j_storage'] = storage
+    assert client.post(url + f'/{identifier}/continue', json={'proposal_digest': 'wrong'}).status_code == 409
+    assert client.post(f'/api/report/other/evidence-proposals/{identifier}/continue', json={'proposal_digest': record['proposal_digest']}).status_code == 404
+    while record['state'] == 'review_pending':
+        for worker in threading.enumerate():
+            if worker.name == 'evidence-proposal': worker.join(10)
+        digest = record['proposal_digest']
+        body = {'proposal_digest': digest}
+        response = client.post(url + f'/{identifier}/continue', json=body)
+        assert response.status_code == 202
+        record = terminal(client, identifier)
+        replay = client.post(url + f'/{identifier}/continue', json=body)
+        assert replay.status_code == 202 and replay.json['data']['proposal_digest'] == record['proposal_digest']
+        assert client.get(url + f'/{identifier}').json['data']['source_review'] == record['source_review']
+    assert record['state'] == 'ready' and record['source_completeness']['complete']
+    for worker in threading.enumerate():
+        if worker.name == 'evidence-proposal': worker.join(10)
+    assert client.post(url + f'/{identifier}/accept', json={'proposal_digest': record['proposal_digest']}).status_code == 200
+
+
 @pytest.mark.parametrize('body', [[], {}, {'section_index': True, 'request_key':'a'},
     {'section_index': 1, 'request_key': 'a', 'scope': {}}, {'section_index': 20, 'request_key':'a'}])
 def test_bad_creation_never_calls_model(app, body):

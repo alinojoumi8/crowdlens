@@ -2,7 +2,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import EvidenceDraftReview from './EvidenceDraftReview.vue'
 import * as api from '../api/report'
-vi.mock('../api/report', () => ({ createEvidenceProposal: vi.fn(), getEvidenceProposal: vi.fn(), listEvidenceProposals: vi.fn(), acceptEvidenceProposal: vi.fn(), rejectEvidenceProposal: vi.fn() }))
+vi.mock('../api/report', () => ({ createEvidenceProposal: vi.fn(), getEvidenceProposal: vi.fn(), listEvidenceProposals: vi.fn(), acceptEvidenceProposal: vi.fn(), continueEvidenceProposal: vi.fn(), rejectEvidenceProposal: vi.fn() }))
 vi.mock('./HumanClaimReview.vue', () => ({ default: { template: '<div />' } }))
 const proposal = (state = 'ready') => ({ proposal_id: 'proposal_1', state, phase: 'review', proposal_digest: 'digest',
   before: { section: 'Original section.', summary: 'Original summary.' }, after: { section: 'Alex says Friday.', summary: 'Updated summary.' }, findings: [], limitations: [],
@@ -27,7 +27,7 @@ describe('evidence draft review', () => {
     expect(wrapper.emitted('revision-created')[0]).toEqual(['report_revision'])
     wrapper.unmount()
   })
-  it.each(['blocked', 'stale', 'failed', 'rejected'])('cannot accept %s proposals', async state => {
+  it.each(['blocked', 'stale', 'failed', 'rejected', 'review_pending'])('cannot accept %s proposals', async state => {
     api.createEvidenceProposal.mockResolvedValue({ success: true, data: proposal(state) })
     const wrapper = mountReview()
     await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
@@ -47,6 +47,41 @@ describe('evidence draft review', () => {
     expect(wrapper.text()).not.toContain('Original section.')
     wrapper.unmount()
   })
+})
+
+it('continues a saved source batch only on explicit request with its exact digest', async () => {
+  const pending = { ...proposal('review_pending'), source_review: { batch_count: 9, completed_batches: [{}, {}], complete: false },
+    source_completeness: { complete: false, inventory_available: true, documents: [], rejected_sources: [] } }
+  api.getEvidenceProposal.mockResolvedValue({ data: pending })
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_root', sectionIndex: 1, initialProposalId: 'proposal_1' } })
+  await flushPromises()
+  expect(wrapper.text()).toContain('2 of 9 batches checked')
+  expect(api.continueEvidenceProposal).not.toHaveBeenCalled()
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  let finish
+  api.continueEvidenceProposal.mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
+  await wrapper.get('[data-test="continue-source-review"]').trigger('click')
+  await wrapper.get('[data-test="continue-source-review"]').trigger('click')
+  expect(api.continueEvidenceProposal).toHaveBeenCalledTimes(1)
+  expect(api.continueEvidenceProposal).toHaveBeenCalledWith('report_root', 'proposal_1', 'digest')
+  finish({ data: { ...pending, source_review: { ...pending.source_review, completed_batches: [{}, {}, {}] } } })
+  await flushPromises()
+  expect(wrapper.text()).toContain('3 of 9 batches checked')
+  wrapper.unmount()
+})
+
+it('retains saved progress after an allowance refusal', async () => {
+  const pending = { ...proposal('review_pending'), source_review: { batch_count: 2, completed_batches: [], complete: false },
+    source_completeness: { complete: false, inventory_available: true, documents: [], rejected_sources: [] } }
+  api.createEvidenceProposal.mockResolvedValue({ data: pending })
+  api.continueEvidenceProposal.mockRejectedValue({ response: { data: { error: 'authorization_required' } } })
+  const wrapper = mountReview()
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  await wrapper.get('[data-test="continue-source-review"]').trigger('click'); await flushPromises()
+  expect(wrapper.get('[role="alert"]').text()).toContain('authorization required')
+  expect(wrapper.text()).toContain('0 of 2 batches checked')
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  wrapper.unmount()
 })
 
 it('allows one acceptance request and ignores its result after navigation', async () => {

@@ -81,6 +81,12 @@
       <details v-if="proposal.source_completeness" open aria-label="Source coverage">
         <summary>Stored source coverage · {{ proposal.source_completeness.complete ? 'complete' : 'unresolved' }}</summary>
         <p>This checks the case version’s expected documents and stored passages. It does not establish extraction accuracy or factual support.</p>
+        <div v-if="proposal.source_review" aria-label="Large source review">
+          <p role="status">Source review: {{ proposal.source_review.completed_batches.length }} of {{ proposal.source_review.batch_count }} batches checked.</p>
+          <p>The draft uses selected passages. Each batch is checked against the proposed section for missing or conflicting evidence. Model judgments can miss errors. Saving remains unavailable until all batches pass.</p>
+          <button v-if="proposal.state === 'review_pending'" data-test="continue-source-review" :disabled="busy" @click="continueReview">Review next source batch</button>
+          <p v-if="proposal.state === 'review_pending'">Progress is saved. Continuing uses your existing model allowance; it does not renew its limits.</p>
+        </div>
         <p v-if="!proposal.source_completeness.inventory_available">The expected document inventory is unavailable.</p>
         <p v-if="proposal.source_completeness.corpus_limited">The source set exceeds the review limit.</p>
         <ul>
@@ -133,7 +139,7 @@
 
 <script setup>
 import { computed, useId, onUnmounted, ref, watch } from 'vue'
-import { createEvidenceProposal, getEvidenceProposal, listEvidenceProposals, acceptEvidenceProposal, rejectEvidenceProposal } from '../api/report'
+import { createEvidenceProposal, getEvidenceProposal, listEvidenceProposals, acceptEvidenceProposal, continueEvidenceProposal, rejectEvidenceProposal } from '../api/report'
 import { isProposalAcceptable } from '../utils/evidenceProposal'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
@@ -157,12 +163,13 @@ const correction = ref({ old_text: '', new_text: '', source_quote: '' })
 const requestPayload = ref(null)
 let generation = 0, timer = null, requestKey = null
 const active = computed(() => ['queued', 'running'].includes(proposal.value?.state))
-const canReject = computed(() => ['queued', 'running', 'ready', 'blocked', 'stale', 'accepting'].includes(proposal.value?.state))
+const canReject = computed(() => ['queued', 'running', 'review_pending', 'ready', 'blocked', 'stale', 'accepting'].includes(proposal.value?.state))
 const canSave = computed(() => isProposalAcceptable(proposal.value) ||
   (proposal.value?.state === 'accepting' && isProposalAcceptable({ ...proposal.value, state: 'ready' })))
 const saveHelp = computed(() => {
   if (busy.value) return 'Your request is being processed. Please wait.'
   if (active.value) return 'Saving is unavailable while the draft is being prepared.'
+  if (proposal.value?.state === 'review_pending') return 'Saving is unavailable until every source batch has been checked. Continue the saved review above.'
   if (proposal.value?.state === 'accepted') return 'This proposal has been saved as a separate revision.'
   if (proposal.value?.state === 'rejected') return 'The original report was retained.'
   if (canSave.value) return 'After reviewing the wording and sources, save a separate revision. It will still need review.'
@@ -173,7 +180,7 @@ const saveHelp = computed(() => {
 })
 const citationNumber = id => [...new Set((proposal.value?.ledger || []).flatMap(c => c.citation_ids || []))].indexOf(id) + 1
 const words = text => String(text).replaceAll('_', ' ')
-const statusLabel = computed(() => ({ queued: 'Waiting', running: words(proposal.value.phase), ready: 'Ready for your review', blocked: 'Changes required', accepted: 'Revision saved', rejected: 'Original retained', failed: 'Draft failed', stale: 'Sources changed', accepting: 'Save needs recovery' })[proposal.value?.state] || '')
+const statusLabel = computed(() => ({ queued: 'Waiting', running: words(proposal.value.phase), review_pending: 'Source review unfinished', ready: 'Ready for your review', blocked: 'Changes required', accepted: 'Revision saved', rejected: 'Original retained', failed: 'Draft failed', stale: 'Sources changed', accepting: 'Save needs recovery' })[proposal.value?.state] || '')
 const cacheKey = () => `evidence-proposal:${props.reportId}:${props.sectionIndex}`
 const remember = () => { try { sessionStorage.setItem(cacheKey(), JSON.stringify({ requestKey, requestPayload: requestPayload.value, proposalId: proposal.value?.proposal_id })) } catch { /* private browsing may disable storage */ } }
 const stop = () => { clearTimeout(timer); timer = null }
@@ -227,6 +234,17 @@ async function accept() {
     }
   }
   finally { if (token === generation) { busy.value = false; schedule(token) } }
+}
+async function continueReview() {
+  if (busy.value || proposal.value?.state !== 'review_pending') return
+  const token = generation
+  busy.value = true; error.value = ''
+  try {
+    const result = await continueEvidenceProposal(props.reportId, proposal.value.proposal_id, proposal.value.proposal_digest)
+    if (token !== generation) return
+    proposal.value = result.data; remember(); schedule(token); loadSaved(token)
+  } catch (err) { if (token === generation) error.value = message(err) }
+  finally { if (token === generation) busy.value = false }
 }
 async function reject() {
   if (busy.value) return

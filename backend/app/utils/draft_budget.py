@@ -8,10 +8,11 @@ class DeadlineExceeded(RuntimeError):
 
 
 class DraftBudget:
-    def __init__(self, seconds=180, clock=time.monotonic):
+    def __init__(self, seconds=180, clock=time.monotonic, previous_usage=None):
         self.clock, self.started = clock, clock()
         self.deadline = self.started + seconds
-        self.calls = []
+        self.calls = list((previous_usage or {}).get('calls', []))
+        self.previous_elapsed_ms = (previous_usage or {}).get('elapsed_ms', 0)
         self.lock = threading.Lock()
 
     def remaining(self):
@@ -37,5 +38,5 @@ class DraftBudget:
 
     def snapshot(self):
         with self.lock:
-            return {'calls': list(self.calls), 'elapsed_ms': round((self.clock() - self.started) * 1000, 2),
+            return {'calls': list(self.calls), 'elapsed_ms': self.previous_elapsed_ms + round((self.clock() - self.started) * 1000, 2),
                     'remaining_ms': round(self.remaining() * 1000, 2), 'cost': None}
