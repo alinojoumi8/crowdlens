@@ -88,6 +88,42 @@ def test_http_requires_authorization_and_exact_input(controlled):
     assert client.get('/api/execution/'+wid).json['data']['admitted']==1
 
 
+def test_staged_source_review_requires_open_allowance_and_never_renews_it(controlled, tmp_path, monkeypatch):
+    from test_staged_source_review import large_storage, StagedLLM
+    from test_source_completeness import generate
+    from test_evidence_proposals_api import terminal
+    from evidence_draft_samples import sample_report
+    from app.services.report_agent import ReportManager
+    from app.services.proposal_store import ProposalStore
+    client, ledger, runtime, calls = controlled
+    monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(tmp_path / 'reports'))
+    ReportManager.save_report(sample_report())
+    record, _ = generate(tmp_path / 'reports', large_storage(), StagedLLM)
+    store = ProposalStore(tmp_path / 'reports')
+    class Metered(StagedLLM):
+        def chat_json(self, *args, **kwargs):
+            with transport_attempt('synthetic', Config.LLM_BASE_URL) as receipt:
+                receipt['usage'] = {'input_tokens': 20, 'output_tokens': 10}
+                receipt['http_status'] = 200
+                return super().chat_json(*args, **kwargs)
+    client.application.extensions.update(neo4j_storage=large_storage(), evidence_proposal_store=store,
+        evidence_llm_factory=lambda identifier: Metered(store, identifier), evidence_embedder_factory=lambda: None)
+    url = f"/api/report/report_root/evidence-proposals/{record['proposal_id']}/continue"
+    body = {'proposal_digest': record['proposal_digest']}
+    assert client.post(url, json=body).status_code == 428
+    assert store.read(record['proposal_id'])['state'] == 'review_pending'
+    wid = client.post('/api/execution/authorize', json={**terms(), 'max_requests': 1}).json['data']['workflow_id']
+    ledger.bind(wid, 'report:report_root')
+    assert client.post(url, json=body).status_code == 202
+    record = terminal(client, record['proposal_id'])
+    assert record['state'] == 'review_pending'
+    assert ledger.status(wid)['admitted'] == 1
+    assert client.post(url, json={'proposal_digest': record['proposal_digest']}).status_code == 409
+    assert store.read(record['proposal_id'])['state'] == 'review_pending'
+    assert len(store.read(record['proposal_id'])['source_review']['completed_batches']) == 1
+    assert ledger.status(wid)['epoch'] == 1
+
+
 def test_repeated_stop_and_invalid_or_replayed_reauthorization(controlled,monkeypatch):
     client,ledger,runtime,calls=controlled
     wid=client.post('/api/execution/authorize',json=terms()).json['data']['workflow_id']

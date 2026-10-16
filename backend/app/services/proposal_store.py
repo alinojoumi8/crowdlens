@@ -20,7 +20,8 @@ ID = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$')
 ACTIVE = {'queued', 'running'}
 TRANSITIONS = {
     'queued': {'running', 'failed', 'rejected'},
-    'running': {'ready', 'blocked', 'failed', 'rejected'},
+    'running': {'ready', 'review_pending', 'blocked', 'failed', 'rejected'},
+    'review_pending': {'queued', 'rejected'},
     'ready': {'accepting', 'stale', 'rejected', 'failed'},
     'blocked': {'rejected'},
     'accepting': {'accepted', 'stale', 'failed', 'rejected'},
@@ -43,14 +44,16 @@ def now():
 
 def proposal_digest(record):
     payload = {key: record.get(key) for key in CONTENT_FIELDS}
-    if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
+    if record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review'):
         payload['extract_provenance'] = record.get('extract_provenance')
     if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
         payload.update({k: record.get(k) for k in ('focused_correction', 'focused_audit', 'replacement_count')})
-    if record.get('policy') in ('evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness'):
+    if record.get('policy') in ('evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review'):
         payload['summary_assessment'] = record.get('summary_assessment')
-    if record.get('policy') == 'evidence-draft-v15-source-completeness':
+    if record.get('policy') in ('evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review'):
         payload['source_completeness'] = record.get('source_completeness')
+    if record.get('policy') == 'evidence-draft-v16-staged-source-review':
+        payload.update({k: record.get(k) for k in ('source_review', 'diagnostics_digest')})
     return canonical_digest(payload)
 
 
@@ -226,14 +229,14 @@ class ProposalStore:
             old, new = record['state'], changes.get('state', record['state'])
             if old not in expected_states or (new != old and new not in TRANSITIONS[old]):
                 raise ProposalError('state_conflict')
-            if old not in ACTIVE and (any(key in CONTENT_FIELDS + ('focused_correction', 'focused_audit', 'replacement_count', 'summary_assessment', 'source_completeness') for key in changes)
-                    or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness') and 'extract_provenance' in changes)):
+            if old not in ACTIVE and (any(key in CONTENT_FIELDS + ('focused_correction', 'focused_audit', 'replacement_count', 'summary_assessment', 'source_completeness', 'source_review', 'diagnostics_digest') for key in changes)
+                    or (record.get('policy') in ('evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review') and 'extract_provenance' in changes)):
                 raise ProposalError('immutable_proposal')
             if new in {'running', 'ready'} and time.time() >= record['deadline_at']:
                 raise ProposalError('deadline_exceeded')
             record.update(changes)
             record['updated_at'] = now()
-            if new in {'ready', 'blocked'} and old == 'running':
+            if new in {'ready', 'blocked', 'review_pending'} and old == 'running':
                 record['proposal_digest'] = proposal_digest(record)
             atomic_json(self._file(proposal_id), record)
             return record
@@ -274,11 +277,42 @@ class ProposalStore:
     def finish(self, proposal_id, changes):
         return self.update(proposal_id, {'running'}, changes)
 
+    def admit_continuation(self, parent_report_id, proposal_id, expected_digest):
+        """One explicit, idempotent step; reuse the same worker and report fences."""
+        with self.lock('admission', 'admission_busy', 503):
+            record = self.get(parent_report_id, proposal_id)
+            if not isinstance(expected_digest, str) or not expected_digest:
+                raise ProposalError('proposal_digest_mismatch')
+            if record.get('continuation_digest') == expected_digest:
+                return record, None
+            if (record['state'] != 'review_pending' or record.get('policy') != 'evidence-draft-v16-staged-source-review'
+                    or expected_digest != record.get('proposal_digest') or expected_digest != proposal_digest(record)):
+                raise ProposalError('proposal_digest_mismatch')
+            operation = self.operation(parent_report_id)
+            slot = None
+            try:
+                for index in range(2):
+                    try:
+                        slot = self.lock(f'worker-{index}', 'capacity', 503)
+                        break
+                    except ProposalError:
+                        continue
+                if slot is None:
+                    raise ProposalError('capacity', 503)
+                record = self.update(proposal_id, {'review_pending'}, {'state': 'queued', 'phase': 'source_review',
+                    'deadline_at': time.time() + 180, 'continuation_digest': expected_digest})
+                return record, LeaseBundle(operation, slot)
+            except BaseException:
+                if slot:
+                    slot.close()
+                operation.close()
+                raise
+
     def reject(self, parent_report_id, proposal_id):
         record = self.get(parent_report_id, proposal_id)
         if record['state'] == 'rejected':
             return record
-        return self.update(proposal_id, {'queued', 'running', 'ready', 'blocked', 'stale'}, {'state': 'rejected'})
+        return self.update(proposal_id, {'queued', 'running', 'review_pending', 'ready', 'blocked', 'stale'}, {'state': 'rejected'})
 
     def reconcile(self):
         interrupted = 0

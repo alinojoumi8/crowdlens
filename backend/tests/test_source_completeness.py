@@ -68,18 +68,20 @@ def test_independent_inventory_catches_absent_or_unverifiable_sources(tmp_path, 
     assert result['state'] == 'blocked' and not llm.calls
 
 
-def test_caps_disclose_unreviewed_passages_and_block_before_inference(tmp_path):
-    result, llm = generate(tmp_path,FixtureStorage([row(f'{i:02}',doc=f'doc{i}') for i in range(31)]))
-    assert result['state'] == 'blocked' and not llm.calls
-    missing = [d for d in result['source_completeness']['documents'] if not d['complete']]
-    assert len(missing) == 1 and missing[0]['chunks'][0]['omitted_characters'] == len(TEXT)
+def test_caps_require_staged_review_of_every_document(tmp_path):
+    from test_staged_source_review import StagedLLM
+    result, llm = generate(tmp_path,FixtureStorage([row('one')] + [row(f'z{i:02}',doc=f'doc{i}') for i in range(30)]), StagedLLM)
+    assert result['state'] == 'review_pending' and llm.calls
+    assert result['source_review']['batch_count'] == 2
+    assert not result['source_completeness']['complete']
 
 
-def test_clipped_large_document_has_partial_interval_and_blocks(tmp_path):
-    result, llm = generate(tmp_path,FixtureStorage([row('one',TEXT + ' Background.' * 6000)]))
-    assert result['state'] == 'blocked' and not llm.calls
+def test_clipped_large_document_waits_for_full_interval_review(tmp_path):
+    from test_staged_source_review import StagedLLM
+    result, llm = generate(tmp_path,FixtureStorage([row('one',TEXT + ' Background.' * 6000)]), StagedLLM)
+    assert result['state'] == 'review_pending' and llm.calls
     chunk = result['source_completeness']['documents'][0]['chunks'][0]
-    assert chunk['covered_intervals'] and chunk['omitted_characters'] > 0
+    assert not chunk['covered_intervals'] and chunk['omitted_characters'] > 0
 
 
 def test_reconstructed_window_only_credits_original_intersections():

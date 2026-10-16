@@ -269,6 +269,9 @@ class EvidenceDraftingService:
         self.embedder, self.evidence_runner = embedder, evidence_runner
 
     def generate(self, proposal_id, parent_snapshot, *, budget):
+        if self.store.read(proposal_id).get('source_review') is not None:
+            from .staged_source_review import continue_review
+            return continue_review(self, proposal_id, parent_snapshot, budget=budget)
         if self.store.read(proposal_id).get('focused_correction') is not None:
             from .focused_correction import generate_focused
             return generate_focused(self, proposal_id, parent_snapshot, budget=budget)
@@ -361,14 +364,22 @@ class EvidenceDraftingService:
             queries = draft_queries(section)
             packet = retrieve_review_sources(corpus, queries, budget=budget, embedder=self.embedder)
             coverage = source_completeness(corpus, packet['sources'])
+            batches = None
+            if not coverage['complete']:
+                from .staged_source_review import review_batches, POLICY as STAGED_POLICY
+                batches = review_batches(corpus)
+                admitted = source_completeness(corpus, [s for batch in batches for s in batch])
+                if not admitted['complete']:
+                    batches = None
             if before['summary_scope_contract']['unmapped_summary_requires_review']:
                 packet['limitations'].append('summary_scope_unmapped: automatic summary edits disabled; original retained for review')
             phase('planning', source_digest=corpus['digest'], source_snapshot_digest=corpus_snapshot_digest,
                   sources=packet['sources'], limitations=packet['limitations'], retrieval=packet['rankings'],
-                  source_completeness=coverage)
+                  source_completeness=source_completeness(corpus, []) if batches else coverage,
+                  policy=STAGED_POLICY if batches else POLICY)
             if not packet['sources'] and corpus.get('inventory') == [] and not corpus.get('rejected_sources'):
                 return finish([finding('no_original_evidence')])
-            if not coverage['complete']:
+            if not coverage['complete'] and not batches:
                 return finish(completeness_findings(coverage))
             windows = [{k: v for k, v in s.items() if k != 'excerpt'} for s in packet['sources']]
             document_count = len({s['document_id'] for s in packet['sources']})
@@ -532,6 +543,11 @@ class EvidenceDraftingService:
                                 and r.get('outcome') == review['outcome'] for r in repaired):
                             audit_issues.append(finding('audit_adverse_judgment_changed'))
             findings.extend(audit_issues)
+            if batches and not any(f['blocking'] for f in findings):
+                from .staged_source_review import initial_review
+                updated = {**store.read(proposal_id), 'summary_assessment': audit.get('summary_assessment')}
+                return finish(findings, state='review_pending', phase='source_review', summary_unchanged=not edits,
+                    summary_assessment=audit.get('summary_assessment'), source_review=initial_review(updated, batches))
             return finish(findings, summary_unchanged=not edits, summary_assessment=audit.get('summary_assessment'))
         except ProposalError:
             raise

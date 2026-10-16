@@ -91,7 +91,7 @@ def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, emb
         tasks.update_task(task_id, status=TaskStatus.PROCESSING, message='Drafting from original sources', progress=5)
         service = EvidenceDraftingService(storage, llm_factory(identifier), store, embedder=embedder_factory())
         result = service.generate(identifier, snapshot, budget=budget)
-        if result['state'] in {'ready', 'blocked'}:
+        if result['state'] in {'ready', 'blocked', 'review_pending'}:
             tasks.complete_task(task_id, result={'proposal_id': identifier, 'state': result['state']})
         else:
             tasks.fail_task(task_id, result.get('error_code', result['state']))
@@ -169,6 +169,46 @@ def create_evidence_proposal(report_id):
 @endpoint
 def get_evidence_proposal(report_id, proposal_id):
     return jsonify(success=True, data=store_for_app().get(report_id, proposal_id))
+
+
+@report_bp.route('/<report_id>/evidence-proposals/<proposal_id>/continue', methods=['POST'])
+@endpoint
+def continue_evidence_proposal(report_id, proposal_id):
+    data = body({'proposal_digest'})
+    store = store_for_app()
+    store.get(report_id, proposal_id)
+    parent = ReportManager.get_report(report_id)
+    if parent is None:
+        raise ProposalError('not_found', 404)
+    storage = current_app.extensions.get('neo4j_storage')
+    if storage is None:
+        raise ProposalError('sources_unavailable', 503)
+    record, lease = store.admit_continuation(report_id, proposal_id, data['proposal_digest'])
+    if lease is None:
+        return jsonify(success=True, data=record), 202
+    handed_off = False
+    try:
+        seconds = min(180, float(current_app.config.get('EVIDENCE_PROPOSAL_SECONDS', 180)))
+        budget = DraftBudget(seconds=max(.001, seconds - (time.time() - (record['deadline_at'] - 180))),
+                             previous_usage=record.get('usage'))
+        tasks = TaskManager()
+        task_id = tasks.create_task('evidence_proposal', metadata={'report_id': report_id, 'proposal_id': proposal_id},
+            resources=[{'key': 'proposal:' + proposal_id, 'root': str(store.root)}])
+        record = store.update(proposal_id, {'queued'}, {'task_id': task_id, 'deadline_at': time.time() + budget.remaining()})
+        tasks.start_task(task_id, run_worker, (store, record, parent.to_dict(), lease, budget, storage,
+            current_app.extensions.get('evidence_llm_factory', lambda identifier: LLMClient()),
+            current_app.extensions.get('evidence_embedder_factory', default_embedder), tasks), name='evidence-proposal')
+        handed_off = True
+        return jsonify(success=True, data=record), 202
+    except Exception:
+        try:
+            store.update(proposal_id, {'queued'}, {'state': 'failed', 'error_code': 'admission_failed'})
+        except ProposalError:
+            pass
+        raise
+    finally:
+        if not handed_off:
+            lease.close()
 
 
 @report_bp.route('/<report_id>/evidence-proposals', methods=['GET'])
