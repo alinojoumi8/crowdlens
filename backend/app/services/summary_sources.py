@@ -14,6 +14,14 @@ def validate_concise_summary(record):
     edits = record['summary_edits']
     if sum(len(edit['new_text']) for edit in edits) > 600:
         raise ValueError('summary_too_long')
+    for span in record.get('before', {}).get('summary_scope_contract', {}).get('editable_spans', []):
+        selected = span['text']
+        for edit in sorted(edits, key=lambda item: item['start'], reverse=True):
+            if span['start'] <= edit['start'] <= edit['end'] <= span['end']:
+                start, end = edit['start'] - span['start'], edit['end'] - span['start']
+                selected = selected[:start] + edit['new_text'] + selected[end:]
+        if len(selected) > 600:
+            raise ValueError('summary_too_long')
     for edit in edits:
         if not edit['new_text'].strip() or '\n' in edit['new_text'] or '\r' in edit['new_text']:
             raise ValueError('summary_requires_short_prose')
@@ -85,3 +93,26 @@ def summary_sources_markdown(passages):
                           f"Source {index}: {_plain(label)} · page {_plain(page)}",
                           '> ' + _plain(source.get('window') or source.get('excerpt') or '').replace('\n', '\n> ')])
     return '\n\n'.join(lines) + '\n\n'
+
+
+def report_prose_for_validation(report):
+    """Exclude only an exact server-rendered appendix backed by frozen cards.
+
+    Report prose, including quoted text and any altered appendix, remains checked.
+    Source excerpts are reference material, not newly authored report assertions.
+    """
+    content = report.markdown_content or ''
+    passages = report.revision.get('summary_sources', [])
+    if not passages or not report.outline:
+        return content
+    cards = [card for section in report.outline.sections for card in section.evidence_cards]
+    for passage in passages:
+        start, end = passage.get('start'), passage.get('end')
+        if (type(start) is not int or type(end) is not int
+                or not 0 <= start < end <= len(report.outline.summary)
+                or report.outline.summary[start:end] != passage.get('text')
+                or not passage.get('sources')
+                or any(source not in cards for source in passage['sources'])):
+            return content
+    appendix = '\n' + summary_sources_markdown(passages)
+    return content[:-len(appendix)] if content.endswith(appendix) else content
