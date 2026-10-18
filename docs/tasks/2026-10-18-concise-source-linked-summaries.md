@@ -21,6 +21,12 @@ No MiniMax requests were made or authorized by this change. The live workflow re
 
 Private validation evidence: `/home/ali/.local/state/crowdlens/concise-summaries-20261018/`.
 
+## Local deployment
+
+Deployed code revision `2426a865f116efb3c9246811689938f6066572dd`; healthy runtime fingerprint `981e18bd0690b75edb008d40af2fa3f6e65add1ad9df27ff9d33c1221c9f7445`. The Docker image built successfully. A verified upload backup and rollback container `mirofish-offline-before-concise-summaries-20261018` are retained. All 5,790 preexisting files and all provider receipts were unchanged after deployment. The prior MiniMax revision reopened successfully and its download retained SHA-256 `20016215947565d1d1c48a7a9f1e363db09fa5cd7f588fe77ec1b1d5f01d9127`.
+
+Delivery backlog and runbook were updated and read back at Confluence versions 40 and 16.
+
 ## Next
 
 Correct the workflow allowance banner so historical unknown usage is displayed separately from in-flight requests. Then finish the canonical-repository review and hosted CI/integration. A live MiniMax check of the new summary prompt requires a newly authorized allowance; it has not been run.
