@@ -3564,7 +3564,8 @@ class ReportManager:
     @classmethod
     def validate_report_output(cls, report: Report) -> List[Dict[str, Any]]:
         """Detect degraded or malformed report output before marking complete."""
-        content = report.markdown_content or ""
+        from .summary_sources import report_prose_for_validation
+        content = report_prose_for_validation(report)
         issues: List[Dict[str, Any]] = []
         from .report_grounding import provenance_issues
         issues.extend(provenance_issues(content, report.source_grounding, report.forecast))

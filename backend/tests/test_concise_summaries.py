@@ -142,3 +142,52 @@ def test_inherited_links_follow_offsets_and_disappear_only_when_changed(root):
     assembled = service._assemble(parent, next_record, 'synthetic-time')
     assert assembled.revision['summary_sources'] == inherited
     assert '[Source 1](#summary-source-1-1)' in assembled.markdown_content
+
+
+def test_grounded_export_appendix_is_not_report_prose(root):
+    record, service = ready(root)
+    parent = ReportManager.get_report('report_root')
+    parent.source_grounding = {'report_contract': 'report-grounding-v1', 'status': 'available',
+                              'original_sources': record['sources']}
+    revision = service._assemble(parent, record, '2026-10-18')
+    assert not any(i.get('blocking') for i in ReportManager.validate_report_output(revision))
+    revision.markdown_content = 'Invented "unsupported quotation".\n\n' + revision.markdown_content
+    assert any(i['code'] == 'unverified_quotation' for i in ReportManager.validate_report_output(revision))
+
+
+@pytest.mark.parametrize('edits', [[], [{'start': 0, 'end': 1, 'old_text': 'A', 'new_text': 'B'}]])
+def test_overlong_selected_result_requires_shortening(edits):
+    from app.services.summary_sources import validate_concise_summary
+    record = {'summary_format': 'concise-linked-v1', 'summary_edits': edits,
+              'before': {'summary': 'A' * 700, 'summary_scope_contract': {
+                  'editable_spans': [{'start': 0, 'end': 700, 'text': 'A' * 700}]}}}
+    with pytest.raises(ValueError, match='summary_too_long'):
+        validate_concise_summary(record)
+
+
+def test_protected_long_summary_does_not_require_out_of_scope_edit():
+    from app.services.summary_sources import validate_concise_summary
+    validate_concise_summary({'summary_format': 'concise-linked-v1', 'summary_edits': [],
+        'before': {'summary': 'A' * 700, 'summary_scope_contract': {'editable_spans': []}}})
+
+
+def test_altered_or_unbacked_appendix_still_gets_validated(root):
+    from copy import deepcopy
+    record, service = ready(root)
+    parent = ReportManager.get_report('report_root')
+    parent.source_grounding = {'report_contract': 'report-grounding-v1', 'status': 'available',
+                              'original_sources': record['sources']}
+    revision = service._assemble(parent, record, '2026-10-18')
+    altered = deepcopy(revision)
+    altered.markdown_content = altered.markdown_content.replace('id="summary-source-1-1"', 'id="invented-anchor"')
+    assert any(i['code'] == 'unverified_quotation' for i in ReportManager.validate_report_output(altered))
+    revision.outline.sections[0].evidence_cards = []
+    assert any(i['code'] == 'unverified_quotation' for i in ReportManager.validate_report_output(revision))
+
+
+def test_shortening_preserves_protected_prefix_and_suffix():
+    from app.services.summary_sources import validate_concise_summary
+    validate_concise_summary({'summary_format': 'concise-linked-v1',
+        'summary_edits': [{'start': 800, 'end': 1500, 'new_text': 'Short supported summary.'}],
+        'before': {'summary': 'P' * 800 + 'A' * 700 + 'S' * 800,
+                   'summary_scope_contract': {'editable_spans': [{'start': 800, 'end': 1500, 'text': 'A' * 700}]}}})
