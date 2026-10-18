@@ -28,8 +28,19 @@ Recovery uses the existing workflow allowance, request ceiling and Stop controls
 - Browser verification used the actual built Vue frontend and Flask API with a synthetic provider. It exercised selection, a forced audit timeout, checkpoint refusal and refresh, retry, save, reopen and Markdown download. The parent, forecast and unselected section stayed unchanged. The downloaded Markdown matched the saved revision. Mobile width was 390 pixels with no horizontal overflow.
 - All five CodeRabbit findings (one major, four minor) were reproduced and fixed. The final review of all 14 changed code and test files completed with zero findings. This includes preserving adverse audit judgments and keeping retry identity tied to the displayed proposal. Detailed review output is retained in the local acceptance evidence; this documentation received a focused diff review.
 
-No MiniMax calls were made for this implementation. Synthetic browser results verify workflow behavior, not provider quality or factual correctness. Hosted CI and live MiniMax acceptance of these changes remain unrun.
+No MiniMax calls were made during implementation. Synthetic browser results verify workflow behavior, not provider quality or factual correctness. Hosted CI remains unrun; the subsequent live acceptance is recorded below.
 
-## Next acceptance step
+## Live MiniMax acceptance
 
-With a new explicit time allowance and the existing 60-request total ceiling, retry the retained MiniMax audit and create a full-section proposal with an explicit summary selection. Verify the resulting findings, save only an eligible revision, then reopen and download it. Preserve any adverse findings and unknown usage. Remote integration and hosted CI remain separate delivery steps.
+On 2026-10-18 the user authorized another 1,800 seconds with the same 60-request total ceiling. The existing fictional Cedarbrook report was used. The run began with 36 requests consumed and stopped after 133.52 seconds at 39 total, with zero in flight. All three new requests returned HTTP 200 with usage receipts. The one earlier unknown-usage attempt remains counted; no new unknown-usage attempts occurred.
+
+- **Timeout recovery:** one new audit request completed from the saved draft. The failed predecessor and its drafting diagnostics stayed unchanged. Reposting the same retry request returned the same proposal without another provider call. The recovered audit correctly blocked saving because the old summary was unmapped and its simulation/forecast claims were unverified against the original source.
+- **Full-section review:** the current one-sentence summary was selected explicitly in the UI. Drafting and audit used two requests. Source coverage was complete, the summary audit returned consistent, and no blocking findings remained. The proposal was saved through the UI as a separate immutable revision, reopened and downloaded.
+- **Preservation:** the original report, structured forecast and unselected sections remained unchanged. All 5,766 pre-existing artifact files were unchanged; the workflow/task database changed as expected. Its original 36 request records were preserved. The revision remains `needs_review` and visibly labels inherited material.
+- **Download and UI:** the browser download matched both the API download and persisted Markdown, SHA-256 `20016215947565d1d1c48a7a9f1e363db09fa5cd7f588fe77ec1b1d5f01d9127`. Desktop and 390-pixel mobile views were checked; mobile had no horizontal overflow.
+
+These results validate the live workflow and its refusal behavior, not factual certification or a general model-quality benchmark. A separate quality gap remains: the replacement summary is the entire 1,478-character source-page excerpt, rather than a concise summary.
+
+## Next work
+
+Produce concise, source-linked revised summaries while preserving the existing edit boundaries and factual gates. Then correct the allowance banner's unknown-usage count. Remote integration and hosted CI remain separate delivery steps.
