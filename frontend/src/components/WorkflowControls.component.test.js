@@ -120,3 +120,28 @@ it('shows unresolved money after reload and requires a sufficient total budget f
   await button.trigger('click'); await flushPromises()
   expect(reauthorizeWorkflow).toHaveBeenCalledWith('wf_spend',expect.objectContaining({budget_usd:'0.20'}))
 })
+
+it.each([
+  { in_flight: 0, unknown_usage_attempts: 1 },
+  { in_flight: 2, unknown_usage_attempts: 3 },
+  { in_flight: 0, unknown_usage_attempts: 0 }
+])('shows separate outstanding and unknown-usage counts: %j', async counts => {
+  getWorkflow.mockResolvedValueOnce({ data: { workflow_id: 'wf_counts', state: 'stopped',
+    admitted: 39, max_requests: 60, elapsed_seconds: 100, ...counts } })
+  wrapper = mount(WorkflowControls, { props: { pendingId: 'wf_counts' } })
+  await flushPromises()
+  expect(wrapper.text()).toContain(`${counts.in_flight} in flight · ${counts.unknown_usage_attempts} with unknown token usage`)
+  expect(wrapper.text()).not.toContain('in flight or delivery unknown')
+  expect(wrapper.text().includes('Unknown token usage can include in-flight requests')).toBe(counts.unknown_usage_attempts > 0)
+  expect(authorizeWorkflow).not.toHaveBeenCalled()
+  expect(reauthorizeWorkflow).not.toHaveBeenCalled()
+  expect(stopWorkflow).not.toHaveBeenCalled()
+})
+
+it('does not present an omitted unknown-usage count as zero', async () => {
+  getWorkflow.mockResolvedValueOnce({ data: { workflow_id: 'wf_legacy', state: 'stopped',
+    admitted: 39, max_requests: 60, elapsed_seconds: 100, in_flight: 0 } })
+  wrapper = mount(WorkflowControls, { props: { pendingId: 'wf_legacy' } })
+  await flushPromises()
+  expect(wrapper.text()).toContain('Unknown token usage count not reported')
+})

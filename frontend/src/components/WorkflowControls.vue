@@ -26,7 +26,8 @@
       <p>These are total limits across all generation stages and retries. Authorization may incur provider charges. Token usage and unknown attempts will be recorded; a request limit is not a monetary ceiling.</p>
     </template>
     <template v-if="status">
-      <p><strong>{{ status.state }}</strong> · {{ status.admitted }}/{{ status.max_requests }} requests · {{ status.in_flight }} in flight or delivery unknown · {{ Math.round(status.elapsed_seconds) }} seconds elapsed</p>
+      <p><strong>{{ status.state }}</strong> · {{ status.admitted }}/{{ status.max_requests }} requests · {{ status.in_flight }} in flight · <span v-if="status.unknown_usage_attempts != null">{{ status.unknown_usage_attempts }} with unknown token usage</span><span v-else>Unknown token usage count not reported</span> · {{ Math.round(status.elapsed_seconds) }} seconds elapsed</p>
+      <p v-if="status.unknown_usage_attempts > 0">Unknown token usage can include in-flight requests and does not mean they are still running. These counts can overlap; do not add them.</p>
       <div v-if="status.spend" class="spend-summary" aria-label="Estimated spending">
         <p>Estimated usage: {{ usd(status.spend.estimated_micro_usd) }} · Reserved for unresolved usage: {{ usd(status.spend.reserved_micro_usd) }} · Available: {{ usd(status.spend.available_micro_usd) }} of {{ usd(status.spend.budget_micro_usd) }}</p>
         <p>{{ status.spend.unpriced_attempts }} attempts unpriced · {{ status.spend.overrun_attempts }} reservations exceeded. Actual provider billing is unknown.</p>
