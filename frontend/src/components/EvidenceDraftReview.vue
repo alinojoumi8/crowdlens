@@ -7,7 +7,15 @@
       </select>
     </label>
     <p v-if="!proposal" class="draft-intro">Create a separate proposal for this section using its sources. Your original report is preserved.</p>
-    <button v-if="!proposal" data-test="create-proposal" :disabled="busy" @click="create">
+    <details v-if="!proposal" class="focused-form summary-selection" :open="summarySelectionRequired">
+      <summary>Choose the summary passage for this section</summary>
+      <p>If the summary paraphrases this section, copy its exact passage below (up to 2,000 characters). Only that passage may change; its replacement is limited to 600 characters and must pass source review. Leave blank to use an exact section match when available.</p>
+      <p v-if="summaryText"><strong>Current summary:</strong> {{ summaryText }}</p>
+      <label :for="`${saveHelpId}-summary`">Summary passage to update</label>
+      <textarea :id="`${saveHelpId}-summary`" v-model="summarySelection" :disabled="busy || !!requestPayload" maxlength="2000" rows="3" />
+      <p v-if="summarySelectionRequired && !summarySelection">Choose the passage to review before starting this full-section proposal.</p>
+    </details>
+    <button v-if="!proposal" data-test="create-proposal" :disabled="busy || (summarySelectionRequired && !summarySelection && !requestPayload)" @click="create">
       {{ busy ? 'Starting draft…' : error ? 'Retry request' : 'Draft with sources' }}
     </button>
     <details v-if="!proposal" class="focused-form">
@@ -51,7 +59,9 @@
           <article><h5>Proposed summary</h5><p>{{ proposal.after?.summary || (active ? 'Draft in progress…' : 'No proposed summary available.') }}</p></article>
         </div>
       </details>
-      <p v-if="proposal.before?.summary_scope_contract?.unmapped_summary_requires_review">Summary scope needs review: no unique passage maps to this section. The original summary is retained. This mapping gap alone does not establish a factual contradiction.</p>
+      <p v-if="proposal.before?.summary_scope_contract?.unmapped_summary_requires_review">Summary scope needs review: no unique passage maps to this section. The original summary is retained. Start a new proposal and choose its summary passage. This mapping gap alone does not establish a factual contradiction.</p>
+      <p v-if="proposal.summary_selection" aria-label="Selected summary scope">You selected this summary passage: “{{ proposal.summary_selection }}”. Selection defines what may change; it does not establish source support.</p>
+      <p v-if="!proposal.focused_correction" class="review-note">This review covers the selected section and its selected summary passage. Other sections, untouched summary text and forecast probabilities remain inherited and unverified by this review.</p>
       <p v-if="proposal.summary_assessment" aria-label="AI summary assessment">AI summary assessment: {{ words(proposal.summary_assessment.outcome) }} — {{ proposal.summary_assessment.detail }} This is a model judgment, not factual certification.</p>
       <nav v-if="proposal.summary_assessment?.evidence_ids?.length" aria-label="Summary assessment sources" class="claim-sources">
         <a v-for="id in proposal.summary_assessment.evidence_ids" :key="id" :href="`#${sourceAnchor(id)}`" @click.prevent="revealSource(id)">{{ citationNumber(id) ? `Read Source ${citationNumber(id)}` : 'Read retrieved source' }}</a>
@@ -119,7 +129,16 @@
         <summary>Search and review limits</summary>
         <ul><li v-for="(limit, index) in proposal.limitations" :key="index">{{ words(limit) }}</li></ul>
       </details>
-      <p v-if="proposal.state === 'failed'" role="status">This draft could not finish. {{ words(proposal.error_code || '') }}. You can start a new proposal.</p>
+      <div v-if="proposal.state === 'failed'" role="status">
+        <p>This draft could not finish. {{ words(proposal.error_code || '') }}.</p>
+        <template v-if="proposal.audit_recovery?.available">
+          <p>The draft and sources are saved. Retry only the unfinished audit in a separate proposal. The failed attempt stays available. Its delivery, usage or billing may be unknown.</p>
+          <button data-test="retry-audit" :disabled="busy" @click="retryAudit">Retry saved audit</button>
+          <p>This uses your existing model allowance and does not renew its time or request limits.</p>
+        </template>
+        <p v-else>You can start a new proposal.</p>
+      </div>
+      <p v-if="proposal.audit_retry">This proposal continues the saved audit from {{ proposal.audit_retry.proposal_id }}. Its draft was not regenerated.</p>
       <p v-if="proposal.state === 'stale'" role="status">The report or its sources changed. Start a new proposal to review current material.</p>
       <p v-if="proposal.state === 'accepting'" role="status">Saving was interrupted. Retry to finish saving or open the revision if it was already saved.</p>
       <HumanClaimReview v-if="proposal.proposal_digest && proposal.ledger?.length && !active"
@@ -139,7 +158,7 @@
 
 <script setup>
 import { computed, useId, onUnmounted, ref, watch } from 'vue'
-import { createEvidenceProposal, getEvidenceProposal, listEvidenceProposals, acceptEvidenceProposal, continueEvidenceProposal, rejectEvidenceProposal } from '../api/report'
+import { createEvidenceProposal, getEvidenceProposal, listEvidenceProposals, acceptEvidenceProposal, continueEvidenceProposal, retryEvidenceAudit, rejectEvidenceProposal } from '../api/report'
 import { isProposalAcceptable } from '../utils/evidenceProposal'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
@@ -153,7 +172,7 @@ const revealSource = id => {
   source.scrollIntoView?.({ block: 'start' })
   source.querySelector('blockquote')?.focus({ preventScroll: true })
 }
-const props = defineProps({ reportId: String, sectionIndex: Number, initialProposalId: String })
+const props = defineProps({ reportId: String, sectionIndex: Number, initialProposalId: String, summaryText: String, sectionText: String })
 const saveHelpId = useId()
 const emit = defineEmits(['revision-created', 'close'])
 const proposal = ref(null), busy = ref(false), error = ref('')
@@ -161,6 +180,13 @@ const savedProposals = ref([])
 const correctionKind = ref('numeric')
 const correction = ref({ old_text: '', new_text: '', source_quote: '' })
 const requestPayload = ref(null)
+const summarySelection = ref('')
+const summarySelectionRequired = computed(() => {
+  if (!props.summaryText || props.sectionText === undefined) return false
+  const start = props.summaryText.indexOf(props.sectionText)
+  return !props.sectionText || start < 0 || props.summaryText.indexOf(props.sectionText, start + 1) >= 0
+})
+let auditRetryRequest = null
 let generation = 0, timer = null, requestKey = null
 const active = computed(() => ['queued', 'running'].includes(proposal.value?.state))
 const canReject = computed(() => ['queued', 'running', 'review_pending', 'ready', 'blocked', 'stale', 'accepting'].includes(proposal.value?.state))
@@ -175,18 +201,20 @@ const saveHelp = computed(() => {
   if (canSave.value) return 'After reviewing the wording and sources, save a separate revision. It will still need review.'
   if (proposal.value?.findings?.some(f => f.blocking)) return 'Saving is blocked by the findings above. Review them before creating a new proposal.'
   if (proposal.value?.state === 'stale') return 'Saving is unavailable because the report or sources changed. Create a new proposal.'
-  if (proposal.value?.state === 'failed') return 'Saving is unavailable because the draft failed. Create a new proposal.'
+  if (proposal.value?.state === 'failed') return proposal.value.audit_recovery?.available
+    ? 'Saving is unavailable until the saved audit finishes and passes its checks.'
+    : 'Saving is unavailable because the draft failed. Create a new proposal.'
   return 'Saving is unavailable until the proposal is ready and its checks allow a revision.'
 })
 const citationNumber = id => [...new Set((proposal.value?.ledger || []).flatMap(c => c.citation_ids || []))].indexOf(id) + 1
 const words = text => String(text).replaceAll('_', ' ')
 const statusLabel = computed(() => ({ queued: 'Waiting', running: words(proposal.value.phase), review_pending: 'Source review unfinished', ready: 'Ready for your review', blocked: 'Changes required', accepted: 'Revision saved', rejected: 'Original retained', failed: 'Draft failed', stale: 'Sources changed', accepting: 'Save needs recovery' })[proposal.value?.state] || '')
 const cacheKey = () => `evidence-proposal:${props.reportId}:${props.sectionIndex}`
-const remember = () => { try { sessionStorage.setItem(cacheKey(), JSON.stringify({ requestKey, requestPayload: requestPayload.value, proposalId: proposal.value?.proposal_id })) } catch { /* private browsing may disable storage */ } }
+const remember = () => { try { sessionStorage.setItem(cacheKey(), JSON.stringify({ requestKey, requestPayload: requestPayload.value, auditRetryRequest, proposalId: proposal.value?.proposal_id })) } catch { /* private browsing may disable storage */ } }
 const stop = () => { clearTimeout(timer); timer = null }
 const message = err => {
   const code = err.response?.data?.error || err.message || 'Request failed'
-  return ({ report_busy: 'Another operation is using this report. Retry when it finishes.', capacity: 'Two drafts are already running. Retry when one finishes.', stale_parent: 'The original report changed. Start a new proposal.', stale_sources: 'The source documents changed. Start a new proposal.', revision_deleted: 'The saved revision was deleted and cannot be restored by retrying.', source_revalidation_unavailable: 'Sources are unavailable. Your proposal is saved; retry saving when the source service is available.' })[code] || words(code)
+  return ({ summary_selection_required: 'Choose the exact summary passage for this section before starting a new proposal.', missing_or_ambiguous_summary_target: 'The selected passage must appear exactly once in the current summary.', audit_checkpoint_changed: 'The saved audit changed. Refresh its status before retrying.', audit_not_recoverable: 'This audit cannot be resumed safely. Start a new proposal.', report_busy: 'Another operation is using this report. Retry when it finishes.', capacity: 'Two drafts are already running. Retry when one finishes.', stale_parent: 'The original report changed. Start a new proposal.', stale_sources: 'The source documents changed. Start a new proposal.', revision_deleted: 'The saved revision was deleted and cannot be restored by retrying.', source_revalidation_unavailable: 'Sources are unavailable. Your proposal is saved; retry saving when the source service is available.' })[code] || words(code)
 }
 function schedule(token) {
   stop()
@@ -206,6 +234,7 @@ async function create(focused = false) {
   const token = generation
   requestKey ||= crypto.randomUUID()
   requestPayload.value ||= { section_index: props.sectionIndex, request_key: requestKey,
+    ...(focused !== true && summarySelection.value ? { summary_selection: summarySelection.value } : {}),
     ...(focused === true ? { focused_correction: { ...correction.value, ...(correctionKind.value === 'wording' ? { kind: 'wording' } : {}) } } : {}) }
   remember(); busy.value = true; error.value = ''
   try {
@@ -246,6 +275,27 @@ async function continueReview() {
   } catch (err) { if (token === generation) error.value = message(err) }
   finally { if (token === generation) busy.value = false }
 }
+async function retryAudit() {
+  if (busy.value || !proposal.value?.audit_recovery?.available) return
+  const token = ++generation
+  stop()
+  auditRetryRequest ||= { proposalId: proposal.value.proposal_id, request_key: crypto.randomUUID(), recovery_digest: proposal.value.audit_recovery.digest }
+  remember(); busy.value = true; error.value = ''
+  try {
+    const { proposalId, ...data } = auditRetryRequest
+    const result = await retryEvidenceAudit(props.reportId, proposalId, data)
+    if (token !== generation) return
+    proposal.value = result.data; auditRetryRequest = null; remember(); schedule(token); loadSaved(token)
+  } catch (err) {
+    if (token !== generation) return
+    error.value = message(err)
+    const code = err.response?.data?.error
+    if (['audit_checkpoint_changed', 'audit_not_recoverable', 'stale_parent', 'stale_sources', 'sources_unavailable', 'idempotency_conflict'].includes(code)) {
+      auditRetryRequest = null; remember()
+    }
+  }
+  finally { if (token === generation) busy.value = false }
+}
 async function reject() {
   if (busy.value) return
   const token = ++generation
@@ -258,10 +308,11 @@ async function reject() {
   } catch (err) { if (token === generation) error.value = message(err) }
   finally { if (token === generation) { busy.value = false; schedule(token) } }
 }
-function fresh() { generation++; stop(); proposal.value = null; requestKey = null; requestPayload.value = null; error.value = ''; remember() }
+function fresh() { generation++; stop(); summarySelection.value = proposal.value?.summary_selection || ''; proposal.value = null; requestKey = null; requestPayload.value = null; auditRetryRequest = null; error.value = ''; remember() }
 function openSaved(identifier) {
   if (!identifier) return
   generation++; stop(); proposal.value = { proposal_id: identifier }; requestKey = null; requestPayload.value = null
+  auditRetryRequest = null
   error.value = ''; remember(); refresh(generation)
 }
 async function loadSaved(token) {
@@ -276,7 +327,9 @@ watch(() => [props.reportId, props.sectionIndex, props.initialProposalId], () =>
   try { saved = JSON.parse(sessionStorage.getItem(cacheKey()) || '{}') } catch { /* no saved request */ }
   requestKey = saved.requestKey || null
   requestPayload.value = saved.requestPayload || null
+  summarySelection.value = requestPayload.value?.summary_selection || ''
   const identifier = props.initialProposalId || saved.proposalId
+  auditRetryRequest = saved.auditRetryRequest?.proposalId === identifier ? saved.auditRetryRequest : null
   if (identifier) { proposal.value = { proposal_id: identifier }; refresh(generation) }
   savedProposals.value = []; loadSaved(generation)
 }, { immediate: true })

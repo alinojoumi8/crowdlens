@@ -266,13 +266,22 @@ def resolve_summary_replacements(original, replacements, ledger):
     return edits
 
 
-def summary_edit_scope(original, section_text):
-    """Only a unique literal section-to-summary link authorizes automatic edits.
+def summary_edit_scope(original, section_text, selected_text=None):
+    """Use an exact section match or an explicit operator-selected passage.
 
-    Abstract summaries have no inferred semantic boundaries. Keep their text
-    unchanged unless a separate trusted mapping is available in a future policy.
+    Selection authorizes the edit boundary, never the truth of its contents.
+    The replacement still needs ledger support and the normal source audit.
     """
     spans = []
+    if selected_text is not None:
+        if not isinstance(selected_text, str) or not 0 < len(selected_text) <= 2000 or not selected_text.strip():
+            raise ValueError('invalid_summary_selection')
+        start = original.find(selected_text)
+        if start < 0 or original.find(selected_text, start + 1) >= 0:
+            raise ValueError('missing_or_ambiguous_summary_target')
+        return {'basis': 'operator_selected_summary',
+                'editable_spans': [{'start': start, 'end': start + len(selected_text), 'text': selected_text}],
+                'unmapped_summary_requires_review': False}
     if isinstance(section_text, str) and section_text.strip():
         start = original.find(section_text)
         if start >= 0 and original.find(section_text, start + 1) < 0:

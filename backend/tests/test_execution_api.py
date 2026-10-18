@@ -349,3 +349,54 @@ def test_http_spend_terms_and_renewal_are_explicit_and_persisted(controlled):
     assert response.json['data']['spend']['estimated_micro_usd'] == 7
     assert client.get('/api/execution/'+wid).json['data']['spend']['price_reference'] == 'Fictional v1'
     assert calls == []
+
+
+def test_saved_audit_retry_keeps_unknown_attempt_and_request_limit(controlled, tmp_path, monkeypatch):
+    import requests
+    from test_evidence_drafting import FakeLLM, SourceStorage, run
+    from test_evidence_proposals_api import terminal
+    from evidence_draft_samples import sample_report
+    from app.services.report_agent import ReportManager
+    from app.services.audit_recovery import recovery_details
+    client, ledger, runtime, calls = controlled
+    monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(tmp_path / 'reports'))
+    ReportManager.save_report(sample_report())
+    original = FakeLLM.chat_json
+    def timeout(self, messages, **kwargs):
+        if messages[0]['content'].startswith('EVIDENCE_AUDIT_V1'):
+            raise requests.Timeout('fictional timeout')
+        return original(self, messages, **kwargs)
+    monkeypatch.setattr(FakeLLM, 'chat_json', timeout)
+    failed, llm = run(tmp_path / 'reports')
+    monkeypatch.setattr(FakeLLM, 'chat_json', original)
+    store = llm.store
+    class Metered(FakeLLM):
+        def chat_json(self, messages, **kwargs):
+            assert messages[0]['content'].startswith('EVIDENCE_AUDIT_V1')
+            with transport_attempt('synthetic', Config.LLM_BASE_URL) as receipt:
+                receipt.update(usage={'input_tokens': 20, 'output_tokens': 10}, http_status=200)
+                return super().chat_json(messages, **kwargs)
+    client.application.extensions.update(neo4j_storage=SourceStorage(), evidence_proposal_store=store,
+        evidence_llm_factory=lambda identifier: Metered(store, identifier), evidence_embedder_factory=lambda: None)
+    url = f"/api/report/report_root/evidence-proposals/{failed['proposal_id']}/retry-audit"
+    body = {'request_key': 'retry', 'recovery_digest': recovery_details(store, failed)['digest']}
+    before = list(store.records())
+    assert client.post(url, json=body).status_code == 428
+    assert list(store.records()) == before
+    wid = client.post('/api/execution/authorize', json={**terms(), 'max_requests': 2}).json['data']['workflow_id']
+    ledger.bind(wid, 'report:report_root')
+    # The original timed-out delivery still occupies a request in this ledger.
+    with execution_scope(ledger, wid, 'proposal'):
+        with pytest.raises(requests.Timeout), transport_attempt('synthetic', Config.LLM_BASE_URL):
+            raise requests.Timeout('fictional earlier delivery')
+    response = client.post(url, json=body)
+    assert response.status_code == 202
+    recovered = terminal(client, response.json['data']['proposal_id'])
+    assert recovered['state'] == 'ready'
+    status = ledger.status(wid)
+    assert status['admitted'] == 2 and status['unknown_usage_attempts'] == 1 and status['epoch'] == 1
+    assert client.post(url, json={**body, 'request_key': 'over-limit'}).status_code == 409
+    ledger.stop(wid)
+    response = client.post(url, json={**body, 'request_key': 'stopped'})
+    assert response.status_code == 409 and response.json['error'] == 'stopped'
+    assert ledger.status(wid)['admitted'] == 2

@@ -44,7 +44,7 @@ def endpoint(function):
 
 
 def body(keys, optional=()):
-    request.max_content_length = 4096
+    request.max_content_length = 16384
     value = request.get_json()
     if not isinstance(value, dict) or not set(keys) <= set(value) or not set(value) <= set(keys) | set(optional):
         raise ProposalError('invalid_request', 400)
@@ -87,9 +87,11 @@ def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, emb
     watchdog.daemon = True
     try:
         watchdog.start()
-        store.update(identifier, {'queued'}, {'state': 'running', 'phase': 'retrieving'})
-        tasks.update_task(task_id, status=TaskStatus.PROCESSING, message='Drafting from original sources', progress=5)
-        service = EvidenceDraftingService(storage, llm_factory(identifier), store, embedder=embedder_factory())
+        store.update(identifier, {'queued'}, {'state': 'running', 'phase': 'auditing' if record.get('audit_retry') else 'retrieving'})
+        tasks.update_task(task_id, status=TaskStatus.PROCESSING,
+            message='Retrying saved audit' if record.get('audit_retry') else 'Drafting from original sources', progress=5)
+        service = EvidenceDraftingService(storage, llm_factory(identifier), store,
+            embedder=None if record.get('audit_retry') else embedder_factory())
         result = service.generate(identifier, snapshot, budget=budget)
         if result['state'] in {'ready', 'blocked', 'review_pending'}:
             tasks.complete_task(task_id, result={'proposal_id': identifier, 'state': result['state']})
@@ -113,7 +115,9 @@ def run_worker(store, record, snapshot, lease, budget, storage, llm_factory, emb
 @report_bp.route('/<report_id>/evidence-proposals', methods=['POST'])
 @endpoint
 def create_evidence_proposal(report_id):
-    data = body({'section_index', 'request_key'}, optional={'focused_correction'})
+    data = body({'section_index', 'request_key'}, optional={'focused_correction', 'summary_selection'})
+    if 'summary_selection' in data and ('focused_correction' in data or data['summary_selection'] is None):
+        raise ProposalError('invalid_summary_selection', 400)
     if 'focused_correction' in data:
         from ..services.focused_correction import validate_request
         validate_request(data['focused_correction'])
@@ -132,6 +136,15 @@ def create_evidence_proposal(report_id):
             raise ProposalError('parent_not_terminal')
         if not parent.outline or data['section_index'] > len(parent.outline.sections):
             raise ProposalError('invalid_section', 400)
+        if 'focused_correction' not in data:
+            from ..services.claim_ledger import summary_edit_scope
+            try:
+                summary_scope = summary_edit_scope(parent.outline.summary,
+                    parent.outline.sections[data['section_index'] - 1].content, data.get('summary_selection'))
+            except ValueError as exc:
+                raise ProposalError(str(exc), 400) from None
+            if summary_scope['unmapped_summary_requires_review']:
+                raise ProposalError('summary_selection_required', 400)
         try:
             scope = proposal_source_scope(parent.to_dict(), load_simulation_config(parent.simulation_id))
         except ValueError:
@@ -147,6 +160,7 @@ def create_evidence_proposal(report_id):
         snapshot = parent.to_dict()
         record = store.update(record['proposal_id'], {'queued'}, {'scope': scope, 'section_index': data['section_index'],
             'task_id': task_id, 'deadline_at': time.time() + budget.remaining(),
+            **({'summary_selection': data['summary_selection']} if 'summary_selection' in data else {}),
             **({'focused_correction': data['focused_correction']} if 'focused_correction' in data else {})})
         llm_factory = current_app.extensions.get('evidence_llm_factory', lambda identifier: LLMClient())
         embedder_factory = current_app.extensions.get('evidence_embedder_factory', default_embedder)
@@ -168,7 +182,57 @@ def create_evidence_proposal(report_id):
 @report_bp.route('/<report_id>/evidence-proposals/<proposal_id>', methods=['GET'])
 @endpoint
 def get_evidence_proposal(report_id, proposal_id):
-    return jsonify(success=True, data=store_for_app().get(report_id, proposal_id))
+    from ..services.audit_recovery import recovery_details
+    store = store_for_app()
+    record = store.get(report_id, proposal_id)
+    return jsonify(success=True, data={**record, 'audit_recovery': recovery_details(store, record)})
+
+
+@report_bp.route('/<report_id>/evidence-proposals/<proposal_id>/retry-audit', methods=['POST'])
+@endpoint
+def retry_evidence_audit(report_id, proposal_id):
+    from ..services.audit_recovery import copy_for_retry
+    data = body({'request_key', 'recovery_digest'})
+    store = store_for_app()
+    store.get(report_id, proposal_id)
+    record, lease = store.admit(report_id, data['request_key'], canonical_digest({'retry_of': proposal_id, **data}))
+    if lease is None:
+        return jsonify(success=True, data=record), 202
+    handed_off = False
+    try:
+        original = store.get(report_id, proposal_id)
+        changes = copy_for_retry(store, original, record, data['recovery_digest'])
+        parent = ReportManager.get_report(report_id)
+        if parent is None or canonical_digest(parent.to_dict()) != changes['parent_digest']:
+            raise ProposalError('stale_parent')
+        storage = current_app.extensions.get('neo4j_storage')
+        if storage is None:
+            raise ProposalError('sources_unavailable', 503)
+        from ..services.source_completeness import freeze_review_sources
+        if freeze_review_sources(storage, changes['scope'])['digest'] != changes['source_digest']:
+            raise ProposalError('stale_sources')
+        seconds = min(180, float(current_app.config.get('EVIDENCE_PROPOSAL_SECONDS', 180)))
+        budget = DraftBudget(seconds=max(.001, seconds - (time.time() - (record['deadline_at'] - 180))),
+                             previous_usage=original.get('usage'))
+        tasks = TaskManager()
+        task_id = tasks.create_task('evidence_proposal', metadata={'report_id': report_id, 'proposal_id': record['proposal_id']},
+            resources=[{'key': 'proposal:' + record['proposal_id'], 'root': str(store.root)}])
+        record = store.update(record['proposal_id'], {'queued'}, {**changes, 'phase': 'auditing',
+            'task_id': task_id, 'deadline_at': time.time() + budget.remaining()})
+        tasks.start_task(task_id, run_worker, (store, record, parent.to_dict(), lease, budget, storage,
+            current_app.extensions.get('evidence_llm_factory', lambda identifier: LLMClient()),
+            current_app.extensions.get('evidence_embedder_factory', default_embedder), tasks), name='evidence-proposal')
+        handed_off = True
+        return jsonify(success=True, data=record), 202
+    except Exception:
+        try:
+            store.update(record['proposal_id'], {'queued'}, {'state': 'failed', 'error_code': 'admission_failed'})
+        except ProposalError:
+            pass
+        raise
+    finally:
+        if not handed_off:
+            lease.close()
 
 
 @report_bp.route('/<report_id>/evidence-proposals/<proposal_id>/continue', methods=['POST'])

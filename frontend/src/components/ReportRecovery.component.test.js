@@ -93,3 +93,30 @@ it('explicit evidence-only generation opts out without changing an old report', 
   await button.trigger('click'); await flushPromises()
   expect(generateReport.mock.calls[0][0]).toMatchObject({simulation_id:'sim_old',evidence_only:true,disable_interviews:true,force_regenerate:true})
 })
+
+it('passes raw section text to summary matching without the rendered heading', async () => {
+  getReport.mockResolvedValue({ success: true, data: { status: 'needs_review', outline: {
+    title: 'Synthetic report', summary: 'Original section. Protected text.',
+    sections: [{ title: 'Section heading', content: 'Original section.' }]
+  } } })
+  getReportProgress.mockResolvedValue({ success: true, data: { effective_status: 'needs_review', terminal: true } })
+  wrapper = mount(Step4Report, { props: { reportId: 'report_raw_section', systemLogs: [] },
+    global: { stubs: { EvidenceDraftReview: true, ClaimEvidence: true, SafeMarkdown: true } } })
+  await flushPromises()
+  expect(wrapper.findComponent({ name: 'EvidenceDraftReview' }).props('sectionText')).toBe('Original section.')
+})
+
+it('shows persisted source links for a reopened revised summary', async () => {
+  getReport.mockResolvedValue({ success: true, data: { status: 'needs_review',
+    outline: { title: 'Saved revision', summary: 'A short attributed summary.', sections: [] },
+    revision: { immutable: true, summary_sources: [{ text: 'A short attributed summary.', sources: [
+      { evidence_id: 's1', document_id: 'doc', filename: 'Source.pdf', locator: { page: 4 }, window: 'Frozen source.' }
+    ] }] } } })
+  getReportProgress.mockResolvedValue({ success: true, data: { effective_status: 'needs_review', terminal: true } })
+  wrapper = mount(Step4Report, { props: { reportId: 'report_saved', systemLogs: [] },
+    global: { stubs: { EvidenceDraftReview: true, ClaimEvidence: true, SafeMarkdown: true } } })
+  await flushPromises()
+  expect(wrapper.get('nav[aria-label="Revised summary sources"] a').text()).toContain('Source.pdf · page 4')
+  expect(wrapper.get('.summary-sources blockquote').text()).toBe('Frozen source.')
+  expect(generateReport).not.toHaveBeenCalled()
+})
