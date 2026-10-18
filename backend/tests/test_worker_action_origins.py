@@ -46,6 +46,7 @@ def test_worker_logs_only_executed_actions_with_phase_origins(tmp_path, monkeypa
                         db.execute('INSERT INTO trace VALUES(0, ?, ?)',
                             ('create_post', json.dumps({'content': content, 'post_id': rowid})))
     db_path = str(tmp_path / f'{platform}_simulation.db')
+    database_bindings = []
     async def generate(**kwargs):
         return graph
     tree = ast.parse((scripts / 'run_parallel_simulation.py').read_text())
@@ -57,6 +58,7 @@ def test_worker_logs_only_executed_actions_with_phase_origins(tmp_path, monkeypa
         EconomyTickCoordinator=object, FILTERED_ACTIONS={'login'}, ACTION_TYPE_MAP={'create_post': 'CREATE_POST'},
         _enrich_action_context=lambda *args: None, create_model=lambda *args, **kw: None,
         generate_twitter_agent_graph=generate, generate_reddit_agent_graph=generate,
+        bind_agent_database=lambda graph, path: database_bindings.append((graph, path)),
         TWITTER_ACTIONS=[], REDDIT_ACTIONS=[], get_agent_names_from_config=lambda _: {0: 'Maya'},
         oasis=SimpleNamespace(make=lambda **kw: Environment(),
             DefaultPlatformType=SimpleNamespace(TWITTER='twitter', REDDIT='reddit')),
@@ -71,6 +73,7 @@ def test_worker_logs_only_executed_actions_with_phase_origins(tmp_path, monkeypa
     config = {'time_config': {'total_simulation_hours': 2, 'minutes_per_round': 60},
         'event_config': {'initial_posts': [{'poster_agent_id': 0, 'content': 'Initial input'}]}}
     asyncio.run(namespace[f'run_{platform}_simulation'](config, str(tmp_path), logger, max_rounds=1))
+    assert database_bindings == [(graph, db_path)]
     rows = [json.loads(line) for line in (tmp_path / platform / 'actions.jsonl').read_text().splitlines()]
     actions = [row for row in rows if 'agent_id' in row]
     posts = [row for row in actions if row['action_type'] == 'CREATE_POST']

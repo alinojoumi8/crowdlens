@@ -169,6 +169,7 @@ from app.services.economy import EconomyRuntime, EconomyTickCoordinator
 try:
     from llm_provider_adapter import create_oasis_model_from_env
     import oasis
+    from oasis_database import bind_agent_database
     from oasis import (
         ActionType,
         LLMAction,
@@ -1101,6 +1102,7 @@ async def run_twitter_simulation(
         database_path=db_path,
         semaphore=30,  # Limit maximum concurrent LLM requests to prevent API overload
     )
+    bind_agent_database(result.agent_graph, db_path)
     
     await result.env.reset()
     log_info("Environment started")
@@ -1349,6 +1351,7 @@ async def run_reddit_simulation(
         database_path=db_path,
         semaphore=30,  # Limit maximum concurrent LLM requests to prevent API overload
     )
+    bind_agent_database(result.agent_graph, db_path)
     
     await result.env.reset()
     log_info("Environment started")
