@@ -138,7 +138,12 @@ class ReportRevisionService:
             else:
                 if record.get('policy') in ('evidence-draft-v3-grounded-summary-scope', 'evidence-draft-v4-server-summary-target', 'evidence-draft-v5-claim-summary', 'evidence-draft-v6-conditional-extract', 'evidence-draft-v7-server-source-sentences', 'evidence-draft-v8-server-conditional-ledger', 'evidence-draft-v9-complete-pdf-pages', 'evidence-draft-v10-exact-quote-recovery', 'evidence-draft-v11-complete-claim-coverage', 'evidence-draft-v12-source-accounting', 'evidence-draft-v13-explicit-audit-targets', 'evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review'):
                     from .claim_ledger import summary_edit_scope, validate_summary_edit_scope
-                    contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'])
+                    try:
+                        contract = summary_edit_scope(frozen['outline']['summary'], frozen['outline']['sections'][record['section_index'] - 1]['content'], record.get('summary_selection'))
+                    except ValueError:
+                        raise ProposalError('summary_scope_mismatch') from None
+                    if contract != record['before']['summary_scope_contract']:
+                        raise ProposalError('summary_scope_mismatch')
                     if record.get('policy') in ('evidence-draft-v14-summary-assessment', 'evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review'):
                         if contract['unmapped_summary_requires_review']:
                             raise ProposalError('summary_scope_unmapped')
@@ -196,6 +201,8 @@ class ReportRevisionService:
             'inherited_forecast': True, 'source_checked_at': checked_at,
             'inherited_section_indices': [i for i in range(1, len(parent.outline.sections)+1) if i != record['section_index']],
             'summary_edits': record['summary_edits'], 'source_digest': record['source_digest']}
+        if 'summary_selection' in record:
+            revision.revision['summary_selection'] = record['summary_selection']
         if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
             revision.revision['focused_correction'] = record['focused_correction']
             revision.revision['review_scope'] = record['limitations'][0]

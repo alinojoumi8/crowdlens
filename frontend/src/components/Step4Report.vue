@@ -20,7 +20,7 @@
               <a :href="`/report/${encodeURIComponent(reportRevision.parent_report_id)}`">Parent report</a>
               <a :href="`/report/${encodeURIComponent(reportRevision.root_report_id)}`">Original report</a>
               <a :href="`/report/${encodeURIComponent(reportRevision.parent_report_id)}?proposal=${encodeURIComponent(reportRevision.proposal_id)}&section=${reportRevision.section_index}`">Review accepted proposal</a>
-              <span>Forecasts and unselected sections are inherited.</span>
+              <span>Forecasts, unselected sections and untouched summary text are inherited and were not verified by the section review.</span>
             </nav>
             <h1 class="main-title">{{ reportOutline.title }}</h1>
             <p class="report-reading-guide">Review the summary, compare proposed changes in each section, and check the original sources. Generated analysis is not a verified forecast.</p>
@@ -175,6 +175,8 @@
                 <ClaimEvidence :checks="section.claim_checks || []" />
                 <EvidenceDraftReview v-if="isComplete && ['completed', 'needs_review'].includes(reportStatus)"
                   :report-id="reportId" :section-index="idx + 1"
+                  :summary-text="reportOutline.summary"
+                  :section-text="section.content || ''"
                   :initial-proposal-id="String(route.query.section) === String(idx + 1) ? route.query.proposal : undefined"
                   @revision-created="openRevision" />
                 <!-- Completed Content -->

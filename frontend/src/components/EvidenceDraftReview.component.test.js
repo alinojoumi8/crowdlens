@@ -2,7 +2,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import EvidenceDraftReview from './EvidenceDraftReview.vue'
 import * as api from '../api/report'
-vi.mock('../api/report', () => ({ createEvidenceProposal: vi.fn(), getEvidenceProposal: vi.fn(), listEvidenceProposals: vi.fn(), acceptEvidenceProposal: vi.fn(), continueEvidenceProposal: vi.fn(), rejectEvidenceProposal: vi.fn() }))
+vi.mock('../api/report', () => ({ createEvidenceProposal: vi.fn(), getEvidenceProposal: vi.fn(), listEvidenceProposals: vi.fn(), acceptEvidenceProposal: vi.fn(), continueEvidenceProposal: vi.fn(), retryEvidenceAudit: vi.fn(), rejectEvidenceProposal: vi.fn() }))
 vi.mock('./HumanClaimReview.vue', () => ({ default: { template: '<div />' } }))
 const proposal = (state = 'ready') => ({ proposal_id: 'proposal_1', state, phase: 'review', proposal_digest: 'digest',
   before: { section: 'Original section.', summary: 'Original summary.' }, after: { section: 'Alex says Friday.', summary: 'Updated summary.' }, findings: [], limitations: [],
@@ -198,7 +198,7 @@ it('submits a focused correction separately and freezes its payload for retries'
   const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_focused', sectionIndex: 2 } })
   await wrapper.find('input').setValue('May 29, 2025')
   await wrapper.findAll('input')[1].setValue('May 29, 2023')
-  await wrapper.find('textarea').setValue('In the May 29, 2023 affidavit, Alex denies signing.')
+  await wrapper.find('form textarea').setValue('In the May 29, 2023 affidavit, Alex denies signing.')
   await wrapper.find('form').trigger('submit'); await flushPromises()
   await button(wrapper, 'Retry request').trigger('click'); await flushPromises()
   const bodies = api.createEvidenceProposal.mock.calls.map(call => call[1])
@@ -213,7 +213,7 @@ it('allows editing a new focused request after an invalid request response', asy
   const wrapper = mount(EvidenceDraftReview, {props:{reportId:'report_invalid_focused',sectionIndex:1}})
   await wrapper.find('input').setValue('an invalid date')
   await wrapper.findAll('input')[1].setValue('another date')
-  await wrapper.find('textarea').setValue('Source quotation.')
+  await wrapper.find('form textarea').setValue('Source quotation.')
   await wrapper.find('form').trigger('submit'); await flushPromises()
   expect(wrapper.find('input').element.disabled).toBe(true)
   await button(wrapper, 'New proposal').trigger('click')
@@ -229,9 +229,11 @@ it('submits a bounded wording correction with an explicit kind', async () => {
   await wrapper.find('select').setValue('wording')
   await wrapper.find('input').setValue('The July 4 index.')
   await wrapper.findAll('input')[1].setValue('The index on PDF page 4.')
-  await wrapper.find('textarea').setValue('[PDF page 4] INDEX')
+  await wrapper.find('form textarea').setValue('[PDF page 4] INDEX')
   await wrapper.find('form').trigger('submit'); await flushPromises()
   expect(api.createEvidenceProposal.mock.calls[0][1].focused_correction.kind).toBe('wording')
+  expect(api.createEvidenceProposal.mock.calls[0][1].focused_correction.source_quote).toBe('[PDF page 4] INDEX')
+  expect(api.createEvidenceProposal.mock.calls[0][1]).not.toHaveProperty('summary_selection')
   expect(wrapper.text()).toContain('Review proposed changes')
   wrapper.unmount()
 })
@@ -313,5 +315,105 @@ it('explains omitted passages and missing extraction while blocking saving', asy
   expect(wrapper.text()).toContain('1 source passage(s) could not be admitted')
   expect(wrapper.text()).toContain('Restore missing source text.')
   expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  wrapper.unmount()
+})
+
+it('sends the exact selected summary passage and freezes it on request retry', async () => {
+  api.createEvidenceProposal.mockRejectedValueOnce(new Error('network'))
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_summary', sectionIndex: 1, summaryText: 'Abstract forecast. Protected text.' } })
+  await wrapper.get('.summary-selection textarea').setValue('Abstract forecast.')
+  await button(wrapper, 'Draft with sources').trigger('click'); await flushPromises()
+  expect(api.createEvidenceProposal.mock.calls[0][1].summary_selection).toBe('Abstract forecast.')
+  expect(wrapper.get('.summary-selection textarea').attributes('disabled')).toBeDefined()
+  await button(wrapper, 'Retry request').trigger('click'); await flushPromises()
+  expect(api.createEvidenceProposal.mock.calls[1][1]).toEqual(api.createEvidenceProposal.mock.calls[0][1])
+  wrapper.unmount()
+})
+
+it('reopens a failed audit without retrying and preserves the retry key across reload', async () => {
+  const failed = { ...proposal('failed'), error_code: 'audit_timeout', audit_recovery: { available: true, digest: 'saved-checkpoint' } }
+  api.getEvidenceProposal.mockResolvedValue({ data: failed })
+  sessionStorage.setItem('evidence-proposal:report_root:1', JSON.stringify({ proposalId: 'proposal_1' }))
+  let wrapper = mountReview(); await flushPromises()
+  expect(api.retryEvidenceAudit).not.toHaveBeenCalled()
+  expect(wrapper.text()).toContain('billing may be unknown')
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeDefined()
+  api.retryEvidenceAudit.mockRejectedValueOnce(new Error('network'))
+  await button(wrapper, 'Retry saved audit').trigger('click'); await flushPromises()
+  const first = api.retryEvidenceAudit.mock.calls[0]
+  expect(first[2].recovery_digest).toBe('saved-checkpoint')
+  wrapper.unmount()
+  wrapper = mountReview(); await flushPromises()
+  api.retryEvidenceAudit.mockResolvedValue({ data: { ...proposal(), proposal_id: 'proposal_recovered' } })
+  await button(wrapper, 'Retry saved audit').trigger('click'); await flushPromises()
+  expect(api.retryEvidenceAudit.mock.calls[1]).toEqual(first)
+  expect(button(wrapper, 'Save as new revision').attributes('disabled')).toBeUndefined()
+  wrapper.unmount()
+})
+
+it('keeps the failed draft after allowance refusal and ignores retry completion after navigation', async () => {
+  api.getEvidenceProposal.mockResolvedValue({ data: { ...proposal('failed'), audit_recovery: { available: true, digest: 'saved-checkpoint' } } })
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_root', sectionIndex: 1, initialProposalId: 'proposal_1' } })
+  await flushPromises()
+  api.retryEvidenceAudit.mockRejectedValueOnce({ response: { data: { error: 'stopped' } } })
+  await button(wrapper, 'Retry saved audit').trigger('click'); await flushPromises()
+  expect(wrapper.get('[role="alert"]').text()).toBe('stopped')
+  expect(wrapper.text()).toContain('Original section.')
+  let finish
+  api.retryEvidenceAudit.mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
+  await button(wrapper, 'Retry saved audit').trigger('click')
+  await button(wrapper, 'Retry saved audit').trigger('click')
+  expect(api.retryEvidenceAudit).toHaveBeenCalledTimes(2)
+  api.getEvidenceProposal.mockResolvedValue({ data: { proposal_id: 'proposal_other', state: 'failed' } })
+  await wrapper.setProps({ reportId: 'other', initialProposalId: 'proposal_other' })
+  finish({ data: { ...proposal(), after: { section: 'Old retry result.' } } }); await flushPromises()
+  expect(wrapper.text()).not.toContain('Old retry result.')
+  wrapper.unmount()
+})
+
+it('requires a summary selection before an unmapped full-section draft', async () => {
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_unmapped', sectionIndex: 1,
+    summaryText: 'A forecast. Protected text.', sectionText: 'Different section prose.' } })
+  expect(wrapper.get('.summary-selection').attributes('open')).toBeDefined()
+  expect(button(wrapper, 'Draft with sources').attributes('disabled')).toBeDefined()
+  await wrapper.get('.summary-selection textarea').setValue('A forecast.')
+  expect(button(wrapper, 'Draft with sources').attributes('disabled')).toBeUndefined()
+  expect(api.createEvidenceProposal).not.toHaveBeenCalled()
+  wrapper.unmount()
+})
+
+it('uses a fresh retry key and checkpoint after a definite server refusal', async () => {
+  const failed = { ...proposal('failed'), audit_recovery: { available: true, digest: 'old-digest' } }
+  api.getEvidenceProposal.mockResolvedValue({ data: failed })
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_root', sectionIndex: 1, initialProposalId: 'proposal_1' } })
+  await flushPromises()
+  api.retryEvidenceAudit.mockRejectedValueOnce({ response: { status: 409, data: { error: 'audit_checkpoint_changed' } } })
+  await button(wrapper, 'Retry saved audit').trigger('click'); await flushPromises()
+  const first = api.retryEvidenceAudit.mock.calls[0][2]
+  api.getEvidenceProposal.mockResolvedValue({ data: { ...failed, audit_recovery: { available: true, digest: 'new-digest' } } })
+  await button(wrapper, 'Refresh status').trigger('click'); await flushPromises()
+  api.retryEvidenceAudit.mockResolvedValue({ data: proposal() })
+  await button(wrapper, 'Retry saved audit').trigger('click'); await flushPromises()
+  const second = api.retryEvidenceAudit.mock.calls[1][2]
+  expect(second.request_key).not.toBe(first.request_key)
+  expect(second.recovery_digest).toBe('new-digest')
+  wrapper.unmount()
+})
+
+it('does not restore another proposal audit retry when opening a direct link', async () => {
+  sessionStorage.setItem('evidence-proposal:report_root:1', JSON.stringify({
+    proposalId: 'proposal_1',
+    auditRetryRequest: { proposalId: 'proposal_1', request_key: 'old-request', recovery_digest: 'old-digest' }
+  }))
+  api.getEvidenceProposal.mockResolvedValue({ data: { ...proposal('failed'), proposal_id: 'proposal_2',
+    audit_recovery: { available: true, digest: 'displayed-digest' } } })
+  api.retryEvidenceAudit.mockResolvedValue({ data: proposal() })
+  const wrapper = mount(EvidenceDraftReview, { props: { reportId: 'report_root', sectionIndex: 1, initialProposalId: 'proposal_2' } })
+  await flushPromises()
+  await button(wrapper, 'Retry saved audit').trigger('click'); await flushPromises()
+  expect(api.retryEvidenceAudit).toHaveBeenCalledWith('report_root', 'proposal_2', {
+    request_key: expect.any(String), recovery_digest: 'displayed-digest'
+  })
+  expect(api.retryEvidenceAudit.mock.calls[0][2].request_key).not.toBe('old-request')
   wrapper.unmount()
 })

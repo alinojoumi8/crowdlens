@@ -93,3 +93,15 @@ it('explicit evidence-only generation opts out without changing an old report', 
   await button.trigger('click'); await flushPromises()
   expect(generateReport.mock.calls[0][0]).toMatchObject({simulation_id:'sim_old',evidence_only:true,disable_interviews:true,force_regenerate:true})
 })
+
+it('passes raw section text to summary matching without the rendered heading', async () => {
+  getReport.mockResolvedValue({ success: true, data: { status: 'needs_review', outline: {
+    title: 'Synthetic report', summary: 'Original section. Protected text.',
+    sections: [{ title: 'Section heading', content: 'Original section.' }]
+  } } })
+  getReportProgress.mockResolvedValue({ success: true, data: { effective_status: 'needs_review', terminal: true } })
+  wrapper = mount(Step4Report, { props: { reportId: 'report_raw_section', systemLogs: [] },
+    global: { stubs: { EvidenceDraftReview: true, ClaimEvidence: true, SafeMarkdown: true } } })
+  await flushPromises()
+  expect(wrapper.findComponent({ name: 'EvidenceDraftReview' }).props('sectionText')).toBe('Original section.')
+})

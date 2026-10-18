@@ -86,5 +86,6 @@ export const getEvidenceProposal = (reportId, proposalId) => service.get(proposa
 export const listEvidenceProposals = reportId => service.get(proposalPath(reportId))
 export const acceptEvidenceProposal = (reportId, proposalId, proposalDigest) => service.post(`${proposalPath(reportId, proposalId)}/accept`, { proposal_digest: proposalDigest })
 export const continueEvidenceProposal = (reportId, proposalId, proposalDigest) => service.post(`${proposalPath(reportId, proposalId)}/continue`, { proposal_digest: proposalDigest })
+export const retryEvidenceAudit = (reportId, proposalId, data) => service.post(`${proposalPath(reportId, proposalId)}/retry-audit`, data)
 export const rejectEvidenceProposal = (reportId, proposalId) => service.post(`${proposalPath(reportId, proposalId)}/reject`, {})
 export const getReportRevisions = reportId => service.get(`/api/report/${encodeURIComponent(reportId)}/revisions`)

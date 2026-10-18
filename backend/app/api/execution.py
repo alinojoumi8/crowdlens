@@ -14,6 +14,7 @@ GENERATION_ENDPOINTS = {
     'report.regenerate_report_section': 'report', 'report.chat_with_report_agent': 'report_chat',
     'report.create_evidence_proposal': 'proposal',
     'report.continue_evidence_proposal': 'proposal',
+    'report.retry_evidence_audit': 'proposal',
 }
 
 
