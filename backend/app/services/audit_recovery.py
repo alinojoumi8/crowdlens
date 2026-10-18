@@ -6,12 +6,13 @@ from .claim_ledger import (canonical_digest, summary_edit_scope, validate_summar
 from .proposal_store import ProposalError
 from .source_completeness import source_completeness
 from .source_coverage import source_coverage
+from .summary_sources import validate_concise_summary
 from .conditional_extracts import build_extract_contract, resolve_extract_claims
 
 POLICIES = {'evidence-draft-v15-source-completeness', 'evidence-draft-v16-staged-source-review'}
 ERRORS = {'audit_timeout', 'audit_unavailable', 'drafting_unavailable', 'deadline_exceeded', 'worker_interrupted'}
 COPY_FIELDS = ('scope', 'section_index', 'before', 'after', 'ledger', 'sources', 'paragraphs',
-               'summary_edits', 'source_digest', 'policy', 'model', 'limitations', 'findings',
+               'summary_format', 'summary_edits', 'source_digest', 'policy', 'model', 'limitations', 'findings',
                'extract_provenance', 'source_completeness', 'summary_selection', 'usage', 'timing')
 
 
@@ -29,6 +30,7 @@ def saved_inputs(store, record):
             or any(f['blocking'] for f in record['findings'])):
         raise ValueError('invalid_audit_checkpoint')
     validate_summary_edit_scope(record['summary_edits'], scope)
+    validate_concise_summary(record)
     findings = validate_ledger(ledger, record['sources'], record['scope'])
     findings += validate_paragraphs(record['paragraphs'], ledger, record['sources'])
     findings += source_coverage(ledger, record['extract_provenance']['source_exclusions'], record['sources'])

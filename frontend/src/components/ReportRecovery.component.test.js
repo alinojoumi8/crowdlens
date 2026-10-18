@@ -105,3 +105,18 @@ it('passes raw section text to summary matching without the rendered heading', a
   await flushPromises()
   expect(wrapper.findComponent({ name: 'EvidenceDraftReview' }).props('sectionText')).toBe('Original section.')
 })
+
+it('shows persisted source links for a reopened revised summary', async () => {
+  getReport.mockResolvedValue({ success: true, data: { status: 'needs_review',
+    outline: { title: 'Saved revision', summary: 'A short attributed summary.', sections: [] },
+    revision: { immutable: true, summary_sources: [{ text: 'A short attributed summary.', sources: [
+      { evidence_id: 's1', document_id: 'doc', filename: 'Source.pdf', locator: { page: 4 }, window: 'Frozen source.' }
+    ] }] } } })
+  getReportProgress.mockResolvedValue({ success: true, data: { effective_status: 'needs_review', terminal: true } })
+  wrapper = mount(Step4Report, { props: { reportId: 'report_saved', systemLogs: [] },
+    global: { stubs: { EvidenceDraftReview: true, ClaimEvidence: true, SafeMarkdown: true } } })
+  await flushPromises()
+  expect(wrapper.get('nav[aria-label="Revised summary sources"] a').text()).toContain('Source.pdf · page 4')
+  expect(wrapper.get('.summary-sources blockquote').text()).toBe('Frozen source.')
+  expect(generateReport).not.toHaveBeenCalled()
+})

@@ -25,6 +25,7 @@
             <h1 class="main-title">{{ reportOutline.title }}</h1>
             <p class="report-reading-guide">Review the summary, compare proposed changes in each section, and check the original sources. Generated analysis is not a verified forecast.</p>
             <p class="sub-title">{{ reportOutline.summary }}</p>
+          <SummarySources :passages="reportRevision.summary_sources || []" />
             <ReportReview :assessment="currentReview" />
             <ActivityAccounting :summary="activitySummary" />
             <ClaimEvidence :checks="reportOutline.summary_claim_checks || []" />
@@ -612,6 +613,7 @@ import { benchmarkGraphEmbeddings, getGraphQuality, reembedGraph } from '../api/
 import { renderSafeMarkdown as renderMarkdown } from '../utils/markdown'
 import SafeMarkdown from './SafeMarkdown.vue'
 import ClaimEvidence from './ClaimEvidence.vue'
+import SummarySources from './SummarySources.vue'
 import ReportReview from './ReportReview.vue'
 import EvidenceDraftReview from './EvidenceDraftReview.vue'
 

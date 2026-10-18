@@ -124,7 +124,8 @@ def generate_selected(tmp_path, *, invalid_summary=False, ordinary=False, illega
                     value = {'claims': [], 'gaps': [], 'source_exclusions':[{'evidence_id':'episode:two','reason':'Unrelated hearing date, not the selected workshop offer.'}]}
             elif phase == 'EVIDENCE_DRAFT_V1':
                 value = {'paragraphs':[{'text':'The group is committed.' if 'source_sentence_id' in c else c['text'], 'kind':c['kind'], 'claim_ids':[c['claim_id']]} for c in context['ledger']],
-                         'section_summary_claim_ids':['unknown'] if invalid_summary else [c['claim_id'] for c in context['ledger']]}
+                         'section_summary': {'text': context['ledger'][0]['text'],
+                             'claim_ids': ['unknown'] if invalid_summary else [context['ledger'][0]['claim_id']]}}
             else:
                 value = {'audit_protocol':'target_reviews_v1','summary_consistent':True, 'summary_assessment':{'outcome':'consistent','detail':'Synthetic source comparison only.','evidence_ids':[]},
                     'claim_reviews':[{'claim_id':c['claim_id'],'outcome':'supported','evidence_ids':c['citation_ids'],'detail':'Synthetic exact sentence comparison.'} for c in context['ledger']],

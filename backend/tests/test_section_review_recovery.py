@@ -107,6 +107,7 @@ def test_timeout_reopens_and_retries_only_saved_audit_explicitly(app):
     assert new_id != identifier
     recovered = terminal(client, new_id)
     assert recovered['state'] == 'ready' and recovered_calls == ['EVIDENCE_AUDIT_V1']
+    assert recovered['summary_format'] == failed['summary_format'] == 'concise-linked-v1'
     assert recovered['after'] == failed['after']
     assert recovered['usage']['calls'] == failed['usage']['calls']
     assert store.read(identifier) == original

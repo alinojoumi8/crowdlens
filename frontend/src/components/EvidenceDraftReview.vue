@@ -9,7 +9,7 @@
     <p v-if="!proposal" class="draft-intro">Create a separate proposal for this section using its sources. Your original report is preserved.</p>
     <details v-if="!proposal" class="focused-form summary-selection" :open="summarySelectionRequired">
       <summary>Choose the summary passage for this section</summary>
-      <p>If the summary paraphrases this section, copy its exact passage below (up to 2,000 characters). Only that passage may change; the replacement must pass source review. Leave blank to use an exact section match when available.</p>
+      <p>If the summary paraphrases this section, copy its exact passage below (up to 2,000 characters). Only that passage may change; its replacement is limited to 600 characters and must pass source review. Leave blank to use an exact section match when available.</p>
       <p v-if="summaryText"><strong>Current summary:</strong> {{ summaryText }}</p>
       <label :for="`${saveHelpId}-summary`">Summary passage to update</label>
       <textarea :id="`${saveHelpId}-summary`" v-model="summarySelection" :disabled="busy || !!requestPayload" maxlength="2000" rows="3" />

@@ -10,6 +10,7 @@ import tempfile
 from .claim_ledger import canonical_digest, validate_ledger, validate_paragraphs, render_paragraphs, apply_summary_edits
 from .proposal_store import ProposalStore, ProposalError, atomic_json, fsync_directory, now, proposal_digest
 from .source_retrieval import freeze_sources
+from .summary_sources import validate_concise_summary, summary_sources, summary_sources_markdown, revision_summary_sources
 
 
 def guard_report_generation(function):
@@ -180,6 +181,11 @@ class ReportRevisionService:
                         or render_paragraphs(record['paragraphs'], ledger) != record['after']['section']
                         or apply_summary_edits(frozen['outline']['summary'], record['summary_edits'], ledger) != record['after']['summary']):
                     raise ProposalError('invalid_proposal')
+            try:
+                validate_concise_summary(record)
+                summary_sources(record)
+            except (ValueError, TypeError, KeyError):
+                raise ProposalError('invalid_proposal') from None
             checked_at = now()
             revision = self._assemble(parent, record, checked_at)
             record = self.store.update(proposal_id, {'ready', 'accepting'}, {'state': 'accepting', 'source_checked_at': checked_at})
@@ -201,6 +207,7 @@ class ReportRevisionService:
             'inherited_forecast': True, 'source_checked_at': checked_at,
             'inherited_section_indices': [i for i in range(1, len(parent.outline.sections)+1) if i != record['section_index']],
             'summary_edits': record['summary_edits'], 'source_digest': record['source_digest']}
+        revision.revision['summary_sources'] = revision_summary_sources(parent, record)
         if 'summary_selection' in record:
             revision.revision['summary_selection'] = record['summary_selection']
         if record.get('policy') in {'focused-literal-correction-v1', 'focused-wording-correction-v2'}:
@@ -222,7 +229,11 @@ class ReportRevisionService:
                 and not any(check['claim_text'] in edit['old_text'] for edit in record['summary_edits'])]
             revision.outline.summary_claim_check_hash = ''
         revision.claim_checks = [dict(c, section_title=s.title) for s in revision.outline.sections for c in s.claim_checks]
-        revision.markdown_content = revision.outline.to_markdown()
+        export_outline = copy.deepcopy(revision.outline)
+        if revision.revision['summary_sources']:
+            export_outline.summary += '\n\n[Sources for revised summary passages](#revised-summary-sources)'
+        revision.markdown_content = export_outline.to_markdown()
+        revision.markdown_content += '\n' + summary_sources_markdown(revision.revision['summary_sources'])
         if revision.forecast:
             from .forecasting import forecast_to_markdown
             revision.markdown_content = forecast_to_markdown(revision.forecast) + '\n\n' + revision.markdown_content
