@@ -13,7 +13,7 @@
 - **Think first.** State assumptions before coding. When requirements are unclear, present the plausible interpretations and ask which is intended before dependent work. Do not silently fill gaps with familiar patterns.
 - **Keep it simple.** Implement the smallest complete solution with proper error handling. Add no unrequested features, options, settings, or abstractions; simplify unnecessarily long solutions before presenting them.
 - **Define verifiable success.** Make a short plan with checkable criteria. For validation, test valid and invalid inputs; for bugs, first reproduce the failure in a test. Implement and continue until the required checks pass. Report blockers without expanding scope.
-- **Learn from corrections.** Read `docs/lessons.md` before starting if it exists. Apply user corrections first, then append a short explanation of what went wrong and the correct approach; create the file when recording the first correction.
+- **Learn from corrections.** Read `docs/lessons.md` before starting if it exists. Apply user corrections first. Record a lesson only when the user requests it or the task includes that update.
 
 ## Project Structure & Module Organization
 
