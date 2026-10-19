@@ -3,6 +3,8 @@ OASIS Simulation Runner
 Run simulations in the background and record actions for each Agent, supporting real-time status monitoring
 """
 
+from ..services.workspace import owned, require, register, visible, maintenance, child_environment
+
 import os
 import sys
 import json
@@ -296,6 +298,7 @@ class SimulationRunner:
     _graph_memory_enabled: Dict[str, bool] = {}  # simulation_id -> enabled
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_run_state(cls, simulation_id: str) -> Optional[SimulationRunState]:
         """Get run state"""
         if simulation_id in cls._run_states:
@@ -313,6 +316,7 @@ class SimulationRunner:
         return state
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def _load_run_state(cls, simulation_id: str) -> Optional[SimulationRunState]:
         """Load run state from file"""
         try:
@@ -335,6 +339,7 @@ class SimulationRunner:
             return None
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def _state_from_dict(cls, simulation_id: str, data: Dict[str, Any]) -> SimulationRunState:
         state = SimulationRunState(
                 simulation_id=data.get("simulation_id") or simulation_id,
@@ -488,6 +493,7 @@ class SimulationRunner:
 
     @classmethod
     @owned_run_start
+    @owned('simulation', 'simulation_id')
     def start_simulation(
         cls,
         simulation_id: str,
@@ -658,6 +664,7 @@ class SimulationRunner:
             # Set subprocess environment variables to ensure UTF-8 encoding on Windows
             # This fixes third-party libraries (like OASIS) not specifying encoding when reading files
             env = os.environ.copy()
+            env.update(child_environment())
             scope = current_scope()
             if scope and scope.workflow_id:
                 env.update(scope.child_env())
@@ -731,6 +738,7 @@ class SimulationRunner:
         return state
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def _monitor_simulation(cls, simulation_id: str, expected_process=None, expected_state=None):
         """Monitor simulation process and parse action logs"""
         from ..models.task import TaskManager
@@ -1038,6 +1046,7 @@ class SimulationRunner:
         return twitter_enabled or reddit_enabled
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def _terminate_process(cls, process: subprocess.Popen, simulation_id: str, timeout: int = 10):
         """
         Cross-platform terminate process and its child processes
@@ -1095,6 +1104,7 @@ class SimulationRunner:
     
     @classmethod
     @runner_state_gate
+    @owned('simulation', 'simulation_id')
     def stop_simulation(cls, simulation_id: str) -> SimulationRunState:
         """Stop simulation"""
         state = cls.get_run_state(simulation_id)
@@ -1217,6 +1227,7 @@ class SimulationRunner:
         return actions
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_all_actions(
         cls,
         simulation_id: str,
@@ -1278,6 +1289,7 @@ class SimulationRunner:
         return actions
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_actions(
         cls,
         simulation_id: str,
@@ -1312,6 +1324,7 @@ class SimulationRunner:
         return actions[offset:offset + limit]
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_timeline(
         cls,
         simulation_id: str,
@@ -1383,6 +1396,7 @@ class SimulationRunner:
         return result
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_agent_stats(cls, simulation_id: str) -> List[Dict[str, Any]]:
         """
         Get statistics for each Agent
@@ -1426,6 +1440,7 @@ class SimulationRunner:
         return result
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_run_diagnostics(cls, simulation_id: str) -> Dict[str, Any]:
         """Summarize large agent runs into readable diagnostics."""
         actions = cls.get_all_actions(simulation_id)
@@ -1680,6 +1695,7 @@ class SimulationRunner:
         return round(min(1.0, hits / 3), 4)
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def cleanup_simulation_logs(cls, simulation_id: str) -> Dict[str, Any]:
         """
         Clean up simulation run logs (for force restart)
@@ -1803,6 +1819,7 @@ class SimulationRunner:
     _cleanup_done = False
     
     @classmethod
+    @maintenance
     def cleanup_all_simulations(cls):
         """
         Clean up all running simulation processes
@@ -1983,13 +2000,14 @@ class SimulationRunner:
         """
         running = []
         for sim_id, process in cls._processes.items():
-            if process.poll() is None:
+            if visible("simulation", sim_id) and process.poll() is None:
                 running.append(sim_id)
         return running
     
     # ============== Interview functionality ==============
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def check_env_alive(cls, simulation_id: str) -> bool:
         """
         Check if simulation environment is alive (can receive Interview commands)
@@ -2008,6 +2026,7 @@ class SimulationRunner:
         return ipc_client.check_env_alive()
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_env_status_detail(cls, simulation_id: str) -> Dict[str, Any]:
         """
         Get detailed status information of simulation environment
@@ -2044,6 +2063,7 @@ class SimulationRunner:
             return default_status
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def interview_agent(
         cls,
         simulation_id: str,
@@ -2108,6 +2128,7 @@ class SimulationRunner:
             }
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def interview_agents_batch(
         cls,
         simulation_id: str,
@@ -2167,6 +2188,7 @@ class SimulationRunner:
             }
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def interview_all_agents(
         cls,
         simulation_id: str,
@@ -2227,6 +2249,7 @@ class SimulationRunner:
         )
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def close_completed_run_for_ensemble(cls, simulation_id):
         """Retire a locally owned interview environment before runtime admission."""
         from ..models.task import TaskManager
@@ -2260,6 +2283,7 @@ class SimulationRunner:
             monitor.join(timeout=5)
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def close_simulation_env(
         cls,
         simulation_id: str,
@@ -2366,6 +2390,7 @@ class SimulationRunner:
         return results
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_interview_history(
         cls,
         simulation_id: str,

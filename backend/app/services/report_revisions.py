@@ -18,7 +18,10 @@ def guard_report_generation(function):
     def guarded(self, progress_callback=None, report_id=None):
         from .report_agent import ReportManager
         import uuid
-        report_id = report_id or 'report_' + uuid.uuid4().hex[:12]
+        if report_id is None:
+            from .workspace import register
+            report_id = 'report_' + uuid.uuid4().hex[:12]
+            register('report', report_id, parents=[('simulation', self.simulation_id), ('graph', self.graph_id)])
         store = ProposalStore(ReportManager._get_reports_dir())
         with store.operation(report_id):
             ReportManager.assert_report_writable(report_id)

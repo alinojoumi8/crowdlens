@@ -4,6 +4,8 @@ Manage Twitter and Reddit dual-platform parallel simulations
 Use preset scripts + LLM intelligent generation of config parameters
 """
 
+from ..services.workspace import owned, require, register, visible
+
 import os
 import json
 import shutil
@@ -174,6 +176,7 @@ class SimulationManager:
         # In-memory simulation state cache
         self._simulations: Dict[str, SimulationState] = {}
     
+    @owned('simulation', 'simulation_id')
     def _get_simulation_dir(self, simulation_id: str) -> str:
         """Get simulation data directory"""
         sim_dir = os.path.join(self.SIMULATION_DATA_DIR, simulation_id)
@@ -183,6 +186,9 @@ class SimulationManager:
     @simulation_write
     def _save_simulation_state(self, state: SimulationState):
         """Save simulation state to file"""
+        require('simulation', state.simulation_id)
+        require('project', state.project_id)
+        require('graph', state.graph_id)
         sim_dir = self._get_simulation_dir(state.simulation_id)
         state_file = os.path.join(sim_dir, "state.json")
         
@@ -193,6 +199,7 @@ class SimulationManager:
         
         self._simulations[state.simulation_id] = state
     
+    @owned('simulation', 'simulation_id')
     def _load_simulation_state(self, simulation_id: str) -> Optional[SimulationState]:
         """Load simulation state from file"""
         # Filesystem state may have been repaired by another backend.
@@ -240,6 +247,8 @@ class SimulationManager:
         self._simulations[simulation_id] = state
         return state
     
+    @owned('graph', 'graph_id')
+    @owned('project', 'project_id')
     def create_simulation(
         self,
         project_id: str,
@@ -263,6 +272,7 @@ class SimulationManager:
         import uuid
         simulation_id = f"sim_{uuid.uuid4().hex[:12]}"
         
+        register('simulation', simulation_id, parents=[('project', project_id), ('graph', graph_id)])
         state = SimulationState(
             simulation_id=simulation_id,
             project_id=project_id,
@@ -280,6 +290,7 @@ class SimulationManager:
         
         return state
     
+    @owned('simulation', 'simulation_id')
     def prepare_simulation(
         self,
         simulation_id: str,
@@ -558,16 +569,20 @@ class SimulationManager:
             self._save_simulation_state(state)
             raise
     
+    @owned('simulation', 'simulation_id')
     def get_simulation(self, simulation_id: str) -> Optional[SimulationState]:
         """Get simulation state"""
         return self._load_simulation_state(simulation_id)
     
+    @owned('project', 'project_id')
     def list_simulations(self, project_id: Optional[str] = None) -> List[SimulationState]:
         """List all simulations"""
         simulations = []
         
         if os.path.exists(self.SIMULATION_DATA_DIR):
             for sim_id in os.listdir(self.SIMULATION_DATA_DIR):
+                if not visible('simulation', sim_id):
+                    continue
                 # Skip hidden files (such as .DS_Store) and non-directory files
                 sim_path = os.path.join(self.SIMULATION_DATA_DIR, sim_id)
                 if sim_id.startswith('.') or not os.path.isdir(sim_path):
@@ -580,6 +595,7 @@ class SimulationManager:
         
         return simulations
     
+    @owned('simulation', 'simulation_id')
     def get_profiles(self, simulation_id: str, platform: str = "reddit") -> List[Dict[str, Any]]:
         """Get Agent Profiles for simulation"""
         state = self._load_simulation_state(simulation_id)
@@ -595,6 +611,7 @@ class SimulationManager:
         with open(profile_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     
+    @owned('simulation', 'simulation_id')
     def get_simulation_config(self, simulation_id: str) -> Optional[Dict[str, Any]]:
         """Get simulation config"""
         sim_dir = self._get_simulation_dir(simulation_id)
@@ -606,6 +623,7 @@ class SimulationManager:
         with open(config_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     
+    @owned('simulation', 'simulation_id')
     def get_run_instructions(self, simulation_id: str) -> Dict[str, str]:
         """Get run instructions"""
         sim_dir = self._get_simulation_dir(simulation_id)

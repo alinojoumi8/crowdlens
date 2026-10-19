@@ -1,9 +1,11 @@
-"""OIDC invitation sign-in. Tester access stays closed until workspace isolation exists."""
+"""OIDC invitation sign-in. Tester access stays closed until administrator-owned quotas exist."""
 import secrets
+from functools import wraps
 from urllib.parse import urlparse
 from flask import Blueprint, g, jsonify, redirect, render_template, request, session
 from authlib.integrations.flask_client import OAuth
 from .services.auth_store import AuthStore
+from .services import workspace
 
 
 def install_authentication(app):
@@ -11,6 +13,7 @@ def install_authentication(app):
     if mode not in {'local', 'oidc'}:
         raise RuntimeError('AUTH_MODE must be local or oidc')
     if mode == 'local':
+        workspace.configure()
         @app.get('/auth/status')
         def local_auth_status():
             return jsonify(enabled=False)
@@ -34,6 +37,7 @@ def install_authentication(app):
     app.config.update(SESSION_COOKIE_NAME='crowdlens_oidc', SESSION_COOKIE_HTTPONLY=True,
                       SESSION_COOKIE_SECURE=secure, SESSION_COOKIE_SAMESITE='Lax')
     store = AuthStore(app.config['AUTH_DB_PATH'], issuer, app.config['AUTH_ADMIN_EMAIL'])
+    workspace.configure(app.config['AUTH_DB_PATH'])
     app.extensions['auth_store'] = store
     oauth = OAuth(app)
     remote = oauth.register('identity', client_id=app.config['AUTH_CLIENT_ID'],
@@ -52,6 +56,7 @@ def install_authentication(app):
     @app.before_request
     def authenticate():
         g.auth_user = store.session(request.cookies.get('crowdlens_auth', ''))
+        g.workspace_token = workspace._SCOPE.set(g.auth_user['id'] if g.auth_user else None)
         public = {'auth.signin', 'auth.start', 'auth.callback', 'auth.status', 'auth.privacy'}
         if request.path == '/favicon.ico':
             return '', 204
@@ -64,6 +69,8 @@ def install_authentication(app):
             return redirect('/auth/signin')
         if request.endpoint not in {'auth.account', 'auth.logout', 'auth.revoke_sessions'} and user['role'] != 'admin':
             return jsonify(success=False, error='workspace_access_not_enabled'), 403
+        if request.path.startswith('/api/'):
+            workspace.check_request_references(request)
         if request.method not in {'GET','HEAD','OPTIONS'}:
             if request.headers.get('Origin') and request.headers['Origin'] != base:
                 return jsonify(success=False, error='origin_not_allowed'), 403
@@ -71,8 +78,27 @@ def install_authentication(app):
             if not same_token(user['csrf'], supplied):
                 return jsonify(success=False, error='csrf_required'), 403
 
+    # Like WorkflowHalt, permission denial bypasses broad service fallback
+    # handlers. Catch it around preprocessing, views and response publication.
+    dispatch = app.full_dispatch_request
+    @wraps(dispatch)
+    def workspace_dispatch():
+        try:
+            return dispatch()
+        except workspace.WorkspaceDenied:
+            return app.finalize_request((jsonify(success=False, error='resource_not_found'), 404))
+    app.full_dispatch_request = workspace_dispatch
+
+    @app.teardown_request
+    def clear_workspace(exc):
+        token = g.pop('workspace_token', None)
+        if token is not None:
+            workspace._SCOPE.reset(token)
+
     @app.after_request
     def authentication_headers(response):
+        if getattr(g, 'auth_user', None) and request.path.startswith('/api/'):
+            workspace._store.audit(g.auth_user['id'], request.method + ':' + str(response.status_code), request.endpoint or '')
         response.headers['Cache-Control'] = 'no-store'
         response.headers['Referrer-Policy'] = 'strict-origin'
         response.headers['X-Content-Type-Options'] = 'nosniff'

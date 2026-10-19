@@ -238,12 +238,13 @@ class TaskManager:
     def cleanup_old_tasks(self, max_age_hours: int = 24):
         """Clean up old tasks"""
         from datetime import timedelta
+        from ..services.workspace import visible
         cutoff = datetime.now() - timedelta(hours=max_age_hours)
 
         with self._task_lock:
             old_ids = [
                 tid for tid, task in self._tasks.items()
-                if task.created_at < cutoff and task.status in [TaskStatus.COMPLETED, TaskStatus.FAILED]
+                if visible("task", tid) and task.created_at < cutoff and task.status in [TaskStatus.COMPLETED, TaskStatus.FAILED]
             ]
             for tid in old_ids:
                 del self._tasks[tid]
