@@ -1,11 +1,19 @@
 <template>
+  <nav v-if="authenticationEnabled" aria-label="Account" style="padding: 8px 20px; text-align: right"><a href="/auth/account">Account and sign out</a></nav>
   <WorkflowControls v-if="workflowResource || pendingId" :resource="workflowResource" :pending-id="pendingId" />
   <router-view />
 </template>
 
 <script setup>
 import './workflow.css'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+const authenticationEnabled = ref(false)
+onMounted(async () => {
+  try {
+    const response = await fetch('/auth/status')
+    if (response.ok) authenticationEnabled.value = (await response.json()).enabled === true
+  } catch { /* Local mode can continue without account navigation. */ }
+})
 import { useRoute } from 'vue-router'
 import WorkflowControls from './components/WorkflowControls.vue'
 import pendingUpload from './store/pendingUpload'

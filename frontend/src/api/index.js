@@ -4,6 +4,8 @@ import { resolveApiBaseUrl } from './baseUrl'
 // Create axios instance
 const service = axios.create({
   baseURL: resolveApiBaseUrl(import.meta.env),
+  xsrfCookieName: 'crowdlens_csrf',
+  xsrfHeaderName: 'X-CrowdLens-CSRF',
   timeout: 300000, // 5 minute timeout (ontology generation may require longer time)
   headers: {
     'Content-Type': 'application/json'
