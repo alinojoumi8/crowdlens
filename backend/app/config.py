@@ -26,6 +26,15 @@ class Config:
 
     # Flask configuration
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    # Local mode preserves the single-operator loopback deployment. Never expose it publicly.
+    AUTH_MODE = os.environ.get('AUTH_MODE', 'local')
+    AUTH_BASE_URL = os.environ.get('AUTH_BASE_URL', '')
+    AUTH_ISSUER = os.environ.get('AUTH_ISSUER', '')
+    AUTH_CLIENT_ID = os.environ.get('AUTH_CLIENT_ID', '')
+    AUTH_CLIENT_SECRET = os.environ.get('AUTH_CLIENT_SECRET', '')
+    AUTH_ADMIN_EMAIL = os.environ.get('AUTH_ADMIN_EMAIL', '')
+    AUTH_DB_PATH = os.environ.get('AUTH_DB_PATH') or os.path.join(os.path.dirname(__file__), '../uploads/auth.db')
+    AUTH_ALLOW_HTTP_LOOPBACK = os.environ.get('AUTH_ALLOW_HTTP_LOOPBACK', 'false').lower() == 'true'
     DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     FRONTEND_DIST_DIR = os.environ.get('FRONTEND_DIST_DIR', '')
     CORS_ORIGINS = _csv_list(os.environ.get(

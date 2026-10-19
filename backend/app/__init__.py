@@ -25,6 +25,9 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    from .authentication import install_authentication
+    install_authentication(app)
+
     # Configure JSON encoding: ensure Chinese displays directly (not as \uXXXX)
     # Flask >= 2.3 uses app.json.ensure_ascii, older versions use JSON_AS_ASCII config
     if hasattr(app, 'json') and hasattr(app.json, 'ensure_ascii'):
