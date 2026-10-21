@@ -5,6 +5,8 @@ Replaces all Zep Cloud API calls with local Neo4j Cypher queries.
 Includes: CRUD, NER/RE-based text ingestion, hybrid search, retry logic.
 """
 
+from ..services.workspace import owned, require, register, visible
+
 import json
 import time
 from ..services.task_execution import fenced, publication_guard
@@ -169,6 +171,7 @@ class Neo4jStorage(GraphStorage):
 
     def create_graph(self, name: str, description: str = "") -> str:
         graph_id = str(uuid.uuid4())
+        register('graph', graph_id)
         now = datetime.now(timezone.utc).isoformat()
         embedding_info = self._embedding.info
 
@@ -203,6 +206,7 @@ class Neo4jStorage(GraphStorage):
         logger.info(f"Created graph '{name}' with id {graph_id}")
         return graph_id
 
+    @owned('graph', 'graph_id')
     def delete_graph(self, graph_id: str) -> None:
         def _delete(tx):
             # Delete all entities and their relationships
@@ -220,6 +224,7 @@ class Neo4jStorage(GraphStorage):
             self._call_with_retry(session.execute_write, _delete)
         logger.info(f"Deleted graph {graph_id}")
 
+    @owned('graph', 'graph_id')
     def set_ontology(self, graph_id: str, ontology: Dict[str, Any]) -> None:
         def _set(tx):
             tx.run(
@@ -234,6 +239,7 @@ class Neo4jStorage(GraphStorage):
         with self._driver.session() as session:
             self._call_with_retry(session.execute_write, _set)
 
+    @owned('graph', 'graph_id')
     def get_ontology(self, graph_id: str) -> Dict[str, Any]:
         with self._driver.session() as session:
             result = session.run(
@@ -245,6 +251,7 @@ class Neo4jStorage(GraphStorage):
                 return json.loads(record["oj"])
             return {}
 
+    @owned('graph', 'graph_id')
     def get_graph_embedding_info(self, graph_id: str) -> Dict[str, Any]:
         """Return embedding metadata stored on the graph node."""
         with self._driver.session() as session:
@@ -268,6 +275,7 @@ class Neo4jStorage(GraphStorage):
                 "provider_id": record["provider_id"],
             }
 
+    @owned('graph', 'graph_id')
     def get_embedding_status(self, graph_id: str) -> Dict[str, Any]:
         """Return vector coverage and report-readiness for a graph."""
         graph_info = self.get_graph_embedding_info(graph_id)
@@ -339,6 +347,7 @@ class Neo4jStorage(GraphStorage):
             "issues": issues,
         }
 
+    @owned('graph', 'graph_id')
     def get_graph_quality(self, graph_id: str) -> Dict[str, Any]:
         """Score whether the graph is structurally rich enough for report synthesis."""
         embedding_status = self.get_embedding_status(graph_id)
@@ -499,6 +508,7 @@ class Neo4jStorage(GraphStorage):
             "deductions": deductions,
         }
 
+    @owned('graph', 'graph_id')
     def reembed_graph(self, graph_id: str, batch_size: int = 32) -> Dict[str, Any]:
         """Backfill entity and relationship embeddings for a graph."""
         status = self.get_embedding_status(graph_id)
@@ -532,6 +542,7 @@ class Neo4jStorage(GraphStorage):
             "status": after,
         }
 
+    @owned('graph', 'graph_id')
     def _read_embedding_targets(self, graph_id: str) -> Dict[str, List[Dict[str, str]]]:
         current = self._embedding.info
         with self._driver.session() as session:
@@ -566,6 +577,7 @@ class Neo4jStorage(GraphStorage):
             }
 
     @fenced
+    @owned('graph', 'graph_id')
     def _write_embeddings(
         self,
         graph_id: str,
@@ -595,6 +607,7 @@ class Neo4jStorage(GraphStorage):
                 )
 
     @fenced
+    @owned('graph', 'graph_id')
     def _update_graph_embedding_metadata(self, graph_id: str) -> None:
         info = self._embedding.info
         with self._driver.session() as session:
@@ -613,6 +626,7 @@ class Neo4jStorage(GraphStorage):
                 provider_id=info.provider_id,
             )
 
+    @owned('graph', 'graph_id')
     def _assert_embedding_compatible(self, graph_id: str) -> None:
         """Prevent querying or appending vectors from a different embedding space."""
         graph_info = self.get_graph_embedding_info(graph_id)
@@ -643,6 +657,7 @@ class Neo4jStorage(GraphStorage):
     # Add data (NER → nodes/edges)
     # ----------------------------------------------------------------
 
+    @owned('graph', 'graph_id')
     def add_text(self, graph_id: str, text: str) -> str:
         """Process text: NER/RE → batch embed → create nodes/edges → return episode_id."""
         self._assert_embedding_compatible(graph_id)
@@ -657,6 +672,7 @@ class Neo4jStorage(GraphStorage):
         )
         return self._write_extraction(graph_id, text, extraction)
 
+    @owned('graph', 'graph_id')
     def _write_extraction(
         self,
         graph_id: str,
@@ -836,6 +852,7 @@ class Neo4jStorage(GraphStorage):
         logger.info(f"[add_text] Chunk done: episode={episode_id}")
         return episode_id
 
+    @owned('graph', 'graph_id')
     def add_text_batch(
         self,
         graph_id: str,
@@ -926,6 +943,7 @@ class Neo4jStorage(GraphStorage):
 
         return episode_ids
 
+    @owned('graph', 'graph_id')
     def _write_extractions_batch(
         self,
         graph_id: str,
@@ -944,6 +962,9 @@ class Neo4jStorage(GraphStorage):
         metadata_rows = chunk_metadata or [{} for _ in chunks]
         for chunk_index, (chunk, extraction) in enumerate(zip(chunks, extractions)):
             metadata = metadata_rows[chunk_index] if chunk_index < len(metadata_rows) else {}
+            for key, kind in [("case_id", "case"), ("version_id", "version"), ("case_version_id", "version")]:
+                if metadata.get(key):
+                    require(kind, metadata[key])
             episode_id = str(uuid.uuid4())
             episode_rows.append({
                 "uuid": episode_id,
@@ -1171,6 +1192,7 @@ class Neo4jStorage(GraphStorage):
 
         return [row["uuid"] for row in episode_rows]
 
+    @owned('graph', 'graph_id')
     def add_agent_memories(self, graph_id: str, memories: List[Dict[str, Any]]) -> List[str]:
         """Write forecast/simulation memories as searchable Neo4j Entity nodes."""
         clean_memories = [
@@ -1251,6 +1273,7 @@ class Neo4jStorage(GraphStorage):
     # Read nodes
     # ----------------------------------------------------------------
 
+    @owned('graph', 'graph_id')
     def get_all_nodes(self, graph_id: str, limit: int = 2000) -> List[Dict[str, Any]]:
         def _read(tx):
             result = tx.run(
@@ -1276,6 +1299,7 @@ class Neo4jStorage(GraphStorage):
             )
             record = result.single()
             if record:
+                require('graph', record['n'].get('graph_id'))
                 return self._node_to_dict(record["n"], record["labels"])
             return None
 
@@ -1284,10 +1308,14 @@ class Neo4jStorage(GraphStorage):
 
     def get_node_edges(self, node_uuid: str) -> List[Dict[str, Any]]:
         """O(1) Cypher — NOT full scan + filter like the old Zep code."""
+        node = self.get_node(node_uuid)
+        if node is None:
+            return []
         def _read(tx):
             result = tx.run(
                 """
                 MATCH (n:Entity {uuid: $uuid})-[r:RELATION]-(m:Entity)
+                WHERE m.graph_id = n.graph_id AND r.graph_id = n.graph_id
                 RETURN r, startNode(r).uuid AS src_uuid, endNode(r).uuid AS tgt_uuid
                 """,
                 uuid=node_uuid,
@@ -1300,6 +1328,7 @@ class Neo4jStorage(GraphStorage):
         with self._driver.session() as session:
             return self._call_with_retry(session.execute_read, _read)
 
+    @owned('graph', 'graph_id')
     def get_nodes_by_label(self, graph_id: str, label: str) -> List[Dict[str, Any]]:
         def _read(tx):
             # Dynamic label in query (safe — label comes from ontology, not user input)
@@ -1317,6 +1346,7 @@ class Neo4jStorage(GraphStorage):
     # Read edges
     # ----------------------------------------------------------------
 
+    @owned('graph', 'graph_id')
     def get_all_edges(self, graph_id: str) -> List[Dict[str, Any]]:
         def _read(tx):
             result = tx.run(
@@ -1339,6 +1369,7 @@ class Neo4jStorage(GraphStorage):
     # Search
     # ----------------------------------------------------------------
 
+    @owned('graph', 'graph_id')
     def get_source_chunks(self, graph_id, case_id, case_version_id):
         """Read original text only within an explicit case version; sentinel detects truncation."""
         if not case_id or not case_version_id:
@@ -1352,6 +1383,7 @@ class Neo4jStorage(GraphStorage):
             )
             return [dict(row["episode"]) for row in rows]
 
+    @owned('graph', 'graph_id')
     def get_source_inventory(self, graph_id, case_id, case_version_id):
         """Expected documents from the exact case version, independent of graph rows."""
         from ..models.case import CaseManager
@@ -1374,6 +1406,7 @@ class Neo4jStorage(GraphStorage):
                               'chunk_count': count, 'chunk_indices': list(range(count)) if type(count) is int and 0 <= count <= 2000 else None})
         return inventory
 
+    @owned('graph', 'graph_id')
     def get_document_covers(self, graph_id, case_id, case_version_id):
         """Bounded original page-one chunks, strictly scoped to a case version."""
         if not case_id or not case_version_id:
@@ -1387,6 +1420,7 @@ class Neo4jStorage(GraphStorage):
             )
             return [dict(row["episode"]) for row in rows]
 
+    @owned('graph', 'graph_id')
     def search(
         self,
         graph_id: str,
@@ -1451,6 +1485,7 @@ class Neo4jStorage(GraphStorage):
     # Graph info
     # ----------------------------------------------------------------
 
+    @owned('graph', 'graph_id')
     def get_graph_info(self, graph_id: str) -> Dict[str, Any]:
         def _read(tx):
             # Count nodes
@@ -1489,6 +1524,7 @@ class Neo4jStorage(GraphStorage):
         with self._driver.session() as session:
             return self._call_with_retry(session.execute_read, _read)
 
+    @owned('graph', 'graph_id')
     def get_graph_data(self, graph_id: str) -> Dict[str, Any]:
         """
         Full graph dump with enriched edge format (for frontend).

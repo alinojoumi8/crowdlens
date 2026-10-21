@@ -37,6 +37,9 @@ def endpoint_identity(base_url):
     return hashlib.sha256(value.encode()).hexdigest()
 
 
+from .workspace import require, require_resource, register, current_workspace, child_environment
+
+
 class WorkflowLedger:
     def __init__(self, path, *, clock=time.time):
         self.path = str(Path(path).resolve())
@@ -68,6 +71,7 @@ class WorkflowLedger:
 
     @staticmethod
     def _read(db, wid):
+        require('workflow', wid)
         row = db.execute('SELECT payload FROM workflows WHERE workflow_id=?', (wid,)).fetchone()
         if not row:
             raise WorkflowHalt('authorization_required', wid)
@@ -75,6 +79,7 @@ class WorkflowLedger:
 
     @staticmethod
     def _save(db, record):
+        require("workflow", record["workflow_id"])
         db.execute('UPDATE workflows SET payload=? WHERE workflow_id=?',
                    (json.dumps(record), record['workflow_id']))
 
@@ -99,6 +104,10 @@ class WorkflowLedger:
         if not all(isinstance(x, str) and 0 < len(x) <= 500 for x in
                    (request_key, provider, model, base_url, input_description)):
             raise ValueError('invalid_authorization_identity')
+        if current_workspace():
+            request_key = current_workspace() + ':' + request_key
+        for resource in resources:
+            require_resource(resource)
         if type(consumed_requests) is not int or not 0 <= consumed_requests < max_requests:
             raise ValueError('invalid_consumed_requests')
         identity = dict(provider=provider, model=model, endpoint_identity=endpoint_identity(base_url),
@@ -115,6 +124,7 @@ class WorkflowLedger:
             row = db.execute('SELECT payload FROM workflows WHERE request_key=?', (request_key,)).fetchone()
             if row:
                 old = json.loads(row[0])
+                require('workflow', old['workflow_id'])
                 if old['initial_authorization'] != identity:
                     raise ValueError('authorization_key_conflict')
                 for resource in resources:
@@ -124,6 +134,9 @@ class WorkflowLedger:
                           initial_authorization=identity, authorizations=[dict(identity, at=self.clock(), epoch=1)],
                           state='authorized', reason=None, epoch=1, admitted=consumed_requests,
                           created_at=self.clock(), started_at=None, deadline_at=None)
+            register('workflow', record['workflow_id'])
+            if current_workspace():
+                record['workspace_id'] = current_workspace()
             if spend is not None:
                 record['spend'] = dict(identity['spend'], estimated_micro_usd=0, reserved_micro_usd=0, overrun_attempts=0)
             db.execute('INSERT INTO workflows VALUES(?,?,?)',
@@ -134,6 +147,8 @@ class WorkflowLedger:
 
     @staticmethod
     def _bind(db, wid, resource):
+        require('workflow', wid)
+        require_resource(resource)
         row = db.execute('SELECT workflow_id FROM workflow_resources WHERE resource_key=?', (resource,)).fetchone()
         if row and row[0] != wid:
             raise ValueError('resource_has_different_authorization')
@@ -145,11 +160,15 @@ class WorkflowLedger:
             self._bind(db, wid, resource)
 
     def resolve(self, resource):
+        require_resource(resource)
         with self.transaction() as db:
             row = db.execute('SELECT workflow_id FROM workflow_resources WHERE resource_key=?', (resource,)).fetchone()
+            if row:
+                require("workflow", row[0])
             return row[0] if row else None
 
     def resources(self, wid):
+        require('workflow', wid)
         with self.transaction() as db:
             return [row[0] for row in db.execute('SELECT resource_key FROM workflow_resources WHERE workflow_id=?', (wid,))]
 
@@ -220,6 +239,7 @@ class WorkflowLedger:
         with self.transaction() as db:
             row = db.execute('SELECT payload FROM workflow_requests WHERE request_id=?', (ticket['request_id'],)).fetchone()
             record = json.loads(row[0])
+            require('workflow', record['workflow_id'])
             if record['finished_at'] is not None:
                 return
             record.update(finished_at=self.clock(), status=status, usage=usage if isinstance(usage, dict) else None, http_status=http_status)
@@ -388,6 +408,7 @@ class ExecutionScope:
         if owner:
             result.update(CROWDLENS_TASK_ID=owner.task_id, CROWDLENS_OWNER_ATTEMPT=owner.attempt_id,
                           CROWDLENS_TASK_OWNER=json.dumps(owner.runtime.owner))
+        result.update(child_environment())
         return result
 
 

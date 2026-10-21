@@ -38,12 +38,16 @@ Keep backups private; reports, source files and database rows can be sensitive.
 ## Store inventory and bundle
 
 Include the **entire uploads root**, hidden directories included. It normally
-contains the control database, workflow/attempt accounting, sources/extracted
+contains the authentication database (including immutable workspace owners and access audit),
+the control database, workflow/attempt accounting, sources/extracted
 text, caches, simulation state/platform databases/action logs and memory files,
 reports/revisions, private proposals, locks/tombstones and
 `.human-reviews.sqlite3`. Include SQLite `-wal`, `-shm` and `-journal` sidecars
 when present. Include external report, simulation, cache or database directories
-as separately named roots. Keep service logs and configuration in the private
+as separately named roots. In particular, a custom `AUTH_DB_PATH` outside uploads
+must be included with its SQLite sidecars. Restore auth identities and ownership
+with the same control/artifact/Neo4j snapshot: recreating accounts or omitting the
+owner registry does not grant access to old records. Keep service logs and configuration in the private
 incident/backup record. Neo4j dumps include graph/source/vector/memory content;
 Ollama models can be re-provisioned from recorded model/digest configuration.
 

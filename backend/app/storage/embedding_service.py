@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional
 import requests
 
 from ..config import Config
+from ..services.workspace import cache_namespace
 
 logger = logging.getLogger('mirofish.embedding')
 
@@ -111,6 +112,8 @@ class EmbeddingCache:
             task_type,
             self._hash_text(text),
         ]))
+        if cache_namespace():
+            cache_key = self._hash_text(cache_namespace() + ':' + cache_key)
         return self.cache_dir / cache_key[:2] / f"{cache_key}.json"
 
 
@@ -133,7 +136,7 @@ class EmbeddingService:
         self.max_retries = max_retries
         self.timeout = timeout
         self.auto_pull = Config.EMBEDDING_AUTO_PULL if auto_pull is None else auto_pull
-        self._cache: dict[tuple[str, str], List[float]] = {}
+        self._cache: dict[tuple[str, str, str], List[float]] = {}
         self._cache_max_size = 2000
         self._persistent_cache = (
             EmbeddingCache() if Config.GRAPH_EMBEDDING_CACHE_ENABLED else None
@@ -182,7 +185,7 @@ class EmbeddingService:
             raise EmbeddingError("Cannot embed empty text")
 
         text = text.strip()
-        cache_key = (task_type, text)
+        cache_key = (cache_namespace(), task_type, text)
         if cache_key in self._cache:
             return self._cache[cache_key]
 
@@ -207,7 +210,7 @@ class EmbeddingService:
 
         for i, text in enumerate(texts):
             text = text.strip() if text else ""
-            cache_key = (task_type, text)
+            cache_key = (cache_namespace(), task_type, text)
             if cache_key in self._cache:
                 results[i] = self._cache[cache_key]
             elif text and self._persistent_cache:
@@ -232,7 +235,7 @@ class EmbeddingService:
 
             for idx, vec, text in zip(uncached_indices, all_vectors, uncached_texts):
                 results[idx] = vec
-                self._cache_put((task_type, text), vec)
+                self._cache_put((cache_namespace(), task_type, text), vec)
                 if self._persistent_cache:
                     self._persistent_cache.set(self.provider_id(), task_type, text, vec)
 
@@ -408,7 +411,7 @@ class EmbeddingService:
             raise EmbeddingError(f"Expected {expected_count} embeddings, got {len(vectors)}")
         return vectors
 
-    def _cache_put(self, cache_key: tuple[str, str], vector: List[float]) -> None:
+    def _cache_put(self, cache_key: tuple[str, str, str], vector: List[float]) -> None:
         if len(self._cache) >= self._cache_max_size:
             keys_to_remove = list(self._cache.keys())[:self._cache_max_size // 10]
             for key in keys_to_remove:

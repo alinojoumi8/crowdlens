@@ -13,6 +13,9 @@ from .proposal_store import ProposalError, now, proposal_digest
 
 
 def packet_for(record):
+    from .workspace import require
+    require("proposal", record.get("proposal_id"))
+    require("report", record.get("parent_report_id"))
     if record.get('state') in {'queued', 'running'} or not record.get('ledger') or not record.get('proposal_digest'):
         raise ProposalError('review_packet_unavailable')
     if proposal_digest(record) != record['proposal_digest']:

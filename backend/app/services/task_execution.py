@@ -17,6 +17,8 @@ import threading
 import time
 import uuid
 
+from .workspace import require, require_resource, register, visible, current_workspace, maintenance
+
 ACTIVE = {'pending', 'processing'}
 LEASE_SECONDS = 30.0
 RECOVERY_INTERVAL_SECONDS = 5.0
@@ -53,6 +55,7 @@ class Attempt:
 
     @contextmanager
     def bind(self):
+        require("task", self.task_id)
         token = _CURRENT.set(self)
         try:
             yield self
@@ -76,6 +79,8 @@ def current_attempt():
 @contextmanager
 def publication_guard(resource=None):
     """Fence publication and ownership change under the same cross-process lock."""
+    if resource:
+        require_resource(resource)
     attempt = current_attempt()
     if attempt is None:
         from ..models.task import TaskManager
@@ -172,20 +177,23 @@ class TaskRuntime:
                     lock_file.close()
 
     def get(self, task_id):
+        require('task', task_id)
         value = self.repository.get_task(task_id) if self.repository else self._memory.get(task_id)
         return json.loads(json.dumps(value)) if value else None
 
     def records(self):
         return (self.repository.list_tasks(limit=2147483647) if self.repository
-                else list(self._memory.values()))
+                else [v for v in self._memory.values() if visible('task', v['task_id'])])
 
     def put(self, payload):
+        require('task', payload['task_id'])
         if self.repository:
             self.repository.put_task(payload)
         else:
             self._memory[payload['task_id']] = json.loads(json.dumps(payload))
 
     def binding(self, key):
+        require_resource(key)
         if not self.repository:
             return self._resources.get(key)
         with self.repository._transaction() as connection:
@@ -193,6 +201,8 @@ class TaskRuntime:
         return dict(row) if row else None
 
     def _bind_resource(self, key, attempt):
+        require_resource(key)
+        require('task', attempt.task_id)
         value = {'task_id':attempt.task_id, 'attempt_id':attempt.attempt_id}
         if self.repository:
             with self.repository._transaction() as connection:
@@ -203,6 +213,12 @@ class TaskRuntime:
             self._resources[key] = value
 
     def admit(self, payload, resources=()):
+        for resource in resources:
+            require_resource(resource['key'])
+        register('task', payload['task_id'])
+        if current_workspace():
+            payload = {**payload, 'workspace_id': current_workspace(),
+                       'metadata': {**payload.get('metadata', {}), 'workspace_id': current_workspace()}}
         with self.gate():
             self.reconcile(raise_on_error=False)
             for resource in resources:
@@ -344,6 +360,7 @@ class TaskRuntime:
         task['recovery']['pending'] = False
         self.put(task)
 
+    @maintenance
     def reconcile(self, *, raise_on_error=True):
         errors = []
         counts = {'failed':0,'repaired':0,'unknown':0,'repair_failed':0}
@@ -376,6 +393,7 @@ class TaskRuntime:
             raise errors[0]
         return counts
 
+    @maintenance
     def tick(self):
         with self._workers_lock:
             workers = list(self.workers.values())
@@ -446,6 +464,7 @@ class TaskRuntime:
     def cancel_workflow(self, workflow_id, reason='stopped', *, epoch=None):
         """Invalidate only attempts bound to this workflow; recovery preserves partials."""
         from .workflow_execution import without_execution_scope
+        require("workflow", workflow_id)
         with self.gate(), without_execution_scope(), recovery_context():
             for task in self.records():
                 metadata = task.get('metadata', {})

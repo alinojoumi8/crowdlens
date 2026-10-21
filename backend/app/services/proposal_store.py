@@ -1,4 +1,6 @@
 """Private proposal artifacts and process-shared, crash-released ownership."""
+
+from ..services.workspace import owned, require, register, visible
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
@@ -121,6 +123,12 @@ class ProposalStore:
             self.path(directory).mkdir(exist_ok=True)
 
     def path(self, *parts):
+        if parts and not str(parts[0]).startswith('.'):
+            require('report', Path(parts[0]).stem if str(parts[0]).endswith(('.json', '.md')) else str(parts[0]))
+        elif len(parts) > 1 and parts[0] == '.evidence-proposals':
+            require('proposal', str(parts[1]))
+        elif len(parts) > 1 and parts[0] == '.evidence-tombstones':
+            require('report', Path(parts[1]).stem)
         result = self.root.joinpath(*parts)
         try:
             relative = result.relative_to(self.root)
@@ -156,21 +164,26 @@ class ProposalStore:
             local_lock.release()
             raise ProposalError(code, status)
 
+    @owned('report', 'report_id')
     def operation(self, report_id):
         return self.lock('operation-' + self.identifier(report_id))
 
+    @owned('proposal', 'proposal_id')
     def _file(self, proposal_id, name='record'):
         self.identifier(proposal_id)
         if name not in {'record', 'parent', 'sources', 'ledger', 'diagnostics'}:
             raise ProposalError('invalid_snapshot', 400)
         return self.path('.evidence-proposals', proposal_id, name + '.json')
 
+    @owned('proposal', 'proposal_id')
     def read(self, proposal_id):
         try:
             return json.loads(self._file(proposal_id).read_text(encoding='utf-8'))
         except FileNotFoundError:
             raise ProposalError('not_found', 404)
 
+    @owned('proposal', 'proposal_id')
+    @owned('report', 'parent_report_id')
     def get(self, parent_report_id, proposal_id):
         self.identifier(parent_report_id)
         record = self.read(proposal_id)
@@ -180,13 +193,14 @@ class ProposalStore:
 
     def records(self):
         for path in sorted(self.path('.evidence-proposals').iterdir()):
-            if path.is_dir() and ID.fullmatch(path.name):
+            if path.is_dir() and ID.fullmatch(path.name) and visible('proposal', path.name):
                 try:
                     yield self.read(path.name)
                 except ProposalError as exc:
                     if exc.status != 404:
                         raise
 
+    @owned('report', 'parent_report_id')
     def admit(self, parent_report_id, request_key, request_digest):
         self.identifier(parent_report_id)
         if not isinstance(request_key, str) or not 1 <= len(request_key) <= 200:
@@ -216,6 +230,8 @@ class ProposalStore:
                               phase='queued', created_at=now(), updated_at=now(), deadline_at=time.time() + 180,
                               before={}, after={}, ledger=[], sources=[], findings=[], usage={}, timing={},
                               limitations=[], accepted_report_id=None, proposal_digest=None)
+                register('proposal', identifier, parents=[('report', parent_report_id)])
+                register('report', record['revision_report_id'], parents=[('report', parent_report_id)])
                 self._file(identifier).parent.mkdir(mode=0o700)
                 atomic_json(self._file(identifier), record)
                 return record, LeaseBundle(operation, slot)
@@ -226,6 +242,7 @@ class ProposalStore:
                 raise
 
     @fenced
+    @owned('proposal', 'proposal_id')
     def update(self, proposal_id, expected_states, changes):
         with self.lock('record-' + self.identifier(proposal_id), 'state_busy'):
             record = self.read(proposal_id)
@@ -245,12 +262,14 @@ class ProposalStore:
             return record
 
     @fenced
+    @owned('proposal', 'proposal_id')
     def save_snapshot(self, proposal_id, name, value):
         path = self._file(proposal_id, name)
         atomic_json(path, value)
         return canonical_digest(value)
 
     @fenced
+    @owned('proposal', 'proposal_id')
     def save_diagnostics(self, proposal_id, value):
         """Bind each receipt to the record before a timeout can close it."""
         with self.lock('record-' + self.identifier(proposal_id), 'state_busy'):
@@ -262,6 +281,7 @@ class ProposalStore:
             atomic_json(self._file(proposal_id), record)
             return digest
 
+    @owned('proposal', 'proposal_id')
     def record_telemetry(self, proposal_id, *, usage, timing=None):
         """Retain observations after cancellation without changing state or content."""
         deadline = time.monotonic() + 1
@@ -280,6 +300,7 @@ class ProposalStore:
                     raise
                 time.sleep(.01)
 
+    @owned('proposal', 'proposal_id')
     def load_snapshot(self, proposal_id, name, expected_digest):
         try:
             value = json.loads(self._file(proposal_id, name).read_text(encoding='utf-8'))
@@ -289,9 +310,12 @@ class ProposalStore:
             raise ProposalError('snapshot_mismatch')
         return value
 
+    @owned('proposal', 'proposal_id')
     def finish(self, proposal_id, changes):
         return self.update(proposal_id, {'running'}, changes)
 
+    @owned('proposal', 'proposal_id')
+    @owned('report', 'parent_report_id')
     def admit_continuation(self, parent_report_id, proposal_id, expected_digest):
         """One explicit, idempotent step; reuse the same worker and report fences."""
         with self.lock('admission', 'admission_busy', 503):
@@ -323,6 +347,8 @@ class ProposalStore:
                 operation.close()
                 raise
 
+    @owned('proposal', 'proposal_id')
+    @owned('report', 'parent_report_id')
     def reject(self, parent_report_id, proposal_id):
         record = self.get(parent_report_id, proposal_id)
         if record['state'] == 'rejected':

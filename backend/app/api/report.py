@@ -203,6 +203,8 @@ def generate_report():
 
         import uuid
         report_id = f"report_{uuid.uuid4().hex[:12]}"
+        from ..services.workspace import register
+        register('report', report_id, parents=[('simulation', simulation_id), ('project', state.project_id), ('graph', graph_id)])
 
         # Initialize graph_tools in Flask context BEFORE spawning thread
         # (current_app is not available inside background threads)

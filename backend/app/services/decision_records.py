@@ -10,10 +10,13 @@ import threading
 import uuid
 
 from .decision_gateway import DecisionGateway, canonical_json
+from .workspace import cache_namespace, require
 
 
 def decision_key(*, state, questions, model, policy_version, scope):
     payload = dict(state=state, questions=questions, model=model, policy_version=policy_version, scope=scope)
+    if cache_namespace():
+        payload['workspace_id'] = cache_namespace()
     return hashlib.sha256(canonical_json(payload).encode()).hexdigest()
 
 
@@ -56,6 +59,9 @@ class DecisionRunner:
         self._lock = threading.Lock()
 
     def evaluate(self, *, feature, policy_version, state, questions, mode, candidate_ids=None, request_timeout=None):
+        for key, kind in [('simulation_id', 'simulation'), ('graph_id', 'graph'), ('report_id', 'report'), ('project_id', 'project')]:
+            if self.scope.get(key):
+                require(kind, self.scope[key])
         controls = {} if request_timeout is None else {"request_timeout": request_timeout}
         if mode == 'off':
             return self.gateway.evaluate(state=state, questions=questions, mode=mode, **controls)

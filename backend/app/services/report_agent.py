@@ -9,6 +9,8 @@ Features:
 4. Support conversations with users, autonomously call retrieval tools during conversations
 """
 
+from ..services.workspace import owned, require, register, visible
+
 import os
 import json
 import time
@@ -2951,6 +2953,7 @@ class ReportManager:
             return fallback_dir
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_report_folder(cls, report_id: str) -> str:
         """getreportfolderpath"""
         store = ProposalStore(cls._get_reports_dir())
@@ -2958,6 +2961,7 @@ class ReportManager:
         return str(store.path(report_id))
     
     @classmethod
+    @owned('report', 'report_id')
     def _ensure_report_folder(cls, report_id: str) -> str:
         """ensurereportfolderexists andreturnedpath"""
         cls.assert_report_writable(report_id)
@@ -2966,6 +2970,7 @@ class ReportManager:
         return folder
 
     @classmethod
+    @owned('report', 'report_id')
     def assert_report_writable(cls, report_id: str) -> None:
         store = ProposalStore(cls._get_reports_dir())
         store.identifier(report_id)
@@ -2976,47 +2981,56 @@ class ReportManager:
             raise ProposalError('immutable_revision')
 
     @classmethod
+    @owned('report', 'report_id')
     def _get_report_file(cls, report_id: str, filename: str) -> str:
         store = ProposalStore(cls._get_reports_dir())
         store.identifier(report_id)
         return str(store.path(report_id, filename))
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_report_path(cls, report_id: str) -> str:
         """getreportmetainformationfile path"""
         return cls._get_report_file(report_id, "meta.json")
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_report_markdown_path(cls, report_id: str) -> str:
         """getcompletereportMarkdownfile path"""
         return cls._get_report_file(report_id, "full_report.md")
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_outline_path(cls, report_id: str) -> str:
         """getoutlinefile path"""
         return cls._get_report_file(report_id, "outline.json")
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_progress_path(cls, report_id: str) -> str:
         """getprogressfile path"""
         return cls._get_report_file(report_id, "progress.json")
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_section_path(cls, report_id: str, section_index: int) -> str:
         """getSectionMarkdownfile path"""
         return cls._get_report_file(report_id, f"section_{section_index:02d}.md")
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_agent_log_path(cls, report_id: str) -> str:
         """get Agent logsfile path"""
         return cls._get_report_file(report_id, "agent_log.jsonl")
     
     @classmethod
+    @owned('report', 'report_id')
     def _get_console_log_path(cls, report_id: str) -> str:
         """getconsolelogsfile path"""
         return cls._get_report_file(report_id, "console_log.txt")
     
     @classmethod
+    @owned('report', 'report_id')
     def get_console_log(cls, report_id: str, from_line: int = 0) -> Dict[str, Any]:
         """
         Getconsolelogcontent
@@ -3064,6 +3078,7 @@ class ReportManager:
         }
     
     @classmethod
+    @owned('report', 'report_id')
     def get_console_log_stream(cls, report_id: str) -> List[str]:
         """
         GetCompleteconsolelog（one-timeGetall）
@@ -3078,6 +3093,7 @@ class ReportManager:
         return result["logs"]
     
     @classmethod
+    @owned('report', 'report_id')
     def get_agent_log(cls, report_id: str, from_line: int = 0) -> Dict[str, Any]:
         """
         Get Agent logcontent
@@ -3126,6 +3142,7 @@ class ReportManager:
         }
     
     @classmethod
+    @owned('report', 'report_id')
     def get_agent_log_stream(cls, report_id: str) -> List[Dict[str, Any]]:
         """
         GetComplete Agent log（for one-timeGetall）
@@ -3141,6 +3158,7 @@ class ReportManager:
     
     @classmethod
     @report_write
+    @owned('report', 'report_id')
     def save_outline(cls, report_id: str, outline: ReportOutline) -> None:
         """
         saveReportoutline
@@ -3156,6 +3174,7 @@ class ReportManager:
     
     @classmethod
     @report_write
+    @owned('report', 'report_id')
     def save_section(
         cls,
         report_id: str,
@@ -3267,6 +3286,7 @@ class ReportManager:
     
     @classmethod
     @report_write
+    @owned('report', 'report_id')
     def update_progress(
         cls, 
         report_id: str, 
@@ -3303,6 +3323,7 @@ class ReportManager:
             json.dump(progress_data, f, ensure_ascii=False, indent=2)
     
     @classmethod
+    @owned('report', 'report_id')
     def get_progress(cls, report_id: str) -> Optional[Dict[str, Any]]:
         """getreportgenerateprogress"""
         path = cls._get_progress_path(report_id)
@@ -3350,6 +3371,7 @@ class ReportManager:
         return enriched
     
     @classmethod
+    @owned('report', 'report_id')
     def get_generated_sections(cls, report_id: str) -> List[Dict[str, Any]]:
         """
         GetalreadygenerateSectionlist
@@ -3382,6 +3404,7 @@ class ReportManager:
     
     @classmethod
     @report_write
+    @owned('report', 'report_id')
     def assemble_full_report(cls, report_id: str, outline: ReportOutline) -> str:
         """
         assembleComplete report
@@ -3541,6 +3564,8 @@ class ReportManager:
     @report_write
     def save_report(cls, report: Report) -> None:
         """SavereportmetainformationandcompleteReport"""
+        require('simulation', report.simulation_id)
+        require('graph', report.graph_id)
         existing = cls.get_report(report.report_id)
         if existing and existing.revision.get('immutable'):
             raise ProposalError('immutable_revision')
@@ -3840,6 +3865,7 @@ class ReportManager:
         ]
     
     @classmethod
+    @owned('report', 'report_id')
     def get_report(cls, report_id: str) -> Optional[Report]:
         """getreport"""
         path = cls._get_report_path(report_id)
@@ -3858,6 +3884,7 @@ class ReportManager:
         return cls._dict_to_report(report_id, data)
 
     @classmethod
+    @owned('report', 'report_id')
     def _dict_to_report(cls, report_id: str, data: Dict[str, Any]) -> Report:
         """Rebuild a Report object from persisted metadata."""
         # rebuildReportobject
@@ -3918,6 +3945,7 @@ class ReportManager:
         )
     
     @classmethod
+    @owned('simulation', 'simulation_id')
     def get_report_by_simulation(cls, simulation_id: str, *, report_mode=None, report_depth=None, evidence_only=None) -> Optional[Report]:
         reports = [report for report in cls.list_reports(simulation_id, limit=None)
                    if not report.revision.get('parent_report_id')
@@ -3927,6 +3955,7 @@ class ReportManager:
         return reports[0] if reports else None
 
     @classmethod
+    @owned('simulation', 'simulation_id')
     def list_reports(cls, simulation_id: Optional[str] = None, limit: int = 50) -> List[Report]:
         """List readable reports without hiding valid records behind a bad one."""
         reports_dir = cls._get_reports_dir()
@@ -3942,6 +3971,8 @@ class ReportManager:
                 report_id = item[:-5]
             else:
                 continue
+            if not visible('report', report_id):
+                continue
             try:
                 report = cls.get_report(report_id)
             except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
@@ -3956,11 +3987,13 @@ class ReportManager:
         return reports[:limit]
     
     @classmethod
+    @owned('report', 'report_id')
     def delete_report(cls, report_id: str) -> bool:
         from .report_revisions import ReportRevisionService
         return ReportRevisionService(ProposalStore(cls._get_reports_dir()), storage=None, report_manager=cls).delete(report_id)
 
     @classmethod
+    @owned('report', 'report_id')
     def _delete_report_unlocked(cls, report_id: str) -> bool:
         """Deletereport（entirefolder）"""
         import shutil

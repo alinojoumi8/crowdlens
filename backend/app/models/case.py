@@ -6,6 +6,8 @@ version with its own project, documents, graph, simulations, reports, and
 prediction snapshots.
 """
 
+from ..services.workspace import owned, require, register, visible
+
 import hashlib
 import json
 import os
@@ -475,10 +477,12 @@ class CaseManager:
         os.makedirs(cls.CASES_DIR, exist_ok=True)
 
     @classmethod
+    @owned('case', 'case_id')
     def _get_case_dir(cls, case_id: str) -> str:
         return os.path.join(cls.CASES_DIR, case_id)
 
     @classmethod
+    @owned('case', 'case_id')
     def _get_case_path(cls, case_id: str) -> str:
         return os.path.join(cls._get_case_dir(case_id), "case.json")
 
@@ -487,6 +491,7 @@ class CaseManager:
     def create_case(cls, name: str, simulation_requirement: str = "", tags: Optional[List[str]] = None) -> Case:
         cls._ensure_cases_dir()
         case_id = f"case_{uuid.uuid4().hex[:12]}"
+        register('case', case_id)
         now = _now()
         case = Case(
             case_id=case_id,
@@ -503,6 +508,18 @@ class CaseManager:
     @classmethod
     def save_case(cls, case: Case) -> None:
         cls._ensure_cases_dir()
+        require('case', case.case_id)
+        for graph_id in case.graph_ids:
+            require('graph', graph_id)
+        for version in case.versions:
+            require('version', version.version_id)
+            require('project', version.project_id)
+            if version.graph_id:
+                require('graph', version.graph_id)
+            for simulation_id in version.simulation_ids:
+                require('simulation', simulation_id)
+            for report_id in version.report_ids:
+                require('report', report_id)
         case.updated_at = _now()
         if cls._repository is not None:
             cls._repository.put_case(case.to_dict())
@@ -513,6 +530,7 @@ class CaseManager:
             json.dump(case.to_dict(), f, ensure_ascii=False, indent=2)
 
     @classmethod
+    @owned('case', 'case_id')
     def get_case(cls, case_id: str) -> Optional[Case]:
         if cls._repository is not None:
             payload = cls._repository.get_case(case_id)
@@ -532,6 +550,8 @@ class CaseManager:
         cls._ensure_cases_dir()
         cases: List[Case] = []
         for case_id in os.listdir(cls.CASES_DIR):
+            if not visible('case', case_id):
+                continue
             case = cls.get_case(case_id)
             if case:
                 cases.append(case)
@@ -540,6 +560,9 @@ class CaseManager:
 
     @classmethod
     @_serialized_case_mutation
+    @owned('case', 'case_id')
+    @owned('graph', 'graph_id')
+    @owned('project', 'project_id')
     def create_version(
         cls,
         case_id: str,
@@ -555,6 +578,7 @@ class CaseManager:
             raise ValueError(f"Case does not exist: {case_id}")
 
         version_id = f"casever_{uuid.uuid4().hex[:12]}"
+        register('version', version_id, parents=[('case', case_id), ('project', project_id)])
         version_number = len(case.versions) + 1
         case_documents: List[CaseDocument] = []
         for raw in documents or []:
@@ -604,6 +628,8 @@ class CaseManager:
 
     @classmethod
     @_serialized_case_mutation
+    @owned('case', 'case_id')
+    @owned('version', 'version_id')
     def update_version(cls, case_id: str, version_id: str, **updates: Any) -> Optional[CaseVersion]:
         case = cls.get_case(case_id)
         if not case:
@@ -644,6 +670,8 @@ class CaseManager:
         return target
 
     @classmethod
+    @owned('case', 'case_id')
+    @owned('version', 'version_id')
     def get_version(cls, case_id: str, version_id: str) -> Optional[CaseVersion]:
         case = cls.get_case(case_id)
         if not case:
@@ -655,6 +683,8 @@ class CaseManager:
 
     @classmethod
     @_serialized_case_mutation
+    @owned('case', 'case_id')
+    @owned('version', 'version_id')
     def record_prediction_snapshot(
         cls,
         case_id: str,
@@ -699,6 +729,7 @@ class CaseManager:
         return target
 
     @classmethod
+    @owned('case', 'case_id')
     def compare_prediction_versions(cls, case_id: str, from_version_id: str, to_version_id: str) -> Dict[str, Any]:
         from_version = cls.get_version(case_id, from_version_id)
         to_version = cls.get_version(case_id, to_version_id)

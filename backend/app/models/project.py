@@ -3,6 +3,8 @@ Project Context Management
 Persists project state on server to avoid frontend passing large data between interfaces
 """
 
+from ..services.workspace import owned, require, register, visible
+
 import os
 import json
 import re
@@ -143,6 +145,7 @@ class ProjectManager:
         os.makedirs(cls.PROJECTS_DIR, exist_ok=True)
 
     @classmethod
+    @owned('project', 'project_id')
     def _get_project_dir(cls, project_id: str) -> str:
         """Resolve a single project directory without following a project alias."""
         if not isinstance(project_id, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,127}', project_id):
@@ -155,21 +158,25 @@ class ProjectManager:
         return project_dir
 
     @classmethod
+    @owned('project', 'project_id')
     def _get_project_meta_path(cls, project_id: str) -> str:
         """Get project metadata file path"""
         return os.path.join(cls._get_project_dir(project_id), 'project.json')
 
     @classmethod
+    @owned('project', 'project_id')
     def _get_project_files_dir(cls, project_id: str) -> str:
         """Get project file storage directory"""
         return os.path.join(cls._get_project_dir(project_id), 'files')
 
     @classmethod
+    @owned('project', 'project_id')
     def _get_project_text_path(cls, project_id: str) -> str:
         """Get project extracted text storage path"""
         return os.path.join(cls._get_project_dir(project_id), 'extracted_text.txt')
 
     @classmethod
+    @owned('project', 'project_id')
     def _get_project_documents_path(cls, project_id: str) -> str:
         """Get per-document extracted text storage path."""
         return os.path.join(cls._get_project_dir(project_id), 'documents.json')
@@ -188,6 +195,7 @@ class ProjectManager:
         cls._ensure_projects_dir()
 
         project_id = f"proj_{uuid.uuid4().hex[:12]}"
+        register('project', project_id)
         now = datetime.now().isoformat()
 
         project = Project(
@@ -213,6 +221,10 @@ class ProjectManager:
     @project_write
     def save_project(cls, project: Project) -> None:
         """Save project metadata"""
+        require('project', project.project_id)
+        for kind, identifier in [('case', project.case_id), ('version', project.case_version_id), ('graph', project.graph_id)]:
+            if identifier:
+                require(kind, identifier)
         project.updated_at = datetime.now().isoformat()
         if cls._repository is not None:
             cls._repository.put_project(project.to_dict())
@@ -224,6 +236,7 @@ class ProjectManager:
             json.dump(project.to_dict(), f, ensure_ascii=False, indent=2)
 
     @classmethod
+    @owned('project', 'project_id')
     def get_project(cls, project_id: str) -> Optional[Project]:
         """
         Get project
@@ -264,6 +277,8 @@ class ProjectManager:
         cls._ensure_projects_dir()
         projects = []
         for project_id in os.listdir(cls.PROJECTS_DIR):
+            if not visible('project', project_id):
+                continue
             try:
                 project = cls.get_project(project_id)
             except ValueError:
@@ -277,6 +292,7 @@ class ProjectManager:
         return projects[:limit]
 
     @classmethod
+    @owned('project', 'project_id')
     def delete_project(cls, project_id: str) -> bool:
         """
         Delete project and all its files
@@ -303,6 +319,7 @@ class ProjectManager:
         return files_deleted or repository_deleted
 
     @classmethod
+    @owned('project', 'project_id')
     def save_file_to_project(cls, project_id: str, file_storage, original_filename: str) -> Dict[str, str]:
         """
         Save uploaded file to project directory
@@ -337,6 +354,7 @@ class ProjectManager:
         }
 
     @classmethod
+    @owned('project', 'project_id')
     def save_extracted_text(cls, project_id: str, text: str) -> None:
         """Save extracted text"""
         text_path = cls._get_project_text_path(project_id)
@@ -344,6 +362,7 @@ class ProjectManager:
             f.write(text)
 
     @classmethod
+    @owned('project', 'project_id')
     def save_document_texts(cls, project_id: str, documents: List[Dict[str, Any]]) -> None:
         """Save per-document extracted text and provenance metadata."""
         docs_path = cls._get_project_documents_path(project_id)
@@ -351,6 +370,7 @@ class ProjectManager:
             json.dump(documents, f, ensure_ascii=False, indent=2)
 
     @classmethod
+    @owned('project', 'project_id')
     def get_document_texts(cls, project_id: str) -> List[Dict[str, Any]]:
         """Get per-document extracted text and metadata."""
         docs_path = cls._get_project_documents_path(project_id)
@@ -361,6 +381,7 @@ class ProjectManager:
         return data if isinstance(data, list) else []
 
     @classmethod
+    @owned('project', 'project_id')
     def get_extracted_text(cls, project_id: str) -> Optional[str]:
         """Get extracted text"""
         text_path = cls._get_project_text_path(project_id)
@@ -372,6 +393,7 @@ class ProjectManager:
             return f.read()
 
     @classmethod
+    @owned('project', 'project_id')
     def get_project_files(cls, project_id: str) -> List[str]:
         """Get all project file paths"""
         files_dir = cls._get_project_files_dir(project_id)

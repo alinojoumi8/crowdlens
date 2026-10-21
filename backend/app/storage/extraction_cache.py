@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from ..config import Config
+from ..services.workspace import cache_namespace
 
 
 logger = logging.getLogger('mirofish.extraction_cache')
@@ -88,4 +89,6 @@ class ExtractionCache:
 
     def _path(self, file_hash: str, chunk_hash: str, ontology_hash: str) -> Path:
         cache_key = self.hash_text("|".join([self.VERSION, file_hash, chunk_hash, ontology_hash]))
+        if cache_namespace():
+            cache_key = self.hash_text(cache_namespace() + ':' + cache_key)
         return self.cache_dir / cache_key[:2] / f"{cache_key}.json"

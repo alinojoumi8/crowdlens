@@ -20,6 +20,10 @@ from .utils.error_handling import sanitize_error_response
 from .utils.logger import setup_logger, get_logger
 
 
+from .services.workspace import maintenance
+
+
+@maintenance
 def create_app(config_class=Config):
     """Flask application factory function"""
     app = Flask(__name__)

@@ -17,6 +17,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 
+from ..services.workspace import require, visible_ids, current_workspace
+
 logger = logging.getLogger("mirofish.control_db")
 
 SCHEMA_VERSION = 2
@@ -107,6 +109,10 @@ class ControlDatabase:
         record_id = str(payload.get(id_field) or "")
         if not record_id:
             raise ValueError(f"{id_field} is required for {table}")
+        require({'projects':'project', 'cases':'case', 'tasks':'task', 'simulation_runs':'simulation'}[table], record_id)
+        payload = dict(payload)
+        if current_workspace():
+            payload['workspace_id'] = current_workspace()
         created_at, updated_at = self._timestamps(payload)
         conflict = (
             "DO UPDATE SET payload_json=excluded.payload_json, updated_at=excluded.updated_at"
@@ -125,6 +131,7 @@ class ControlDatabase:
             return cursor.rowcount > 0
 
     def _get(self, table: str, record_id: str) -> Optional[Dict[str, Any]]:
+        require({'projects':'project', 'cases':'case', 'tasks':'task', 'simulation_runs':'simulation'}[table], record_id)
         with self._transaction() as connection:
             row = connection.execute(
                 f"SELECT payload_json FROM {table} WHERE record_id = ?",
@@ -134,14 +141,26 @@ class ControlDatabase:
 
     def _list(self, table: str, limit: int = 50) -> list[Dict[str, Any]]:
         safe_limit = max(0, int(limit))
+        if safe_limit == 0:
+            return []
+        kind = {'projects':'project', 'cases':'case', 'tasks':'task', 'simulation_runs':'simulation'}[table]
+        allowed = visible_ids(kind)
+        if allowed == set():
+            return []
+        result = []
         with self._transaction() as connection:
             rows = connection.execute(
-                f"SELECT payload_json FROM {table} ORDER BY updated_at DESC LIMIT ?",
-                (safe_limit,),
-            ).fetchall()
-        return [json.loads(row["payload_json"]) for row in rows]
+                f"SELECT record_id, payload_json FROM {table} ORDER BY updated_at DESC",
+            )
+            for row in rows:
+                if allowed is None or row['record_id'] in allowed:
+                    result.append(json.loads(row['payload_json']))
+                    if len(result) == safe_limit:
+                        break
+        return result
 
     def _delete(self, table: str, record_id: str) -> bool:
+        require({'projects':'project', 'cases':'case', 'tasks':'task', 'simulation_runs':'simulation'}[table], record_id)
         with self._transaction() as connection:
             cursor = connection.execute(
                 f"DELETE FROM {table} WHERE record_id = ?",
@@ -156,6 +175,7 @@ class ControlDatabase:
         mutator: Callable[[Dict[str, Any]], Dict[str, Any]],
     ) -> Optional[Dict[str, Any]]:
         """Serialize a read-modify-write cycle with a SQLite write lock."""
+        require({'projects':'project', 'cases':'case', 'tasks':'task', 'simulation_runs':'simulation'}[table], record_id)
         connection = self._connect()
         try:
             connection.execute("BEGIN IMMEDIATE")
@@ -173,6 +193,8 @@ class ControlDatabase:
             id_field = _TABLE_IDS[table]
             if str(updated.get(id_field) or "") != record_id:
                 raise ValueError(f"metadata mutator cannot change {id_field}")
+            if current_workspace():
+                updated["workspace_id"] = current_workspace()
             updated["updated_at"] = _utc_now()
             connection.execute(
                 f"UPDATE {table} SET payload_json = ?, updated_at = ? WHERE record_id = ?",

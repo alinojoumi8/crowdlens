@@ -42,3 +42,13 @@ def disable_live_jev(monkeypatch):
     from app.config import Config
     for name in ('JEV_INTERVIEW_MODE', 'JEV_RERANK_MODE', 'JEV_EVIDENCE_MODE'):
         monkeypatch.setattr(Config, name, 'off')
+
+
+@pytest.fixture(autouse=True)
+def isolated_workspace_context(monkeypatch):
+    """Each app fixture explicitly enables ownership; no auth state crosses tests."""
+    from app.services import workspace
+    monkeypatch.setattr(workspace, '_store', None)
+    token = workspace._SCOPE.set(None)
+    yield
+    workspace._SCOPE.reset(token)
