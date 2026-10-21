@@ -6,6 +6,8 @@ version with its own project, documents, graph, simulations, reports, and
 prediction snapshots.
 """
 
+from ..services.quota_io import open
+
 from ..services.workspace import owned, require, register, visible
 
 import hashlib

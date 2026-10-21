@@ -71,6 +71,8 @@ def get_off_track_agents(simulation_id: str):
 def export_run_diagnostics(simulation_id: str):
     try:
         diagnostics = SimulationRunner.get_run_diagnostics(simulation_id)
+        from ..services.quota_io import charge
+        charge(len(json.dumps(diagnostics, ensure_ascii=False, indent=2).encode('utf-8')))
         with tempfile.NamedTemporaryFile(
             mode='w', suffix='.json', delete=False, encoding='utf-8'
         ) as handle:

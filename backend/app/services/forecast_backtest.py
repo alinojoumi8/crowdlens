@@ -14,6 +14,8 @@ safe) and calls `fit_calibration` + `write_calibration`.
 
 from __future__ import annotations
 
+from .quota_io import open
+
 import json
 import math
 import os

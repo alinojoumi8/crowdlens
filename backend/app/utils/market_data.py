@@ -11,6 +11,8 @@ Dependency-free beyond `requests` (already a backend dependency).
 
 from __future__ import annotations
 
+from ..services.quota_io import open
+
 import hashlib
 import json
 import math

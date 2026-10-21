@@ -140,6 +140,9 @@ def test_real_api_ids_lists_downloads_and_override_rejection(stores, tmp_path):
     # relying on the tester blanket 403 would not exercise workspace isolation.
     with auth.db() as db:
         db.execute("UPDATE auth_users SET role='admin' WHERE id=?", (ub['id'],))
+    from test_administrator_quotas import configure
+    configure(app, ca, ua, {'X-CrowdLens-CSRF': csrf_a})
+    configure(app, ca, ub, {'X-CrowdLens-CSRF': csrf_a})
     a, b = bundle(w, ua['id']), bundle(w, ub['id'])
     assert cb.get('/api/graph/project/' + b['project']).status_code == 200
     assert ca.get('/api/report/' + a['report'] + '/download').status_code == 200
@@ -439,6 +442,8 @@ def test_oidc_application_startup_migrates_legacy_without_assigning_it(stores, t
         client=app.test_client();user,csrf=login(app,client)
         assert app.extensions['control_db_migration']['projects']==1
         assert client.get('/api/graph/project/'+legacy.project_id).status_code==404
+        from test_administrator_quotas import configure
+        configure(app, client, user, {'X-CrowdLens-CSRF': csrf})
         assert client.get('/api/graph/project/list').json['data']==[]
         created=client.post('/api/graph/case/create',json={'name':'owned fictional case'},headers={'X-CrowdLens-CSRF':csrf})
         assert created.status_code==200, created.json

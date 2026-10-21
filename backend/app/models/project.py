@@ -3,6 +3,8 @@ Project Context Management
 Persists project state on server to avoid frontend passing large data between interfaces
 """
 
+from ..services.quota_io import open
+
 from ..services.workspace import owned, require, register, visible
 
 import os
@@ -341,7 +343,8 @@ class ProjectManager:
         file_path = os.path.join(files_dir, safe_filename)
 
         # Save file
-        file_storage.save(file_path)
+        with open(file_path, 'wb') as target:
+            file_storage.save(target)
 
         # Get file size
         file_size = os.path.getsize(file_path)

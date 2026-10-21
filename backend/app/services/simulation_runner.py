@@ -3,6 +3,8 @@ OASIS Simulation Runner
 Run simulations in the background and record actions for each Agent, supporting real-time status monitoring
 """
 
+from .quota_io import open
+
 from ..services.workspace import owned, require, register, visible, maintenance, child_environment
 
 import os
@@ -659,7 +661,9 @@ class SimulationRunner:
             
             # Create main log file to avoid stdout/stderr pipe buffer overflow
             main_log_path = os.path.join(sim_dir, "simulation.log")
-            main_log_file = open(main_log_path, 'w', encoding='utf-8')
+            from .quota_io import ledger_for_workspace
+            quota_ledger, _ = ledger_for_workspace()
+            main_log_file = None if quota_ledger else open(main_log_path, 'w', encoding='utf-8')
             
             # Set subprocess environment variables to ensure UTF-8 encoding on Windows
             # This fixes third-party libraries (like OASIS) not specifying encoding when reading files
@@ -668,6 +672,12 @@ class SimulationRunner:
             scope = current_scope()
             if scope and scope.workflow_id:
                 env.update(scope.child_env())
+            if quota_ledger:
+                from pathlib import Path
+                bootstrap = Path(__file__).resolve().parents[2] / 'scripts' / 'quota_runner.py'
+                cmd.insert(1, str(bootstrap))
+                env['CROWDLENS_QUOTA_DB'] = quota_ledger.path
+                env['PYTHONDONTWRITEBYTECODE'] = '1'
             env['CROWDLENS_RUN_ID'] = state.execution['run_id']
             owner = current_attempt()
             state.execution = dict(run_id=env['CROWDLENS_RUN_ID'],
@@ -682,17 +692,24 @@ class SimulationRunner:
                 process = subprocess.Popen(
                     cmd,
                     cwd=sim_dir,
-                    stdout=main_log_file,
+                    stdout=subprocess.PIPE if quota_ledger else main_log_file,
                     stderr=subprocess.STDOUT,  # stderr also written to same file
-                    text=True,
-                    encoding='utf-8',  # Explicitly specify encoding
-                    bufsize=1,
+                    text=not bool(quota_ledger),
+                    encoding=None if quota_ledger else 'utf-8',
+                    bufsize=0 if quota_ledger else 1,
                     env=env,  # Pass environment variables with UTF-8 settings
                     start_new_session=True,  # Create new process group, ensure all related processes terminate when server closes
                 )
             
             # Save file handle for later closing
-            cls._stdout_files[simulation_id] = main_log_file
+            if main_log_file is not None:
+                cls._stdout_files[simulation_id] = main_log_file
+            if quota_ledger:
+                from .quota_subprocess import capture_stdout
+                output_context = copy_context()
+                output_thread = threading.Thread(target=lambda: output_context.run(capture_stdout, process, main_log_path), daemon=True)
+                process._crowdlens_output_thread = output_thread
+                output_thread.start()
             cls._stderr_files[simulation_id] = None  # No longer need separate stderr
             
             from ..utils.process_identity import process_identity
@@ -728,6 +745,16 @@ class SimulationRunner:
             
             logger.info(f"Simulation started successfully: {simulation_id}, pid={process.pid}, platform={platform}")
             
+        except WorkflowHalt as exc:
+            from .quota_io import remediation
+            launched = locals().get('process')
+            if launched is not None:
+                cls._terminate_process(launched, simulation_id)
+            state.runner_status = RunnerStatus.FAILED
+            state.error = exc.reason
+            with without_execution_scope(), remediation():
+                cls._save_run_state(state)
+            raise
         except Exception as e:
             state.runner_status = RunnerStatus.FAILED
             state.error = str(e)
@@ -803,6 +830,11 @@ class SimulationRunner:
                 cls._save_run_state(state)
                 time.sleep(2)
             
+            output_thread = getattr(process, '_crowdlens_output_thread', None)
+            if output_thread:
+                output_thread.join(timeout=5)
+                if output_thread.is_alive():
+                    process._crowdlens_quota_error = 'quota_output_capture_incomplete'
             with TaskManager().runtime.gate():
                 # After process ends, read logs one more time
                 if cls._processes.get(simulation_id) is not process:
@@ -818,7 +850,13 @@ class SimulationRunner:
                 # Process ended
                 exit_code = process.returncode
             
-                if state.runner_status in {RunnerStatus.COMPLETED, RunnerStatus.FAILED}:
+                if getattr(process, '_crowdlens_quota_error', None):
+                    if state.runner_status == RunnerStatus.COMPLETED:
+                        state.execution['quota_close_reason'] = process._crowdlens_quota_error
+                    else:
+                        state.runner_status = RunnerStatus.FAILED
+                        state.error = process._crowdlens_quota_error
+                elif state.runner_status in {RunnerStatus.COMPLETED, RunnerStatus.FAILED}:
                     pass  # Closing an idle environment cannot change the recorded outcome.
                 elif state.runner_status in {RunnerStatus.STOPPING, RunnerStatus.STOPPED}:
                     state.runner_status = RunnerStatus.STOPPED
@@ -850,6 +888,16 @@ class SimulationRunner:
                 state.reddit_running = False
                 cls._save_run_state(state)
             
+        except WorkflowHalt as exc:
+            from .quota_io import remediation
+            cls._terminate_process(process, simulation_id)
+            with without_execution_scope(), remediation():
+                if state.runner_status == RunnerStatus.COMPLETED:
+                    state.execution['quota_close_reason'] = exc.reason
+                else:
+                    state.runner_status = RunnerStatus.FAILED
+                    state.error = exc.reason
+                cls._save_run_state(state)
         except OwnershipLost:
             if cls._processes.get(simulation_id) is process and process.poll() is None:
                 cls._terminate_process(process, simulation_id)
@@ -875,7 +923,8 @@ class SimulationRunner:
                         state.error = 'graph_memory_interrupted: ' + exc.reason
                     state.execution['graph_memory'] = 'interrupted'
                     try:
-                        with without_execution_scope():
+                        from .quota_io import remediation
+                        with without_execution_scope(), remediation():
                             cls._save_run_state(state)
                     except OwnershipLost:
                         pass  # Cancellation already reconciled the persisted task.
@@ -1761,15 +1810,21 @@ class SimulationRunner:
                 target.mkdir(parents=True, mode=0o700)
                 for source in root.iterdir():
                     if source.is_file():
+                        from .quota_io import charge
+                        charge(source.stat().st_size)
                         shutil.copy2(source, target / source.name)
                 for name in dirs_to_clean:
                     if (root / name).is_dir():
+                        from .quota_io import charge
+                        charge(sum(p.stat().st_size for p in (root / name).rglob('*') if p.is_file()))
                         shutil.copytree(root / name, target / name)
                 if persisted:
-                    (target / 'control-state.json').write_text(json.dumps(persisted, ensure_ascii=False, indent=2))
+                    with open(target / 'control-state.json', 'w', encoding='utf-8') as stream:
+                        stream.write(json.dumps(persisted, ensure_ascii=False, indent=2))
                 manifest = {str(path.relative_to(target)): hashlib.sha256(path.read_bytes()).hexdigest()
                             for path in target.rglob('*') if path.is_file()}
-                (target / 'sha256.json').write_text(json.dumps(manifest, indent=2))
+                with open(target / 'sha256.json', 'w', encoding='utf-8') as stream:
+                    stream.write(json.dumps(manifest, indent=2))
             except Exception as exc:
                 return dict(success=False, cleaned_files=[], archive=archive, errors=[f'Archive failed: {exc}'])
 

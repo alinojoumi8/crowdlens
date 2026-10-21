@@ -32,6 +32,8 @@ class DecisionRecords:
         safe = {k: v for k, v in record.items() if k in self.FIELDS}
         # Legends repeat request text; retain numeric judgments only in default logs.
         safe['answers'] = {k: {a: b for a, b in v.items() if a != 'legend'} for k, v in safe.get('answers', {}).items()}
+        from .quota_io import charge
+        charge(len(canonical_json(safe).encode('utf-8')))
         fd, temporary = tempfile.mkstemp(prefix='.decision-', suffix='.tmp', dir=self.root)
         try:
             with os.fdopen(fd, 'w') as stream:

@@ -17,6 +17,7 @@ import uuid
 from functools import wraps
 import inspect
 from .workflow_spend import price_terms, micro_usd, estimated_micro_usd, token_counts
+from . import administrator_quotas as quotas
 
 _SCOPE = ContextVar('workflow_execution', default=None)
 _ISSUER = ContextVar('workflow_issuing_owner', default=None)
@@ -41,7 +42,7 @@ from .workspace import require, require_resource, register, current_workspace, c
 
 
 class WorkflowLedger:
-    def __init__(self, path, *, clock=time.time):
+    def __init__(self, path, *, clock=time.time, quotas_required=False):
         self.path = str(Path(path).resolve())
         self.clock = clock
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
@@ -53,6 +54,7 @@ class WorkflowLedger:
             db.execute('CREATE TABLE IF NOT EXISTS workflow_requests ('
                        'request_id TEXT PRIMARY KEY, workflow_id TEXT NOT NULL, payload TEXT NOT NULL)')
             db.execute('CREATE INDEX IF NOT EXISTS workflow_request_root ON workflow_requests(workflow_id)')
+            quotas.initialize(db, required=quotas_required)
 
     @contextmanager
     def transaction(self):
@@ -113,30 +115,49 @@ class WorkflowLedger:
         identity = dict(provider=provider, model=model, endpoint_identity=endpoint_identity(base_url),
                         input_description=input_description, max_requests=max_requests,
                         max_seconds=max_seconds, imported_requests=consumed_requests, input_fingerprint=input_fingerprint)
-        if spend is not None:
-            if consumed_requests:
-                raise ValueError('legacy_usage_cannot_be_priced')
-            identity['spend'] = price_terms(spend)
         if input_fingerprint is not None and (not isinstance(input_fingerprint, str) or len(input_fingerprint) != 64
                 or any(c not in '0123456789abcdef' for c in input_fingerprint)):
             raise ValueError('invalid_input_fingerprint')
         with self.transaction() as db:
+            request_identity = dict(identity)
+            managed = quotas.managed(db)
+            if consumed_requests and (managed or spend is not None):
+                raise ValueError('legacy_usage_cannot_be_priced')
+            if managed:
+                if spend is not None and not isinstance(spend, dict):
+                    raise ValueError('invalid_spend_terms')
+                request_identity['requested_budget_micro_usd'] = (micro_usd(spend['budget_usd'], positive=True)
+                    if isinstance(spend, dict) and 'budget_usd' in spend else None)
+            elif spend is not None:
+                request_identity['spend'] = price_terms(spend)
             row = db.execute('SELECT payload FROM workflows WHERE request_key=?', (request_key,)).fetchone()
             if row:
                 old = json.loads(row[0])
                 require('workflow', old['workflow_id'])
-                if old['initial_authorization'] != identity:
+                if managed and not old.get('administrator_quotas'):
+                    quotas.halt('legacy_workflow_requires_new_authorization')
+                if old.get('request_identity', old['initial_authorization']) != request_identity:
                     raise ValueError('authorization_key_conflict')
                 for resource in resources:
                     self._bind(db, old['workflow_id'], resource)
                 return old
+            spend = quotas.authorization_spend(db, current_workspace(), self.clock(),
+                dict(provider=provider, model=model, base_url=base_url), spend)
+            if spend is not None:
+                identity['spend'] = price_terms(spend)
+            quotas.begin_operation(db, current_workspace(), self.clock(), active=False)
+            for resource in resources:
+                if db.execute('SELECT 1 FROM workflow_resources WHERE resource_key=?', (resource,)).fetchone():
+                    raise ValueError('resource_has_different_authorization')
             record = dict(identity, workflow_id='wf_' + uuid.uuid4().hex, request_key=request_key,
+                          request_identity=request_identity,
                           initial_authorization=identity, authorizations=[dict(identity, at=self.clock(), epoch=1)],
                           state='authorized', reason=None, epoch=1, admitted=consumed_requests,
                           created_at=self.clock(), started_at=None, deadline_at=None)
             register('workflow', record['workflow_id'])
             if current_workspace():
                 record['workspace_id'] = current_workspace()
+            record['administrator_quotas'] = quotas.managed(db)
             if spend is not None:
                 record['spend'] = dict(identity['spend'], estimated_micro_usd=0, reserved_micro_usd=0, overrun_attempts=0)
             db.execute('INSERT INTO workflows VALUES(?,?,?)',
@@ -187,6 +208,10 @@ class WorkflowLedger:
         record = self.checkpoint(wid, epoch)
         if record['state'] != 'authorized' or record['admitted'] >= record['max_requests']:
             raise WorkflowHalt(record['reason'] or 'request_limit', wid)
+        with self.transaction() as db:
+            quotas.check(db, current_workspace(), self.clock(), {})
+            if quotas.managed(db) and not record.get('administrator_quotas'):
+                quotas.halt('legacy_workflow_requires_new_authorization')
         return record
 
     def admit(self, wid, epoch, stage, model, base_url, *, attempt_number=1, task_id=None, owner_attempt=None):
@@ -194,6 +219,8 @@ class WorkflowLedger:
         with self.transaction() as db:
             record = self._read(db, wid)
             self._expire(record)
+            if quotas.managed(db) and not record.get('administrator_quotas'):
+                quotas.halt('legacy_workflow_requires_new_authorization')
             if epoch != record['epoch']:
                 reason = 'authorization_superseded'
             elif model != record['model'] or endpoint_identity(base_url) != record['endpoint_identity']:
@@ -216,6 +243,7 @@ class WorkflowLedger:
                     sequence=record['admitted'], stage=stage, model=model, task_id=task_id,
                     owner_attempt=owner_attempt, attempt_number=attempt_number, admitted_at=now,
                     finished_at=None, status='in_flight', usage=None, http_status=None)
+                quotas.admit(db, current_workspace(), now, ticket, record['provider'], model, endpoint_identity(base_url))
                 if spend:
                     ticket['spend'] = dict(reserved_micro_usd=spend['reserve_micro_usd'],
                                            estimated_micro_usd=None, reservation_exceeded=False)
@@ -243,6 +271,7 @@ class WorkflowLedger:
             if record['finished_at'] is not None:
                 return
             record.update(finished_at=self.clock(), status=status, usage=usage if isinstance(usage, dict) else None, http_status=http_status)
+            quotas.finish(db, ticket, usage)
             if record.get('spend'):
                 workflow = self._read(db, record['workflow_id'])
                 spend = workflow['spend']
@@ -278,6 +307,9 @@ class WorkflowLedger:
             raise ValueError('invalid_reauthorization_key')
         with self.transaction() as db:
             record = self._read(db, wid)
+            quotas.check(db, current_workspace(), self.clock(), {})
+            if quotas.managed(db) and not record.get('administrator_quotas'):
+                quotas.halt('legacy_workflow_requires_new_authorization')
             terms = dict(max_requests=max_requests, max_seconds=max_seconds, request_key=request_key)
             spend = record.get('spend')
             if budget_usd is not None and not spend:
@@ -291,6 +323,7 @@ class WorkflowLedger:
                 if any(replay[k] != v for k, v in terms.items()):
                     raise ValueError('reauthorization_key_conflict')
                 return record
+            quotas.begin_operation(db, current_workspace(), self.clock(), active=False)
             if max_requests <= record['admitted']:
                 raise ValueError('new_total_ceiling_must_exceed_consumed')
             if spend:
@@ -337,6 +370,11 @@ class WorkflowLedger:
             spend['available_micro_usd'] = max(0, spend['budget_micro_usd'] - spend['estimated_micro_usd'] - spend['reserved_micro_usd'])
             spend['unpriced_attempts'] = sum(item.get('spend', {}).get('estimated_micro_usd') is None for item in attempts)
             spend['guarantee'] = 'admission_reservations_only_not_provider_billing'
+        with self.transaction() as db:
+            try:
+                record['quotas'] = quotas.snapshot(db, current_workspace(), self.clock())
+            except WorkflowHalt as exc:
+                record['quotas'] = dict(managed=True, admission_open=False, reason=exc.reason)
         return record
 
     @staticmethod
