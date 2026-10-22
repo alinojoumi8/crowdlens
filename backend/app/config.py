@@ -85,7 +85,9 @@ class Config:
     DISK_WARNING_BYTES = max(DISK_CRITICAL_BYTES, int(os.environ.get('DISK_WARNING_BYTES', str(2 * 1024**3))))
 
     # File upload configuration
-    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB
+    MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB, including multipart overhead
+    MAX_FORM_MEMORY_SIZE = 64 * 1024
+    MAX_FORM_PARTS = 32
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '../uploads')
     CONTROL_DB_PATH = os.environ.get(
         'CONTROL_DB_PATH',

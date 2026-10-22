@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 import pytest
 
-from app.utils.url_fetcher import fetch_url, parse_urls, _assert_public_host, _HTMLTextExtractor
+from app.utils.url_fetcher import _fetch_url as fetch_url, parse_urls, _assert_public_host, _HTMLTextExtractor
 
 
 def test_parse_urls_normalizes_and_dedupes():
@@ -62,33 +62,57 @@ class _FakeResponse:
         del chunk_size
         yield self.body
 
+    @property
+    def status(self):
+        return self.status_code
+
+    def getheader(self, key, default=None):
+        return self.headers.get(key, default)
+
+    def read(self, amount):
+        data, self.body = self.body[:amount], self.body[amount:]
+        return data
+
     def close(self):
         return None
+
+
+class _FakeConnection:
+    def __init__(self, response):
+        self.response = response
+        self.closed = False
+        self.request_args = None
+
+    def request(self, *args, **kwargs):
+        self.request_args = (args, kwargs)
+
+    def getresponse(self):
+        return self.response
+
+    def close(self):
+        self.closed = True
 
 
 def test_fetch_url_rejects_private_redirect_before_requesting_it(monkeypatch):
     calls = []
 
-    def fake_get(url, **kwargs):
-        calls.append((url, kwargs))
-        if url == "https://public.example/start":
-            return _FakeResponse(
-                url=url,
-                status_code=302,
-                headers={"Location": "http://127.0.0.1:11434/api/tags"},
-            )
-        raise AssertionError(f"private redirect was requested: {url}")
+    def connect(parsed, host, address):
+        calls.append(parsed.geturl())
+        return _FakeConnection(_FakeResponse(parsed.geturl(), 302,
+            {'Location': 'http://127.0.0.1/api/tags'}))
 
-    monkeypatch.setattr("app.utils.url_fetcher._assert_public_host", lambda host: (
-        (_ for _ in ()).throw(ValueError("private host")) if host == "127.0.0.1" else None
-    ))
-    monkeypatch.setattr("app.utils.url_fetcher.requests.get", fake_get)
+    def public(host):
+        if host == '127.0.0.1':
+            raise ValueError('private host')
+        return ('93.184.216.34',)
+
+    monkeypatch.setattr('app.utils.url_fetcher._assert_public_host', public)
+    monkeypatch.setattr('app.utils.url_fetcher._open_connection', connect)
 
     with pytest.raises(ValueError, match="private host"):
         fetch_url("https://public.example/start")
 
-    assert [url for url, _ in calls] == ["https://public.example/start"]
-    assert calls[0][1]["allow_redirects"] is False
+    assert calls == ['https://public.example/start']
 
 
 def test_fetch_url_follows_public_redirect_and_preserves_readable_content(monkeypatch):
@@ -106,10 +130,10 @@ def test_fetch_url_follows_public_redirect_and_preserves_readable_content(monkey
         ),
     }
 
-    monkeypatch.setattr("app.utils.url_fetcher._assert_public_host", lambda host: None)
+    monkeypatch.setattr("app.utils.url_fetcher._assert_public_host", lambda host: ('93.184.216.34',))
     monkeypatch.setattr(
-        "app.utils.url_fetcher.requests.get",
-        lambda url, **kwargs: responses[url],
+        "app.utils.url_fetcher._open_connection",
+        lambda parsed, host, address: _FakeConnection(responses[parsed.geturl()]),
     )
 
     result = fetch_url("https://public.example/start")

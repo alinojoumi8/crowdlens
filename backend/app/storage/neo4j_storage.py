@@ -8,6 +8,7 @@ Includes: CRUD, NER/RE-based text ingestion, hybrid search, retry logic.
 from ..services.workspace import owned, require, register, visible
 
 import json
+import re
 import time
 from ..services.task_execution import fenced, publication_guard
 import uuid
@@ -32,6 +33,22 @@ from .search_service import SearchService
 from . import neo4j_schema
 
 logger = logging.getLogger('mirofish.neo4j_storage')
+
+
+def _validate_entity_label(label):
+    # Generated ontology/NER values are data, never executable Cypher syntax.
+    if not isinstance(label, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', label):
+        raise ValueError('Generated entity label must be a simple identifier of at most 64 characters.')
+    return label
+
+
+def _validate_extraction_labels(extraction):
+    if not isinstance(extraction, dict) or not isinstance(extraction.get('entities', []), list):
+        raise ValueError('Generated entity labels require a valid extraction object.')
+    for entity in extraction.get('entities', []):
+        if not isinstance(entity, dict):
+            raise ValueError('Generated entity label requires an entity object.')
+        _validate_entity_label(entity.get('type', 'Entity'))
 
 
 class Neo4jStorage(GraphStorage):
@@ -688,6 +705,7 @@ class Neo4jStorage(GraphStorage):
 
         entities = extraction.get("entities", [])
         relations = extraction.get("relations", [])
+        _validate_extraction_labels(extraction)
 
         entity_summaries = [f"{e['name']} ({e['type']})" for e in entities]
         fact_texts = [r.get("fact", f"{r['source']} {r['type']} {r['target']}") for r in relations]
@@ -895,6 +913,13 @@ class Neo4jStorage(GraphStorage):
                 else None
             )
             if cached is not None:
+                try:
+                    _validate_extraction_labels(cached)
+                except ValueError:
+                    # Older cache entries are data too. Retry extraction under
+                    # the existing workflow allowance rather than pin bad output.
+                    cached = None
+            if cached is not None:
                 logger.info("[add_text_batch] NER cache hit for chunk %s/%s", idx + 1, len(chunks))
                 extractions[idx] = cached
                 profile["cache_hits"] += 1
@@ -917,6 +942,7 @@ class Neo4jStorage(GraphStorage):
             profile["llm_extraction_seconds"] += time.perf_counter() - llm_started
 
             for (idx, _chunk, chunk_hash), extraction in zip(missing, miss_extractions):
+                _validate_extraction_labels(extraction)
                 extractions[idx] = extraction
                 if self._extraction_cache:
                     self._extraction_cache.set(file_hash, chunk_hash, ontology_hash, extraction)
@@ -986,7 +1012,7 @@ class Neo4jStorage(GraphStorage):
             local_entity_keys: Dict[str, str] = {}
             for entity in extraction.get("entities", []):
                 name = str(entity.get("name", "")).strip()
-                etype = str(entity.get("type", "Entity") or "Entity").strip() or "Entity"
+                etype = _validate_entity_label(entity.get("type", "Entity") or "Entity")
                 if not name:
                     continue
                 name_lower = name.lower()
@@ -1121,7 +1147,7 @@ class Neo4jStorage(GraphStorage):
                     if etype and etype != "Entity":
                         label_groups.setdefault(etype, []).append(row["name_lower"])
                 for etype, name_lowers in label_groups.items():
-                    safe_label = str(etype).replace("`", "")
+                    safe_label = _validate_entity_label(etype)
                     if not safe_label:
                         continue
 
@@ -1333,12 +1359,12 @@ class Neo4jStorage(GraphStorage):
     @owned('graph', 'graph_id')
     def get_nodes_by_label(self, graph_id: str, label: str) -> List[Dict[str, Any]]:
         def _read(tx):
-            # Dynamic label in query (safe — label comes from ontology, not user input)
-            query = f"""
-                MATCH (n:Entity:`{label}` {{graph_id: $gid}})
+            query = """
+                MATCH (n:Entity {graph_id: $gid})
+                WHERE $label IN labels(n)
                 RETURN n, labels(n) AS labels
             """
-            result = tx.run(query, gid=graph_id)
+            result = tx.run(query, gid=graph_id, label=label)
             return [self._node_to_dict(record["n"], record["labels"]) for record in result]
 
         with self._driver.session() as session:

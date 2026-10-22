@@ -1401,6 +1401,14 @@ class ReportAgent:
         logger.info(f"Executing tool: {tool_name}, parameters: {parameters}")
         
         try:
+            if not isinstance(parameters, dict):
+                return 'Invalid tool arguments.'
+            # Tool destinations and scope come from the server, never a source
+            # passage or model-supplied graph, workspace, URL or file path.
+            if tool_name not in self._define_tools():
+                return 'Tool is not available for this report.'
+            if any(k in parameters for k in ('graph_id', 'simulation_id', 'workspace_id', 'url', 'path', 'base_url')):
+                return 'Tool destination cannot be selected by generated content.'
             if tool_name == "insight_forge":
                 query = parameters.get("query", "")
                 ctx = parameters.get("report_context", "") or report_context
@@ -1433,10 +1441,12 @@ class ReportAgent:
                 limit = parameters.get("limit", 10)
                 if isinstance(limit, str):
                     limit = int(limit)
+                if type(limit) is not int or limit < 1:
+                    raise ValueError('limit must be a positive integer')
                 result = self.graph_tools.quick_search(
                     graph_id=self.graph_id,
                     query=query,
-                    limit=limit
+                    limit=min(limit, 100)
                 )
                 return self._render_evidence_result(result)
             
@@ -1528,7 +1538,8 @@ class ReportAgent:
         for match in re.finditer(xml_pattern, response, re.DOTALL):
             try:
                 call_data = json.loads(match.group(1))
-                tool_calls.append(call_data)
+                if self._is_valid_tool_call(call_data):
+                    tool_calls.append(call_data)
             except json.JSONDecodeError:
                 pass
 
@@ -1576,7 +1587,11 @@ class ReportAgent:
     def _is_valid_tool_call(self, data: dict) -> bool:
         """Validate if the parsed JSON is a valid tool call"""
         # Support both {"name": ..., "parameters": ...} and {"tool": ..., "params": ...} key names
+        if not isinstance(data, dict) or not isinstance(data.get('parameters', data.get('params', {})), dict):
+            return False
         tool_name = data.get("name") or data.get("tool")
+        if not isinstance(tool_name, str):
+            return False
         if tool_name and tool_name in self.VALID_TOOL_NAMES:
             # Normalize key names to name / parameters
             if "tool" in data:

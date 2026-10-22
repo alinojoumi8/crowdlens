@@ -18,6 +18,13 @@ def forbid_real_external_http(monkeypatch):
             raise AssertionError('External HTTP blocked in offline tests')
         if parsed.port == 11434 or parsed.path.endswith('/api/pull'):
             raise AssertionError('Existing model services and downloads blocked in offline tests')
+    import socket
+    original_connection = socket.create_connection
+    def guarded_connection(address, *args, **kwargs):
+        if address[0] not in {'127.0.0.1', 'localhost', '::1'}:
+            raise AssertionError('External sockets blocked in offline tests')
+        return original_connection(address, *args, **kwargs)
+    monkeypatch.setattr(socket, 'create_connection', guarded_connection)
     original_request = requests.sessions.Session.request
     def guarded_request(self, method, url, *args, **kwargs):
         check(url)
