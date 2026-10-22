@@ -7,6 +7,8 @@ Communication uses a simple filesystem-based command/response model:
 3. Flask polls the responses directory and retrieves the result.
 """
 
+from .quota_io import open
+
 import os
 import json
 import time

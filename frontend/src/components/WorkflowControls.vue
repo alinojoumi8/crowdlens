@@ -8,8 +8,9 @@
         <label>Maximum minutes <input v-model.number="maxMinutes" type="number" min="1" max="1440" /></label>
         <button :aria-describedby="authorizationHelpId" :disabled="busy || !inputDescription || !inputFingerprint || !configuration?.controls_available || !configuration?.configured || !!configuration?.authorization_blocker || !!workflowId || !spendValid" @click="confirmAuthorization">Authorize this workflow</button>
       </div>
-      <label class="spend-toggle"><input v-model="spendEnabled" type="checkbox" :disabled="busy || !!workflowId" /> Add an estimated USD admission budget</label>
-      <fieldset v-if="spendEnabled" :disabled="busy || !!workflowId">
+      <p v-if="configuration?.quotas?.managed">Shared quotas and pricing are controlled by the administrator. These workflow limits can restrict your run; starting or renewing a workflow does not increase your shared quota.</p>
+      <label v-else class="spend-toggle"><input v-model="spendEnabled" type="checkbox" :disabled="busy || !!workflowId" /> Add an estimated USD admission budget</label>
+      <fieldset v-if="spendEnabled && !configuration?.quotas?.managed" :disabled="busy || !!workflowId">
         <legend>Pricing assumptions for {{ configuration?.model }}</legend>
         <div class="allowance-inputs">
           <label>Total budget (USD) <input v-model="budgetUsd" inputmode="decimal" /></label>
@@ -28,6 +29,12 @@
     <template v-if="status">
       <p><strong>{{ status.state }}</strong> · {{ status.admitted }}/{{ status.max_requests }} requests · {{ status.in_flight }} in flight · <span v-if="status.unknown_usage_attempts != null">{{ status.unknown_usage_attempts }} with unknown token usage</span><span v-else>Unknown token usage count not reported</span> · {{ Math.round(status.elapsed_seconds) }} seconds elapsed</p>
       <p v-if="status.unknown_usage_attempts > 0">Unknown token usage can include in-flight requests and does not mean they are still running. These counts can overlap; do not add them.</p>
+      <div v-if="status.quotas?.workspace" aria-label="Shared workspace quota">
+        <p>Shared workspace usage: {{ status.quotas.workspace.usage.requests }}/{{ status.quotas.workspace.limits.requests }} requests total · {{ status.quotas.workspace.usage.daily_requests }}/{{ status.quotas.workspace.limits.daily_requests }} today (UTC).</p>
+        <p>Shared estimated usage and unresolved reservations: {{ usd(status.quotas.workspace.usage.estimated_micro_usd) }}. Actual provider billing is unknown. Renewal does not reset these totals.</p>
+        <p>Shared accounting uses administrator pricing at each request. The workflow estimate retains its saved pricing.</p>
+      </div>
+      <p v-if="status.quotas?.managed && !status.quotas.admission_open" role="status">{{ readableError(status.quotas.reason || 'quota_admission_closed') }}</p>
       <div v-if="status.spend" class="spend-summary" aria-label="Estimated spending">
         <p>Estimated usage: {{ usd(status.spend.estimated_micro_usd) }} · Reserved for unresolved usage: {{ usd(status.spend.reserved_micro_usd) }} · Available: {{ usd(status.spend.available_micro_usd) }} of {{ usd(status.spend.budget_micro_usd) }}</p>
         <p>{{ status.spend.unpriced_attempts }} attempts unpriced · {{ status.spend.overrun_attempts }} reservations exceeded. Actual provider billing is unknown.</p>
@@ -64,19 +71,23 @@ const spendEnabled = ref(false), budgetUsd = ref(''), reserveUsd = ref(''), inpu
 const renewBudget = ref('')
 const usd = micros => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:6 }).format(micros / 1e6)
 const validUsd = value => /^(0|[1-9][0-9]{0,6})(\.[0-9]{1,6})?$/.test(value) && Number(value) <= 1000000
-const spendValid = computed(() => !spendEnabled.value || ([budgetUsd, reserveUsd, inputRate, outputRate].every(field => validUsd(field.value)) && Number(reserveUsd.value) > 0 && Number(budgetUsd.value) >= Number(reserveUsd.value) && !!priceReference.value.trim()))
+const spendValid = computed(() => configuration.value?.quotas?.managed || !spendEnabled.value || ([budgetUsd, reserveUsd, inputRate, outputRate].every(field => validUsd(field.value)) && Number(reserveUsd.value) > 0 && Number(budgetUsd.value) >= Number(reserveUsd.value) && !!priceReference.value.trim()))
 const renewSpendValid = computed(() => !status.value?.spend || (validUsd(renewBudget.value) && Math.round(Number(renewBudget.value) * 1e6) >= status.value.spend.estimated_micro_usd + status.value.spend.reserved_micro_usd + status.value.spend.reserve_micro_usd))
 const renewRequests = ref(60), renewMinutes = ref(30), acknowledgeUnknown = ref(false)
 let renewalKey = crypto.randomUUID()
 let timer, generation = 0, authorizationKey = crypto.randomUUID()
 const readableError = code => ({
+  quota_not_configured: 'Shared quotas are not configured. Ask the administrator to set account and global limits.',
+  quota_admission_closed: 'New work is paused by the administrator. Existing output is retained; contact the administrator before continuing.',
+  quota_provider_changed: 'The provider changed. Ask the administrator to review the saved quota pricing.',
+  quota_unmetered_file_descriptor_unsupported: 'This operation cannot use an unmetered storage path. Contact the administrator.',
   secondary_provider_allowance_unsupported: 'Authorization is blocked because optional Jev provider modes are enabled. Turn off JEV_INTERVIEW_MODE, JEV_RERANK_MODE and JEV_EVIDENCE_MODE in the server configuration and restart the server.',
   remote_embedding_allowance_unsupported: 'Authorization requires local Ollama embeddings. Configure the embedding provider and address on the server, then restart it.',
   budget_cannot_reserve_next_request: 'The total budget must cover prior usage, unresolved reservations and one more request.',
   explicit_spend_budget_required: 'Confirm a total USD budget to renew this workflow.',
   invalid_usd_decimal: 'Use USD amounts with up to six decimal places.',
   provider_identity_changed: 'The AI provider changed. Refresh the page and review the current provider before authorizing.'
-}[code] || code)
+}[code] || (code?.startsWith('quota_') ? 'A shared usage limit is reached. Contact the administrator. Starting or renewing a workflow does not reset shared usage; daily limits reset at 00:00 UTC.' : code))
 const errorMessage = exc => readableError(exc.response?.data?.error || exc.message)
 const authorizationHelp = computed(() => {
   if (busy.value) return 'Submitting your request…'
@@ -94,6 +105,10 @@ const applyStatus = data => {
     if (data.spend) renewBudget.value = (data.spend.budget_micro_usd / 1e6).toFixed(6)
   }
   status.value = data
+  if (props.authorize) {
+    const available = data.state === 'authorized' && !data.admission_closed && (!data.quotas?.managed || data.quotas.admission_open)
+    emit('authorized', available ? workflowId.value : null)
+  }
 }
 const refresh = async () => {
   const token = generation
@@ -120,13 +135,12 @@ const confirmAuthorization = async () => {
   const terms = { ...configuration.value,
       request_key: authorizationKey, input_description: props.inputDescription, input_fingerprint:props.inputFingerprint,
       max_requests: maxRequests.value, max_seconds: maxMinutes.value * 60, confirmed: true }
-  if (spendEnabled.value) terms.spend = { currency:'USD', budget_usd:budgetUsd.value, reserve_usd:reserveUsd.value, input_usd_per_million:inputRate.value, output_usd_per_million:outputRate.value, price_reference:priceReference.value.trim() }
+  if (spendEnabled.value && !configuration.value?.quotas?.managed) terms.spend = { currency:'USD', budget_usd:budgetUsd.value, reserve_usd:reserveUsd.value, input_usd_per_million:inputRate.value, output_usd_per_million:outputRate.value, price_reference:priceReference.value.trim() }
   busy.value = true; error.value = ''
   try {
     const response = await authorizeWorkflow(terms)
     if (token !== generation) return
     workflowId.value = response.data.workflow_id; applyStatus(response.data)
-    emit('authorized', workflowId.value)
   } catch (exc) { if(token === generation) error.value = errorMessage(exc) } finally { busy.value = false }
 }
 const renew = async () => {

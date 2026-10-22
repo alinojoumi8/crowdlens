@@ -4,6 +4,8 @@ from urllib.parse import urlparse
 from flask import Blueprint, g, jsonify, request
 from ..config import Config
 from ..services.workflow_execution import WorkflowLedger, WorkflowHalt, ExecutionScope, _SCOPE, without_execution_scope
+from ..services import administrator_quotas as quotas
+from ..services.workspace import current_workspace
 
 GENERATION_ENDPOINTS = {
     'graph.generate_ontology': 'ontology', 'graph.build_graph': 'graph',
@@ -19,13 +21,24 @@ GENERATION_ENDPOINTS = {
 
 
 def control_response(exc):
-    return jsonify(success=False, error=exc.reason, error_code=exc.reason,
-        workflow_id=exc.workflow_id, terminal=True, recovery_requires_action=True), 409 if exc.workflow_id else 428
+    shared = exc.reason.startswith('quota_')
+    response = jsonify(success=False, error=exc.reason, error_code=exc.reason,
+        workflow_id=exc.workflow_id, terminal=True, recovery_requires_action=True,
+        **({'next_action': 'Contact the administrator to review shared quotas; wait for the next UTC day for a daily limit. Starting or renewing a workflow does not reset shared usage.'} if shared else {}))
+    if shared:
+        response.headers['Retry-After'] = '60'
+    return response, 429 if shared else 409 if exc.workflow_id else 428
 
 
 def install_workflow_controls(app):
     repository = app.extensions.get('control_db')
-    ledger = WorkflowLedger(repository.path) if repository else None
+    if repository is None and app.config.get('AUTH_MODE') == 'oidc':
+        raise RuntimeError('OIDC application access requires a durable control database for quotas')
+    ledger = WorkflowLedger(repository.path, quotas_required=app.config.get('AUTH_MODE') == 'oidc') if repository else None
+    if ledger and app.config.get('AUTH_MODE', 'local') != 'oidc':
+        with ledger.transaction() as db:
+            if quotas.managed(db):
+                raise RuntimeError('Managed quota databases require OIDC authentication')
     app.extensions['workflow_ledger'] = ledger
     bp = Blueprint('execution', __name__)
 
@@ -34,11 +47,12 @@ def install_workflow_controls(app):
                     base_url=Config.LLM_BASE_URL)
 
     def cancel_owned(wid, reason, epoch):
+        from ..services.quota_io import remediation
         from ..models.task import TaskManager
         from ..services.simulation_runner import SimulationRunner
         from ..services.task_execution import recovery_context
         tasks = TaskManager()
-        with tasks.runtime.gate(), without_execution_scope(), recovery_context():
+        with tasks.runtime.gate(), without_execution_scope(), recovery_context(), remediation():
             tasks.runtime.cancel_workflow(wid, reason, epoch=epoch)
             for resource in ledger.resources(wid):
                 if resource.startswith('simulation:'):
@@ -75,9 +89,69 @@ def install_workflow_controls(app):
     @bp.route('/configuration')
     def configuration():
         identity = configured_identity()
+        shared, blocker = None, authorization_blocker()
+        if ledger:
+            with ledger.transaction() as db:
+                try:
+                    shared = quotas.snapshot(db, current_workspace(), ledger.clock())
+                    if shared and not shared['admission_open']:
+                        blocker = shared.get('reason') or 'quota_admission_closed'
+                except WorkflowHalt as exc:
+                    shared = dict(managed=True, admission_open=False, reason=exc.reason)
+                    blocker = exc.reason
         return jsonify(success=True, data=dict(provider=identity['provider'], model=identity['model'],
             controls_available=ledger is not None, configured=bool(Config.LLM_API_KEY),
-            embeddings=Config.EMBEDDING_PROVIDER, authorization_blocker=authorization_blocker()))
+            embeddings=Config.EMBEDDING_PROVIDER, authorization_blocker=blocker, quotas=shared))
+
+    @bp.route('/quotas')
+    def own_quotas():
+        if ledger is None:
+            return jsonify(success=False, error='durable_controls_unavailable'), 503
+        with ledger.transaction() as db:
+            return jsonify(success=True, data=quotas.snapshot(db, current_workspace(), ledger.clock()))
+
+    @bp.route('/quotas/<account_id>', methods=['GET', 'PUT'])
+    def administrator_quotas(account_id):
+        user = getattr(g, 'auth_user', None)
+        if not user or user['role'] != 'admin':
+            return jsonify(success=False, error='administrator_required'), 403
+        if ledger is None:
+            return jsonify(success=False, error='durable_controls_unavailable'), 503
+        if account_id != 'global' and account_id not in {a['id'] for a in app.extensions['auth_store'].accounts()}:
+            return jsonify(success=False, error='account_not_found'), 404
+        try:
+            with ledger.transaction() as db:
+                if request.method == 'PUT':
+                    policy = quotas.update_policy(db, account_id, request.get_json(silent=True), user['id'],
+                        ledger.clock(), identity=configured_identity())
+                else:
+                    row = db.execute('SELECT payload FROM quota_policies WHERE scope=?', (account_id,)).fetchone()
+                    import json
+                    policy = json.loads(row[0]) if row else None
+                return jsonify(success=True, data=dict(policy=quotas.public_policy(policy),
+                    provider_identity=policy.get('identity') if policy else None,
+                    usage=quotas.usage(db, account_id, ledger.clock())))
+        except ValueError as exc:
+            return jsonify(success=False, error=str(exc)), 400
+
+    @bp.route('/quotas/reconciliation', methods=['GET', 'POST'])
+    def quota_reconciliation():
+        user = getattr(g, 'auth_user', None)
+        if not user or user['role'] != 'admin':
+            return jsonify(success=False, error='administrator_required'), 403
+        if ledger is None:
+            return jsonify(success=False, error='durable_controls_unavailable'), 503
+        try:
+            with ledger.transaction() as db:
+                if request.method == 'POST':
+                    data = quotas.reconcile(db, request.get_json(silent=True), user['id'], ledger.clock())
+                else:
+                    import json
+                    data = [json.loads(row[0]) for row in db.execute(
+                        'SELECT payload FROM quota_reconciliations ORDER BY at DESC LIMIT 20')]
+                return jsonify(success=True, data=data)
+        except ValueError as exc:
+            return jsonify(success=False, error=str(exc)), 400
 
     @bp.route('/authorize', methods=['POST'])
     def authorize():
@@ -199,6 +273,12 @@ def install_workflow_controls(app):
                 if digest != record.get('input_fingerprint'):
                     return jsonify(success=False, error='authorized_input_mismatch'), 409
             if stage:
+                with ledger.transaction() as db:
+                    if record and quotas.managed(db) and not record.get('administrator_quotas'):
+                        quotas.halt('legacy_workflow_requires_new_authorization')
+                blocker = authorization_blocker()
+                if blocker:
+                    return jsonify(success=False, error=blocker), 400
                 from ..models.case import normalize_prediction_settings
                 if data.get('prediction_settings'):
                     raw = data.get('prediction_settings')
@@ -218,6 +298,19 @@ def install_workflow_controls(app):
                 from ..services.simulation_runner import SimulationRunner
                 state = SimulationRunner.get_run_state(data.get('simulation_id'))
                 return jsonify(success=True, data={**(state.to_dict() if state else {}), 'workflow': stopped})
+            # Charge potentially expensive POST/PUT work, including non-model
+            # operations. Stop and deletion remain available at an exhausted quota.
+            cheap_reads = {'status.get_status', 'graph.get_task_status', 'report.get_report_progress',
+                           'report.get_evidence_proposal', 'simulation.get_run_status',
+                           'simulation.get_prepare_status', 'simulation.get_ensemble_status'}
+            expensive = request.endpoint not in cheap_reads and request.method in {'GET', 'POST', 'PUT', 'PATCH'}
+            if request.endpoint and expensive and not (request.endpoint or '').endswith(('.stop_simulation', '.stop')):
+                from ..models.task import TaskManager
+                with TaskManager().runtime.gate(), ledger.transaction() as db:
+                    identifier = quotas.begin_operation(db, current_workspace(), ledger.clock(), admission=request.method != 'GET')
+                if identifier:
+                    g.quota_operation = identifier
+                    g.quota_operation_token = quotas._OPERATION.set(identifier)
             # Non-generation endpoints may review existing artifacts, even after
             # Stop. Any unexpected model call there is denied by an empty scope.
             g.workflow_token = _SCOPE.set(ExecutionScope(ledger, wid if stage else None,
@@ -250,6 +343,11 @@ def install_workflow_controls(app):
 
     @app.teardown_request
     def unbind_request(exc):
+        identifier = g.pop('quota_operation', None)
+        if identifier:
+            with ledger.transaction() as db:
+                db.execute('UPDATE quota_operations SET active=0 WHERE id=?', (identifier,))
+            quotas._OPERATION.reset(g.pop('quota_operation_token'))
         token = getattr(g, 'workflow_token', None)
         if token is not None:
             _SCOPE.reset(token)

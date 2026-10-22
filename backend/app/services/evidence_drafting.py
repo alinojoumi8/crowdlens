@@ -240,7 +240,8 @@ def resolve_claim_summary(original, identifiers, scope, ledger):
 def summary_review_contract(before, edits):
     spans = before['summary_scope_contract']['editable_spans']
     if not spans:
-        return {'basis':'unmapped_original_summary', 'selected_text':before['summary'], 'claim_ids':[]}
+        return {'basis':'empty_original_summary' if before['summary'] == '' and not edits else 'unmapped_original_summary',
+                'selected_text':before['summary'], 'claim_ids':[]}
     selected = spans[0]['text']
     for edit in sorted(edits, key=lambda edit: edit['start'], reverse=True):
         start = edit['start'] - spans[0]['start']; end = edit['end'] - spans[0]['start']

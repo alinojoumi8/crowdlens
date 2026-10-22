@@ -95,7 +95,8 @@ class EmbeddingCache:
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
             with self._lock:
-                with tmp_path.open("w", encoding="utf-8") as handle:
+                from ..services.quota_io import open as quota_open
+                with quota_open(tmp_path, "w", encoding="utf-8") as handle:
                     json.dump(payload, handle, ensure_ascii=False)
                 os.replace(tmp_path, path)
         except OSError as exc:
@@ -304,6 +305,14 @@ class EmbeddingService:
             raise EmbeddingError(f"Failed to pull Ollama embedding model '{self.model}': {exc}") from exc
 
     def _request_embeddings(self, texts: List[str], task_type: str, *, request_timeout=None, request_max_retries=None) -> List[List[float]]:
+        from ..services.quota_io import ledger_for_workspace
+        if ledger_for_workspace()[0]:
+            from urllib.parse import urlparse
+            from ..services.administrator_quotas import halt
+            if self.provider != 'ollama' or urlparse(self.base_url).hostname not in {'127.0.0.1', 'localhost', '::1', 'host.docker.internal', 'ollama'}:
+                halt('remote_embeddings_unsupported')
+            # A request cannot silently download an unbounded local model.
+            self.ensure_ready(check_only=True)
         self._raise_if_circuit_open()
         if request_timeout is not None or request_max_retries is not None:
             # Proposal calls never pull models or run a separate readiness request.
@@ -360,6 +369,8 @@ class EmbeddingService:
         attempts = self.max_retries if request_max_retries is None else request_max_retries + 1
         for attempt in range(attempts):
             try:
+                from ..services.quota_io import charge_operation
+                charge_operation()
                 response = requests.post(url, json=payload, headers=headers, timeout=self.timeout if request_timeout is None else request_timeout)
                 response.raise_for_status()
                 vectors = self._parse_embedding_response(response.json(), expected_count=len(payload.get("input", payload.get("requests", []))))

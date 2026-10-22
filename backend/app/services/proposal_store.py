@@ -71,10 +71,13 @@ def fsync_directory(path):
 
 
 def atomic_json(path, payload):
+    from .quota_io import charge
+    content = json.dumps(payload, ensure_ascii=False, allow_nan=False)
+    charge(len(content.encode('utf-8')))
     fd, name = tempfile.mkstemp(prefix='.write-', dir=path.parent)
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as stream:
-            json.dump(payload, stream, ensure_ascii=False, allow_nan=False)
+            stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(name, path)

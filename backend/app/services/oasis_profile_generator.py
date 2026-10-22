@@ -8,6 +8,8 @@ Optimization improvements:
 3. Distinguish between individual entities and abstract group entities
 """
 
+from .quota_io import open
+
 import json
 import random
 import time

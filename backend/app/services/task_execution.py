@@ -221,6 +221,12 @@ class TaskRuntime:
                        'metadata': {**payload.get('metadata', {}), 'workspace_id': current_workspace()}}
         with self.gate():
             self.reconcile(raise_on_error=False)
+            if self.repository:
+                from .workflow_execution import WorkflowLedger
+                from . import administrator_quotas as quotas
+                ledger = WorkflowLedger(self.repository.path)
+                with ledger.transaction() as db:
+                    quotas.check(db, current_workspace(), self.clock(), dict(active_work=1))
             for resource in resources:
                 bound = self.binding(resource['key'])
                 prior = self.get(bound['task_id']) if bound else None

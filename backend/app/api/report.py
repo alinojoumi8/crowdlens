@@ -401,6 +401,8 @@ def download_report(report_id: str):
         md_path = ReportManager._get_report_markdown_path(report_id)
         if not os.path.exists(md_path):
             import tempfile
+            from ..services.quota_io import charge
+            charge(len(report.markdown_content.encode('utf-8')))
             with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as f:
                 f.write(report.markdown_content)
                 temp_path = f.name

@@ -77,7 +77,8 @@ class ExtractionCache:
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
             with self._lock:
-                with tmp_path.open("w", encoding="utf-8") as handle:
+                from ..services.quota_io import open as quota_open
+                with quota_open(tmp_path, "w", encoding="utf-8") as handle:
                     json.dump(payload, handle, ensure_ascii=False)
                 os.replace(tmp_path, path)
         except OSError as exc:

@@ -262,6 +262,8 @@ class ReportRevisionService:
             texts = {'full_report.md': revision.markdown_content}
             texts.update({f'section_{i:02}.md': section.to_markdown() for i, section in enumerate(revision.outline.sections, 1)})
             for name, value in texts.items():
+                from .quota_io import charge
+                charge(len(value.encode('utf-8')))
                 with (stage / name).open('w', encoding='utf-8') as stream:
                     stream.write(value); stream.flush(); os.fsync(stream.fileno())
             manifest = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in stage.iterdir()}

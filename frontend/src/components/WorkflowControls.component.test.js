@@ -9,6 +9,48 @@ vi.mock('../api/execution', () => ({
 }))
 let wrapper
 afterEach(() => { wrapper?.unmount(); vi.clearAllMocks(); vi.useRealTimers() })
+it('uses administrator pricing without offering client price controls', async () => {
+  getExecutionConfiguration.mockResolvedValueOnce({data:{provider:'synthetic',model:'synthetic',controls_available:true,configured:true,quotas:{managed:true,admission_open:true}}})
+  authorizeWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_managed',state:'authorized',admitted:0,max_requests:60,in_flight:0}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,inputDescription:'fictional',inputFingerprint:'abc'}})
+  await flushPromises()
+  expect(wrapper.text()).toContain('Shared quotas and pricing are controlled by the administrator')
+  expect(wrapper.find('.spend-toggle').exists()).toBe(false)
+  await wrapper.get('button').trigger('click')
+  await flushPromises()
+  expect(authorizeWorkflow).toHaveBeenCalled()
+  expect(authorizeWorkflow.mock.calls[0][0]).not.toHaveProperty('spend')
+})
+it('explains that a shared limit cannot be reset by renewal', async () => {
+  authorizeWorkflow.mockRejectedValueOnce({response:{data:{error:'quota_daily_requests_limit'}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,inputDescription:'fictional',inputFingerprint:'abc'}})
+  await flushPromises()
+  await wrapper.get('button').trigger('click')
+  await flushPromises()
+  expect(wrapper.get('[role="alert"]').text()).toContain('Starting or renewing a workflow does not reset shared usage')
+})
+it('withdraws parent start permission when a shared quota closes', async () => {
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_paused',state:'authorized',admission_closed:false,
+    admitted:0,max_requests:60,in_flight:0,quotas:{managed:true,admission_open:false,reason:'quota_admission_closed'}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,pendingId:'wf_paused'}})
+  await flushPromises()
+  expect(wrapper.emitted('authorized').at(-1)).toEqual([null])
+  expect(wrapper.text()).toContain('New work is paused by the administrator')
+})
+it.each(['stopped', 'runtime_limit', 'request_limit', 'spend_limit', undefined])('does not grant parent start permission for state %s without an admission flag', async state => {
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_not_startable',state,
+    admitted:0,max_requests:60,in_flight:0,quotas:{managed:true,admission_open:true}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,pendingId:'wf_not_startable'}})
+  await flushPromises()
+  expect(wrapper.emitted('authorized').at(-1)).toEqual([null])
+})
+it('grants parent start permission only for an authorized workflow with open admission', async () => {
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_startable',state:'authorized',admission_closed:false,
+    admitted:0,max_requests:60,in_flight:0,quotas:{managed:true,admission_open:true}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,pendingId:'wf_startable'}})
+  await flushPromises()
+  expect(wrapper.emitted('authorized').at(-1)).toEqual(['wf_startable'])
+})
 it('ignores authorization for an input that changed while the response was delayed', async () => {
   let resolve
   authorizeWorkflow.mockReturnValue(new Promise(done => { resolve = done }))

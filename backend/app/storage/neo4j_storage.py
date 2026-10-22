@@ -57,6 +57,8 @@ class Neo4jStorage(GraphStorage):
         self._driver = GraphDatabase.driver(
             self._uri, auth=(self._user, self._password)
         )
+        from ..services.quota_io import GraphDriver
+        self._driver = GraphDriver(self._driver)
         self._embedding = embedding_service or EmbeddingService()
         self._ner = ner_extractor or NERExtractor()
         self._extraction_cache = (
