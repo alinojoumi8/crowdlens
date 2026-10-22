@@ -272,6 +272,11 @@ def summary_edit_scope(original, section_text, selected_text=None):
     Selection authorizes the edit boundary, never the truth of its contents.
     The replacement still needs ledger support and the normal source audit.
     """
+    if not isinstance(original, str):
+        raise ValueError('invalid_summary')
+    if original == '' and selected_text is None:
+        return {'basis': 'empty_original_summary', 'editable_spans': [],
+                'unmapped_summary_requires_review': False}
     spans = []
     if selected_text is not None:
         if not isinstance(selected_text, str) or not 0 < len(selected_text) <= 2000 or not selected_text.strip():

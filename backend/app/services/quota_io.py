@@ -1,5 +1,6 @@
 """Bound managed artifact writes before publication; local operator I/O is unchanged."""
 import builtins
+import codecs
 from contextlib import contextmanager
 from contextvars import ContextVar
 import io
@@ -86,25 +87,35 @@ class _Writer:
         self.errors = kwargs.get('errors') or (args[2] if len(args) > 2 else None) or 'strict'
         self.newline = kwargs.get('newline', args[3] if len(args) > 3 else None)
         self.buffer = io.BytesIO() if 'b' in mode else io.StringIO()
+        self._buffered_bytes = 0
+        self._encoder = None if 'b' in mode else codecs.getincrementalencoder(self.encoding)(self.errors)
         self.available = available
         self.closed = False
 
     def write(self, value):
         # Check before buffering, and recheck atomically before publication.
-        encoded = self._encode(value)
-        if len(encoded) + self.size() > self.available:
-            quotas.halt('storage_write_bytes_limit')
-        return self.buffer.write(value)
+        state = self._encoder.getstate() if self._encoder else None
+        try:
+            encoded = self._encode(value)
+            if len(encoded) + self.size() > self.available:
+                quotas.halt('storage_write_bytes_limit')
+            result = self.buffer.write(value)
+        except BaseException:
+            if self._encoder:
+                self._encoder.setstate(state)
+            raise
+        self._buffered_bytes += len(encoded)
+        return result
 
     def size(self):
-        return len(self._encode(self.buffer.getvalue()))
+        return self._buffered_bytes
 
     def _encode(self, value):
         if isinstance(value, (bytes, bytearray, memoryview)):
             return bytes(value)
         if self.newline not in (None, '', '\n'):
             value = value.replace('\n', self.newline)
-        return value.encode(self.encoding, errors=self.errors)
+        return self._encoder.encode(value)
 
     def writelines(self, values):
         for value in values:
@@ -113,11 +124,15 @@ class _Writer:
     def flush(self):
         if self.closed:
             raise ValueError('I/O operation on closed file')
+        # Text encodings can emit a prefix even when publishing an empty string.
+        self.write(b'' if 'b' in self.mode else '')
         value = self.buffer.getvalue()
         charge(self.size())
         with _ORIGINAL_OPEN(self.name, self.mode, *self.args, **self.kwargs) as stream:
             stream.write(value)
         self.buffer = io.BytesIO() if 'b' in self.mode else io.StringIO()
+        self._buffered_bytes = 0
+        self._encoder = None if 'b' in self.mode else codecs.getincrementalencoder(self.encoding)(self.errors)
         # Subsequent explicit flushes append; a failed quota check never truncates
         # the existing file. Normal artifact writers publish once on context exit.
         self.mode = 'ab' if 'b' in self.mode else 'a'

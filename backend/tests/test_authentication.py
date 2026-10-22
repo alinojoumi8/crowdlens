@@ -53,7 +53,10 @@ def test_invite_single_use_email_binding_and_tester_boundary(app):
         store.admit({'iss':'http://localhost:9999','sub':'bad','email':'wrong@example.test','email_verified':True},invite)
     tester=app.test_client(); account,_=login(app,tester,'tester@example.test','tester',invite)
     assert account['role']=='tester'
-    assert tester.get('/auth/account').status_code==200
+    page=tester.get('/auth/account')
+    assert page.status_code==200
+    assert b'remaining pilot readiness checks' in page.data
+    assert b'usage limits are still being implemented' not in page.data
     assert tester.get('/api/private').status_code==403
     assert tester.get('/api/report/private/download').status_code==403
     assert tester.post('/auth/invitations').status_code==403

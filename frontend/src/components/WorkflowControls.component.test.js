@@ -37,6 +37,20 @@ it('withdraws parent start permission when a shared quota closes', async () => {
   expect(wrapper.emitted('authorized').at(-1)).toEqual([null])
   expect(wrapper.text()).toContain('New work is paused by the administrator')
 })
+it.each(['stopped', 'runtime_limit', 'request_limit', 'spend_limit', undefined])('does not grant parent start permission for state %s without an admission flag', async state => {
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_not_startable',state,
+    admitted:0,max_requests:60,in_flight:0,quotas:{managed:true,admission_open:true}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,pendingId:'wf_not_startable'}})
+  await flushPromises()
+  expect(wrapper.emitted('authorized').at(-1)).toEqual([null])
+})
+it('grants parent start permission only for an authorized workflow with open admission', async () => {
+  getWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_startable',state:'authorized',admission_closed:false,
+    admitted:0,max_requests:60,in_flight:0,quotas:{managed:true,admission_open:true}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,pendingId:'wf_startable'}})
+  await flushPromises()
+  expect(wrapper.emitted('authorized').at(-1)).toEqual(['wf_startable'])
+})
 it('ignores authorization for an input that changed while the response was delayed', async () => {
   let resolve
   authorizeWorkflow.mockReturnValue(new Promise(done => { resolve = done }))

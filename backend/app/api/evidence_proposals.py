@@ -168,7 +168,7 @@ def create_evidence_proposal(report_id):
                                   llm_factory, embedder_factory, tasks), name='evidence-proposal')
         handed_off = True
         return jsonify(success=True, data=record), 202
-    except Exception:
+    except BaseException:
         try:
             store.update(record['proposal_id'], {'queued'}, {'state': 'failed', 'error_code': 'admission_failed'})
         except ProposalError:
@@ -224,7 +224,7 @@ def retry_evidence_audit(report_id, proposal_id):
             current_app.extensions.get('evidence_embedder_factory', default_embedder), tasks), name='evidence-proposal')
         handed_off = True
         return jsonify(success=True, data=record), 202
-    except Exception:
+    except BaseException:
         try:
             store.update(record['proposal_id'], {'queued'}, {'state': 'failed', 'error_code': 'admission_failed'})
         except ProposalError:
@@ -264,7 +264,7 @@ def continue_evidence_proposal(report_id, proposal_id):
             current_app.extensions.get('evidence_embedder_factory', default_embedder), tasks), name='evidence-proposal')
         handed_off = True
         return jsonify(success=True, data=record), 202
-    except Exception:
+    except BaseException:
         try:
             store.update(proposal_id, {'queued'}, {'state': 'failed', 'error_code': 'admission_failed'})
         except ProposalError:

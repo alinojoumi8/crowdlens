@@ -106,7 +106,7 @@ const applyStatus = data => {
   }
   status.value = data
   if (props.authorize) {
-    const available = !data.admission_closed && (!data.quotas?.managed || data.quotas.admission_open)
+    const available = data.state === 'authorized' && !data.admission_closed && (!data.quotas?.managed || data.quotas.admission_open)
     emit('authorized', available ? workflowId.value : null)
   }
 }

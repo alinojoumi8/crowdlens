@@ -81,6 +81,78 @@ def failed_audit(app):
     return client, identifier, record, calls
 
 
+@pytest.mark.parametrize('action', ['create', 'continue', 'retry-audit'])
+@pytest.mark.parametrize('halt_kind', ['quota', 'workspace'])
+def test_admission_halts_do_not_strand_queued_proposals(app, monkeypatch, action, halt_kind):
+    from app.models.task import TaskManager
+    from app.services.workflow_execution import WorkflowHalt
+    from app.services.workspace import WorkspaceDenied
+    store = app.extensions['evidence_proposal_store']
+    client = app.test_client()
+    url, body = URL, {'section_index': 1, 'request_key': 'halted-create'}
+    if action == 'continue':
+        from test_staged_source_review import large_storage, StagedLLM
+        app.extensions.update(neo4j_storage=large_storage(), evidence_llm_factory=lambda identifier: StagedLLM(store, identifier))
+        created = client.post(URL, json={'section_index': 1, 'request_key': 'staged-halt'})
+        identifier = created.json['data']['proposal_id']
+        record = terminal(client, identifier)
+        join_workers()
+        assert record['state'] == 'review_pending'
+        url, body = URL + '/' + identifier + '/continue', {'proposal_digest': record['proposal_digest']}
+    elif action == 'retry-audit':
+        client, identifier, record, _ = failed_audit(app)
+        url = URL + '/' + identifier + '/retry-audit'
+        body = {'request_key': 'halted-retry', 'recovery_digest': record['audit_recovery']['digest']}
+    failure = WorkflowHalt('quota_active_work_limit') if halt_kind == 'quota' else WorkspaceDenied()
+    def denied(*args, **kwargs):
+        raise failure
+    monkeypatch.setattr(TaskManager, 'create_task', denied)
+    with pytest.raises(type(failure)):
+        client.post(url, json=body)
+    records = list(store.records())
+    assert not any(row['state'] == 'queued' for row in records)
+    assert any(row.get('error_code') == 'admission_failed' for row in records)
+
+
+def test_empty_summary_can_review_section_without_creating_summary_text(app):
+    parent = ReportManager.get_report('report_root')
+    parent.outline.summary = ''
+    ReportManager.save_report(parent)
+    store = app.extensions['evidence_proposal_store']
+    class SectionOnly(FakeLLM):
+        def chat_json(self, messages, **kwargs):
+            value = super().chat_json(messages, **kwargs)
+            phase = messages[0]['content'].splitlines()[0]
+            if phase == 'EVIDENCE_DRAFT_V1':
+                value['summary_edits'] = []
+            elif phase == 'EVIDENCE_AUDIT_V1':
+                value['summary_reviews'] = []
+            return value
+    app.extensions['evidence_llm_factory'] = lambda identifier: SectionOnly(store, identifier)
+    client = app.test_client()
+    response = client.post(URL, json={'section_index': 1, 'request_key': 'empty-summary'})
+    assert response.status_code == 202
+    record = terminal(client, response.json['data']['proposal_id'])
+    join_workers()
+    assert record['state'] == 'ready', record.get('findings')
+    assert record['after']['summary'] == ''
+    assert record['summary_edits'] == []
+    accepted = client.post(URL + '/' + record['proposal_id'] + '/accept', json={'proposal_digest': record['proposal_digest']})
+    assert accepted.status_code == 200
+    assert accepted.json['data']['outline']['summary'] == ''
+    assert ReportManager.get_report('report_root').outline.summary == ''
+
+
+def test_non_text_summary_is_invalid_before_scheduling(app):
+    parent = ReportManager.get_report('report_root')
+    parent.outline.summary = None
+    ReportManager.save_report(parent)
+    app.extensions['evidence_llm_factory'] = lambda _: pytest.fail('invalid summary reached model')
+    response = app.test_client().post(URL, json={'section_index': 1, 'request_key': 'invalid-summary'})
+    assert response.status_code == 400
+    assert response.json['error'] == 'invalid_summary'
+
+
 def test_timeout_reopens_and_retries_only_saved_audit_explicitly(app):
     client, identifier, failed, calls = failed_audit(app)
     assert failed['state'] == 'failed' and failed['error_code'] == 'audit_timeout'

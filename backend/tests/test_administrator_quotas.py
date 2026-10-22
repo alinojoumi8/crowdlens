@@ -49,6 +49,13 @@ def quota_app(tmp_path, monkeypatch):
     app.add_url_rule('/api/report/generate', 'report.generate_report', generate, methods=['POST'])
     app.add_url_rule('/api/start-task', 'start_task',
         lambda: {'task_id': TaskManager().create_task('synthetic')}, methods=['POST'])
+    for path, endpoint, methods in [
+        ('/api/poll/proposal', 'report.get_evidence_proposal', ['GET']),
+        ('/api/poll/run', 'simulation.get_run_status', ['GET']),
+        ('/api/poll/prepare', 'simulation.get_prepare_status', ['POST']),
+        ('/api/poll/ensemble', 'simulation.get_ensemble_status', ['POST']),
+    ]:
+        app.add_url_rule(path, endpoint, lambda: {'success': True}, methods=methods)
     install_workflow_controls(app)
     client = app.test_client()
     user, csrf = login(app, client)
@@ -311,6 +318,83 @@ def test_non_model_operations_are_shared_and_exhaustion_is_actionable(quota_app)
     assert 'administrator' in r.json['next_action']
     with ledger.transaction() as db:
         assert quotas.usage(db, user['id'], time.time())['active_work'] == 0
+
+
+def test_progress_polling_does_not_consume_or_require_operation_capacity(quota_app):
+    app, client, user, headers = quota_app
+    ledger = configure(app, client, user, headers, individual=policy(operations=0, active_work=0))
+    from app.api import report_bp, simulation_bp
+    actual = Flask('registered-poll-routes')
+    actual.register_blueprint(report_bp)
+    actual.register_blueprint(simulation_bp)
+    for path, endpoint, method in [
+        ('/api/poll/proposal', 'report.get_evidence_proposal', 'GET'),
+        ('/api/poll/run', 'simulation.get_run_status', 'GET'),
+        ('/api/poll/prepare', 'simulation.get_prepare_status', 'POST'),
+        ('/api/poll/ensemble', 'simulation.get_ensemble_status', 'POST'),
+    ]:
+        assert endpoint in actual.view_functions
+        for _ in range(3):
+            assert client.open(path, method=method, json={} if method == 'POST' else None, headers=headers).status_code == 200
+    assert client.get('/api/work').status_code == 429
+    with ledger.transaction() as db:
+        assert quotas.usage(db, 'global', time.time())['operations'] == 0
+
+
+def test_many_small_storage_writes_encode_only_incremental_input(quota_app, tmp_path, monkeypatch):
+    from app.services import quota_io
+    app, client, user, headers = quota_app
+    ledger = configure(app, client, user, headers)
+    encoded_characters = 0
+    original = quota_io._Writer._encode
+    def track(self, value):
+        nonlocal encoded_characters
+        encoded_characters += len(value)
+        return original(self, value)
+    monkeypatch.setattr(quota_io._Writer, '_encode', track)
+    target = tmp_path / 'many-chunks.txt'
+    with w.workspace_scope(user['id']), quota_io.open(target, 'w', encoding='utf-8') as stream:
+        for _ in range(1000):
+            stream.write('é\n')
+        stream.flush()
+        stream.write('end')
+    assert target.read_text() == 'é\n' * 1000 + 'end'
+    assert encoded_characters <= 2 * len(target.read_text())
+    with ledger.transaction() as db:
+        assert quotas.usage(db, 'global', time.time())['storage_write_bytes'] == target.stat().st_size
+
+
+@pytest.mark.parametrize('encoding', ['utf-16', 'iso2022_jp'])
+def test_incremental_storage_encoding_counts_final_bytes_and_recovers_rejected_write(quota_app, tmp_path, encoding):
+    from app.services.quota_io import open as quota_open
+    app, client, user, headers = quota_app
+    reference = tmp_path / 'reference.txt'
+    with open(reference, 'w', encoding=encoding) as stream:
+        stream.write('あ')
+        stream.write('い')
+    expected = reference.read_bytes()
+    ledger = configure(app, client, user, headers, individual=policy(storage_write_bytes=len(expected)))
+    target = tmp_path / 'encoded.txt'
+    with w.workspace_scope(user['id']), quota_open(target, 'w', encoding=encoding) as stream:
+        stream.write('あ')
+        with pytest.raises(WorkflowHalt, match='quota_storage_write_bytes_limit'):
+            stream.write('う' * 50)
+        stream.write('い')
+    assert target.read_bytes() == expected
+    with ledger.transaction() as db:
+        assert quotas.usage(db, 'global', time.time())['storage_write_bytes'] == len(expected)
+
+
+def test_empty_text_publication_cannot_skip_encoding_prefix_quota(quota_app, tmp_path):
+    from app.services.quota_io import open as quota_open
+    app, client, user, headers = quota_app
+    configure(app, client, user, headers, individual=policy(storage_write_bytes=1))
+    target = tmp_path / 'empty-utf16.txt'
+    with w.workspace_scope(user['id']):
+        with pytest.raises(WorkflowHalt, match='quota_storage_write_bytes_limit'):
+            with quota_open(target, 'w', encoding='utf-16'):
+                pass
+    assert not target.exists()
 
 
 def test_utc_operation_reset_retains_lifetime_usage(quota_app):

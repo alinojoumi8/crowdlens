@@ -301,8 +301,9 @@ def install_workflow_controls(app):
             # Charge potentially expensive POST/PUT work, including non-model
             # operations. Stop and deletion remain available at an exhausted quota.
             cheap_reads = {'status.get_status', 'graph.get_task_status', 'report.get_report_progress',
-                           'simulation.get_simulation_status'}
-            expensive = request.method in {'POST', 'PUT', 'PATCH'} or (request.method == 'GET' and request.endpoint not in cheap_reads)
+                           'report.get_evidence_proposal', 'simulation.get_run_status',
+                           'simulation.get_prepare_status', 'simulation.get_ensemble_status'}
+            expensive = request.endpoint not in cheap_reads and request.method in {'GET', 'POST', 'PUT', 'PATCH'}
             if request.endpoint and expensive and not (request.endpoint or '').endswith(('.stop_simulation', '.stop')):
                 from ..models.task import TaskManager
                 with TaskManager().runtime.gate(), ledger.transaction() as db:
