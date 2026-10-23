@@ -17,7 +17,14 @@ function escapeHtml(value) {
 export function renderSafeMarkdown(content) {
   if (!content) return ''
   if (typeof content !== 'string') {
-    content = content.response || content.answer || JSON.stringify(content, null, 2)
+    content = typeof content.response === 'string' ? content.response
+      : typeof content.answer === 'string' ? content.answer : JSON.stringify(content, null, 2)
+  }
+
+  // Bound repeated Markdown substitutions on hostile or unusually large output.
+  // This affects display only; retained source/report text is unchanged.
+  if (content.length > 200000) {
+    content = content.slice(0, 200000) + '\n\n[Display limited to 200,000 characters. Download the report for the full text.]'
   }
 
   let html = escapeHtml(content).replace(/^##\s+.+\n+/, '')
@@ -29,11 +36,11 @@ export function renderSafeMarkdown(content) {
   html = html.replace(/^# (.+)$/gm, '<h2 class="md-h2">$1</h2>')
   html = html.replace(/^&gt; (.+)$/gm, '<blockquote class="md-quote">$1</blockquote>')
 
-  html = html.replace(/^(\s*)- (.+)$/gm, (match, indent, text) => {
+  html = html.replace(/^([ \t]*)- (.+)$/gm, (match, indent, text) => {
     const level = Math.floor(indent.length / 2)
     return `<li class="md-li" data-level="${level}">${text}</li>`
   })
-  html = html.replace(/^(\s*)(\d+)\. (.+)$/gm, (match, indent, number, text) => {
+  html = html.replace(/^([ \t]*)(\d+)\. (.+)$/gm, (match, indent, number, text) => {
     const level = Math.floor(indent.length / 2)
     return `<li class="md-oli" data-level="${level}">${text}</li>`
   })

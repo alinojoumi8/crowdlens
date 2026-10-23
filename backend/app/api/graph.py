@@ -8,6 +8,7 @@ import traceback
 import threading
 import time
 from flask import request, jsonify, current_app
+from werkzeug.exceptions import HTTPException
 
 from . import graph_bp
 from ..config import Config
@@ -18,6 +19,7 @@ from ..services.embedding_benchmark import DEFAULT_QUERIES, run_embedding_benchm
 from ..services.text_processor import TextProcessor
 from ..storage.extraction_cache import ExtractionCache
 from ..utils.file_parser import FileParser
+from ..utils.ingestion_limits import MAX_SOURCES, MAX_BATCH_TEXT_CHARS
 from ..utils.url_fetcher import fetch_url, parse_urls
 from ..utils.logger import get_logger
 from ..utils.timing import PhaseTimer
@@ -48,6 +50,21 @@ def allowed_file(filename: str) -> bool:
         return False
     ext = os.path.splitext(filename)[1].lower().lstrip('.')
     return ext in Config.ALLOWED_EXTENSIONS
+
+
+def _validate_source_batch(files, source_urls=()):
+    files = [f for f in files if f and f.filename]
+    if len(files) + len(source_urls) > MAX_SOURCES:
+        raise ValueError(f'At most {MAX_SOURCES} sources may be ingested in one batch.')
+    if any(len(f.filename) > 255 or any(ord(c) < 32 for c in f.filename) for f in files):
+        raise ValueError('Source filenames must be at most 255 characters without control characters.')
+    if any(not allowed_file(f.filename) for f in files):
+        raise ValueError('Every source must be PDF, TXT or Markdown; unsupported files are not silently skipped.')
+
+
+def _check_batch_text(text):
+    if len(text) > MAX_BATCH_TEXT_CHARS:
+        raise ValueError('Source batch exceeds the extracted-text limit; split it and retry.')
 
 
 # ============== Project Management Interface ==============
@@ -198,6 +215,7 @@ def add_documents_to_case(case_id: str):
     This endpoint records the version and extracted text. The existing
     ontology/generate endpoint remains the full analyze-and-build entry point.
     """
+    project = None
     try:
         case = CaseManager.get_case(case_id)
         if not case:
@@ -207,6 +225,7 @@ def add_documents_to_case(case_id: str):
         if not uploaded_files or all(not f.filename for f in uploaded_files):
             return jsonify({"success": False, "error": "Please upload at least one document file"}), 400
 
+        _validate_source_batch(uploaded_files)
         project = ProjectManager.create_project(name=request.form.get("project_name", case.name))
         project.case_id = case_id
         project.simulation_requirement = request.form.get("simulation_requirement") or case.simulation_requirement
@@ -226,6 +245,7 @@ def add_documents_to_case(case_id: str):
                 "document_type": classify_document_type(file_info["original_filename"], text).value,
             })
             all_text += f"\n\n=== {file_info['original_filename']} ===\n{text}"
+            _check_batch_text(all_text)
 
         if not document_texts:
             ProjectManager.delete_project(project.project_id)
@@ -274,6 +294,12 @@ def add_documents_to_case(case_id: str):
                 "project": project.to_dict(),
             },
         })
+    except HTTPException:
+        raise
+    except ValueError as e:
+        if project and not project.case_version_id:
+            ProjectManager.delete_project(project.project_id)
+        return jsonify(success=False, error=str(e)), 400
     except Exception as e:
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
 
@@ -339,6 +365,7 @@ def generate_ontology():
             }
         }
     """
+    project = None
     try:
         logger.info("=== Starting ontology generation ===")
         timing = PhaseTimer("ontology_generation")
@@ -373,6 +400,8 @@ def generate_ontology():
                 "error": "Please upload at least one document file or provide a website URL"
             }), 400
 
+        _validate_source_batch(uploaded_files, source_urls)
+
         # Create or load case
         case = CaseManager.get_case(case_id) if case_id else None
         if case_id and not case:
@@ -380,12 +409,7 @@ def generate_ontology():
                 "success": False,
                 "error": f"Case does not exist: {case_id}"
             }), 404
-        if not case:
-            case = CaseManager.create_case(
-                name=project_name,
-                simulation_requirement=simulation_requirement,
-            )
-        case_id = case.case_id
+        case_id = case.case_id if case else None
 
         # Create project
         project = ProjectManager.create_project(name=project_name)
@@ -421,19 +445,18 @@ def generate_ontology():
                         "document_type": document_type,
                     })
                     all_text += f"\n\n=== {file_info['original_filename']} ===\n{text}"
+                    _check_batch_text(all_text)
 
             # Fetch and extract text from website URLs (treated as documents)
             for url in source_urls:
                 try:
                     fetched = fetch_url(url)
                 except Exception as exc:
-                    logger.warning(f"Failed to fetch URL {url}: {exc}")
-                    url_errors.append({"url": url, "error": str(exc)})
-                    continue
+                    logger.warning('URL source rejected: %s', type(exc).__name__)
+                    raise ValueError('A URL source was rejected; no partial source batch was accepted. ' + str(exc)) from None
                 text = TextProcessor.preprocess_text(fetched["text"])
                 if not text.strip():
-                    url_errors.append({"url": url, "error": "No readable text extracted"})
-                    continue
+                    raise ValueError('URL source has no readable text; no partial batch was accepted.')
                 display_name = f"{fetched['title']} ({fetched['url']})"
                 document_type = classify_document_type(fetched["title"], text).value
                 ontology_texts.append(text)
@@ -446,6 +469,7 @@ def generate_ontology():
                     "source_url": fetched["url"],
                 })
                 all_text += f"\n\n=== {display_name} ===\n{text}"
+                _check_batch_text(all_text)
         phase_profile["pdf_extraction_seconds"] = timing.snapshot()["phase_totals"].get("document_extraction", 0.0)
         phase_profile["url_count"] = len(source_urls)
         phase_profile["url_errors"] = url_errors
@@ -459,6 +483,11 @@ def generate_ontology():
                 "success": False,
                 "error": "No documents successfully processed. Please check file format or URL." + detail
             }), 400
+
+        if not case:
+            case = CaseManager.create_case(name=project_name, simulation_requirement=simulation_requirement)
+            case_id = case.case_id
+            project.case_id = case_id
 
         with timing.time("case_version", label="Create case version", metadata={"document_count": len(document_payloads)}):
             version = CaseManager.create_version(
@@ -559,6 +588,12 @@ def generate_ontology():
             }
         })
         
+    except HTTPException:
+        raise
+    except ValueError as e:
+        if project and not project.case_version_id:
+            ProjectManager.delete_project(project.project_id)
+        return jsonify(success=False, error=str(e)), 400
     except Exception as e:
         return jsonify({
             "success": False,

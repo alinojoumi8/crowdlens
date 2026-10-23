@@ -3,65 +3,12 @@ File Parser Utility
 Supports text extraction from PDF, Markdown, TXT files
 """
 
-import os
-import shutil
-import subprocess
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 from .logger import get_logger
 
 logger = get_logger("mirofish.file_parser")
-
-
-def _read_text_with_fallback(file_path: str) -> str:
-    """
-    Read text file with automatic encoding detection if UTF-8 fails.
-
-    Uses multi-level fallback strategy:
-    1. First try UTF-8 decoding
-    2. Use charset_normalizer for encoding detection
-    3. Fall back to chardet for encoding detection
-    4. Finally use UTF-8 + errors='replace' as fallback
-
-    Args:
-        file_path: File path
-
-    Returns:
-        Decoded text content
-    """
-    data = Path(file_path).read_bytes()
-    
-    # First try UTF-8
-    try:
-        return data.decode('utf-8')
-    except UnicodeDecodeError:
-        pass
-
-    # Try charset_normalizer for encoding detection
-    encoding = None
-    try:
-        from charset_normalizer import from_bytes
-        best = from_bytes(data).best()
-        if best and best.encoding:
-            encoding = best.encoding
-    except Exception:
-        pass
-
-    # Fall back to chardet
-    if not encoding:
-        try:
-            import chardet
-            result = chardet.detect(data)
-            encoding = result.get('encoding') if result else None
-        except Exception:
-            pass
-
-    # Final fallback: use UTF-8 + replace
-    if not encoding:
-        encoding = 'utf-8'
-
-    return data.decode(encoding, errors='replace')
 
 
 class FileParser:
@@ -80,63 +27,13 @@ class FileParser:
         Returns:
             Extracted text content
         """
+        from .ingestion import run_ingestion
         path = Path(file_path)
-
         if not path.exists():
-            raise FileNotFoundError(f"File does not exist: {file_path}")
-
-        suffix = path.suffix.lower()
-
-        if suffix not in cls.SUPPORTED_EXTENSIONS:
-            raise ValueError(f"Unsupported file format: {suffix}")
-
-        if suffix == '.pdf':
-            return cls._extract_from_pdf(file_path)
-        elif suffix in {'.md', '.markdown'}:
-            return cls._extract_from_md(file_path)
-        elif suffix == '.txt':
-            return cls._extract_from_txt(file_path)
-
-        raise ValueError(f"Cannot handle file format: {suffix}")
-
-    @staticmethod
-    def _extract_from_pdf(file_path: str) -> str:
-        """Extract text from PDF"""
-        try:
-            import fitz  # PyMuPDF
-        except ImportError:
-            raise ImportError("PyMuPDF required: pip install PyMuPDF")
-
-        text_parts = []
-        with fitz.open(file_path) as doc:
-            for number, page in enumerate(doc, 1):
-                text = page.get_text()
-                if len(text.strip()) < 20 and page.get_images():
-                    executable = shutil.which('tesseract')
-                    if not executable:
-                        raise ValueError(f'PDF page {number} requires local OCR. Install Tesseract before retrying; scanned pages cannot be silently skipped.')
-                    result = subprocess.run(
-                        [executable, 'stdin', 'stdout', '-l', 'eng', '--psm', '3'],
-                        input=page.get_pixmap(dpi=180).tobytes('png'),
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60, check=False,
-                    )
-                    if result.returncode:
-                        raise ValueError(f'Local OCR failed for PDF page {number}; retry after checking Tesseract.')
-                    text = result.stdout.decode('utf-8', errors='replace')
-                if text.strip():
-                    text_parts.append(f'[PDF page {number}]\n{text}')
-
-        return "\n\n".join(text_parts)
-
-    @staticmethod
-    def _extract_from_md(file_path: str) -> str:
-        """Extract text from Markdown with automatic encoding detection"""
-        return _read_text_with_fallback(file_path)
-
-    @staticmethod
-    def _extract_from_txt(file_path: str) -> str:
-        """Extract text from TXT with automatic encoding detection"""
-        return _read_text_with_fallback(file_path)
+            raise FileNotFoundError('Source file does not exist.')
+        if path.suffix.lower() not in cls.SUPPORTED_EXTENSIONS:
+            raise ValueError('Unsupported file format.')
+        return run_ingestion('file', str(path.resolve()) if not path.is_symlink() else str(path))
 
     @classmethod
     def extract_from_multiple(cls, file_paths: List[str]) -> str:

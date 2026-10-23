@@ -1,9 +1,9 @@
 """Fetch and extract readable text from a web URL.
 
 Lets users seed a simulation from a website link alongside uploaded PDF/MD/TXT
-files. Uses only `requests` plus the stdlib HTML parser (no extra dependencies)
-and applies an SSRF guard so a user-supplied URL cannot be used to reach internal
-services (Neo4j, Ollama, cloud metadata endpoints, etc.).
+files. Uses pinned standard-library HTTP connections inside a bounded worker.
+Every redirect is validated before connecting; internal services and translated
+address forms are refused.
 """
 
 from __future__ import annotations
@@ -12,10 +12,12 @@ import ipaddress
 import re
 import socket
 from html.parser import HTMLParser
-from typing import Dict, List, Optional
+from typing import Dict, List
 from urllib.parse import urljoin, urlparse
 
-import requests
+import http.client
+import ssl
+import time
 
 # Conservative caps for a user-initiated fetch.
 MAX_BYTES = 5 * 1024 * 1024  # 5 MB
@@ -80,140 +82,180 @@ def parse_urls(raw) -> List[str]:
     """Split a free-form string (or list) of URLs into a clean, de-duplicated list."""
     items: List[str] = []
     if isinstance(raw, (list, tuple)):
-        candidates = raw
+        if any(not isinstance(item, str) for item in raw):
+            raise ValueError('Source URLs must be strings.')
+        candidates = [part for item in raw for part in re.split(r'[\s,]+', item)]
     elif isinstance(raw, str):
         candidates = re.split(r"[\s,]+", raw)
     else:
         return []
     seen = set()
     for candidate in candidates:
-        url = (candidate or "").strip()
+        if not isinstance(candidate, str):
+            raise ValueError('Source URLs must be strings.')
+        url = candidate.strip()
         if not url:
             continue
+        if re.match(r'^[a-z][a-z0-9+.-]*:', url, re.IGNORECASE) and not re.match(r'^https?://', url, re.IGNORECASE):
+            raise ValueError('Only HTTP/HTTPS source URLs are supported.')
         if not re.match(r"^https?://", url, re.IGNORECASE):
             url = "https://" + url
+        _validated_url(url)
         if url not in seen:
             seen.add(url)
             items.append(url)
     return items
 
 
-def _assert_public_host(host: str) -> None:
-    """Raise ValueError if the host resolves to a private/loopback/link-local address
-    (SSRF guard)."""
-    if not host:
-        raise ValueError("URL has no host")
+def _assert_public_host(host: str):
+    """Resolve once; every address must be globally routable before connecting."""
+    if not host or '%' in host:
+        raise ValueError('URL has no valid public host.')
     try:
-        infos = socket.getaddrinfo(host, None)
-    except socket.gaierror as exc:
-        raise ValueError(f"Could not resolve host: {host}") from exc
+        infos = socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
+    except (socket.gaierror, UnicodeError):
+        raise ValueError('Could not resolve URL host.') from None
+    addresses = []
     for info in infos:
         ip = ipaddress.ip_address(info[4][0])
-        if (
-            ip.is_private or ip.is_loopback or ip.is_link_local
-            or ip.is_reserved or ip.is_multicast or ip.is_unspecified
-        ):
-            raise ValueError(f"Refusing to fetch internal/private address for host: {host}")
+        translated = isinstance(ip, ipaddress.IPv6Address) and any(ip in ipaddress.ip_network(n)
+            for n in ('64:ff9b::/96', '64:ff9b:1::/48', '2002::/16', '2001::/32'))
+        if not ip.is_global or ip.is_multicast or translated or getattr(ip, 'ipv4_mapped', None):
+            raise ValueError('Refusing to fetch internal/private or translated address.')
+        addresses.append(str(ip))
+    if not addresses:
+        raise ValueError('URL host has no public addresses.')
+    return tuple(dict.fromkeys(addresses))
+
+
+def _validated_url(url):
+    if not isinstance(url, str) or len(url) > 4096 or any(ord(c) <= 32 or ord(c) == 127 for c in url) or '\\' in url:
+        raise ValueError('Invalid source URL.')
+    try:
+        parsed = urlparse(url)
+        if (parsed.scheme not in {'http', 'https'} or not parsed.hostname or
+                parsed.username is not None or parsed.password is not None or
+                parsed.port not in {None, 80 if parsed.scheme == 'http' else 443}):
+            raise ValueError('Only public HTTP/HTTPS URLs on their standard ports are supported.')
+        host = parsed.hostname.encode('idna').decode('ascii')
+    except (UnicodeError, ValueError):
+        raise ValueError('Only public HTTP/HTTPS URLs without credentials on standard ports are supported.') from None
+    return parsed, host
+
+
+def _open_connection(parsed, host, address):
+    """Pin the socket to the validated IP; retain hostname verification and SNI.
+
+    No proxy environment, cookie jar, netrc authentication or second hostname DNS
+    lookup participates in this connection.
+    """
+    port = 443 if parsed.scheme == 'https' else 80
+    if parsed.scheme == 'https':
+        import certifi
+        conn = http.client.HTTPSConnection(host, port, timeout=REQUEST_TIMEOUT,
+                                          context=ssl.create_default_context(cafile=certifi.where()))
+    else:
+        conn = http.client.HTTPConnection(host, port, timeout=REQUEST_TIMEOUT)
+    conn._create_connection = lambda ignored, timeout, source_address=None: socket.create_connection(
+        (address, port), timeout, source_address)
+    try:
+        conn.connect()
+        if ipaddress.ip_address(conn.sock.getpeername()[0]) != ipaddress.ip_address(address):
+            raise ValueError('Source connection address did not match the validated address.')
+        return conn
+    except BaseException:
+        conn.close()
+        raise
 
 
 def _domain_name(url: str) -> str:
-    netloc = urlparse(url).netloc
-    return netloc or url
+    return urlparse(url).netloc
 
 
 def fetch_url(url: str) -> Dict[str, str]:
-    """Fetch a URL and return ``{url, title, text}``.
+    from .ingestion import run_ingestion
+    _validated_url(url)
+    return run_ingestion('url', url)
 
-    Supports HTML (stripped to text), plain text / markdown, and PDF (via PyMuPDF).
-    Raises ValueError on invalid/blocked URLs or empty content.
-    """
+
+def _fetch_url(url: str) -> Dict[str, str]:
     current_url = url
-    response = None
+    deadline = time.monotonic() + REQUEST_TIMEOUT
     for redirect_count in range(MAX_REDIRECTS + 1):
-        parsed = urlparse(current_url)
-        if parsed.scheme.lower() not in {"http", "https"}:
-            raise ValueError(f"Only http/https URLs are supported: {current_url}")
-        _assert_public_host(parsed.hostname or "")
-
-        response = requests.get(
-            current_url,
-            timeout=REQUEST_TIMEOUT,
-            headers={"User-Agent": USER_AGENT, "Accept": "text/html,text/plain,application/pdf,*/*"},
-            stream=True,
-            allow_redirects=False,
-        )
-        if response.status_code not in {301, 302, 303, 307, 308}:
-            break
-
-        location = response.headers.get("Location")
-        response.close()
-        if not location:
-            raise ValueError(f"Redirect response has no Location header: {current_url}")
-        if redirect_count >= MAX_REDIRECTS:
-            raise ValueError(f"Too many redirects while fetching URL: {url}")
-
-        next_url = urljoin(current_url, location)
-        next_parsed = urlparse(next_url)
-        if next_parsed.scheme.lower() not in {"http", "https"}:
-            raise ValueError(f"Only http/https redirects are supported: {next_url}")
-        # Validate before issuing the next request. This is the security boundary
-        # that automatic requests redirects bypassed.
-        _assert_public_host(next_parsed.hostname or "")
-        current_url = next_url
-
-    if response is None:  # pragma: no cover - loop always executes at least once
-        raise ValueError(f"Unable to fetch URL: {url}")
-    response.raise_for_status()
-
-    effective_url = response.url or current_url
-    final_host = urlparse(effective_url).hostname or ""
-    _assert_public_host(final_host)
-
-    content_type = (response.headers.get("Content-Type") or "").lower()
-
-    # Read at most MAX_BYTES.
-    chunks: List[bytes] = []
-    total = 0
-    for chunk in response.iter_content(chunk_size=65536):
-        if not chunk:
-            continue
-        chunks.append(chunk)
-        total += len(chunk)
-        if total >= MAX_BYTES:
-            break
-    raw = b"".join(chunks)[:MAX_BYTES]
-
-    title = ""
-    if "application/pdf" in content_type or effective_url.lower().endswith(".pdf"):
-        text = _extract_pdf_bytes(raw)
-    elif "html" in content_type or raw[:512].lstrip().lower().startswith((b"<!doctype html", b"<html")):
-        extractor = _HTMLTextExtractor()
+        parsed, host = _validated_url(current_url)
+        addresses = _assert_public_host(host)
+        conn = _open_connection(parsed, host, addresses[0])
+        response = None
         try:
-            extractor.feed(raw.decode("utf-8", errors="replace"))
-        except Exception:
-            pass
-        text = extractor.get_text()
-        title = (extractor.title or "").strip()
+            path = parsed.path or '/'
+            if parsed.query:
+                path += '?' + parsed.query
+            conn.request('GET', path, headers={'User-Agent': USER_AGENT,
+                'Accept': 'text/html,text/plain,text/markdown,application/pdf', 'Accept-Encoding': 'identity'})
+            response = conn.getresponse()
+            if response.status in {301, 302, 303, 307, 308}:
+                location = response.getheader('Location')
+                if not location or redirect_count >= MAX_REDIRECTS:
+                    raise ValueError('Missing redirect destination or too many redirects.')
+                current_url = urljoin(current_url, location)
+                continue
+            if response.status != 200:
+                raise ValueError('Source server did not return a successful document.')
+            if response.getheader('Content-Encoding', 'identity').lower() not in {'', 'identity'}:
+                raise ValueError('Compressed source responses are not supported.')
+            length = response.getheader('Content-Length')
+            if length is not None and (not length.isdecimal() or int(length) > MAX_BYTES):
+                raise ValueError('Source response exceeds its byte limit or has invalid length.')
+            chunks, total = [], 0
+            while True:
+                if time.monotonic() > deadline:
+                    raise ValueError('Source response exceeded its time limit.')
+                chunk = response.read(min(65536, MAX_BYTES + 1 - total))
+                if not chunk:
+                    break
+                total += len(chunk)
+                if total > MAX_BYTES:
+                    raise ValueError('Source response exceeds its byte limit; partial sources are not accepted.')
+                chunks.append(chunk)
+            raw = b''.join(chunks)
+            if length is not None and total != int(length):
+                raise ValueError('Source response was incomplete; partial sources are not accepted.')
+            content_type_header = response.getheader('Content-Type') or ''
+            content_type = content_type_header.split(';')[0].strip().lower()
+            charset = re.search(r'charset\s*=\s*["\']?([\w.-]+)', content_type_header, re.I)
+            charset = charset.group(1) if charset else None
+        finally:
+            if response is not None:
+                response.close()
+            conn.close()
+        if content_type == 'application/pdf':
+            text, title = _extract_pdf_bytes(raw), ''
+        elif content_type in {'text/html', 'application/xhtml+xml'}:
+            extractor = _HTMLTextExtractor()
+            if __package__:
+                from .ingestion_worker import text_bytes
+            else:
+                from ingestion_worker import text_bytes
+            extractor.feed(text_bytes(raw, charset))
+            text, title = extractor.get_text(), extractor.title.strip()
+        elif content_type in {'text/plain', 'text/markdown'}:
+            # Loaded standalone only inside the constrained worker.
+            if __package__:
+                from .ingestion_worker import text_bytes
+            else:
+                from ingestion_worker import text_bytes
+            text, title = text_bytes(raw, charset), ''
+        else:
+            raise ValueError('Unsupported source content type; use PDF, HTML or plain text.')
+        if not text or len(text.strip()) < 20 or len(text) > 4_000_000:
+            raise ValueError('Source has no readable text or exceeds its character limit.')
+        return {'url': current_url, 'title': (title or _domain_name(current_url))[:200], 'text': text}
+    raise ValueError('Too many source redirects.')
+
+
+def _extract_pdf_bytes(data):
+    if __package__:
+        from .ingestion_worker import extract_pdf_bytes
     else:
-        text = raw.decode("utf-8", errors="replace").strip()
-
-    if not text or len(text.strip()) < 20:
-        raise ValueError(f"No readable text extracted from URL: {effective_url}")
-
-    if not title:
-        title = _domain_name(effective_url)
-    return {"url": effective_url, "title": title[:200], "text": text}
-
-
-def _extract_pdf_bytes(data: bytes) -> str:
-    try:
-        import fitz  # PyMuPDF
-    except ImportError as exc:  # pragma: no cover
-        raise ValueError("PDF URL ingestion requires PyMuPDF") from exc
-    parts: List[str] = []
-    with fitz.open(stream=data, filetype="pdf") as doc:
-        for page in doc:
-            page_text = page.get_text()
-            if page_text.strip():
-                parts.append(page_text)
-    return "\n\n".join(parts)
+        from ingestion_worker import extract_pdf_bytes
+    return extract_pdf_bytes(data)

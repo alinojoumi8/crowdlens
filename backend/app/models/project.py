@@ -342,12 +342,27 @@ class ProjectManager:
         safe_filename = f"{uuid.uuid4().hex[:8]}{ext}"
         file_path = os.path.join(files_dir, safe_filename)
 
-        # Save file
-        with open(file_path, 'wb') as target:
-            file_storage.save(target)
-
-        # Get file size
-        file_size = os.path.getsize(file_path)
+        from ..utils.ingestion_limits import MAX_FILE_BYTES
+        if ext not in {'.pdf', '.txt', '.md', '.markdown'}:
+            raise ValueError('Unsupported source file type.')
+        file_size = 0
+        try:
+            with open(file_path, 'xb') as target:
+                while True:
+                    chunk = file_storage.stream.read(65536)
+                    if not chunk:
+                        break
+                    file_size += len(chunk)
+                    if file_size > MAX_FILE_BYTES:
+                        raise ValueError('Source file exceeds the 50 MiB limit.')
+                    target.write(chunk)
+            if not file_size:
+                raise ValueError('Source file is empty.')
+            os.chmod(file_path, 0o600)
+        except BaseException:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            raise
 
         return {
             "original_filename": original_filename,

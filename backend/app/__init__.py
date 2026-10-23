@@ -29,6 +29,9 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    from .utils.response_security import install_response_security
+    install_response_security(app)
+
     from .authentication import install_authentication
     install_authentication(app)
 
@@ -51,7 +54,8 @@ def create_app(config_class=Config):
         logger.info("=" * 50)
 
     # Enable CORS
-    CORS(app, resources={r"/api/*": {"origins": app.config.get('CORS_ORIGINS', [])}})
+    if app.config.get('AUTH_MODE', 'local') == 'local':
+        CORS(app, resources={r"/api/*": {"origins": app.config.get('CORS_ORIGINS', [])}})
 
     initialize_control_plane(app, logger, log_startup=should_log_startup)
 
