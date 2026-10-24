@@ -1,0 +1,39 @@
+{
+    admin off
+    persist_config off
+    skip_install_trust
+    auto_https disable_redirects
+    renew_interval 5m
+    servers {
+        protocols h1 h2
+        strict_sni_host on
+    }
+}
+
+http://crowdlens-stage.localhost:{$CROWDLENS_STAGE_HTTP_PORT} {
+    redir https://crowdlens-stage.localhost:{$CROWDLENS_STAGE_HTTPS_PORT}{uri} 308
+}
+
+http://:{$CROWDLENS_STAGE_HTTP_PORT} {
+    respond 404
+}
+
+https://crowdlens-stage.localhost:{$CROWDLENS_STAGE_HTTPS_PORT} {
+    tls {
+        issuer internal {
+            lifetime 12h
+        }
+    }
+    @foreignOrigin {
+        header Origin *
+        not header Origin https://crowdlens-stage.localhost:{$CROWDLENS_STAGE_HTTPS_PORT}
+    }
+    respond @foreignOrigin "Origin not allowed" 403
+    @privatePaths path /health /.env /.git /.git/* /metrics /debug /debug/*
+    respond @privatePaths 404
+    header {
+        Strict-Transport-Security "max-age=86400"
+        -Server
+    }
+    reverse_proxy app:3000
+}

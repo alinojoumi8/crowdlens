@@ -1,0 +1,83 @@
+services:
+  app:
+    image: ${CROWDLENS_STAGE_APP_IMAGE:?Initialize a release first}
+    pull_policy: never
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=268435456,mode=1777"]
+    environment:
+      SECRET_KEY: ${CROWDLENS_STAGE_SECRET:?Initialize a release first}
+      AUTH_MODE: local
+      CROWDLENS_BIND: 0.0.0.0:3000
+      FLASK_DEBUG: "False"
+      CORS_ORIGINS: https://crowdlens-stage.localhost:${CROWDLENS_STAGE_HTTPS_PORT}
+      LLM_API_KEY: fictional-offline-only
+      LLM_BASE_URL: http://127.0.0.1:9/v1
+      OPENAI_API_BASE_URL: http://127.0.0.1:9/v1
+      NEO4J_URI: bolt://127.0.0.1:9
+      NEO4J_PASSWORD: fictional-offline-only
+      EMBEDDING_BASE_URL: http://127.0.0.1:9
+      EMBEDDING_AUTO_PULL: "False"
+      STARTUP_STATUS_CHECK: "False"
+      MARKET_DATA_PROVIDER: none
+    volumes:
+      - app_data:/app/backend/uploads
+      - app_logs:/app/backend/logs
+    networks: [application]
+    restart: unless-stopped
+    stop_grace_period: 60s
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/health', timeout=3)"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+      start_period: 20s
+    logging: &logging
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  proxy:
+    image: ${CROWDLENS_STAGE_PROXY_IMAGE:?Initialize a release first}
+    pull_policy: never
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    environment:
+      CROWDLENS_STAGE_HTTPS_PORT: ${CROWDLENS_STAGE_HTTPS_PORT}
+      CROWDLENS_STAGE_HTTP_PORT: ${CROWDLENS_STAGE_HTTP_PORT}
+    ports:
+      - "127.0.0.1:${CROWDLENS_STAGE_HTTPS_PORT}:${CROWDLENS_STAGE_HTTPS_PORT}"
+      - "127.0.0.1:${CROWDLENS_STAGE_HTTP_PORT}:${CROWDLENS_STAGE_HTTP_PORT}"
+    volumes:
+      - type: bind
+        source: ./Caddyfile
+        target: /etc/caddy/Caddyfile
+        read_only: true
+        bind: {create_host_path: false}
+      - proxy_data:/data
+      - proxy_config:/config
+    networks: [ingress, application]
+    restart: unless-stopped
+    depends_on:
+      app: {condition: service_healthy}
+    logging: *logging
+
+networks:
+  ingress:
+  application:
+    internal: true
+
+volumes:
+  app_data:
+  app_logs:
+  proxy_data:
+  proxy_config:
