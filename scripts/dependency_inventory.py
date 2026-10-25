@@ -20,6 +20,7 @@ ENDPOINT_KEYS = {
     'OLLAMA_API_URL', 'EMBEDDING_BASE_URL', 'EMBEDDING_API_URL',
     'OPENAI_API_BASE_URL', 'OPENAI_BASE_URL', 'LLM_BASE_URL', 'GRAPHITI_BRIDGE_URL',
 }
+CONFIG_ENDPOINT_KEYS = {key.lower() for key in ENDPOINT_KEYS} | {'api_url', 'uri', 'url', 'base_url'}
 SENSITIVE = re.compile(r'password|secret|token|key', re.I)
 ASSIGNMENT = re.compile(r'^\s*(?:export\s+)?[\"\']?([\w.-]+)[\"\']?\s*[:=]\s*(.*)')
 URL = re.compile(r'(?:https?|bolt|neo4j)(?:\+s|\+ssc)?://[^\s\"\'{}<>]+')
@@ -63,7 +64,7 @@ def configuration_hints(path):
     hints = []
     for number, line in enumerate(content.decode().splitlines(), 1):
         match = ASSIGNMENT.match(line)
-        if not match or SENSITIVE.search(match[1]):
+        if not match or match[1].lower() not in CONFIG_ENDPOINT_KEYS or SENSITIVE.search(match[1]):
             continue
         for value in URL.findall(match[2]):
             safe = endpoint(value)
@@ -80,7 +81,8 @@ def container_record(obj):
         'compose_project': labels.get('com.docker.compose.project'),
         'endpoints': environment_endpoints(obj['Config'].get('Env') or []),
         'networks': sorted(obj['NetworkSettings']['Networks']),
-        'published_ports': obj['HostConfig'].get('PortBindings') or {},
+        'published_ports': obj['NetworkSettings'].get('Ports') or {},
+        'requested_port_bindings': obj['HostConfig'].get('PortBindings') or {},
         'volumes': [{'name': m.get('Name'), 'destination': m['Destination'], 'type': m['Type']}
                     for m in obj.get('Mounts', [])],
     }

@@ -46,11 +46,14 @@ def test_configuration_hints_do_not_include_secret_fields_comments_or_paths(tmp_
     path.write_text('# NEO4J_URI=bolt://private:private@localhost:7687\n'
                     'NEO4J_URI="bolt://user:private@localhost:7687/private?token=private"\n'
                     'api_key: http://localhost:11434/private\n'
+                    'PROMPT: "Example: http://private-host:11434/private"\n'
+                    'description: http://private-host:11434/private\n'
                     'api_url: http://localhost:11434/private\n')
     result = inventory.configuration_hints(path)
     assert [r['key'] for r in result['hints']] == ['NEO4J_URI', 'api_url']
     assert all(set(r['endpoint']) == {'scheme', 'host', 'port'} for r in result['hints'])
     assert result['evidence'] == 'configuration_only'
+    assert 'private-host' not in json.dumps(result)
 
 
 def test_large_configuration_is_refused(tmp_path):
@@ -87,6 +90,23 @@ def test_container_record_does_not_dump_environment_labels_or_bind_sources():
     result = inventory.container_record(obj)
     assert not result['running'] and result['compose_project'] == 'fixture'
     assert 'never-print' not in json.dumps(result)
+
+
+def test_container_inventory_distinguishes_assigned_ports_from_requested_bindings():
+    requested = {'7687/tcp': [{'HostIp': '127.0.0.1', 'HostPort': ''}]}
+    active = {'7687/tcp': [{'HostIp': '127.0.0.1', 'HostPort': '32987'}]}
+    obj = {'Name': '/fictional', 'State': {'Running': True}, 'Image': 'sha256:fictional',
+           'Config': {'Image': 'fictional:old'},
+           'NetworkSettings': {'Networks': {'fixture_default': {}}, 'Ports': active},
+           'HostConfig': {'PortBindings': requested}}
+    result = inventory.container_record(obj)
+    assert result['published_ports'] == active
+    assert result['requested_port_bindings'] == requested
+    obj['State']['Running'] = False
+    obj['NetworkSettings']['Ports'] = {}
+    stopped = inventory.container_record(obj)
+    assert stopped['published_ports'] == {}
+    assert stopped['requested_port_bindings'] == requested
 
 
 def test_process_environment_is_only_an_endpoint_hint(tmp_path):
