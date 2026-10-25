@@ -1,0 +1,43 @@
+# Host-compatible B11 preparation. Apply only after the consumer/change review.
+# Require Engine >= 28.0.0 and Compose >= 2.24.4; run the inventory preflight first.
+# !override replaces, rather than appends, ports (including unsafe base mappings).
+services:
+  mirofish:
+    # This host migration must not rebuild or upgrade the running application.
+    build: !reset null
+    image: sha256:6b28dd78e5fe4b1b21a2879d612f519f8229a84c31f9ea56315504fb0f6bfe7e
+    pull_policy: never
+    ports: !override
+      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:5001:5001"
+    networks: !override
+      default: {}
+      dependencies: {}
+
+  neo4j:
+    # Preserve the observed image/data version; this is not a database upgrade.
+    image: neo4j:5.18-community@sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e
+    pull_policy: never
+    ports: !override
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    networks: !override
+      dependencies: {}
+
+  ollama:
+    # The observed running version is 0.24.0; do not silently adopt the base tag.
+    image: ollama/ollama@sha256:a6149234667efc71d37766d61c1a16f24c33e4cd7a0bf4125c44a7e47e2419c4
+    pull_policy: never
+    ports: !override
+      - "127.0.0.1:11434:11434"
+    networks: !override
+      dependencies: {}
+
+networks:
+  dependencies:
+    driver: bridge
+    # Host consumers require published loopback ports. This is ingress privacy,
+    # not an egress-denial sandbox or isolation from the Docker administrator.
+    internal: false
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
