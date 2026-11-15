@@ -18,8 +18,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from ..config import Config
-from .workflow_execution import workflow_stage
-from .task_execution import fenced
+from .workflow_execution import WorkflowHalt, workflow_stage
+from .task_execution import OwnershipLost, fenced
 from contextvars import copy_context
 from ..utils.llm_client import LLMClient
 from ..utils.logger import get_logger
@@ -574,6 +574,9 @@ class OasisProfileGenerator:
 
                     last_error = je
 
+            except OwnershipLost:
+                # The run was stopped or hit its limit; retrying or a fallback persona is wrong.
+                raise
             except Exception as e:
                 logger.warning(f"LLM call failed (attempt {attempt+1}): {str(e)[:80]}")
                 last_error = e
@@ -1099,6 +1102,8 @@ Important:
 
                 return idx, profile, None
 
+            except OwnershipLost:
+                raise
             except Exception as e:
                 logger.error(f"Failed to generate persona for entity {entity.name}: {str(e)}")
                 forecast_profile = self._apply_forecast_profile_fields(
@@ -1133,8 +1138,11 @@ Important:
         print(f"Starting agent persona generation - {total} entities total, parallel count: {parallel_count}")
         print(f"{'='*60}\n")
         
-        # Use thread pool for parallel execution
-        with concurrent.futures.ThreadPoolExecutor(max_workers=parallel_count) as executor:
+        # Use thread pool for parallel execution. It is shut down explicitly:
+        # a halted run must not wait for model calls that are still running.
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=parallel_count)
+        halted = False
+        try:
             # Submit all tasks
             future_to_entity = {
                 executor.submit(copy_context().run, generate_single_profile, idx, entity): (idx, entity)
@@ -1169,6 +1177,8 @@ Important:
                     else:
                         logger.info(f"[{current}/{total}] Successfully generated persona: {entity.name} ({entity_type})")
 
+                except OwnershipLost:
+                    raise
                 except Exception as e:
                     logger.error(f"Exception occurred while processing entity {entity.name}: {str(e)}")
                     with lock:
@@ -1199,6 +1209,12 @@ Important:
                     )
                     # Real-time file writing (even for fallback personas)
                     save_profiles_realtime()
+        except (OwnershipLost, WorkflowHalt):
+            # Do not start the queued personas of a halted run.
+            halted = True
+            raise
+        finally:
+            executor.shutdown(wait=not halted, cancel_futures=halted)
 
         print(f"\n{'='*60}")
         print(f"Persona generation complete! Generated {len([p for p in profiles if p])} agents")

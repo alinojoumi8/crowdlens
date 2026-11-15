@@ -80,7 +80,7 @@
             <div class="forecast-control-grid">
               <label class="forecast-field">
                 <span class="forecast-label">Mode</span>
-                <select v-model="forecastMode" :disabled="forecastControlsLocked">
+                <select v-model="forecastMode" :disabled="forecastControlsLocked" @change="followForecastMode">
                   <option value="auto">Auto infer</option>
                   <option value="legal_case">Legal case</option>
                   <option value="market_economy">Market/economy</option>
@@ -155,9 +155,9 @@
               <label class="forecast-field">
                 <span class="forecast-label">Preset</span>
                 <select v-model="predictionPreset" :disabled="forecastControlsLocked">
-                  <option value="quick_legal_read">Quick legal read</option>
-                  <option value="standard_litigation_prediction">Standard litigation</option>
-                  <option value="deep_adversarial_run">Deep adversarial</option>
+                  <option value="quick_legal_read">Quick</option>
+                  <option value="standard_litigation_prediction">Standard</option>
+                  <option value="deep_adversarial_run">Deep</option>
                 </select>
               </label>
               <label class="forecast-field">
@@ -955,6 +955,14 @@ const minutesPerRoundSetting = ref(60)
 const activeAgentsPerRound = ref(16)
 const scenarioPack = ref('baseline_adverse_favorable')
 const reportMode = ref('legal_case')
+// Report type that matches each forecast mode. Auto infer keeps the current choice.
+const REPORT_MODE_BY_FORECAST = { general: 'prediction', legal_case: 'legal_case', market_economy: 'market_prediction' }
+// Preset defaults store these legal aliases; the Report menu cannot show them.
+const LEGACY_LEGAL_REPORT_MODES = new Set(['litigation_case', 'motion_only', 'settlement_risk', 'evidence_gap'])
+const followForecastMode = () => {
+  const report = REPORT_MODE_BY_FORECAST[forecastMode.value]
+  if (report) reportMode.value = report
+}
 const simulationPlatform = ref('parallel')
 const simulationSeed = ref(42)
 const activationMode = ref('stochastic')
@@ -1201,6 +1209,9 @@ const restoreSettings = config => {
     scenario_pack:scenarioPack,memory_mode:memoryMode,report_depth:reportDepth,
     report_mode:reportMode,platform:simulationPlatform,seed:simulationSeed,activation_mode:activationMode}
   for (const [key, field] of Object.entries(fields)) if (saved[key] !== undefined) field.value = saved[key]
+  if (LEGACY_LEGAL_REPORT_MODES.has(reportMode.value)) {
+    reportMode.value = REPORT_MODE_BY_FORECAST[config.forecast_mode || forecastMode.value] || 'legal_case'
+  }
 }
 watch(simulationConfig, restoreSettings)
 
@@ -1236,6 +1247,24 @@ const totalTopicsCount = computed(() => {
 // Methods
 const addLog = (msg) => {
   emit('add-log', msg)
+}
+
+const ALLOWANCE_STOPS = {
+  runtime_limit: 'the workflow time allowance ran out',
+  request_limit: 'the workflow model-call allowance ran out',
+}
+const preparationFailure = (error) => {
+  const stop = ALLOWANCE_STOPS[error]
+  return stop
+    ? `${stop} (${error}). Renew the allowance in the workflow panel, then prepare again.`
+    : (error || 'Unknown error')
+}
+// After an allowance stop, show Prepare again (the same state a page reload gives).
+const reopenAfterAllowanceStop = (error) => {
+  if (!ALLOWANCE_STOPS[error]) return
+  taskId.value = null
+  phase.value = 0
+  awaitingConfig.value = true
 }
 
 // ProcessStart simulationButton click
@@ -1339,11 +1368,13 @@ const startPrepareSimulation = async () => {
       // Start real-time fetching Profiles
       startProfilesPolling()
     } else {
-      addLog(`Preparation failed: ${res.error || 'Unknown error'}`)
+      addLog(`Preparation failed: ${preparationFailure(res.error)}`)
+      reopenAfterAllowanceStop(res.error)
       emit('update-status', 'error')
     }
   } catch (err) {
-    addLog(`Preparation exception: ${err.message}`)
+    addLog(`Preparation exception: ${preparationFailure(err.message)}`)
+    reopenAfterAllowanceStop(err.message)
     emit('update-status', 'error')
   }
 }
@@ -1372,12 +1403,15 @@ const stopProfilesPolling = () => {
 
 const pollPrepareStatus = async () => {
   if (!taskId.value && !props.simulationId) return
+  const polledTask = taskId.value
 
   try {
     const res = await getPrepareStatus({
       task_id: taskId.value,
       simulation_id: props.simulationId
     })
+    // A late answer about an older task must not change a newer preparation.
+    if (taskId.value !== polledTask) return
 
     if (res.success && res.data) {
       const data = res.data
@@ -1429,9 +1463,10 @@ const pollPrepareStatus = async () => {
         stopProfilesPolling()
         await loadPreparedData()
       } else if (data.status === 'failed') {
-        addLog(`✗ Preparation failed: ${data.error || 'Unknown error'}`)
+        addLog(`✗ Preparation failed: ${preparationFailure(data.error)}`)
         stopPolling()
         stopProfilesPolling()
+        reopenAfterAllowanceStop(data.error)
       }
     }
   } catch (err) {
