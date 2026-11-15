@@ -48,7 +48,8 @@ export function renderSafeMarkdown(content) {
   html = html.replace(/(<li class="md-oli"[^>]*>.*?<\/li>\s*)+/g, '<ol class="md-ol">$&</ol>')
   html = html.replace(/<\/li>\s+<li/g, '</li><li')
   html = html.replace(/<(ul|ol) class="(md-ul|md-ol)">\s+/g, '<$1 class="$2">')
-  html = html.replace(/\s+<\/(ul|ol)>/g, '</$1>')
+  // Check each whitespace run once when trimming before a closing list tag.
+  html = html.replace(/(?<!\s)\s+<\/(ul|ol)>/g, '</$1>')
 
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
