@@ -7,6 +7,7 @@ from .claim_ledger import canonical_digest
 from .source_retrieval import freeze_sources
 from .source_scope import resolve_source_scope
 from .simulation_activity import read_activity, unique_actions, summarize_activity
+from .legal_authorities import admitted_sources
 
 CONTRACT = 'report-grounding-v1'
 
@@ -85,7 +86,7 @@ def provenance_issues(content, grounding, forecast):
     if grounding.get('report_contract') != CONTRACT:
         return []
     issues = []
-    sources = grounding.get('original_sources') or []
+    sources = admitted_sources(grounding)
     known_documents = {row.get('document_id') for row in sources}
     for identifier in set(re.findall(r'\[(doc_[A-Za-z0-9_-]+)(?=[,\]])', content)):
         if identifier not in known_documents:
@@ -93,21 +94,28 @@ def provenance_issues(content, grounding, forecast):
                 'message': 'Document citation is not an admitted original document ID.', 'document_id': identifier})
     actions = (grounding.get('simulation_activity') or {}).get('actions') or []
     normalize = lambda value: re.sub(r'\s+', ' ', value).strip()
+    paragraph_cursor = 0
     for paragraph in re.split(r'\n\s*\n', content):
-        quotations = re.findall(r'["“]([^"”\n]+)["”]', paragraph)
-        quotations += [re.sub(r'\[[^\]]+\]', '', line.lstrip('> ')).strip() for line in paragraph.splitlines()
-                       if line.startswith('> ') and len(line) > 2 and not re.search(r'["“]', line)]
-        for quote in quotations:
+        paragraph_start = content.find(paragraph, paragraph_cursor)
+        paragraph_cursor = paragraph_start + len(paragraph)
+        document_citations = set(re.findall(r'\[(doc_[A-Za-z0-9_-]+)(?=[,\]])', paragraph))
+        quotations = [(match.group(1), match) for match in re.finditer(r'["“]([^"”\n]+)["”]', paragraph)]
+        quotations += [(re.sub(r'\[[^\]]+\]', '', match.group().lstrip('> ')).strip(), match)
+                       for match in re.finditer(r'^ {0,3}>.+$', paragraph, re.M)
+                       if not re.search(r'["“]', match.group())]
+        for quote, match in quotations:
             text = normalize(quote)
             original = any(text in normalize(row.get('excerpt', ''))
-                           and f"[{row.get('document_id', '')}]" in paragraph for row in sources)
+                           and row.get('document_id') in document_citations for row in sources)
             trace = any(row.get('origin') == 'model_action'
                         and text in normalize((row.get('action_args') or {}).get('content', ''))
                         and f"[{row.get('reference', '')}]" in paragraph for row in actions)
             if not original and not trace:
                 issues.append({'code': 'unverified_quotation', 'blocking': True,
                     'message': 'Quotation is not an exact referenced original-source span or recorded model response.',
-                    'quote': quote[:300]})
+                    'quote': quote[:300], 'draft_span': match.group(),
+                    'draft_start': paragraph_start + match.start(),
+                    'draft_end': paragraph_start + match.end()})
     if forecast.get('reason') == 'evidence_only':
         for table in re.findall(r'(?:^\|.*\n?)+', content, re.M):
             if (re.search(r'probabilit|likelihood|chance of|confidence', table.splitlines()[0], re.I)
@@ -120,8 +128,9 @@ def provenance_issues(content, grounding, forecast):
     from .forecasting import forecast_to_markdown
     body = content.replace(forecast_to_markdown(forecast), '', 1)
     for paragraph in re.split(r'\n\s*\n', body):
+        document_citations = set(re.findall(r'\[(doc_[A-Za-z0-9_-]+)(?=[,\]])', paragraph))
         for number in re.findall(r'(\d+(?:\.\d+)?)\s*%', paragraph):
-            sourced = any(f"[{row.get('document_id', '')}]" in paragraph
+            sourced = any(row.get('document_id') in document_citations
                 and any(float(value) == float(number) for value in re.findall(r'(\d+(?:\.\d+)?)\s*%', row.get('excerpt', '')))
                 for row in sources)
             if not sourced:

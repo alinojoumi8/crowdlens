@@ -5,6 +5,7 @@ Supports Ollama num_ctx parameter to prevent prompt truncation
 """
 
 from .model_limits import anthropic_output_settings
+from .llm_text import clean_model_text
 
 import json
 import os
@@ -113,7 +114,7 @@ class LLMClient:
             for item in data.get("content", [])
             if item.get("type") == "text" and item.get("text")
         ]
-        content = "\n".join(text_parts).strip()
+        content = clean_model_text("\n".join(text_parts))
         if not content:
             # Keep diagnostics structural: never expose private prompts or thinking.
             block_types = sorted({str(item.get("type", "unknown")) for item in data.get("content", [])})
@@ -247,9 +248,9 @@ class LLMClient:
         if usage_callback:
             usage = response.usage.model_dump() if getattr(response, 'usage', None) else {}
             usage_callback('openai_compatible', response.model or self.model, usage, (time.monotonic() - started) * 1000)
-        content = response.choices[0].message.content
-        # Some models (like MiniMax M2.5) include <think>thinking content in response, need to remove
-        content = re.sub(r'<think>[\s\S]*?</think>', '', content).strip()
+        content = clean_model_text(response.choices[0].message.content)
+        if not content:
+            raise EmptyLLMResponseError('LLM returned no usable answer text.')
         return content
 
     def chat_json(

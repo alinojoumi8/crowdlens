@@ -76,7 +76,8 @@ export const resumeReport = (reportId, data = {}) => {
  * @param {Object} data - { simulation_id, message, chat_history? }
  */
 export const chatWithReport = (data) => {
-  return service.post('/api/report/chat', data)
+  // Bounded tool use and source verification can outlast the default request timeout.
+  return service.post('/api/report/chat', data, { timeout: 900000 })
 }
 
 // Explicit retries preserve the creation key and the displayed proposal digest.

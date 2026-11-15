@@ -66,7 +66,7 @@ def capture_logger(name):
     return target_logger, handler, previous_level
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview", "MiniMax-M3.1-Flash"])
 def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model_name):
     captured = {}
 
@@ -97,7 +97,7 @@ def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model
     )
 
     assert result == "OK"
-    if model_name == "MiniMax-M3.1-Flash-Preview":
+    if model_name.startswith("MiniMax-M3.1-Flash"):
         assert captured["json"]["max_tokens"] == 32768
         assert captured["json"]["output_config"] == {"effort":"high"}
     assert captured["url"] == "https://api.minimax.io/anthropic/v1/messages"
@@ -108,6 +108,29 @@ def test_anthropic_transport_posts_messages_and_extracts_text(monkeypatch, model
     assert captured["json"]["messages"] == [
         {"role": "user", "content": "Reply with exactly OK."}
     ]
+
+
+@pytest.mark.parametrize('text,expected', [
+    (']<]minimax[>[The original records are needed.[e~[', 'The original records are needed.'),
+    ('<mm:think>PRIVATE reasoning</mm:think>Answer.', 'Answer.'),
+])
+def test_anthropic_text_does_not_expose_model_control_tokens(monkeypatch, text, expected):
+    class Answer(FakeResponse):
+        def json(self):
+            return {'content': [{'type': 'text', 'text': text}]}
+    monkeypatch.setattr(requests, 'post', lambda *a, **kw: Answer())
+    client = LLMClient(api_key='test-key', base_url='https://api.minimax.io/anthropic', model='MiniMax-M3.1-Flash')
+    assert client.chat([{'role': 'user', 'content': 'Synthetic question'}]) == expected
+
+
+def test_control_token_only_response_is_not_a_successful_answer(monkeypatch):
+    class Answer(FakeResponse):
+        def json(self):
+            return {'content': [{'type': 'text', 'text': ']<]minimax[>['}]}
+    monkeypatch.setattr(requests, 'post', lambda *a, **kw: Answer())
+    client = LLMClient(api_key='test-key', base_url='https://api.minimax.io/anthropic', model='MiniMax-M3.1-Flash')
+    with pytest.raises(ValueError, match='no text content'):
+        client.chat([{'role': 'user', 'content': 'Synthetic question'}])
 
 
 def test_anthropic_transport_retries_temporary_dns_failures(monkeypatch):

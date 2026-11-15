@@ -18,7 +18,7 @@ logger = logging.getLogger('mirofish.extraction_cache')
 class ExtractionCache:
     """Disk-backed cache keyed by file, chunk, and ontology hashes."""
 
-    VERSION = "ner-extraction-v1"
+    VERSION = "ner-extraction-v2-source-names"
 
     def __init__(self, cache_dir: Optional[str | os.PathLike[str]] = None):
         self.cache_dir = Path(cache_dir or Config.GRAPH_EXTRACTION_CACHE_DIR)

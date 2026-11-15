@@ -1,5 +1,6 @@
 """Regression examples for graph quotations and conflicting probability prose."""
 from copy import deepcopy
+import pytest
 
 from app.services.report_agent import Report, ReportAgent, ReportManager, ReportStatus
 
@@ -232,6 +233,15 @@ def test_grounding_correction_uses_findings_and_frozen_authority_once():
     assert agent._forecast_authority == report_with('').forecast
 
 
+def test_original_quotation_accepts_a_document_citation_with_a_locator():
+    from app.services.report_grounding import provenance_issues
+    grounding = {'report_contract': 'report-grounding-v1', 'status': 'available',
+        'original_sources': [{'document_id': 'doc_1', 'excerpt': SOURCE}]}
+    issues = provenance_issues(f'Original: "{SOURCE}" [doc_1, para. 4].', grounding,
+        {'status': 'unavailable', 'reason': 'evidence_only'})
+    assert not any(issue['blocking'] for issue in issues)
+
+
 def test_failed_correction_stays_blocked_and_preserves_both_attempts():
     import pytest
     text = 'Original: "Invented quotation." [doc_1]'
@@ -265,3 +275,29 @@ def test_correction_response_after_stop_cannot_be_adopted(monkeypatch):
     with pytest.raises(OwnershipLost, match='controlled stop'):
         agent._repair_grounded_text('Original: "Invented." [doc_1]', 'Facts', 1)
     assert agent.report_logger.log.call_count == 1
+
+
+@pytest.mark.parametrize('quote_line', ['>Invented statement here.', '   > Invented statement here.'])
+def test_block_quotation_forms_without_a_space_are_checked(quote_line):
+    from app.services.report_grounding import provenance_issues
+    from app.services.report_grounding import CONTRACT
+    grounding = {'report_contract': CONTRACT, 'status': 'available',
+                 'original_sources': [{'document_id': 'doc_1', 'excerpt': SOURCE}]}
+    issues = provenance_issues(f'Summary line [doc_1].\n{quote_line}', grounding, {'status': 'unavailable'})
+    assert 'unverified_quotation' in [issue['code'] for issue in issues]
+
+
+def test_fidelity_review_runs_when_only_legal_authorities_are_supplied(monkeypatch):
+    from types import SimpleNamespace
+    from app.services import source_fidelity
+    agent = ReportAgent.__new__(ReportAgent)
+    agent.report_mode, agent.report_logger = 'legal_case', None
+    agent._load_source_grounding = lambda: {'status': 'available', 'original_sources': [],
+        'authority_sources': [{'document_id': 'doc_authority', 'excerpt': 'The applicant bears the burden.'}]}
+    agent._frozen_forecast = lambda: {'status': 'unavailable', 'reason': 'evidence_only'}
+    reviewed = []
+    monkeypatch.setattr(source_fidelity, 'source_fidelity_issues',
+                        lambda llm, content, grounding, callback=None: reviewed.append(content) or [])
+    agent.llm = SimpleNamespace()
+    agent._repair_grounded_text('The respondent bears the burden.', 'Law', 0)
+    assert reviewed == ['The respondent bears the burden.']

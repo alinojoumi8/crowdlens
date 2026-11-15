@@ -55,12 +55,16 @@ def test_generated_cover_does_not_anchor_documentary_roles():
 
 
 def test_saved_report_is_not_injected_into_system_instructions(monkeypatch):
-    from app.services.report_agent import ReportAgent, ReportManager
+    from app.services.report_agent import ReportAgent, ReportManager, Report, ReportStatus
     marker = 'SYNTHETIC_GENERATED_REPORT_INSTRUCTION'
-    monkeypatch.setattr(ReportManager, 'get_report_by_simulation', lambda _: SimpleNamespace(markdown_content=marker))
+    saved = Report('r', 'synthetic_sim', 'synthetic_graph', 'Synthetic exploration', ReportStatus.NEEDS_REVIEW,
+        evidence_only=True, markdown_content=marker, forecast={'status': 'unavailable', 'reason': 'evidence_only'},
+        source_grounding={'report_contract': 'report-grounding-v1', 'status': 'unavailable', 'original_sources': []})
+    monkeypatch.setattr(ReportManager, 'get_report_by_simulation', lambda _: saved)
     messages = []
     agent = ReportAgent.__new__(ReportAgent)
     agent.simulation_id = 'synthetic_sim'; agent.simulation_requirement = 'Synthetic exploration'
+    agent.graph_id = 'synthetic_graph'; agent.simulation_config = {}; agent.report_mode = 'legal_case'
     agent._get_tools_description = lambda: 'Synthetic tools'
     agent.llm = SimpleNamespace(chat=lambda **kw: messages.extend(kw['messages']) or 'Synthetic reply')
     agent.chat('Synthetic question')

@@ -630,6 +630,7 @@ const sendToReportAgent = async (message) => {
     }))
 
   const res = await chatWithReport({
+    report_id: props.reportId,
     simulation_id: props.simulationId,
     message: message,
     chat_history: historyForApi
@@ -891,7 +892,12 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-watch(() => props.reportId, (newId) => {
+watch(() => props.reportId, (newId, oldId) => {
+  if (oldId && newId !== oldId) {
+    // The Report Agent conversation belongs to one report; do not send it with another report's id.
+    delete chatHistoryCache.value['report_agent']
+    if (chatTarget.value === 'report_agent') chatHistory.value = []
+  }
   if (newId) {
     loadReportData()
   }
