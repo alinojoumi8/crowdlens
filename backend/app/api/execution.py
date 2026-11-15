@@ -6,6 +6,9 @@ from ..config import Config
 from ..services.workflow_execution import WorkflowLedger, WorkflowHalt, ExecutionScope, _SCOPE, without_execution_scope
 from ..services import administrator_quotas as quotas
 from ..services.workspace import current_workspace
+from ..utils.logger import get_logger
+
+logger = get_logger('mirofish.api.execution')
 
 GENERATION_ENDPOINTS = {
     'graph.generate_ontology': 'ontology', 'graph.build_graph': 'graph',
@@ -39,6 +42,13 @@ def install_workflow_controls(app):
         with ledger.transaction() as db:
             if quotas.managed(db):
                 raise RuntimeError('Managed quota databases require OIDC authentication')
+    if ledger:
+        # Only an HTTP request holds an active slot, and teardown frees it. A process
+        # killed mid-request never runs teardown, so free slots whose process has ended.
+        with ledger.transaction() as db:
+            freed = quotas.reclaim_abandoned_operations(db)
+        if freed:
+            logger.warning('Freed %s request quota slots left by an interrupted process', freed)
     app.extensions['workflow_ledger'] = ledger
     bp = Blueprint('execution', __name__)
 

@@ -2855,6 +2855,20 @@ class ReportAgent:
         if strict_antirepetition is not None:
             self.strict_antirepetition = strict_antirepetition
         self.tools = self._define_tools()
+        # The section, outline and full report are written before validation. Keep the
+        # saved versions so a rejected rewrite cannot become the downloadable report.
+        published = [ReportManager._get_section_path(report.report_id, section_index),
+                     ReportManager._get_outline_path(report.report_id),
+                     ReportManager._get_report_markdown_path(report.report_id),
+                     ReportManager._get_report_path(report.report_id)]
+        # The whole caller object, so a retry with it cannot persist rejected fields.
+        saved_files, committed, saved_state = {}, False, deepcopy(report.__dict__)
+        for path in published:
+            try:
+                with open(path, 'r', encoding='utf-8') as stream:
+                    saved_files[path] = stream.read()
+            except FileNotFoundError:
+                saved_files[path] = None
 
         try:
             self.report_logger = ReportLogger(report.report_id)
@@ -2914,6 +2928,7 @@ class ReportAgent:
             ReportManager.apply_quality_status(report)
             report.completed_at = datetime.now().isoformat()
             ReportManager.save_report(report)
+            committed = True  # meta.json now matches the new files; keep them from here on.
             ReportManager.update_progress(
                 report.report_id,
                 report.status.value,
@@ -2934,6 +2949,27 @@ class ReportAgent:
             )
             raise
         finally:
+            # Runs for Stop and quota halts too (WorkflowHalt is not an Exception).
+            if not committed:
+                report.__dict__.clear()
+                report.__dict__.update(saved_state)
+                from .quota_io import remediation
+                # A trusted repair: it must succeed after Stop or an exhausted quota.
+                with remediation():
+                    for path, content in saved_files.items():
+                        try:
+                            if content is None:
+                                if os.path.exists(path):
+                                    os.unlink(path)
+                            else:
+                                write_text(path, content)
+                        except OSError as exc:
+                            # Never leave rejected text published: remove what could not be restored.
+                            logger.error('Could not restore %s after a rejected section rewrite: %s', path, exc)
+                            try:
+                                os.unlink(path)
+                            except OSError:
+                                logger.error('Could not remove %s; it may hold the rejected rewrite', path)
             if self.console_logger:
                 self.console_logger.close()
                 self.console_logger = None

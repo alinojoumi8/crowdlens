@@ -7,6 +7,7 @@ Estimates and unresolved reservations are not provider billing.
 from contextvars import ContextVar
 import json
 import re
+import os
 import uuid
 
 from .workflow_spend import price_terms, estimated_micro_usd
@@ -199,9 +200,37 @@ def begin_operation(db, workspace_id, now, *, admission=True, active=True):
         additions['storage_write_bytes'] = 1
     if not check(db, workspace_id, now, additions, admission=admission):
         return None
-    identifier = 'op_' + uuid.uuid4().hex
+    identifier = _owner_prefix() + uuid.uuid4().hex
     db.execute('INSERT INTO quota_operations VALUES(?,?,?,?)', (identifier, workspace_id, now, int(active)))
     return identifier
+
+
+def _owner(pid=None):
+    from ..utils.process_identity import process_identity
+    identity = process_identity(pid or os.getpid())
+    return f"{identity['pid']}-{identity['start_ticks']}-{identity['boot_id'][:8]}" if identity else None
+
+
+def _owner_prefix():
+    owner = _owner()
+    return f'op_{owner}_' if owner else 'op_'
+
+
+def reclaim_abandoned_operations(db):
+    """Free active slots whose owning process has ended (killed mid-request).
+
+    The slot id names its process birth identity, so a request still running in an
+    overlapping worker (graceful reload) keeps its slot. Ids without an owner come from
+    older code or a platform without process identity and are treated as abandoned.
+    """
+    freed = 0
+    for (identifier,) in db.execute('SELECT id FROM quota_operations WHERE active=1').fetchall():
+        parts = identifier.split('_')
+        owner = parts[1] if len(parts) == 3 else None
+        pid = owner.split('-', 1)[0] if owner else ''
+        if not (pid.isdigit() and _owner(int(pid)) == owner):
+            freed += db.execute('UPDATE quota_operations SET active=0 WHERE id=?', (identifier,)).rowcount
+    return freed
 
 
 def charge_storage(db, workspace_id, now, size):
