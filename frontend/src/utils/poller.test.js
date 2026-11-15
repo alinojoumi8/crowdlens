@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { createPoller } from './poller.js'
+import { createPoller, noOverlap } from './poller.js'
 
 describe('createPoller', () => {
   it('owns one interval and releases it on stop', () => {
@@ -51,6 +51,31 @@ describe('createPoller', () => {
     release()
     await Promise.all([first, overlapping])
     await scheduledCallback()
+    assert.equal(calls, 2)
+  })
+})
+
+describe('noOverlap', () => {
+  it('skips a tick while the previous call still runs, then runs again', async () => {
+    let release
+    let calls = 0
+    const tick = noOverlap(() => { calls += 1; return new Promise(resolve => { release = resolve }) })
+
+    const first = tick()
+    await tick()
+    assert.equal(calls, 1)
+    release()
+    await first
+    tick()
+    assert.equal(calls, 2)
+  })
+
+  it('runs again after a failed call', async () => {
+    let calls = 0
+    const tick = noOverlap(async () => { calls += 1; throw new Error('down') })
+
+    await assert.rejects(tick())
+    await assert.rejects(tick())
     assert.equal(calls, 2)
   })
 })

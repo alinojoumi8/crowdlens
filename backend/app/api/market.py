@@ -34,9 +34,13 @@ def resolve():
     try:
         data = market_data.resolve_target(symbol, kind=kind, horizon=horizon)
         return jsonify({"success": True, "data": data})
-    except Exception as exc:
+    except market_data.MarketDataError as exc:
         logger.warning("market resolve failed for %s (%s): %s", symbol, kind, exc)
         return jsonify({"success": False, "error": str(exc)}), 200
+    except Exception as exc:
+        # Provider errors can quote the request URL, which holds the API key.
+        logger.warning("market resolve failed for %s (%s): %s", symbol, kind, type(exc).__name__)
+        return jsonify({"success": False, "error": "Market data lookup failed. Enter values manually."}), 200
 
 
 @market_bp.route('/status', methods=['GET'])

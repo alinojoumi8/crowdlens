@@ -120,3 +120,20 @@ it('shows persisted source links for a reopened revised summary', async () => {
   expect(wrapper.get('.summary-sources blockquote').text()).toBe('Frozen source.')
   expect(generateReport).not.toHaveBeenCalled()
 })
+
+it('shows a failed operator action on the page, not only in the hidden log', async () => {
+  getReport.mockResolvedValue({success:true,data:{status:'interrupted',outline:{title:'Partial',summary:'Fictional fixture',sections:[]}}})
+  getReportProgress.mockResolvedValue({success:true,data:{status:'interrupted',effective_status:'interrupted',terminal:true}})
+  wrapper = mount(Step4Report, { props: { reportId:'report_interrupted', systemLogs:[] },
+    global: { stubs: { EvidenceDraftReview:true, ClaimEvidence:true, SafeMarkdown:true } } })
+  await flushPromises()
+  expect(wrapper.find('[role="alert"].action-error').exists()).toBe(false)
+  resumeReport.mockRejectedValue(new Error('Request limit reached'))
+  await wrapper.findAll('button').find(item=>item.text()==='Resume failed section').trigger('click')
+  await flushPromises()
+  expect(wrapper.get('[role="alert"].action-error').text()).toContain('Report resume failed: Request limit reached')
+  resumeReport.mockResolvedValue({success:true,data:{task_id:'replacement'}})
+  await wrapper.findAll('button').find(item=>item.text()==='Resume failed section').trigger('click')
+  await flushPromises()
+  expect(wrapper.find('.action-error').exists()).toBe(false)
+})

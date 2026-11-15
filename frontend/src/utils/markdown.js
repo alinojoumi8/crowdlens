@@ -52,7 +52,8 @@ export function renderSafeMarkdown(content) {
 
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
-  html = html.replace(/_(.+?)_/g, '<em>$1</em>')
+  // Underscores inside a word (file names, identifiers) are text, not emphasis.
+  html = html.replace(/(^|[^\w])_([^_\s](?:[^_\n]*[^_\s])?)_(?!\w)/g, '$1<em>$2</em>')
   html = html.replace(/^---$/gm, '<hr class="md-hr">')
   html = html.replace(/\n\n/g, '</p><p class="md-p">')
   html = html.replace(/\n/g, '<br>')

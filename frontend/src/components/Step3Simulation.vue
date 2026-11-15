@@ -464,6 +464,7 @@
 </template>
 
 <script setup>
+import { noOverlap } from '../utils/poller'
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import {
@@ -855,7 +856,7 @@ const doRunEnsemble = async () => {
 
 const startEnsemblePolling = () => {
   stopEnsemblePolling()
-  ensembleTimer = setInterval(fetchEnsembleStatus, 4000)
+  ensembleTimer = setInterval(noOverlap(fetchEnsembleStatus), 4000)
 }
 
 const fetchEnsembleStatus = async () => {
@@ -914,16 +915,17 @@ let detailTimer = null
 let economyTimer = null
 
 const startStatusPolling = () => {
-  statusTimer = setInterval(fetchRunStatus, 2000)
+  statusTimer = setInterval(noOverlap(fetchRunStatus), 2000)
 }
 
 const startDetailPolling = () => {
-  detailTimer = setInterval(fetchRunStatusDetail, 3000)
+  detailTimer = setInterval(noOverlap(fetchRunStatusDetail), 3000)
 }
 
 const startEconomyPolling = () => {
-  loadEconomy()
-  economyTimer = setInterval(loadEconomy, 5000)
+  const poll = noOverlap(loadEconomy)
+  poll()
+  economyTimer = setInterval(poll, 5000)
 }
 
 const stopPolling = () => {

@@ -4,7 +4,7 @@ Manage Twitter and Reddit dual-platform parallel simulations
 Use preset scripts + LLM intelligent generation of config parameters
 """
 
-from .quota_io import open
+from .quota_io import open, write_text
 
 from ..services.workspace import owned, require, register, visible
 
@@ -196,8 +196,7 @@ class SimulationManager:
         
         state.updated_at = datetime.now().isoformat()
         
-        with open(state_file, 'w', encoding='utf-8') as f:
-            json.dump(state.to_dict(), f, ensure_ascii=False, indent=2)
+        write_text(state_file, json.dumps(state.to_dict(), ensure_ascii=False, indent=2))
         
         self._simulations[state.simulation_id] = state
     
@@ -528,10 +527,9 @@ class SimulationManager:
             # Save config files
             config_path = os.path.join(sim_dir, "simulation_config.json")
             with publication_guard(), timing.time("save_config", label="Persist simulation config"):
-                with open(config_path, 'w', encoding='utf-8') as f:
-                    config_data = sim_params.to_dict()
-                    config_data['participant_selection'] = state.participant_selection
-                    json.dump(config_data, f, ensure_ascii=False, indent=2)
+                config_data = sim_params.to_dict()
+                config_data['participant_selection'] = state.participant_selection
+                write_text(config_path, json.dumps(config_data, ensure_ascii=False, indent=2))
             
             state.config_generated = True
             state.config_reasoning = sim_params.generation_reasoning

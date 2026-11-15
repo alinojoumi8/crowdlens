@@ -9,7 +9,7 @@ Features:
 4. Support conversations with users, autonomously call retrieval tools during conversations
 """
 
-from .quota_io import open
+from .quota_io import open, write_text
 
 from ..services.workspace import owned, require, register, visible
 
@@ -3184,8 +3184,7 @@ class ReportManager:
         """
         cls._ensure_report_folder(report_id)
         
-        with open(cls._get_outline_path(report_id), 'w', encoding='utf-8') as f:
-            json.dump(outline.to_dict(), f, ensure_ascii=False, indent=2)
+        write_text(cls._get_outline_path(report_id), json.dumps(outline.to_dict(), ensure_ascii=False, indent=2))
         
         logger.info(f"outlinesaved: {report_id}")
     
@@ -3222,8 +3221,7 @@ class ReportManager:
         # savefile
         file_suffix = f"section_{section_index:02d}.md"
         file_path = cls._get_section_path(report_id, section_index)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(md_content)
+        write_text(file_path, md_content)
 
         logger.info(f"Sectionsaved: {report_id}/{file_suffix}")
         return file_path
@@ -3336,8 +3334,7 @@ class ReportManager:
             "heartbeat_at": datetime.now().isoformat(),
         }
         
-        with open(cls._get_progress_path(report_id), 'w', encoding='utf-8') as f:
-            json.dump(progress_data, f, ensure_ascii=False, indent=2)
+        write_text(cls._get_progress_path(report_id), json.dumps(progress_data, ensure_ascii=False, indent=2))
     
     @classmethod
     @owned('report', 'report_id')
@@ -3445,8 +3442,7 @@ class ReportManager:
         
         # saveComplete report
         full_path = cls._get_report_markdown_path(report_id)
-        with open(full_path, 'w', encoding='utf-8') as f:
-            f.write(md_content)
+        write_text(full_path, md_content)
         
         logger.info(f"completereporthasassemble: {report_id}")
         return md_content
@@ -3589,8 +3585,7 @@ class ReportManager:
         cls._ensure_report_folder(report.report_id)
         
         # savemetainformationJSON
-        with open(cls._get_report_path(report.report_id), 'w', encoding='utf-8') as f:
-            json.dump(report.to_dict(), f, ensure_ascii=False, indent=2)
+        write_text(cls._get_report_path(report.report_id), json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
         
         # saveoutline
         if report.outline:
@@ -3598,8 +3593,7 @@ class ReportManager:
         
         # saveCompleteMarkdownReport
         if report.markdown_content:
-            with open(cls._get_report_markdown_path(report.report_id), 'w', encoding='utf-8') as f:
-                f.write(report.markdown_content)
+            write_text(cls._get_report_markdown_path(report.report_id), report.markdown_content)
         
         logger.info(f"reportsaved: {report.report_id}")
 

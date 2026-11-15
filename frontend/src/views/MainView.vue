@@ -81,6 +81,7 @@
 </template>
 
 <script setup>
+import { noOverlap } from '../utils/poller'
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GraphPanel from '../components/GraphPanel.vue'
@@ -325,10 +326,11 @@ const startBuildGraph = async () => {
 const startGraphPolling = ({ intervalMs = 60000, fetchImmediately = false } = {}) => {
   stopGraphPolling()
   addLog(`Started slow graph data polling every ${Math.round(intervalMs / 1000)}s during build...`)
+  const poll = noOverlap(fetchGraphData)
   if (fetchImmediately) {
-    fetchGraphData()
+    poll()
   }
-  graphPollTimer = setInterval(fetchGraphData, intervalMs)
+  graphPollTimer = setInterval(poll, intervalMs)
 }
 
 const fetchGraphData = async () => {
@@ -350,8 +352,10 @@ const fetchGraphData = async () => {
 }
 
 const startPollingTask = (taskId) => {
-  pollTaskStatus(taskId)
-  pollTimer = setInterval(() => pollTaskStatus(taskId), 2000)
+  // One wrapper for the first call and the timer, so a slow first call is not overtaken.
+  const poll = noOverlap(() => pollTaskStatus(taskId))
+  poll()
+  pollTimer = setInterval(poll, 2000)
 }
 
 const pollTaskStatus = async (taskId) => {

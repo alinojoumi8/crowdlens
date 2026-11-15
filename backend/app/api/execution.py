@@ -300,7 +300,7 @@ def install_workflow_controls(app):
                 return jsonify(success=True, data={**(state.to_dict() if state else {}), 'workflow': stopped})
             # Charge potentially expensive POST/PUT work, including non-model
             # operations. Stop and deletion remain available at an exhausted quota.
-            cheap_reads = {'status.get_status', 'graph.get_task_status', 'report.get_report_progress',
+            cheap_reads = {'status.get_status', 'graph.get_task', 'report.get_report_progress',
                            'report.get_evidence_proposal', 'simulation.get_run_status',
                            'simulation.get_prepare_status', 'simulation.get_ensemble_status'}
             expensive = request.endpoint not in cheap_reads and request.method in {'GET', 'POST', 'PUT', 'PATCH'}

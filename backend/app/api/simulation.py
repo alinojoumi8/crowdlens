@@ -26,6 +26,24 @@ from ..models.project import ProjectManager
 logger = get_logger('mirofish.api.simulation')
 
 
+def _unsafe_path_part(value) -> bool:
+    value = str(value)
+    return value in {".", ".."} or any(token in value for token in ("/", "\\", "\x00"))
+
+
+@simulation_bp.before_request
+def _reject_path_values():
+    """simulation_id and platform become file path parts, so refuse path syntax."""
+    body = request.get_json(silent=True)
+    for source in (request.view_args or {}, request.args, body if isinstance(body, dict) else {}):
+        simulation_id = source.get('simulation_id')
+        if simulation_id is not None and _unsafe_path_part(simulation_id):
+            return jsonify({"success": False, "error": "Invalid simulation id"}), 400
+        platform = source.get('platform')
+        if platform and platform not in ('twitter', 'reddit', 'parallel'):
+            return jsonify({"success": False, "error": "Invalid platform"}), 400
+
+
 # Interview prompt optimization prefix
 # Adding this prefix can prevent agents from calling tools and reply directly with text
 INTERVIEW_PROMPT_PREFIX = "Based on your persona, all your past memories and actions, reply directly to me with text without calling any tools:"

@@ -1104,7 +1104,8 @@ def build_graph():
                     task_id,
                     status=TaskStatus.FAILED,
                     message=f"Build failed: {str(e)}",
-                    error=traceback.format_exc(),
+                    # The task record is served to the client; the traceback stays in the build log.
+                    error=str(e),
                     progress_detail={"profile": build_profile, "timing": timing_summary},
                 )
 
@@ -1159,8 +1160,11 @@ def list_tasks():
     """
     List all tasks
     """
-    tasks = TaskManager().list_tasks()
-    
+    from ..models.task import Task
+    from ..services.workspace import visible
+    # The runtime returns stored records for every workspace; show only the caller's.
+    tasks = [Task.from_dict(record) for record in TaskManager().list_tasks() if visible('task', record['task_id'])]
+
     return jsonify({
         "success": True,
         "data": [t.to_dict() for t in tasks],

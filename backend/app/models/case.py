@@ -214,7 +214,8 @@ def normalize_graph_build_settings(raw: Optional[Dict[str, Any]] = None) -> Dict
 
     settings["build_preset"] = preset_name
     settings["chunk_size"] = max(1, int(settings.get("chunk_size") or GRAPH_BUILD_PRESETS[preset_name]["chunk_size"]))
-    settings["chunk_overlap"] = max(0, min(int(settings.get("chunk_overlap") or 0), settings["chunk_size"] - 1))
+    # More than half overlap multiplies the chunk count and the model cost.
+    settings["chunk_overlap"] = max(0, min(int(settings.get("chunk_overlap") or 0), settings["chunk_size"] // 2))
     settings["batch_size"] = max(1, int(settings.get("batch_size") or 1))
     if settings.get("llm_concurrency") in ("", None):
         settings["llm_concurrency"] = None

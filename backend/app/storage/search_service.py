@@ -14,24 +14,24 @@ from .embedding_service import EmbeddingService
 
 logger = logging.getLogger('mirofish.search')
 
+# The vector indexes are shared by all graphs and return global neighbours, so a
+# query widens its candidate pool until this graph has enough hits or the index ends.
+_MAX_VECTOR_CANDIDATES = 10000
+
 # Cypher for vector search on edges (facts)
 _VECTOR_SEARCH_EDGES = """
-CALL db.index.vector.queryRelationships('fact_embedding', $limit, $query_vector)
+CALL db.index.vector.queryRelationships('fact_embedding', $candidates, $query_vector)
 YIELD relationship, score
-WHERE relationship.graph_id = $graph_id
-RETURN relationship AS r, score
-ORDER BY score DESC
-LIMIT $limit
+WITH collect({r: relationship, score: score}) AS rows
+RETURN size(rows) AS scanned, [row IN rows WHERE row.r.graph_id = $graph_id][..$limit] AS hits
 """
 
 # Cypher for vector search on nodes (entities)
 _VECTOR_SEARCH_NODES = """
-CALL db.index.vector.queryNodes('entity_embedding', $limit, $query_vector)
+CALL db.index.vector.queryNodes('entity_embedding', $candidates, $query_vector)
 YIELD node, score
-WHERE node.graph_id = $graph_id
-RETURN node AS n, score
-ORDER BY score DESC
-LIMIT $limit
+WITH collect({n: node, score: score}) AS rows
+RETURN size(rows) AS scanned, [row IN rows WHERE row.n.graph_id = $graph_id][..$limit] AS hits
 """
 
 # Cypher for fulltext (BM25) search on edges
@@ -121,21 +121,33 @@ class SearchService:
         )
         return merged
 
+    @staticmethod
+    def _vector_search(
+        session: Neo4jSession, cypher: str, key: str, graph_id: str, query_vector: List[float], limit: int
+    ) -> List[Dict[str, Any]]:
+        candidates, scanned = limit, -1
+        while True:
+            candidates = min(candidates * 4, _MAX_VECTOR_CANDIDATES)
+            record = next(iter(session.run(
+                cypher, graph_id=graph_id, query_vector=query_vector, limit=limit, candidates=candidates,
+            )))
+            hits = record["hits"]
+            # An approximate index can return fewer rows than requested, so a short
+            # answer is not the end: stop only when a wider request finds no more rows.
+            exhausted = record["scanned"] <= scanned
+            scanned = record["scanned"]
+            if len(hits) >= limit or exhausted or candidates >= _MAX_VECTOR_CANDIDATES:
+                return [
+                    {**dict(hit[key]), "uuid": hit[key]["uuid"], "_score": hit["score"]}
+                    for hit in hits
+                ]
+
     def _run_edge_vector_search(
         self, session: Neo4jSession, graph_id: str, query_vector: List[float], limit: int
     ) -> List[Dict[str, Any]]:
         """Run vector similarity search on edge fact_embedding."""
         try:
-            result = session.run(
-                _VECTOR_SEARCH_EDGES,
-                graph_id=graph_id,
-                query_vector=query_vector,
-                limit=limit,
-            )
-            return [
-                {**dict(record["r"]), "uuid": record["r"]["uuid"], "_score": record["score"]}
-                for record in result
-            ]
+            return self._vector_search(session, _VECTOR_SEARCH_EDGES, "r", graph_id, query_vector, limit)
         except Exception as e:
             logger.warning(f"Vector edge search failed (index may not exist yet): {e}")
             return []
@@ -166,16 +178,7 @@ class SearchService:
     ) -> List[Dict[str, Any]]:
         """Run vector similarity search on entity embedding."""
         try:
-            result = session.run(
-                _VECTOR_SEARCH_NODES,
-                graph_id=graph_id,
-                query_vector=query_vector,
-                limit=limit,
-            )
-            return [
-                {**dict(record["n"]), "uuid": record["n"]["uuid"], "_score": record["score"]}
-                for record in result
-            ]
+            return self._vector_search(session, _VECTOR_SEARCH_NODES, "n", graph_id, query_vector, limit)
         except Exception as e:
             logger.warning(f"Vector node search failed: {e}")
             return []

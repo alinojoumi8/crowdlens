@@ -865,6 +865,7 @@
 </template>
 
 <script setup>
+import { noOverlap } from '../utils/poller'
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import {
   prepareSimulation,
@@ -1348,7 +1349,7 @@ const startPrepareSimulation = async () => {
 }
 
 const startPolling = () => {
-  pollTimer = setInterval(pollPrepareStatus, 2000)
+  pollTimer = setInterval(noOverlap(pollPrepareStatus), 2000)
 }
 
 const stopPolling = () => {
@@ -1359,7 +1360,7 @@ const stopPolling = () => {
 }
 
 const startProfilesPolling = () => {
-  profilesTimer = setInterval(fetchProfilesRealtime, 3000)
+  profilesTimer = setInterval(noOverlap(fetchProfilesRealtime), 3000)
 }
 
 const stopProfilesPolling = () => {
@@ -1484,7 +1485,7 @@ const fetchProfilesRealtime = async () => {
 
 // ConfigurationroundsInquiry
 const startConfigPolling = () => {
-  configTimer = setInterval(fetchConfigRealtime, 2000)
+  configTimer = setInterval(noOverlap(fetchConfigRealtime), 2000)
 }
 
 const stopConfigPolling = () => {

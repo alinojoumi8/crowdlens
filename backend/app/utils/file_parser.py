@@ -99,7 +99,9 @@ def split_text_into_chunks(
             chunks.append(chunk)
 
         # Next chunk starts at overlap position
-        start = end - overlap if end < len(text) else len(text)
+        next_start = end - overlap if end < len(text) else len(text)
+        # A chunk no longer than the overlap would not advance; skip the overlap then.
+        start = next_start if next_start > start else end
 
     return chunks
 
