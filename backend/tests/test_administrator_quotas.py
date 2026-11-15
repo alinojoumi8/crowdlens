@@ -54,6 +54,7 @@ def quota_app(tmp_path, monkeypatch):
         ('/api/poll/run', 'simulation.get_run_status', ['GET']),
         ('/api/poll/prepare', 'simulation.get_prepare_status', ['POST']),
         ('/api/poll/ensemble', 'simulation.get_ensemble_status', ['POST']),
+        ('/api/poll/task', 'graph.get_task', ['GET']),
     ]:
         app.add_url_rule(path, endpoint, lambda: {'success': True}, methods=methods)
     install_workflow_controls(app)
@@ -323,8 +324,9 @@ def test_non_model_operations_are_shared_and_exhaustion_is_actionable(quota_app)
 def test_progress_polling_does_not_consume_or_require_operation_capacity(quota_app):
     app, client, user, headers = quota_app
     ledger = configure(app, client, user, headers, individual=policy(operations=0, active_work=0))
-    from app.api import report_bp, simulation_bp
+    from app.api import graph_bp, report_bp, simulation_bp
     actual = Flask('registered-poll-routes')
+    actual.register_blueprint(graph_bp)
     actual.register_blueprint(report_bp)
     actual.register_blueprint(simulation_bp)
     for path, endpoint, method in [
@@ -332,6 +334,7 @@ def test_progress_polling_does_not_consume_or_require_operation_capacity(quota_a
         ('/api/poll/run', 'simulation.get_run_status', 'GET'),
         ('/api/poll/prepare', 'simulation.get_prepare_status', 'POST'),
         ('/api/poll/ensemble', 'simulation.get_ensemble_status', 'POST'),
+        ('/api/poll/task', 'graph.get_task', 'GET'),
     ]:
         assert endpoint in actual.view_functions
         for _ in range(3):

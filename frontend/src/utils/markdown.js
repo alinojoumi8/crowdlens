@@ -48,11 +48,13 @@ export function renderSafeMarkdown(content) {
   html = html.replace(/(<li class="md-oli"[^>]*>.*?<\/li>\s*)+/g, '<ol class="md-ol">$&</ol>')
   html = html.replace(/<\/li>\s+<li/g, '</li><li')
   html = html.replace(/<(ul|ol) class="(md-ul|md-ol)">\s+/g, '<$1 class="$2">')
-  html = html.replace(/\s+<\/(ul|ol)>/g, '</$1>')
+  // Check each whitespace run once when trimming before a closing list tag.
+  html = html.replace(/(?<!\s)\s+<\/(ul|ol)>/g, '</$1>')
 
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
-  html = html.replace(/_(.+?)_/g, '<em>$1</em>')
+  // Underscores inside a word (file names, identifiers) are text, not emphasis.
+  html = html.replace(/(^|[^\w])_([^_\s](?:[^_\n]*[^_\s])?)_(?!\w)/g, '$1<em>$2</em>')
   html = html.replace(/^---$/gm, '<hr class="md-hr">')
   html = html.replace(/\n\n/g, '</p><p class="md-p">')
   html = html.replace(/\n/g, '<br>')

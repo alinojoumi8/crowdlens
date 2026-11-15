@@ -1,5 +1,9 @@
 <template>
   <div class="interaction-panel">
+    <div v-if="actionError" class="action-error" role="alert">
+      <span>{{ actionError }}</span>
+      <button type="button" @click="actionError = ''">Dismiss</button>
+    </div>
     <!-- Main Split Layout -->
     <div class="main-split-layout">
       <!-- LEFT PANEL: Report Style -->
@@ -472,6 +476,13 @@ const addLog = (msg) => {
   emit('add-log', msg)
 }
 
+// Failures must be visible on the page; the system log is not shown here.
+const actionError = ref('')
+const addError = (msg) => {
+  actionError.value = msg
+  addLog(msg)
+}
+
 const toggleSectionCollapse = (idx) => {
   if (!generatedSections.value[idx + 1]) return
   const newSet = new Set(collapsedSections.value)
@@ -501,7 +512,15 @@ const saveChatHistory = () => {
   }
 }
 
+// A reply belongs to the conversation that asked for it, so the target stays fixed until it arrives.
+const replyPending = () => {
+  if (!isSending.value) return false
+  addError('Wait for the current reply before you change the conversation.')
+  return true
+}
+
 const selectReportAgentChat = () => {
+  if (replyPending()) return
   // Save current chat history
   saveChatHistory()
 
@@ -516,6 +535,7 @@ const selectReportAgentChat = () => {
 }
 
 const selectSurveyTab = () => {
+  if (replyPending()) return
   activeTab.value = 'survey'
   selectedAgent.value = null
   selectedAgentIndex.value = null
@@ -523,6 +543,7 @@ const selectSurveyTab = () => {
 }
 
 const toggleAgentDropdown = () => {
+  if (replyPending()) return
   showAgentDropdown.value = !showAgentDropdown.value
   if (showAgentDropdown.value) {
     activeTab.value = 'chat'
@@ -531,6 +552,7 @@ const toggleAgentDropdown = () => {
 }
 
 const selectAgent = (agent, idx) => {
+  if (replyPending()) return
   // Save current chat history
   saveChatHistory()
 
@@ -581,7 +603,7 @@ const sendMessage = async () => {
       await sendToAgent(message)
     }
   } catch (err) {
-    addLog(`Send failed: ${err.message}`)
+    addError(`Send failed: ${err.message}`)
     chatHistory.value.push({
       role: 'assistant',
       content: `Sorry, an error occurred: ${err.message}`,
@@ -786,7 +808,7 @@ const submitSurvey = async () => {
       throw new Error(res.error || 'Request failed')
     }
   } catch (err) {
-    addLog(`Survey submission failed: ${err.message}`)
+    addError(`Survey submission failed: ${err.message}`)
   } finally {
     isSurveying.value = false
   }
@@ -806,7 +828,7 @@ const loadReportData = async () => {
       await loadAgentLogs()
     }
   } catch (err) {
-    addLog(`Failed to load report: ${err.message}`)
+    addError(`Failed to load report: ${err.message}`)
   }
 }
 
@@ -831,7 +853,7 @@ const loadAgentLogs = async () => {
       addLog('Report data loading completed')
     }
   } catch (err) {
-    addLog(`Failed to load report logs: ${err.message}`)
+    addError(`Failed to load report logs: ${err.message}`)
   }
 }
 
@@ -845,7 +867,7 @@ const loadProfiles = async () => {
       addLog(`Loaded ${profiles.value.length} simulated individuals`)
     }
   } catch (err) {
-    addLog(`Failed to load simulated individuals: ${err.message}`)
+    addError(`Failed to load simulated individuals: ${err.message}`)
   }
 }
 
@@ -883,6 +905,8 @@ watch(() => props.simulationId, (newId) => {
 </script>
 
 <style scoped>
+.action-error { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 1rem; background: #fdecea; border-bottom: 1px solid #f0b4ae; color: #8a1c14; font-size: 13px; }
+.action-error button { border: 1px solid currentColor; background: transparent; color: inherit; padding: .2rem .6rem; cursor: pointer; }
 .interaction-panel {
   height: 100%;
   display: flex;

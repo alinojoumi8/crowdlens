@@ -16,7 +16,7 @@ from flask_cors import CORS
 
 from .config import Config
 from .services.control_plane import initialize_control_plane, initialize_simulation_runtime
-from .utils.error_handling import sanitize_error_response
+from .utils.error_handling import reject_malformed_json, sanitize_error_response
 from .utils.logger import setup_logger, get_logger
 
 
@@ -100,6 +100,8 @@ def create_app(config_class=Config):
         for area in disk.get('areas', []):
             if area['state'] != 'ready':
                 logger.warning('Storage %s: %s', area['name'], area['message'])
+
+    app.before_request(reject_malformed_json)
 
     # Request logging middleware
     @app.before_request

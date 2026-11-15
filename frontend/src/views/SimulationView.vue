@@ -182,9 +182,16 @@ const handleNextStep = (params = {}) => {
 
 // --- Data Logic ---
 
+// Opening this page must never end a run without the user's agreement.
+const confirmStop = () => {
+  const agreed = window.confirm('A simulation is running. Stop it now? Select Cancel to keep it running.')
+  if (!agreed) addLog('Simulation left running')
+  return agreed
+}
+
 /**
  * Check and stop running simulation
- * When user returns from Step 3 to Step 2, assume user wants to exit simulation
+ * When user returns from Step 3 to Step 2, ask before the simulation is stopped
  */
 const checkAndStopRunningSimulation = async () => {
   if (!currentSimulationId.value) return
@@ -194,6 +201,7 @@ const checkAndStopRunningSimulation = async () => {
     const envStatusRes = await getEnvStatus({ simulation_id: currentSimulationId.value })
 
     if (envStatusRes.success && envStatusRes.data?.env_alive) {
+      if (!confirmStop()) return
       addLog('Simulation environment running, shutting down...')
 
       // Try graceful shutdown
@@ -219,6 +227,7 @@ const checkAndStopRunningSimulation = async () => {
       // Environment not running, but process may still exist, check simulation status
       const simRes = await getSimulation(currentSimulationId.value)
       if (simRes.success && simRes.data?.status === 'running') {
+        if (!confirmStop()) return
         addLog('Simulation is running, stopping...')
         await forceStopSimulation()
       }
@@ -299,7 +308,7 @@ const refreshGraph = () => {
 onMounted(async () => {
   addLog('SimulationView initialized')
 
-  // Check and stop running simulation (when user returns from Step 3)
+  // Offer to stop a running simulation (when user returns from Step 3)
   await checkAndStopRunningSimulation()
 
   // Load simulation data

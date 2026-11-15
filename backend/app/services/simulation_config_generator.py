@@ -722,9 +722,20 @@ Field description:
             agents_per_hour_min = max(1, agents_per_hour_max // 2)
             logger.warning(f"agents_per_hour_min >= max, corrected to {agents_per_hour_min}")
 
+        def positive(name: str, ceiling: int) -> int:
+            # Model output is untrusted: a zero, a string or a huge value must not reach the runner.
+            try:
+                value = int(result.get(name, defaults[name]))
+            except (TypeError, ValueError, OverflowError):
+                value = 0
+            if 0 < value <= ceiling:
+                return value
+            logger.warning(f"{name} ({result.get(name)!r}) is not usable, default applied")
+            return defaults[name]
+
         return TimeSimulationConfig(
-            total_simulation_hours=result.get("total_simulation_hours", defaults["total_simulation_hours"]),
-            minutes_per_round=result.get("minutes_per_round", defaults["minutes_per_round"]),
+            total_simulation_hours=positive("total_simulation_hours", 24 * 365),
+            minutes_per_round=positive("minutes_per_round", 24 * 60),
             agents_per_hour_min=agents_per_hour_min,
             agents_per_hour_max=agents_per_hour_max,
             peak_hours=result.get("peak_hours", defaults["peak_hours"]),

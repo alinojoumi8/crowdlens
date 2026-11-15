@@ -5,7 +5,9 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 import io
 import json
+import os
 import re
+import tempfile
 
 from . import administrator_quotas as quotas
 from .workspace import current_workspace
@@ -168,6 +170,19 @@ def open(path, mode='r', *args, **kwargs):
     if '+' in mode or not isinstance(path, (str, bytes)) and not hasattr(path, '__fspath__'):
         quotas.halt('unmetered_file_descriptor_unsupported')
     return _Writer(path, mode, args, kwargs, available)
+
+
+def write_text(path, content):
+    """Publish a whole text artifact atomically: a reader sees the old file or the new one."""
+    charge(len(content.encode('utf-8')))
+    descriptor, temporary = tempfile.mkstemp(prefix='.write-', dir=os.path.dirname(path) or '.')
+    try:
+        with os.fdopen(descriptor, 'w', encoding='utf-8') as stream:
+            stream.write(content)
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 class GraphTransaction:

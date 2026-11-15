@@ -684,6 +684,8 @@ class Neo4jStorage(GraphStorage):
 
         logger.info(f"[add_text] Starting NER extraction for chunk ({len(text)} chars)...")
         extraction = self._ner.extract(text, ontology)
+        if extraction.pop("failed", False):
+            raise RuntimeError("Entity extraction failed; see the NER log for the provider error")
         logger.info(
             "[add_text] NER done: %s entities, %s relations",
             len(extraction.get("entities", [])),
@@ -941,11 +943,22 @@ class Neo4jStorage(GraphStorage):
                 miss_extractions = [self._ner.extract(chunk, ontology) for chunk in miss_chunks]
             profile["llm_extraction_seconds"] += time.perf_counter() - llm_started
 
-            for (idx, _chunk, chunk_hash), extraction in zip(missing, miss_extractions):
+            failed = [extraction.pop("failed", False) for extraction in miss_extractions]
+            for (idx, _chunk, chunk_hash), extraction, chunk_failed in zip(missing, miss_extractions, failed):
+                if chunk_failed:
+                    continue
                 _validate_extraction_labels(extraction)
                 extractions[idx] = extraction
                 if self._extraction_cache:
                     self._extraction_cache.set(file_hash, chunk_hash, ontology_hash, extraction)
+            if any(failed):
+                # Stop before anything is written: a build that continued would record the
+                # document as built with a hole in it. Successes above stay cached, so a
+                # retry asks the model only for the chunks that failed.
+                raise RuntimeError(
+                    f"Entity extraction failed for {sum(failed)} of {len(failed)} chunks; "
+                    "see the NER log for the provider error, then build again"
+                )
 
         ordered_extractions = [extractions.get(i, {"entities": [], "relations": []}) for i in range(len(chunks))]
         write_kwargs = {"profile": profile}

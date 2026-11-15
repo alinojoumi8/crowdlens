@@ -1,5 +1,9 @@
 <template>
   <div class="report-panel">
+    <div v-if="actionError" class="action-error" role="alert">
+      <span>{{ actionError }}</span>
+      <button type="button" @click="actionError = ''">Dismiss</button>
+    </div>
     <!-- Main Split Layout -->
     <div class="main-split-layout">
       <!-- LEFT PANEL: Report Style -->
@@ -603,6 +607,7 @@
 </template>
 
 <script setup>
+import { noOverlap } from '../utils/poller'
 import { resolveApiBaseUrl } from '../api/baseUrl'
 const reportApiBase = resolveApiBaseUrl(import.meta.env)
 import { ref, computed, watch, onMounted, onUnmounted, nextTick, h, reactive } from 'vue'
@@ -2204,9 +2209,17 @@ const addLog = (msg) => {
   emit('add-log', msg)
 }
 
+// Failures must be visible on the page; the system log is not shown here.
+const actionError = ref('')
+const addError = (msg) => {
+  actionError.value = msg
+  addLog(msg)
+}
+
 const repairEmbeddings = async () => {
   if (!reportGraphId.value || isRepairing.value) return
   isRepairing.value = true
+  actionError.value = ''
   try {
     addLog(`Repairing embeddings for graph ${reportGraphId.value}`)
     const res = await reembedGraph(reportGraphId.value, { batch_size: 32 })
@@ -2216,7 +2229,7 @@ const repairEmbeddings = async () => {
       await fetchReportSnapshot()
     }
   } catch (err) {
-    addLog(`Embedding repair failed: ${err.message}`)
+    addError(`Embedding repair failed: ${err.message}`)
   } finally {
     isRepairing.value = false
   }
@@ -2225,6 +2238,7 @@ const repairEmbeddings = async () => {
 const regenerateReport = async (options = {}) => {
   if (!activeSimulationId.value || isRegenerating.value) return
   isRegenerating.value = true
+  actionError.value = ''
   try {
     const payload = {
       simulation_id: activeSimulationId.value,
@@ -2239,7 +2253,7 @@ const regenerateReport = async (options = {}) => {
       router.push({ name: 'Report', params: { reportId: res.data.report_id } })
     }
   } catch (err) {
-    addLog(`Regeneration failed: ${err.message}`)
+    addError(`Regeneration failed: ${err.message}`)
   } finally {
     isRegenerating.value = false
   }
@@ -2248,6 +2262,7 @@ const regenerateReport = async (options = {}) => {
 const resumeFailedReport = async (options = {}) => {
   if (!props.reportId || reportRevision.value.immutable || isResuming.value) return
   isResuming.value = true
+  actionError.value = ''
   try {
     addLog(`Resuming report from failed section: ${JSON.stringify(options)}`)
     const res = await resumeReport(props.reportId, options)
@@ -2258,7 +2273,7 @@ const resumeFailedReport = async (options = {}) => {
       startPolling()
     }
   } catch (err) {
-    addLog(`Report resume failed: ${err.message}`)
+    addError(`Report resume failed: ${err.message}`)
   } finally {
     isResuming.value = false
   }
@@ -2291,7 +2306,7 @@ const regenerateSection = async (sectionIndex, options = {}) => {
       await refreshReportState()
     }
   } catch (err) {
-    addLog(`Section regeneration failed: ${err.message}`)
+    addError(`Section regeneration failed: ${err.message}`)
   } finally {
     regeneratingSection.value = null
   }
@@ -2311,7 +2326,7 @@ const runEmbeddingBenchmark = async () => {
       addLog('Embedding benchmark completed')
     }
   } catch (err) {
-    addLog(`Embedding benchmark failed: ${err.message}`)
+    addError(`Embedding benchmark failed: ${err.message}`)
   } finally {
     isBenchmarking.value = false
   }
@@ -2628,15 +2643,15 @@ const fetchConsoleLog = async () => {
 const startPolling = () => {
   if (agentLogTimer || consoleLogTimer) return
   
-  fetchReportSnapshot()
-  fetchAgentLog()
-  fetchConsoleLog()
-  
-  agentLogTimer = setInterval(() => {
-    fetchAgentLog()
-    fetchReportSnapshot()
-  }, 2000)
-  consoleLogTimer = setInterval(fetchConsoleLog, 1500)
+  // A slow backend must not stack requests: each poll waits for its last call,
+  // and the first call uses the same wrapper as the timer.
+  const pollReport = noOverlap(() => Promise.all([fetchReportSnapshot(), fetchAgentLog()]))
+  const pollConsole = noOverlap(fetchConsoleLog)
+  pollReport()
+  pollConsole()
+
+  agentLogTimer = setInterval(pollReport, 2000)
+  consoleLogTimer = setInterval(pollConsole, 1500)
 }
 
 const stopPolling = () => {
@@ -2697,6 +2712,8 @@ watch(() => props.reportId, (newId) => {
 </script>
 
 <style scoped>
+.action-error { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 1rem; background: #fdecea; border-bottom: 1px solid #f0b4ae; color: #8a1c14; font-size: 13px; }
+.action-error button { border: 1px solid currentColor; background: transparent; color: inherit; padding: .2rem .6rem; cursor: pointer; }
 .revision-navigation { display: flex; flex-wrap: wrap; gap: .6rem 1rem; margin: 1rem 0; padding: .8rem; background: #eef3f8; font-size: 12px; }
 .revision-navigation a { color: #254b73; text-decoration: underline; }
 .saved-ledger { margin: 1rem 0; padding: 1rem; background: #f4f7fa; border: 1px solid #cbd7e3; }

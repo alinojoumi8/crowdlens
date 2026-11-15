@@ -124,7 +124,8 @@ class NERExtractor:
         logger.error(
             f"NER extraction failed after {self.max_retries + 1} attempts: {last_error}"
         )
-        return {"entities": [], "relations": []}
+        # "failed" lets the caller tell a provider failure from a chunk with no entities.
+        return {"entities": [], "relations": [], "failed": True}
 
     def extract_batch(self, chunks: List[str], ontology: Dict[str, Any]) -> List[Dict[str, Any]]:
         """

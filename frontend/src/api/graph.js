@@ -1,4 +1,4 @@
-import service from './index'
+import service, { requestWithRetry } from './index'
 
 /**
  * Generate ontology (upload documents and simulation requirements)

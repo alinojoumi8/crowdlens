@@ -19,4 +19,18 @@ describe('renderSafeMarkdown', () => {
     assert.match(rendered, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/)
     assert.match(rendered, /<h2 class="md-h2">Heading<\/h2>/)
   })
+
+  it('keeps underscores inside file names and identifiers', () => {
+    const rendered = renderSafeMarkdown('See annual_report_2024.pdf and agent_id, then _really_ read it.')
+
+    assert.match(rendered, /annual_report_2024\.pdf and agent_id,/)
+    assert.match(rendered, /<em>really<\/em>/)
+  })
+
+  it('renders many unmatched underscores in linear time', () => {
+    const started = performance.now()
+    renderSafeMarkdown(' _x'.repeat(60000))
+
+    assert.ok(performance.now() - started < 2000)
+  })
 })
