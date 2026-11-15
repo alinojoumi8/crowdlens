@@ -22,12 +22,15 @@ def test_doctrine_name_and_invented_person_are_not_case_participants(reference):
     assert result['relations'] == []  # A relation must not resurrect rejected endpoints.
 
 
-def test_doctrine_filter_keeps_a_person_explicitly_acting_in_the_source():
+@pytest.mark.parametrize('source', [
+    'The Walsh review was discussed. Justice Walsh signed this order.',
+    'Walsh, the presiding judge, applied the Walsh test.',
+])
+def test_doctrine_filter_keeps_a_person_explicitly_acting_in_the_source(source):
     class LLM:
         def chat_json(self, **kwargs):
             return {'entities': [{'name': 'Walsh', 'type': 'JudicialOfficer'}], 'relations': []}
-    result = NERExtractor(llm_client=LLM()).extract(
-        'The Walsh review was discussed. Justice Walsh signed this order.', ONTOLOGY)
+    result = NERExtractor(llm_client=LLM()).extract(source, ONTOLOGY)
     assert result['entities'][0]['name'] == 'Walsh'
 
 

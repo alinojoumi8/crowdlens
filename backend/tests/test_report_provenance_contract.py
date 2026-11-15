@@ -287,13 +287,17 @@ def test_block_quotation_forms_without_a_space_are_checked(quote_line):
     assert 'unverified_quotation' in [issue['code'] for issue in issues]
 
 
-def test_fidelity_review_runs_when_only_legal_authorities_are_supplied(monkeypatch):
+@pytest.mark.parametrize('authority_sources', [
+    [],
+    [{'document_id': 'doc_authority', 'excerpt': 'The applicant bears the burden.'}],
+])
+def test_fidelity_review_runs_without_original_sources(monkeypatch, authority_sources):
     from types import SimpleNamespace
     from app.services import source_fidelity
     agent = ReportAgent.__new__(ReportAgent)
     agent.report_mode, agent.report_logger = 'legal_case', None
     agent._load_source_grounding = lambda: {'status': 'available', 'original_sources': [],
-        'authority_sources': [{'document_id': 'doc_authority', 'excerpt': 'The applicant bears the burden.'}]}
+        'authority_sources': authority_sources}
     agent._frozen_forecast = lambda: {'status': 'unavailable', 'reason': 'evidence_only'}
     reviewed = []
     monkeypatch.setattr(source_fidelity, 'source_fidelity_issues',
@@ -301,3 +305,18 @@ def test_fidelity_review_runs_when_only_legal_authorities_are_supplied(monkeypat
     agent.llm = SimpleNamespace()
     agent._repair_grounded_text('The respondent bears the burden.', 'Law', 0)
     assert reviewed == ['The respondent bears the burden.']
+
+
+@pytest.mark.parametrize(('line', 'verified'), [
+    ('> Alice [never] approved payment. [doc_1]', False),
+    ('> “Alice approved payment.” [doc_1]', True),
+    ('> Dana repeated "payment approved" yesterday. [doc_1]', False),
+    ('> Alice said "payment approved" [as recorded]. [doc_1, para. 4]', True),
+])
+def test_blockquote_checks_the_complete_passage(line, verified):
+    from app.services.report_grounding import CONTRACT, provenance_issues
+    grounding = {'report_contract': CONTRACT, 'status': 'available', 'original_sources': [
+        {'document_id': 'doc_1', 'excerpt': 'Alice approved payment. Alice said "payment approved" [as recorded].'},
+    ]}
+    issues = provenance_issues(line, grounding, {'status': 'unavailable'})
+    assert [issue['code'] for issue in issues] == ([] if verified else ['unverified_quotation'])

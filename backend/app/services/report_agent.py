@@ -1923,11 +1923,10 @@ class ReportAgent:
         """
         from .report_grounding import provenance_issues
         from .source_fidelity import source_fidelity_issues
-        from .legal_authorities import admitted_sources
         grounding, forecast = self._load_source_grounding(), self._frozen_forecast()
         issues = (list(initial_issues) if initial_issues is not None
                   else provenance_issues(content, grounding, forecast))
-        review_fidelity = getattr(self, 'report_mode', None) == 'legal_case' and bool(admitted_sources(grounding))
+        review_fidelity = getattr(self, 'report_mode', None) == 'legal_case'
         def retain_review(response):
             with publication_guard():
                 if self.report_logger:

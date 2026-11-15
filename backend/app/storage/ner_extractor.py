@@ -296,6 +296,9 @@ class NERExtractor:
                                 or (re.search(r'\buse:\s*$', source[:m.start()])
                                     and re.match(r'\s*[—–-]\s', source[m.end():])) for m in occurrences)
                 actor = any(re.search(r'(?:justice|judge|dr\.?|mr\.?|ms\.?)\s+$', source[:m.start()])
+                            or re.match(r',\s+(?:the|an?)\s+(?:(?:presiding|chief|acting|trial|lead|expert)\s+){0,2}'
+                                        r'(?:judge|justice|lawyer|witness|representative|investigator|expert)\s*,',
+                                        source[m.end():])
                             or re.match(r'\s+(?:signed|granted|swore|wrote|filed|testified|said|appeared|applied|requested|stated|emailed|investigated|is|was)\b',
                                         source[m.end():]) for m in occurrences)
                 if personal and reference and not actor:

@@ -8,8 +8,11 @@ from .source_retrieval import freeze_sources
 from .source_scope import resolve_source_scope
 from .simulation_activity import read_activity, unique_actions, summarize_activity
 from .legal_authorities import admitted_sources
+from .report_semantics import REF
 
 CONTRACT = 'report-grounding-v1'
+_QUOTATION = re.compile(r'^ {0,3}>[ \t]*(?P<block>[^\r\n]+)|["“](?P<inline>[^"”\r\n]+)["”]', re.M)
+_QUOTATION_CITATION = re.compile(r'\[(?:doc_[A-Za-z0-9_-]+(?:,[^\]\r\n]+)?|' + REF + r')\]')
 
 
 def select_report_sources(rows, config, maximum=60000):
@@ -99,12 +102,16 @@ def provenance_issues(content, grounding, forecast):
         paragraph_start = content.find(paragraph, paragraph_cursor)
         paragraph_cursor = paragraph_start + len(paragraph)
         document_citations = set(re.findall(r'\[(doc_[A-Za-z0-9_-]+)(?=[,\]])', paragraph))
-        quotations = [(match.group(1), match) for match in re.finditer(r'["“]([^"”\n]+)["”]', paragraph)]
-        quotations += [(re.sub(r'\[[^\]]+\]', '', match.group().lstrip('> ')).strip(), match)
-                       for match in re.finditer(r'^ {0,3}>.+$', paragraph, re.M)
-                       if not re.search(r'["“]', match.group())]
-        for quote, match in quotations:
+        for match in _QUOTATION.finditer(paragraph):
+            quote = match['inline']
+            if quote is None:
+                quote = _QUOTATION_CITATION.sub('', match['block']).strip()
+                if (quote.startswith('"') and quote.endswith('"')
+                        or quote.startswith('“') and quote.endswith('”')):
+                    quote = quote[1:-1]
             text = normalize(quote)
+            if not text:
+                continue
             original = any(text in normalize(row.get('excerpt', ''))
                            and row.get('document_id') in document_citations for row in sources)
             trace = any(row.get('origin') == 'model_action'
