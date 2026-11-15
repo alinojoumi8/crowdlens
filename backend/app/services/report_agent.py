@@ -4141,9 +4141,12 @@ class ReportManager:
     
     @classmethod
     @owned('simulation', 'simulation_id')
-    def get_report_by_simulation(cls, simulation_id: str, *, report_mode=None, report_depth=None, evidence_only=None) -> Optional[Report]:
+    def get_report_by_simulation(cls, simulation_id: str, *, report_mode=None, report_depth=None, evidence_only=None,
+                                 authority_digest=...) -> Optional[Report]:
+        """Newest matching root report. Pass authority_digest (None for no authorities) to match that authority set."""
         reports = [report for report in cls.list_reports(simulation_id, limit=None)
                    if not report.revision.get('parent_report_id')
+                   and (authority_digest is ... or (report.source_grounding or {}).get('authority_digest') == authority_digest)
                    and (report_mode is None or report.report_mode == report_mode)
                    and (report_depth is None or report.report_depth == report_depth)
                    and (evidence_only is None or report.evidence_only == evidence_only)]

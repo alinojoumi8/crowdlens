@@ -128,3 +128,21 @@ def test_memo_only_cached_report_is_not_reused_for_an_authority_enriched_request
     assert result.status_code == 200
     assert result.json['data']['report_id'] != previous.report_id
     assert len(dispatched) == len(db.list_tasks()) == 1
+
+
+def test_report_lookup_returns_the_newest_report_with_the_requested_authority_set(tmp_path, monkeypatch):
+    from app.services.report_agent import Report, ReportManager, ReportStatus
+    monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(tmp_path))
+    for report_id, created, digest in [('report_a', '2026-11-01T00:00:00', 'digest-a'),
+                                       ('report_b', '2026-11-02T00:00:00', 'digest-b'),
+                                       ('report_c', '2026-11-03T00:00:00', None)]:
+        ReportManager.save_report(Report(report_id=report_id, simulation_id='sim_x', graph_id='graph_x',
+            simulation_requirement='Review.', status=ReportStatus.COMPLETED, created_at=created,
+            source_grounding={'authority_digest': digest} if digest else {}))
+
+    lookup = lambda **kw: ReportManager.get_report_by_simulation('sim_x', **kw).report_id
+    assert lookup() == 'report_c'
+    assert lookup(authority_digest='digest-a') == 'report_a'
+    assert lookup(authority_digest='digest-b') == 'report_b'
+    assert lookup(authority_digest=None) == 'report_c'
+    assert ReportManager.get_report_by_simulation('sim_x', authority_digest='digest-z') is None

@@ -192,9 +192,9 @@ def repair_source_conflicts(llm, content, issues, grounding):
 def source_fidelity_issues(llm, content, grounding, review_callback=None):
     from ..utils.llm_client import EmptyLLMResponseError
     from .legal_authorities import admitted_sources
+    # No early return when nothing is admitted: a legal rule with no source is
+    # exactly the gap this review must report, not a passed check.
     sources = admitted_sources(grounding)
-    if not sources:
-        return []
     activity = grounding.get('simulation_activity') or {}
     actions = activity.get('actions') or []
     scope_targets = _scope_targets(content)

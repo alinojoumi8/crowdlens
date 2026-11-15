@@ -445,3 +445,16 @@ def test_scope_audit_distinguishes_a_recommendation_within_a_mixed_paragraph():
             'draft_span': 'assess the orders separately for each bank.',
             'explanation': 'The scope phrases occur in an organizing recommendation, not an event claim.'}]}
     assert source_fidelity_issues(SimpleNamespace(chat_json=review), draft, GROUNDING) == []
+
+
+def test_legal_rule_gap_is_reported_when_no_source_is_admitted():
+    draft = 'The applicant must prove the claim beyond a reasonable doubt.'
+    grounding = {'report_contract': 'report-grounding-v1', 'status': 'unavailable'}
+    calls = []
+    def review(**kwargs):
+        calls.append(kwargs)
+        return {'conflicts': [], 'unsupported_legal_rules': [
+            {'draft_span': draft, 'explanation': 'No admitted source establishes this standard of proof.'}]}
+    issues = source_fidelity_issues(SimpleNamespace(chat_json=review), draft, grounding)
+    assert len(calls) == 1
+    assert [(issue['code'], issue['blocking']) for issue in issues] == [('unsupported_legal_rule', True)]

@@ -172,7 +172,8 @@ def generate_report():
                 return replay
 
         if not force_regenerate:
-            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth, evidence_only=evidence_only)
+            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth,
+                                                                     evidence_only=evidence_only, authority_digest=reference_digest)
             if (
                 existing_report
                 and existing_report.report_mode == report_mode

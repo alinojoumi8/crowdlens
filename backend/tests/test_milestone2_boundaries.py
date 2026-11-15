@@ -66,7 +66,9 @@ def test_saved_report_is_not_injected_into_system_instructions(monkeypatch):
     agent.simulation_id = 'synthetic_sim'; agent.simulation_requirement = 'Synthetic exploration'
     agent.graph_id = 'synthetic_graph'; agent.simulation_config = {}; agent.report_mode = 'legal_case'
     agent._get_tools_description = lambda: 'Synthetic tools'
-    agent.llm = SimpleNamespace(chat=lambda **kw: messages.extend(kw['messages']) or 'Synthetic reply')
+    # A legal-case answer is reviewed even when no source is admitted; this review finds nothing.
+    agent.llm = SimpleNamespace(chat=lambda **kw: messages.extend(kw['messages']) or 'Synthetic reply',
+                                chat_json=lambda **kw: {'conflicts': [], 'unsupported_legal_rules': []})
     agent.chat('Synthetic question')
     assert all(marker not in m['content'] for m in messages if m['role'] == 'system')
     assert any(marker in m['content'] for m in messages if m['role'] == 'user')
