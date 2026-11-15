@@ -50,3 +50,52 @@ it('keeps the conversation target while a reply is pending', async () => {
   wrapper.vm.selectSurveyTab()
   expect(wrapper.vm.activeTab).toBe('survey')
 })
+
+it('does not carry the Report Agent conversation to a different report', async () => {
+  getReport.mockResolvedValue({ success: true, data: {} })
+  chatWithReport.mockResolvedValue({ success: true, data: { response: 'Answer about report A' } })
+  wrapper = mount(Step5Interaction, {
+    props: { reportId: 'report_a', simulationId: 'sim_test' },
+    global: { stubs: { SafeMarkdown: true } },
+  })
+  await flushPromises()
+  wrapper.vm.chatInput = 'Question about report A'
+  await wrapper.vm.sendMessage()
+  await flushPromises()
+  expect(wrapper.vm.chatHistory.length).toBe(2)
+
+  await wrapper.setProps({ reportId: 'report_b' })
+  await flushPromises()
+
+  expect(wrapper.vm.chatHistory).toEqual([])
+  expect(wrapper.vm.chatHistoryCache.report_agent).toBeUndefined()
+})
+
+it.each(['reply', 'error'])('discards a pending Report Agent %s when the report changes', async outcome => {
+  getReport.mockResolvedValue({ success: true, data: {} })
+  let resolveReply
+  let rejectReply
+  chatWithReport.mockReturnValue(new Promise((resolve, reject) => {
+    resolveReply = resolve
+    rejectReply = reject
+  }))
+  wrapper = mount(Step5Interaction, {
+    props: { reportId: 'report_a', simulationId: 'sim_test' },
+    global: { stubs: { SafeMarkdown: true } },
+  })
+  await flushPromises()
+  wrapper.vm.chatInput = 'Question about report A'
+  const sending = wrapper.vm.sendMessage()
+  await wrapper.setProps({ reportId: 'report_b' })
+
+  if (outcome === 'reply') {
+    resolveReply({ success: true, data: { response: 'Answer about report A' } })
+  } else {
+    rejectReply(new Error('Request failed for report A'))
+  }
+  await sending
+
+  expect(wrapper.vm.chatHistory).toEqual([])
+  expect(wrapper.vm.chatHistoryCache.report_agent).toBeUndefined()
+  expect(wrapper.vm.isSending).toBe(false)
+})

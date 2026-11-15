@@ -26,6 +26,8 @@ from ..models.task import TaskManager, TaskStatus
 from ..services.graph_tools import GraphToolsService
 from ..services.proposal_store import ProposalError
 from ..utils.logger import get_logger
+from ..utils.llm_client import EmptyLLMResponseError
+from ..services.legal_authorities import normalize_legal_authorities, authority_digest
 
 logger = get_logger('mirofish.api.report')
 
@@ -116,6 +118,11 @@ def generate_report():
         evidence_only = data.get('evidence_only', False)
         if type(evidence_only) is not bool:
             return jsonify(success=False, error='invalid_evidence_only'), 400
+        legal_authorities = data.get('legal_authorities', [])
+        try:
+            reference_digest = authority_digest(normalize_legal_authorities(legal_authorities))
+        except ValueError as exc:
+            return jsonify(success=False, error=str(exc)), 400
         force_regenerate = data.get('force_regenerate', False)
         requested_report_mode = data.get('report_mode')
         report_mode = normalize_report_mode(requested_report_mode)
@@ -144,6 +151,8 @@ def generate_report():
             )
 
         request_key = data.get('request_key')
+        if reference_digest and report_mode != 'legal_case':
+            return jsonify(success=False, error='legal_authorities_require_legal_case_mode'), 400
         if request_key is not None and (not isinstance(request_key, str)
                 or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,128}', request_key)):
             return jsonify(success=False, error='invalid_request_key'), 400
@@ -151,6 +160,7 @@ def generate_report():
             'simulation_id': simulation_id, 'report_mode': report_mode,
             'report_depth': report_depth, 'force_regenerate': bool(force_regenerate),
             **({'evidence_only': True} if evidence_only else {}),
+            **({'authority_digest': reference_digest} if reference_digest else {}),
             **{key: _json_bool(data.get(key), False) for key in
                ('disable_interviews', 'strict_antirepetition', 'allow_degraded')},
         }, sort_keys=True).encode()).hexdigest()
@@ -162,12 +172,14 @@ def generate_report():
                 return replay
 
         if not force_regenerate:
-            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth, evidence_only=evidence_only)
+            existing_report = ReportManager.get_report_by_simulation(simulation_id, report_mode=report_mode, report_depth=report_depth,
+                                                                     evidence_only=evidence_only, authority_digest=reference_digest)
             if (
                 existing_report
                 and existing_report.report_mode == report_mode
                 and existing_report.report_depth == report_depth
                 and existing_report.status in [ReportStatus.COMPLETED, ReportStatus.NEEDS_REVIEW]
+                and (existing_report.source_grounding or {}).get('authority_digest') == reference_digest
             ):
                 existing_issues = ReportManager.validate_report_output(existing_report)
                 blocking_issues = [issue for issue in existing_issues if issue.get("blocking")]
@@ -261,6 +273,7 @@ def generate_report():
                     report_mode=report_mode,
                     report_depth=report_depth,
                     evidence_only=evidence_only,
+                    legal_authorities=legal_authorities,
                 )
                 def progress_callback(stage, progress, message):
                     task_manager.update_task(task_id, progress=progress, message=f"[{stage}] {message}")
@@ -434,10 +447,13 @@ def delete_report(report_id: str):
 @report_bp.route('/chat', methods=['POST'])
 def chat_with_report_agent():
     try:
-        data = request.get_json() or {}
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict):
+            return jsonify(success=False, error='invalid_chat_request'), 400
         simulation_id = data.get('simulation_id')
         message = data.get('message')
         chat_history = data.get('chat_history', [])
+        report_id = data.get('report_id')
 
         if (not isinstance(chat_history, list) or len(chat_history) > 100
                 or any(not isinstance(item, dict)
@@ -447,10 +463,10 @@ def chat_with_report_agent():
                        or len(item['content']) > 15000 for item in chat_history)):
             return jsonify(success=False, error='invalid_chat_history'), 400
 
-        if not simulation_id:
+        if not isinstance(simulation_id, str) or not simulation_id.strip():
             return jsonify({"success": False, "error": "Please provide simulation_id"}), 400
-        if not message:
-            return jsonify({"success": False, "error": "Please provide message"}), 400
+        if not isinstance(message, str) or not message.strip() or len(message) > 15000:
+            return jsonify(success=False, error='Please provide a message of 1 to 15000 characters'), 400
 
         manager = SimulationManager()
         state = manager.get_simulation(simulation_id)
@@ -473,7 +489,14 @@ def chat_with_report_agent():
         if not storage:
             raise ValueError("GraphStorage not initialized - check Neo4j connection")
         graph_tools = GraphToolsService(storage=storage)
-        existing_report = ReportManager.get_report_by_simulation(simulation_id)
+        if report_id is not None and (not isinstance(report_id, str) or not report_id):
+            return jsonify(success=False, error='invalid_report_id'), 400
+        existing_report = (ReportManager.get_report(report_id) if report_id
+                           else ReportManager.get_report_by_simulation(simulation_id))
+        if report_id and not existing_report:
+            return jsonify(success=False, error='report_not_found'), 404
+        if existing_report and (existing_report.simulation_id != simulation_id or existing_report.graph_id != graph_id):
+            return jsonify(success=False, error='report_scope_mismatch'), 409
 
         agent = ReportAgent(
             graph_id=graph_id,
@@ -481,12 +504,18 @@ def chat_with_report_agent():
             simulation_requirement=simulation_requirement,
             graph_tools=graph_tools,
             report_mode=existing_report.report_mode if existing_report else "prediction",
+            report_depth=existing_report.report_depth if existing_report else 'standard',
+            evidence_only=existing_report.evidence_only if existing_report else False,
         )
 
-        result = agent.chat(message=message, chat_history=chat_history)
+        result = agent.chat(message=message, chat_history=chat_history, report=existing_report)
         return jsonify({"success": True, "data": {"response": result, "simulation_id": simulation_id}})
 
+    except ProposalError as e:
+        return jsonify(success=False, error=e.code), e.status
     except Exception as e:
+        if isinstance(e, EmptyLLMResponseError):
+            return jsonify(success=False, error='The model did not return a usable answer. Please retry the question.'), 502
         logger.error(f"Chat failed: {str(e)}")
         return jsonify({"success": False, "error": str(e), "traceback": traceback.format_exc()}), 500
 

@@ -583,6 +583,11 @@ const formatTime = (timestamp) => {
 const sendMessage = async () => {
   if (!chatInput.value.trim() || isSending.value) return
   
+  const conversation = chatHistory.value
+  const reportId = props.reportId
+  const isReportChat = chatTarget.value === 'report_agent'
+  const isCurrentConversation = () => !isReportChat ||
+    (props.reportId === reportId && chatHistory.value === conversation)
   const message = chatInput.value.trim()
   chatInput.value = ''
   
@@ -597,12 +602,20 @@ const sendMessage = async () => {
   isSending.value = true
   
   try {
-    if (chatTarget.value === 'report_agent') {
-      await sendToReportAgent(message)
+    if (isReportChat) {
+      const response = await sendToReportAgent(message)
+      if (!isCurrentConversation()) return
+      chatHistory.value.push({
+        role: 'assistant',
+        content: response,
+        timestamp: new Date().toISOString()
+      })
+      addLog('Report Agent replied')
     } else {
       await sendToAgent(message)
     }
   } catch (err) {
+    if (!isCurrentConversation()) return
     addError(`Send failed: ${err.message}`)
     chatHistory.value.push({
       role: 'assistant',
@@ -611,9 +624,10 @@ const sendMessage = async () => {
     })
   } finally {
     isSending.value = false
-    scrollToBottom()
-    // Auto-save chat history to cache
-    saveChatHistory()
+    if (isCurrentConversation()) {
+      scrollToBottom()
+      saveChatHistory()
+    }
   }
 }
 
@@ -630,6 +644,7 @@ const sendToReportAgent = async (message) => {
     }))
 
   const res = await chatWithReport({
+    report_id: props.reportId,
     simulation_id: props.simulationId,
     message: message,
     chat_history: historyForApi
@@ -637,19 +652,11 @@ const sendToReportAgent = async (message) => {
 
   if (res.success && res.data) {
     const agentResponse = res.data.response
-    const responseText = typeof agentResponse === 'string'
+    return typeof agentResponse === 'string'
       ? agentResponse
       : (agentResponse?.response || agentResponse?.answer || res.data.answer || 'No response')
-
-    chatHistory.value.push({
-      role: 'assistant',
-      content: responseText,
-      timestamp: new Date().toISOString()
-    })
-    addLog('Report Agent replied')
-  } else {
-    throw new Error(res.error || 'Request failed')
   }
+  throw new Error(res.error || 'Request failed')
 }
 
 const sendToAgent = async (message) => {
@@ -891,7 +898,12 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-watch(() => props.reportId, (newId) => {
+watch(() => props.reportId, (newId, oldId) => {
+  if (newId !== oldId) {
+    // The Report Agent conversation belongs to one report; do not send it with another report's id.
+    delete chatHistoryCache.value['report_agent']
+    if (chatTarget.value === 'report_agent') chatHistory.value = []
+  }
   if (newId) {
     loadReportData()
   }

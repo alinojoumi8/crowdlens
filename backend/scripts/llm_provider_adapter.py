@@ -27,6 +27,8 @@ from openai import AsyncStream, Stream
 from pydantic import BaseModel
 from app.services.workflow_execution import current_scope, transport_attempt, WorkflowHalt
 from app.utils.model_limits import anthropic_output_settings
+from app.utils.llm_text import clean_model_text
+from app.utils.llm_client import EmptyLLMResponseError
 
 
 ANTHROPIC_COMPATIBLE_PROVIDERS = {"anthropic", "minimax", "kimi"}
@@ -400,7 +402,9 @@ class AnthropicMessagesModel(BaseModelBackend):
                     }
                 )
 
-        content = "\n".join(text_parts).strip()
+        content = clean_model_text("\n".join(text_parts))
+        if not content and not tool_calls:
+            raise EmptyLLMResponseError('Provider returned no usable text or tool call.')
         usage = data.get("usage") or {}
         prompt_tokens = usage.get("input_tokens", 0)
         completion_tokens = usage.get("output_tokens", 0)

@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 from app.services.report_agent import Report, ReportManager, ReportSection, ReportStatus, normalize_report_mode
 from app.services.report_agent import ReportAgent, ReportOutline
+import pytest
+
 from app.config import Config
 
 
@@ -282,6 +284,81 @@ def test_resume_report_continues_from_first_missing_section(tmp_path, monkeypatc
     assert resumed.status in {ReportStatus.COMPLETED, ReportStatus.NEEDS_REVIEW}
     sections = ReportManager.get_generated_sections(report.report_id)
     assert [section["section_index"] for section in sections] == [1, 2, 3]
+
+
+@pytest.mark.parametrize('checkpoint', ['matching', 'superseded', 'no_blockers'])
+def test_resume_rechecks_the_retained_failed_section(tmp_path, monkeypatch, checkpoint):
+    from app.services.report_agent import ReportLogger
+
+    monkeypatch.setattr(Config, 'UPLOAD_FOLDER', str(tmp_path))
+    monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(tmp_path / 'reports'))
+    agent = ResumeAgent()
+    agent.report_mode = 'legal_case'
+    report = Report('report_retained', 'sim_1', 'graph_1', 'test', ReportStatus.INTERRUPTED,
+        report_mode='legal_case', evidence_only=True,
+        error='Grounding correction failed; original and correction remain retained',
+        outline=ReportOutline(title='Report', summary='Summary',
+            sections=[ReportSection(title='One', content='Already saved.'), ReportSection(title='Two')]))
+    ReportManager.save_report(report)
+    ReportManager.save_section(report.report_id, 1, report.outline.sections[0])
+    saved_first = ReportManager.get_generated_sections(report.report_id)[0]
+
+    draft = 'Retained draft with a source finding.'
+    findings = [{'code': 'unsupported_source_scope', 'blocking': checkpoint != 'no_blockers'}]
+    log = ReportLogger(report.report_id)
+    log.log(action='grounding_correction_result', stage='generating', section_index=2, section_title='Two',
+            details={'content': draft, 'validation_issues': findings, 'accepted': False})
+    if checkpoint == 'superseded':
+        log.log_section_start('Two', 2)
+    repairs = []
+
+    def repair(content, title, index, initial_issues=None):
+        if index == 0:
+            return content
+        repairs.append((content, title, index, initial_issues))
+        return 'Rechecked section.'
+
+    monkeypatch.setattr(agent, '_repair_grounded_text', repair)
+    resumed = agent.resume_report(report)
+    sections = ReportManager.get_generated_sections(report.report_id)
+
+    assert resumed.status in {ReportStatus.COMPLETED, ReportStatus.NEEDS_REVIEW}
+    assert sections[0] == saved_first
+    if checkpoint == 'matching':
+        assert repairs == [(draft, 'Two', 2, findings)]
+        assert agent.generated == []
+        assert 'Rechecked section.' in sections[1]['content']
+    else:
+        assert repairs == []
+        assert agent.generated == [2]
+
+
+@pytest.mark.parametrize('planning_fails', [False, True])
+def test_resume_can_recover_a_report_that_failed_before_its_outline(tmp_path, monkeypatch, planning_fails):
+    monkeypatch.setattr(Config, 'UPLOAD_FOLDER', str(tmp_path))
+    monkeypatch.setattr(ReportManager, 'REPORTS_DIR', str(tmp_path / 'reports'))
+    agent = ResumeAgent()
+    report = Report('report_no_outline', 'sim_1', 'graph_1', 'test', ReportStatus.INTERRUPTED,
+                    error='planning failed', evidence_only=True)
+    ReportManager.save_report(report)
+    created = report.created_at
+    def plan():
+        if planning_fails:
+            raise ValueError('synthetic planning failure')
+        return ReportOutline(title='Recovered', summary='Summary',
+            sections=[ReportSection(title='One'), ReportSection(title='Two')])
+    monkeypatch.setattr(agent, 'plan_outline', plan)
+    monkeypatch.setattr(agent, '_repair_grounded_text', lambda *args: 'Checked summary')
+    if planning_fails:
+        with pytest.raises(ValueError, match='synthetic planning failure'):
+            agent.resume_report(report)
+        assert ReportManager.get_report(report.report_id).error == 'synthetic planning failure'
+        assert agent.console_logger is None
+    else:
+        result = agent.resume_report(report)
+        assert result.report_id == report.report_id and result.created_at == created
+        assert result.evidence_only is True and agent.generated == [1, 2]
+        assert result.outline.summary == 'Checked summary'
 
 
 def test_report_progress_records_failed_section_metadata(tmp_path, monkeypatch):

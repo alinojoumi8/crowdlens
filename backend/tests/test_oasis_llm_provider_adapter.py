@@ -7,6 +7,7 @@ from scripts.llm_provider_adapter import (
     create_oasis_model,
     resolve_oasis_llm_config,
 )
+from app.utils.llm_client import EmptyLLMResponseError
 
 
 class FakeResponse:
@@ -20,7 +21,21 @@ class FakeResponse:
         return self.payload
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
+@pytest.mark.parametrize('text,expected', [(']<]minimax[>[Answer.[e~[', 'Answer.'),
+    (']<]minimax[>[', None)])
+def test_simulation_transport_cleans_provider_framing(monkeypatch, text, expected):
+    monkeypatch.setattr('scripts.llm_provider_adapter.requests.post', lambda *a, **kw:
+        FakeResponse({'model': 'MiniMax-M3.1-Flash', 'content': [{'type': 'text', 'text': text}]}))
+    model = AnthropicMessagesModel(model_type='MiniMax-M3.1-Flash', api_key='test',
+                                   url='https://api.minimax.io/anthropic')
+    if expected is None:
+        with pytest.raises(EmptyLLMResponseError):
+            model.run([{'role': 'user', 'content': 'Synthetic question'}])
+    else:
+        assert model.run([{'role': 'user', 'content': 'Synthetic question'}]).choices[0].message.content == expected
+
+
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview", "MiniMax-M3.1-Flash"])
 def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch, model_name):
     monkeypatch.setenv("LLM_DEFAULT_PROVIDER", "minimax")
     monkeypatch.setenv("LLM_API_KEY", "test-key")
@@ -36,7 +51,7 @@ def test_resolve_config_detects_anthropic_compatible_minimax(monkeypatch, model_
     assert config.model == model_name
 
 
-@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview"])
+@pytest.mark.parametrize("model_name", ["MiniMax-M2.7", "MiniMax-M3", "MiniMax-M3.1-Flash-Preview", "MiniMax-M3.1-Flash"])
 def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
     monkeypatch, model_name,
 ):
@@ -78,7 +93,7 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
         ]
     )
 
-    if model_name == "MiniMax-M3.1-Flash-Preview":
+    if model_name.startswith("MiniMax-M3.1-Flash"):
         assert captured["json"]["max_tokens"] == 32768
         assert captured["json"]["output_config"] == {"effort":"high"}
     assert isinstance(result, ChatCompletion)
@@ -91,7 +106,7 @@ def test_anthropic_messages_model_posts_messages_and_returns_chat_completion(
     assert captured["json"]["messages"] == [
         {"role": "user", "content": "What is your position?"}
     ]
-    assert captured["json"]["max_tokens"] == (32768 if model_name == "MiniMax-M3.1-Flash-Preview" else 4096)
+    assert captured["json"]["max_tokens"] == (32768 if model_name.startswith("MiniMax-M3.1-Flash") else 4096)
 
 
 def test_create_oasis_model_routes_openai_compatible_to_camel_factory(
