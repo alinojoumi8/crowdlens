@@ -3,9 +3,9 @@
 # !override replaces, rather than appends, ports (including unsafe base mappings).
 services:
   mirofish:
-    # This host migration must not rebuild or upgrade the running application.
+    # Pinned to the deployed app image (main c1b4187). Change only for a reviewed deployment.
     build: !reset null
-    image: sha256:6b28dd78e5fe4b1b21a2879d612f519f8229a84c31f9ea56315504fb0f6bfe7e
+    image: sha256:589340abd27ff74bfb183d9fd6034dc481f24f66bfd24444d4111538ccc3a0c7
     pull_policy: never
     ports: !override
       - "127.0.0.1:3000:3000"

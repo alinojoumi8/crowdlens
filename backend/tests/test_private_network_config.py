@@ -42,7 +42,7 @@ def test_private_override_replaces_ports_pins_images_and_preserves_consumers(tmp
         assert all(p['host_ip'] == '127.0.0.1' and int(p['published']) == p['target'] for p in actual)
         assert services[name]['pull_policy'] == 'never'
     assert not services['mirofish'].get('build')
-    assert services['mirofish']['image'] == 'sha256:6b28dd78e5fe4b1b21a2879d612f519f8229a84c31f9ea56315504fb0f6bfe7e'
+    assert services['mirofish']['image'] == 'sha256:589340abd27ff74bfb183d9fd6034dc481f24f66bfd24444d4111538ccc3a0c7'
     assert services['neo4j']['image'].endswith('@sha256:8f01f7bb053e5564eb84a3f1824e4ca2202d29dd415d196cf8e27c8f7e6b611e')
     assert services['ollama']['image'].endswith('@sha256:a6149234667efc71d37766d61c1a16f24c33e4cd7a0bf4125c44a7e47e2419c4')
     assert set(services['mirofish']['networks']) == {'default', 'dependencies'}
