@@ -24,7 +24,13 @@ def fallback_settings():
     if not (api_key and base_url and model):
         return None
     provider = os.environ.get('LLM_FALLBACK_PROVIDER', '').strip() or 'openrouter'
-    return dict(provider=provider, api_key=api_key, base_url=base_url, model=model)
+    # Some OpenRouter reasoning models spend the whole token budget on hidden
+    # thinking and return no text. LLM_FALLBACK_REASONING=off turns thinking off;
+    # it is opt-in because other models require reasoning and reject the field.
+    extra_body = {}
+    if provider == 'openrouter' and os.environ.get('LLM_FALLBACK_REASONING', '').strip().lower() == 'off':
+        extra_body['reasoning'] = {'enabled': False}
+    return dict(provider=provider, api_key=api_key, base_url=base_url, model=model, extra_body=extra_body)
 
 
 def same_endpoint(model_a, url_a, model_b, url_b):

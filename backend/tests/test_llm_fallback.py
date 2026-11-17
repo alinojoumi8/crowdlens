@@ -24,6 +24,7 @@ def backup_env(monkeypatch):
     monkeypatch.setenv('LLM_FALLBACK_BASE_URL', BACKUP)
     monkeypatch.setenv('LLM_FALLBACK_MODEL_NAME', 'backup-model')
     monkeypatch.setenv('LLM_HTTP_MAX_RETRIES', '0')
+    monkeypatch.setenv('LLM_FALLBACK_REASONING', 'off')
     monkeypatch.setattr('time.sleep', lambda seconds: None)
     llm_fallback.reset()
     yield
@@ -73,6 +74,7 @@ def backup_transport(client, calls):
     backup = client._backup()
     def handler(request):
         calls.append('backup')
+        assert json.loads(request.content)['reasoning'] == {'enabled': False}
         return httpx.Response(200, json=REPLY)
     backup.client = OpenAI(api_key='synthetic', base_url=BACKUP, max_retries=0,
                            http_client=httpx.Client(transport=httpx.MockTransport(handler)))
@@ -195,6 +197,7 @@ def test_backup_keeps_agent_generation_settings_and_may_share_the_model_name(mon
     with execution_scope(ledger, wid, 'simulation'):
         model.run([{'role': 'user', 'content': 'fixture'}])
     assert bodies[0]['max_tokens'] == 128 and bodies[0]['temperature'] == 0
+    assert bodies[0]['reasoning'] == {'enabled': False}
 
 
 @pytest.mark.parametrize('sent, accepted', [
@@ -224,3 +227,16 @@ def test_cooldown_belongs_to_one_main_model():
     llm_fallback.mark_primary_limited('main-model', MAIN)
     assert llm_fallback.primary_limited('main-model', MAIN + '/v1/messages')
     assert not llm_fallback.primary_limited('other-model', MAIN)
+
+
+@pytest.mark.parametrize('provider, setting, expected', [
+    ('openrouter', 'off', {'reasoning': {'enabled': False}}),
+    ('openrouter', None, {}),
+    ('other', 'off', {}),
+])
+def test_thinking_off_is_opt_in_for_openrouter(monkeypatch, provider, setting, expected):
+    monkeypatch.setenv('LLM_FALLBACK_PROVIDER', provider)
+    monkeypatch.delenv('LLM_FALLBACK_REASONING')
+    if setting:
+        monkeypatch.setenv('LLM_FALLBACK_REASONING', setting)
+    assert llm_fallback.fallback_settings()['extra_body'] == expected

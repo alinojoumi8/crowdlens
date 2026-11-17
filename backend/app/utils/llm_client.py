@@ -192,6 +192,7 @@ class LLMClient:
         if getattr(self, '_backup_client', None) is None:
             self._backup_client = LLMClient(api_key=settings['api_key'], base_url=settings['base_url'],
                                             model=settings['model'], timeout=self.timeout, fallback=False)
+            self._backup_client.extra_body = settings['extra_body']
         return self._backup_client
 
     def chat(
@@ -261,6 +262,8 @@ class LLMClient:
             kwargs["extra_body"] = {
                 "options": {"num_ctx": self._num_ctx}
             }
+        if getattr(self, 'extra_body', None):
+            kwargs["extra_body"] = dict(kwargs.get("extra_body") or {}, **self.extra_body)
 
         client = self.client
         overrides = {}

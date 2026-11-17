@@ -59,3 +59,13 @@ def isolated_workspace_context(monkeypatch):
     token = workspace._SCOPE.set(None)
     yield
     workspace._SCOPE.reset(token)
+
+
+@pytest.fixture(autouse=True)
+def no_backup_llm_from_local_env(monkeypatch):
+    """A developer .env may configure a backup LLM; tests opt in explicitly."""
+    for name in ('LLM_FALLBACK_PROVIDER', 'LLM_FALLBACK_API_KEY', 'LLM_FALLBACK_BASE_URL',
+                 'LLM_FALLBACK_MODEL_NAME', 'LLM_FALLBACK_REASONING', 'LLM_FALLBACK_COOLDOWN_SECONDS'):
+        monkeypatch.delenv(name, raising=False)
+    from app.utils import llm_fallback
+    llm_fallback.reset()

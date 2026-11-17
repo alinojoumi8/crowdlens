@@ -243,7 +243,7 @@ class AnthropicMessagesModel(BaseModelBackend):
             return None
         if getattr(self, '_backup_cache', None) is None:
             self._backup_cache = CountedOpenAIModel(
-                model_type=settings['model'], model_config_dict=dict(self.model_config_dict),
+                model_type=settings['model'], model_config_dict=dict(self.model_config_dict, **settings['extra_body']),
                 api_key=settings['api_key'], url=settings['base_url'],
                 timeout=self._timeout, max_retries=self._max_retries)
             self._backup_cache._is_backup = True
