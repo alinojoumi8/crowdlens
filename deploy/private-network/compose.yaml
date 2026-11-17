@@ -3,9 +3,9 @@
 # !override replaces, rather than appends, ports (including unsafe base mappings).
 services:
   mirofish:
-    # Pinned to the deployed app image (fix/general-mode-and-halted-personas b1139a4). Change only for a reviewed deployment.
+    # Pinned to the deployed app image (fix/general-mode-and-halted-personas 083076f). Change only for a reviewed deployment.
     build: !reset null
-    image: sha256:40f87d10fbb4423561f253d8cf192bbad877c283b752252f074e4075b8be2ffb
+    image: sha256:703a4c60098135fceeea5b3f57cac9080adb73c5c30f94909b249024a77006bc
     pull_policy: never
     ports: !override
       - "127.0.0.1:3000:3000"
