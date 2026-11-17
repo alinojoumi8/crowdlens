@@ -56,6 +56,11 @@ def install_workflow_controls(app):
         return dict(provider=Config.LLM_DEFAULT_PROVIDER, model=Config.LLM_MODEL_NAME,
                     base_url=Config.LLM_BASE_URL)
 
+    def configured_fallback():
+        from ..utils.llm_fallback import fallback_settings
+        settings = fallback_settings()
+        return settings and dict(provider=settings['provider'], model=settings['model'], base_url=settings['base_url'])
+
     def cancel_owned(wid, reason, epoch):
         from ..services.quota_io import remediation
         from ..models.task import TaskManager
@@ -109,7 +114,9 @@ def install_workflow_controls(app):
                 except WorkflowHalt as exc:
                     shared = dict(managed=True, admission_open=False, reason=exc.reason)
                     blocker = exc.reason
+        fallback = configured_fallback()
         return jsonify(success=True, data=dict(provider=identity['provider'], model=identity['model'],
+            fallback=fallback and dict(provider=fallback['provider'], model=fallback['model']),
             controls_available=ledger is not None, configured=bool(Config.LLM_API_KEY),
             embeddings=Config.EMBEDDING_PROVIDER, authorization_blocker=blocker, quotas=shared))
 
@@ -171,6 +178,10 @@ def install_workflow_controls(app):
         identity = configured_identity()
         if data.get('provider') != identity['provider'] or data.get('model') != identity['model']:
             return jsonify(success=False, error='provider_identity_changed'), 409
+        fallback = configured_fallback()
+        shown = fallback and dict(provider=fallback['provider'], model=fallback['model'])
+        if (data.get('fallback') or None) != shown:
+            return jsonify(success=False, error='provider_identity_changed'), 409
         blocker = authorization_blocker()
         if blocker:
             return jsonify(success=False, error=blocker), 400
@@ -199,7 +210,8 @@ def install_workflow_controls(app):
                 input_description=data.get('input_description'), max_requests=data.get('max_requests'),
                 max_seconds=data.get('max_seconds'), confirmed=data.get('confirmed'),
                 input_fingerprint=data.get('input_fingerprint'), resources=resources,
-                consumed_requests=data.get('consumed_requests', 0), spend=data.get('spend'))
+                consumed_requests=data.get('consumed_requests', 0), spend=data.get('spend'),
+                fallback=configured_fallback())
             return jsonify(success=True, data=ledger.status(record['workflow_id'])), 201
         except ValueError as exc:
             return jsonify(success=False, error=str(exc)), 400

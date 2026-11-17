@@ -2,6 +2,7 @@
   <section class="workflow-controls" aria-label="Workflow allowance">
     <template v-if="authorize">
       <p>Provider: <strong>{{ configuration?.provider || 'Loading' }}</strong> · Model: <strong>{{ configuration?.model || 'Loading' }}</strong></p>
+      <p v-if="configuration?.fallback" class="fallback-provider">Backup when rate limited: <strong>{{ configuration.fallback.provider }}</strong> · Model: <strong>{{ configuration.fallback.model }}</strong>. Backup calls count toward the same limits.</p>
       <p>Authorize generation for: {{ inputDescription || 'Select the fictional input and describe the scenario first.' }}</p>
       <div class="allowance-inputs">
         <label>Maximum requests <input v-model.number="maxRequests" type="number" min="1" max="100000" /></label>

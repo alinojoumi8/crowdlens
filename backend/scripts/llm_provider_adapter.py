@@ -29,6 +29,8 @@ from app.services.workflow_execution import current_scope, transport_attempt, Wo
 from app.utils.model_limits import anthropic_output_settings
 from app.utils.llm_text import clean_model_text
 from app.utils.llm_client import EmptyLLMResponseError
+from app.utils.llm_fallback import (fallback_settings, is_limit_error, mark_primary_limited, primary_limited,
+                                   same_endpoint, usable_backup)
 
 
 ANTHROPIC_COMPATIBLE_PROVIDERS = {"anthropic", "minimax", "kimi"}
@@ -217,9 +219,35 @@ class AnthropicMessagesModel(BaseModelBackend):
         response_format: Optional[Type[BaseModel]] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
     ) -> ChatCompletion | Stream[ChatCompletionChunk]:
-        body = self._build_request_body(messages, response_format, tools)
-        data = self._post_messages(body)
-        return self._to_chat_completion(data)
+        backup = self._backup_model()
+        if backup and primary_limited(str(self.model_type), self._url):
+            return backup._run(messages, response_format, tools)
+        try:
+            body = self._build_request_body(messages, response_format, tools)
+            data = self._post_messages(body)
+            return self._to_chat_completion(data)
+        except Exception as exc:
+            if not backup or not is_limit_error(exc):
+                raise
+            print(f"[fallback] {self.model_type} is rate limited ({exc}); using {backup.model_type}")
+            mark_primary_limited(str(self.model_type), self._url)
+            return backup._run(messages, response_format, tools)
+
+    def _backup_model(self):
+        """The backup model for rate limits, or None when no backup is configured and authorized."""
+        if getattr(self, '_is_backup', False):
+            return None
+        settings = fallback_settings()
+        if (not settings or same_endpoint(settings['model'], settings['base_url'], str(self.model_type), self._url)
+                or not usable_backup(settings)):
+            return None
+        if getattr(self, '_backup_cache', None) is None:
+            self._backup_cache = CountedOpenAIModel(
+                model_type=settings['model'], model_config_dict=dict(self.model_config_dict),
+                api_key=settings['api_key'], url=settings['base_url'],
+                timeout=self._timeout, max_retries=self._max_retries)
+            self._backup_cache._is_backup = True
+        return self._backup_cache
 
     async def _arun(
         self,

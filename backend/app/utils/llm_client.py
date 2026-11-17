@@ -6,6 +6,8 @@ Supports Ollama num_ctx parameter to prevent prompt truncation
 
 from .model_limits import anthropic_output_settings
 from .llm_text import clean_model_text
+from .llm_fallback import (fallback_settings, is_limit_error, mark_primary_limited, primary_limited,
+                           same_endpoint, usable_backup)
 
 import json
 import os
@@ -36,8 +38,12 @@ class LLMClient:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         model: Optional[str] = None,
-        timeout: float = 300.0
+        timeout: float = 300.0,
+        *,
+        fallback: bool = True,
     ):
+        self.fallback = fallback
+        self._backup_client = None
         self.api_key = api_key or Config.LLM_API_KEY
         self.base_url = base_url or Config.LLM_BASE_URL
         self.model = model or Config.LLM_MODEL_NAME
@@ -175,7 +181,44 @@ class LLMClient:
 
         raise last_error or RuntimeError("Anthropic-compatible LLM request failed")
 
+    def _backup(self):
+        """The backup client, or None when no backup is configured and authorized."""
+        if not getattr(self, 'fallback', True):
+            return None
+        settings = fallback_settings()
+        if (not settings or same_endpoint(settings['model'], settings['base_url'], self.model, self.base_url)
+                or not usable_backup(settings)):
+            return None
+        if getattr(self, '_backup_client', None) is None:
+            self._backup_client = LLMClient(api_key=settings['api_key'], base_url=settings['base_url'],
+                                            model=settings['model'], timeout=self.timeout, fallback=False)
+        return self._backup_client
+
     def chat(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float = 0.7,
+        max_tokens: int = 4096,
+        response_format: Optional[Dict] = None,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None,
+    ) -> str:
+        """Send a chat request; use the backup model when the main one is rate limited."""
+        call = dict(messages=messages, temperature=temperature, max_tokens=max_tokens,
+                    response_format=response_format, request_timeout=request_timeout,
+                    request_max_retries=request_max_retries, usage_callback=usage_callback)
+        backup = self._backup()
+        if backup and primary_limited(self.model, self.base_url):
+            return backup.chat(**call)
+        try:
+            return self._chat_once(**call)
+        except Exception as exc:
+            if not backup or not is_limit_error(exc):
+                raise
+            logger.warning("Main LLM %s is rate limited (%s); using backup %s", self.model, exc, backup.model)
+            mark_primary_limited(self.model, self.base_url)
+            return backup.chat(**call)
+
+    def _chat_once(
         self,
         messages: List[Dict[str, str]],
         temperature: float = 0.7,
