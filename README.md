@@ -1,38 +1,84 @@
 <div align="center">
 
-<img src="./static/image/crowdlens-banner.svg" alt="CrowdLens — Explore how people respond" width="100%"/>
+<img src="./docs/images/readme/crowdlens-hero.jpg" alt="A magnifying lens over a miniature crowd gathered around an orange product box" width="100%"/>
 
 # CrowdLens
 
-**Explore how people respond.**
+### Test your idea on a simulated crowd before you take it to market.
 
-AI scenario simulation with a local-first runtime, knowledge graphs, and evidence review.
+Give CrowdLens your pitch, pricing page, or launch post. It builds a crowd of AI
+participants from your own sources, lets them react, and shows you the
+conversation and the evidence behind the analysis.
 
+[![CI](https://github.com/alinojoumi8/crowdlens/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/alinojoumi8/crowdlens/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue)](./LICENSE)
+![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![Node 22](https://img.shields.io/badge/Node-22-339933?logo=nodedotjs&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+
+[Quick start](#quick-start) · [How it works](#how-it-works) · [What you can test](#what-you-can-test) · [Limits](#a-rehearsal-not-a-crystal-ball) · [Docs](#documentation)
 
 </div>
 
-## What is CrowdLens?
+<p align="center">
+  <img src="./docs/images/readme/crowdlens-report.png" alt="A CrowdLens scenario report with a summary, outcome estimates, a section list, and report checks" width="100%"/>
+</p>
+<p align="center"><sub>A report from a fictional city policy scenario. The same workflow runs on a product pitch, a pricing page, or a launch post. Generated analysis is not a verified forecast.</sub></p>
 
-CrowdLens turns documents into scenarios populated by AI agents with different
-perspectives. Explore public reactions, conversations, and shifts in simulated
-sentiment; compare assumptions and inspect the resulting analysis.
+## Why CrowdLens
 
-Simulation output is generated behavior, not a verified forecast of real people
-or markets. Review source attribution and factual claims before using a report
-to inform a decision.
+Most ideas meet their audience on launch day. By then the product is built, the
+campaign is paid for, and the pricing page is public. If people react badly, you
+learn it late and at full price.
 
-The default setup uses Ollama and Neo4j on your hardware. Hosted generation and
-embedding providers are optional; enabling them sends the corresponding inputs
-to the configured provider. Website ingestion and optional market lookups also
-require network access. Choose your configuration to match your data needs.
+CrowdLens moves that moment earlier. You describe your idea with the documents
+you already have. CrowdLens reads them and maps the people and groups they
+mention: customers, competitors, critics, partners. It turns them into simulated
+participants and lets them talk. You watch where the conversation goes, read an
+analysis that points back to your sources, and ask the participants your own
+questions.
 
-CrowdLens builds on the work of [666ghj](https://github.com/666ghj) and
-[nikmcfly](https://github.com/nikmcfly). The product name
-has changed; existing storage paths and Docker service names remain compatible.
-See [the rebrand plan and compatibility notes](docs/rebranding.md).
+Then you change the idea and run it again. You see where your idea could go
+before you commit to it.
 
-## Workflow
+| The usual way | With CrowdLens |
+| --- | --- |
+| You learn the objections after you launch. | You read simulated objections before you spend. |
+| You get one launch and one result. | You change an assumption and run the scenario again. |
+| Feedback comes from one person at a time. | Participants react to your idea and to each other. |
+| An analysis asks you to trust it. | The report shows source excerpts, so you can check the claims. |
+
+## What you can test
+
+- **A new product idea.** Upload the pitch deck or the product brief. Explore which groups get interested, which groups push back, and what they ask first.
+- **A pricing change.** Upload the pricing page and the announcement. Explore who accepts the change and who objects.
+- **A launch message.** Run one announcement, then run another. Compare how the conversation moves.
+- **A market entry.** Add market research and competitor pages as sources. Explore how buyers and incumbents might respond.
+- **More than products.** The same workflow supports communication planning, policy scenario exploration, and research and storytelling.
+
+## How it works
+
+```mermaid
+flowchart LR
+    A["Your sources<br/>pitch · brief · pricing page · links"] --> B["Source graph<br/>people · topics · relationships"]
+    B --> C["Simulated<br/>participants"]
+    C --> D["Conversation<br/>posts and responses"]
+    D --> E["Report<br/>with source excerpts"]
+    E --> F["Follow-up<br/>chat · interviews · surveys"]
+```
+
+1. **Connect your sources.** Upload PDF, Markdown, or text files, or paste website links. Describe the scenario you want to explore. CrowdLens organizes the people, topics, and relationships into a source-linked knowledge graph.
+2. **Set up participants.** CrowdLens creates simulated participants from that graph. You select who takes part and choose the scenario settings.
+3. **Explore reactions.** Participants post and respond on a simulated public feed and a discussion community. You watch the activity and the run status.
+4. **Review the report.** Read a structured analysis with excerpts from your original sources. For an analysis with no forecast percentages, choose the evidence-only report.
+5. **Ask follow-up questions.** Chat with the report assistant, talk to one participant, or send a survey to the simulated crowd. Agent interviews require an available simulation environment.
+
+A report is a draft that you can improve. **Draft with sources** proposes a
+corrected section with a claim ledger and the original excerpts. **Save as new
+revision** keeps your original report unchanged.
+
+<details>
+<summary>The full workflow, step by step</summary>
 
 1. **Upload** — Provide PDF, Markdown, or text files and/or website URLs with a scenario requirement. CrowdLens stores source documents, creates project/case-version metadata, and generates an ontology.
 2. **Graph** — Build entities, relationships, and source-linked chunks in Neo4j. Inspect graph progress and embedding readiness before continuing.
@@ -47,14 +93,34 @@ require an available simulation environment. See the
 [capability manifest](docs/product-capabilities.md) for API contracts, persistence
 boundaries, current verification evidence, and remaining gaps.
 
+</details>
+
+<p align="center">
+  <img src="./docs/images/readme/crowdlens-follow-up.png" alt="The CrowdLens follow-up screen with the report on the left and chat, interview, and survey tools on the right" width="100%"/>
+</p>
+<p align="center"><sub>Step 5: ask the report assistant, one participant, or the whole simulated crowd.</sub></p>
+
+## You stay in control
+
+- **Local-first.** The default setup uses Ollama and Neo4j on your hardware. Hosted generation and embedding providers are optional; enabling them sends the corresponding inputs to the configured provider. Website ingestion and optional market lookups also require network access.
+- **You set the limits.** Before generation starts, you authorize a maximum number of requests and minutes for the workflow. A request limit is not a monetary ceiling.
+- **Open source.** CrowdLens is AGPL-3.0. You can read the code that produces your report.
+
+## A rehearsal, not a crystal ball
+
+CrowdLens is a place to rehearse. It does not predict the future.
+
+- Simulated participants are AI models. They are not your real customers.
+- Simulation output is generated behavior, not a verified forecast of real people or markets.
+- Reports show their sources, but mechanical checks and report completion do not certify factual correctness. Review source attribution and factual claims before using a report to inform a decision.
+
+Use CrowdLens to find the questions, objections, and blind spots early. Then
+take them to real people.
+
 ## Quick Start
 
-### Prerequisites
-
-- Docker & Docker Compose (recommended), **or**
-- Python **3.11** (verified dependency-lock baseline), Node.js **22.13+ in the 22.x series** (CI uses Node 22), Neo4j 5.18+, Ollama. Other declared Node ranges are in `package.json`; broader Python support remains unverified.
-
-### Option A: Docker (easiest)
+You need Docker and Docker Compose. For a manual install, see
+[Setup and configuration](docs/setup.md).
 
 The container serves the built frontend and API with Gunicorn. See the
 [production release and rollback guide](docs/CI-AND-RELEASE-WORKFLOW.md) for
@@ -71,7 +137,7 @@ openssl rand -hex 24
 # For local Ollama in Docker, set these two values in .env:
 # LLM_BASE_URL=http://ollama:11434/v1
 # OPENAI_API_BASE_URL=http://ollama:11434/v1
-# For MiniMax M3, use the hosted configuration below instead.
+# For MiniMax M3, use the hosted configuration in docs/setup.md instead.
 
 # Start all services in CPU-compatible mode
 CROWDLENS_BUILD_REVISION="$(git rev-parse HEAD)" docker compose up -d --build
@@ -90,248 +156,22 @@ start the same stack with the GPU override:
 docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
 ```
 
-### Option B: Manual
-
-**1. Start Neo4j**
-
-```bash
-docker run -d --name neo4j \
-  -p 127.0.0.1:7474:7474 -p 127.0.0.1:7687:7687 \
-  -e NEO4J_AUTH=neo4j/replace-with-a-unique-password \
-  neo4j:5.18-community
-```
-
-**2. Start Ollama & pull models**
-
-```bash
-ollama serve &
-ollama pull qwen2.5:32b      # LLM (or qwen2.5:14b for less VRAM)
-ollama pull nomic-embed-text  # Embeddings (768d)
-```
-
-**3. Configure & run backend**
-
-```bash
-cp .env.example .env
-# Set NEO4J_PASSWORD and edit endpoints if services use non-default ports
-
-cd backend
-uv sync --frozen --dev
-uv run python run.py
-```
-
-**4. Run frontend**
-
-```bash
-cd frontend
-npm ci
-npm run dev
-```
-
-Open `http://localhost:3000`.
-
-### Scanned PDF evidence
-
-PDF extraction preserves page markers. Image pages with little native text use local Tesseract OCR (`tesseract` with English language data on the backend host). If OCR is unavailable or fails, ingestion reports the affected page rather than silently discarding scanned evidence. OCR text can contain recognition errors; check quotations against the original PDF during report review.
-
-Source-backed proposals can select a complete marked PDF page within a larger stored graph chunk. Page windows retain the original chunk hash, exact offsets, and PDF page number. Eligible conditional material is copied verbatim by the server; oversized or incomplete page windows remain blocked. Retrieval discloses when fragment matches are omitted or adjacent pages may contain continued attribution or conditions. A complete extracted page does not establish complete context, exhaustive document coverage, or factual accuracy; compare adjacent original pages before accepting a revision.
-
-Quotation recovery maps a unique whitespace-only variant back to exact source text and records the original offsets. It never changes wording, punctuation, case, dates, numbers, or negation. A genuine quotation mismatch permits one counted ledger correction within the workflow budget; repeated mismatches remain blocked. Corrected claims still require the normal coverage and source-first audit checks before a proposal can be saved.
-
-### Authorization fails before a website or PDF upload
-
-Workflow authorization currently covers the configured primary AI provider and local Ollama embeddings. Optional Jev modes must be off for this workflow. If the UI reports that optional Jev provider modes are enabled, restart the backend with:
-
-```bash
-JEV_INTERVIEW_MODE=off JEV_RERANK_MODE=off JEV_EVIDENCE_MODE=off uv run python run.py
-```
-
-Run this from `backend/` with the usual application environment loaded. These process overrides preserve `.env` settings for separate Jev evaluations. The UI checks configuration before authorization and displays the server's error reason when a request fails. After restarting, refresh the page and authorize your selected sources again.
-
-## Configuration
-
-All settings are in `.env` (copy from `.env.example`):
-
-```bash
-# LLM — points to local Ollama (OpenAI-compatible API)
-LLM_API_KEY=ollama
-LLM_BASE_URL=http://localhost:11434/v1
-LLM_MODEL_NAME=qwen2.5:32b
-
-# Neo4j
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=<unique-local-password>
-
-# Embeddings
-EMBEDDING_PROVIDER=ollama
-EMBEDDING_MODEL=nomic-embed-text
-EMBEDDING_BASE_URL=http://localhost:11434
-EMBEDDING_DIMENSIONS=768
-
-# External market lookups are disabled unless explicitly enabled
-MARKET_DATA_PROVIDER=none
-```
-
-OpenAI-compatible providers use the chat-completions transport. The backend and
-OASIS also support MiniMax through the Anthropic Messages adapter.
-
-### MiniMax M3
-
-To use M3 for generation and simulation, set these values in `.env`:
-
-```dotenv
-LLM_DEFAULT_PROVIDER=minimax
-LLM_API_KEY=your-minimax-api-key
-LLM_BASE_URL=https://api.minimax.io/anthropic
-LLM_MODEL_NAME=MiniMax-M3
-LLM_TRANSPORT=anthropic_messages
-```
-
-Both `LLMClient` and the OASIS/CAMEL adapter read `LLM_MODEL_NAME`.
-`MINIMAX_MODEL` alone is not read by these paths. If you keep legacy
-`OPENAI_API_KEY` and `OPENAI_API_BASE_URL` aliases, match them to `LLM_API_KEY`
-and `LLM_BASE_URL`. Compose respects the selected LLM endpoint; Neo4j and
-Ollama embeddings still use container service names. With M3, pull only the
-embedding model in the Docker quick start.
-
-Restart the manual backend after editing `.env`. For Docker, recreate the app
-with `docker compose up -d --force-recreate`; an image rebuild
-is needed only when application code changes. Check `GET /api/status` for
-`data.llm.model == "MiniMax-M3"`. Saved simulations that explicitly specify an
-LLM model (including economy configuration) should be re-prepared before a new
-run; the switch does not rewrite old simulation artifacts.
-
-See MiniMax's [Anthropic API documentation](https://platform.minimax.io/docs/api-reference/text-anthropic-api)
-for the supported M3 model ID and endpoint.
-
-Embeddings default to local Ollama. To benchmark Gemini, set `EMBEDDING_PROVIDER=gemini`, `GEMINI_API_KEY`, and `GEMINI_EMBEDDING_MODEL=gemini-embedding-2`; rebuild or re-embed graphs before searching with a different embedding provider.
-
-Runtime readiness is exposed at `GET /api/status`. It reports Neo4j, embedding,
-SQLite control-plane, migration, and simulation-restart status. The lightweight
-container liveness endpoint is `GET /health`. The home page shows [storage and model metadata readiness](docs/readiness.md); status polling never generates text or embeddings. A listed model is not an inference test.
-
-Project, case, task, and simulation metadata is stored transactionally in
-the SQLite database under `backend/uploads/`. New background tasks retain
-worker/attempt ownership; expired attempts fail honestly and require manual retry.
-Existing JSON metadata is imported once without
-being deleted; uploaded documents and generated artifacts remain on disk. See
-[`docs/control-plane-migration.md`](docs/control-plane-migration.md) for backup,
-migration, and recovery details.
-
-Root report generation assigns one `request_key` per logical browser request.
-Network retries reuse its task/report identity while the task record is retained;
-a new manual invocation receives a new key. Generation also requires an explicit
-workflow authorization in the browser, backed by the SQLite control database.
-Choose the provider/model, frozen inputs, maximum physical requests and runtime
-before upload. The aggregate allowance includes graph/profile workers, simulation
-children, memory updates, report/proposal work and actual transport retries.
-Refresh and manual retries retain consumed requests.
-
-The workflow bar displays usage, remaining requests and effective terminal reason.
-**Stop** closes admission and preserves partial output; an already submitted
-request may still incur provider billing. Interrupted reports stop polling and
-require explicit recovery with new authorization. Request/time controls do not
-enforce a dollar ceiling. See [the execution contract](docs/workflow-execution.md)
-for API use, supported providers and recovery semantics.
-
-Run the embedding benchmark from `backend/`:
-
-```bash
-uv run python scripts/benchmark_embeddings.py --providers ollama gemini --graph-id <graph_id>
-```
-
-## Architecture
-
-CrowdLens uses an abstraction layer between the application and the graph database:
-
-```
-┌─────────────────────────────────────────┐
-│              Flask API                   │
-│ graph.py simulation.py diagnostics.py   │
-│ report.py market.py status.py           │
-└──────────────┬──────────────────────────┘
-               │ app.extensions['neo4j_storage']
-┌──────────────▼──────────────────────────┐
-│           Service Layer                  │
-│ ControlPlane  SimulationRunner           │
-│ GraphBuilder  GraphTools  ReportAgent    │
-└──────────────┬──────────────────────────┘
-               │ storage: GraphStorage
-┌──────────────▼──────────────────────────┐
-│         GraphStorage (abstract)          │
-│              │                            │
-│    ┌─────────▼─────────┐                │
-│    │   Neo4jStorage     │                │
-│    │  ┌───────────────┐ │                │
-│    │  │ EmbeddingService│ ← Ollama       │
-│    │  │ NERExtractor   │ ← Ollama LLM   │
-│    │  │ SearchService  │ ← Hybrid search │
-│    │  └───────────────┘ │                │
-│    └───────────────────┘                │
-└─────────────────────────────────────────┘
-       │ graph/search          │ workflow metadata
-┌──────▼──────┐         ┌─────▼──────────────┐
-│ Neo4j 5.18 │         │ SQLite control DB  │
-└─────────────┘         └────────────────────┘
-```
-
-**Key design decisions:**
-
-- `GraphStorage` is an abstract interface — swap Neo4j for any other graph DB by implementing one class
-- Flask `app.extensions` provides runtime dependencies; existing manager singletons remain process-local and coordinate durable task ownership through SQLite
-- SQLite WAL transactions for restart-safe project, case, task, and run metadata
-- Uploaded files and large generated artifacts remain on the filesystem
-- Hybrid search: 0.7 × vector similarity + 0.3 × BM25 keyword search
-- Synchronous NER/RE extraction via local LLM (replaces Zep's async episodes)
-- All original dataclasses and LLM tools (InsightForge, Panorama, Agent Interviews) preserved
-
-## Hardware Requirements
-
-| Component | Minimum | Recommended |
-|---|---|---|
-| RAM | 16 GB | 32 GB |
-| VRAM (GPU) | 10 GB (14b model) | 24 GB (32b model) |
-| Disk | 20 GB | 50 GB |
-| CPU | 4 cores | 8+ cores |
-
-CPU-only mode works but is significantly slower for LLM inference. For lighter setups, use `qwen2.5:14b` or `qwen2.5:7b`.
-
-## Development checks
-
-```bash
-UV_PYTHON=3.11 npm test # backend + frontend unit/component suites
-npm run build     # production frontend bundle
-UV_PYTHON=3.11 npm run check # tests + build
-npm audit --audit-level=moderate
-npm audit --prefix frontend --audit-level=moderate
-```
-
-Pull requests also run backend tests, frontend unit/component tests, the
-frontend build, root and frontend dependency audits, Compose validation, and a
-Docker image build. Unit/component checks and synthetic report checks do not
-establish a complete live-provider pipeline or independently measured report quality.
-
-The [2026-10-03 report reliability audit](docs/audits/2026-10-03-report-reliability.md)
-records a fresh visible MiniMax-M3 upload → graph → four personas → two OASIS
-rounds → root report → source proposal → accepted revision → reload/history reopen
-on frozen application candidate `7f4d68e`. Original reports and failed attempts
-remain preserved. **563 backend and 63 frontend tests plus build pass.** One
-fictional journey verifies that boundary; independent claim/omission quality,
-cross-packet reliability and exact-candidate release/deployment checks remain open.
-The retained report includes a Round 1 contradiction that its mechanical score
-missed; the saved revision remains Needs review. The [semantic-review follow-up](docs/audits/2026-10-03-semantic-review.md) checks explicit action counts and trace author/round/origin assertions, carries unresolved proposal findings into new revisions, and displays a read-only current assessment on retained reports. These limited checks do not certify truth or completeness. Four actual MiniMax-M3 held-out proposal drafts are now [prepared for human source review](docs/evaluations/2026-10-03-source-review-v2.md): 0/4 ready under existing gates, nine requests. Independent ratings and measured reviewer effort remain pending; application behavior is unchanged.
-The [previous live tests](docs/audits/2026-10-03-live-cedarbrook.md) retain their
-separate mixed-candidate and blocked outcomes.
-
-## Use Cases
-
-- **Communication planning** — explore possible responses to a draft announcement.
-- **Market scenario exploration** — examine simulated reactions to financial news.
-- **Policy scenario exploration** — compare possible responses to a policy proposal.
-- **Research and storytelling** — study agent interactions under different assumptions.
+Local models need a capable machine. See the
+[hardware requirements](docs/setup.md#hardware-requirements) for memory, VRAM,
+and lighter model options.
 
 ## Documentation
+
+- [Setup and configuration](docs/setup.md) — manual install, providers, architecture, hardware, development checks
+- [Product capabilities, contracts, and verification gaps](docs/product-capabilities.md)
+- [Architecture](docs/architecture.md)
+- [Evidence-first report proposals and revisions](docs/evidence-first-reports.md)
+- [Workflow request/time authorization and Stop contract](docs/workflow-execution.md)
+- [Roadmap](ROADMAP.md)
+- [Verification history](docs/verification-history.md)
+
+<details>
+<summary>All documentation</summary>
 
 - [Report reliability tasks and fresh actual-provider acceptance](docs/audits/2026-10-03-report-reliability.md)
 - [Completed corrective task checklist](docs/tasks/2026-10-03-report-reliability.md)
@@ -358,6 +198,8 @@ separate mixed-candidate and blocked outcomes.
 - [CrowdLens brand and rebrand plan](docs/rebranding.md)
 - [Historical migration progress](docs/progress.md)
 
+</details>
+
 ## License
 
 AGPL-3.0. See [LICENSE](./LICENSE).
@@ -366,40 +208,12 @@ AGPL-3.0. See [LICENSE](./LICENSE).
 
 CrowdLens is a modified fork of the original work by [666ghj](https://github.com/666ghj), incorporating the local-runtime fork maintained by [nikmcfly](https://github.com/nikmcfly), originally supported by [Shanda Group](https://www.shanda.com/). The simulation engine is powered by [OASIS](https://github.com/camel-ai/oasis) from the CAMEL-AI team.
 
+The product name has changed; existing storage paths and Docker service names remain compatible.
+See [the rebrand plan and compatibility notes](docs/rebranding.md).
+
 **Modifications in this fork:**
 - Backend migrated from Zep Cloud to local Neo4j CE + Ollama
 - Entire frontend translated from Chinese to English (20 files, 1,000+ strings)
 - All Zep references replaced with Neo4j across the UI
 - Rebranded the product to CrowdLens, with updated UI, visual assets, and documentation
 - Preserved original author and contributor attribution and existing runtime identifiers
-
-## Source coverage repair follow-up
-
-[Source coverage and summary repair](docs/audits/2026-10-03-source-coverage-repair.md) implements bounded companion-document retrieval, source metadata preservation, planned-claim coverage and server-resolved exact summary spans. Final check passes 673 tests and build. Fresh v3 actual MiniMax verification retrieved all eight current originals, with one ready and three blocked proposals after 11 requests; strict guards and original reports are preserved. Independent Astra max review finds all 28 material section facts covered; 31 of 33 claim judgments are supported, one unsupported and one ambiguous. These AI opinions stay separate from still-unmeasured human labels/time. This does not establish broad factual quality or release readiness.
-
-## Claim grounding and summary contract follow-up — 2026-10-04
-
-[Contract completion](docs/audits/2026-10-04-draft-contract-completion.md) requires complete explicit AI source judgments, checks resulting-summary consistency even with edits, and confines server-owned summary replacements to a unique literal selected-section span. Unmapped summaries stay unchanged for review; strict legacy contracts remain compatible. Title-topic retrieval and raw target exports are covered by separate regressions. All 694 tests and the build pass, with independent code review and a visible provider-disabled immutable-revision test. Fresh MiniMax v4/v5 each retain 0 ready out of four attempts (8/10 requests); v5 retrieves all eight originals and preserves all parents, but actual-model JSON, premise and semantic-audit reliability remain unresolved. Human labels/time remain unmeasured. These scoped fixes do not establish factual certification, end-to-end or release readiness. Next: separate development work on provider contract and audit reliability, then new frozen verification cases.
-
-## Output reliability follow-up — 2026-10-05
-
-[JSON, summary and explicit audit contracts](docs/audits/2026-10-05-output-reliability.md) now build default summary wording from selected ledger claims, retain one counted syntax correction per phase, and require complete claim/paragraph/edit/document judgments for fresh proposals. Mixed or missing protocols and negative judgments block. Final check: 713 tests/build and independent code review pass. Fresh v6 MiniMax verification retains 4/4 ready proposals, 12 requests, all eight originals and unchanged parents; the final stricter gate revalidates those retained audits without rerunning v6. Astra max covers all 22 material facts and rates 24 of 25 claims supported, but flags one conditional-to-universal inference also repeated in its summary. Ready remains reviewable, not factual approval. Human ratings/time remain unmeasured; no actual proposal was accepted or published. Followed by the conditional-correction and completion milestones below.
-
-Conditional-offer correction (2026-10-05): exact source extraction and acceptance guards prevent detected offer conditions being rewritten as prerequisites; 728 tests/build pass. Fresh v7 attempts were 0/2 ready (both conservatively blocked). A separate Elmreach correction received source-first AI support for all four claims; original evidence remains frozen. See [audit](docs/audits/2026-10-05-conditional-fidelity.md).
-
-Conditional completion (2026-10-05): server-owned complete source excerpts avoid guarded paraphrase false positives; 752 tests/build and independent code review pass. Two ready development drafts received source-first AI support (7/7 claims, 10/10 material facts); all eight development attempts remain counted. Frozen v8 stays 0/2 ready due ordinary draft omissions and no source anchor. No publication or release-readiness claim. See [audit](docs/audits/2026-10-05-conditional-completion.md).
-
-Claim coverage (2026-10-06): structurally valid drafts now receive exact persisted-ledger paragraphs for omitted claims, with recorded provenance and a 60-paragraph ceiling. Malformed drafts remain blocked; source audits still inspect every claim and paragraph. Saving rechecks complete claim linkage. See [verification receipt](docs/tasks/2026-10-06-claim-coverage.md).
-
-Source accounting (2026-10-06): each retrieved window must be represented by a ledger citation or an explicit task-irrelevance reason. One counted planning correction addresses missing windows without expanding the claim ceiling. The source audit still checks exclusions and material completeness; abstract whole-report summaries retain their existing edit boundary. See [receipt](docs/tasks/2026-10-06-source-accounting.md).
-
-Whole-report source audit (2026-10-07): corrected verified source omissions and overstatements, retained the original and frozen scenario numbers, and added bounded source prioritization, document-ID validation and legal scenario display limits. Final local validation passes 807 tests/build; dependency audits are clean. The private candidate remains `needs_review`. See [audit receipt](docs/tasks/2026-10-07-full-report-audit.md).
-
-Focused corrections and participant coverage (2026-10-10): report sections support
-source-checked date/number patches and single-statement wording corrections saved
-as separate Needs review revisions. Model audits remain fallible. Capped
-legal preparation retains explicit plaintiff/defendant types when available and
-shows coverage warnings. See the [usage guide](docs/evidence-first-reports.md#focused-date-and-number-corrections)
-and [verification receipt](docs/audits/2026-10-10-focused-correction-participants.md).
-
-Wording correction and longer-run verification: [receipt](docs/audits/2026-10-10-wording-corrections.md).
