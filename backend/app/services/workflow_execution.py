@@ -101,8 +101,12 @@ class WorkflowLedger:
             raise ValueError('invalid_max_seconds')
 
     def authorize(self, *, request_key, provider, model, base_url, input_description,
-                  max_requests, max_seconds, confirmed, consumed_requests=0, input_fingerprint=None, resources=(), spend=None):
+                  max_requests, max_seconds, confirmed, consumed_requests=0, input_fingerprint=None, resources=(), spend=None,
+                  fallback=None):
         self._limits(max_requests, max_seconds, confirmed)
+        if fallback is not None and not (isinstance(fallback, dict) and all(
+                isinstance(fallback.get(k), str) and 0 < len(fallback[k]) <= 500 for k in ('provider', 'model', 'base_url'))):
+            raise ValueError('invalid_fallback_identity')
         if not all(isinstance(x, str) and 0 < len(x) <= 500 for x in
                    (request_key, provider, model, base_url, input_description)):
             raise ValueError('invalid_authorization_identity')
@@ -119,8 +123,12 @@ class WorkflowLedger:
                 or any(c not in '0123456789abcdef' for c in input_fingerprint)):
             raise ValueError('invalid_input_fingerprint')
         with self.transaction() as db:
-            request_identity = dict(identity)
             managed = quotas.managed(db)
+            # Priced and administrator-quota workflows price one model, so they get no backup.
+            if fallback is not None and not managed and spend is None:
+                identity['fallback'] = dict(provider=fallback['provider'], model=fallback['model'],
+                                            endpoint_identity=endpoint_identity(fallback['base_url']))
+            request_identity = dict(identity)
             if consumed_requests and (managed or spend is not None):
                 raise ValueError('legacy_usage_cannot_be_priced')
             if managed:
@@ -221,9 +229,10 @@ class WorkflowLedger:
             self._expire(record)
             if quotas.managed(db) and not record.get('administrator_quotas'):
                 quotas.halt('legacy_workflow_requires_new_authorization')
+            provider = self._authorized_provider(record, model, base_url)
             if epoch != record['epoch']:
                 reason = 'authorization_superseded'
-            elif model != record['model'] or endpoint_identity(base_url) != record['endpoint_identity']:
+            elif provider is None:
                 reason = 'provider_not_authorized'
             elif record['state'] != 'authorized':
                 reason = record['reason'] or record['state']
@@ -243,7 +252,7 @@ class WorkflowLedger:
                     sequence=record['admitted'], stage=stage, model=model, task_id=task_id,
                     owner_attempt=owner_attempt, attempt_number=attempt_number, admitted_at=now,
                     finished_at=None, status='in_flight', usage=None, http_status=None)
-                quotas.admit(db, current_workspace(), now, ticket, record['provider'], model, endpoint_identity(base_url))
+                quotas.admit(db, current_workspace(), now, ticket, provider, model, endpoint_identity(base_url))
                 if spend:
                     ticket['spend'] = dict(reserved_micro_usd=spend['reserve_micro_usd'],
                                            estimated_micro_usd=None, reservation_exceeded=False)
@@ -256,6 +265,20 @@ class WorkflowLedger:
         if reason:
             raise WorkflowHalt(reason, wid)
         return ticket
+
+    @staticmethod
+    def _authorized_provider(record, model, base_url):
+        """The provider this workflow authorized for model and endpoint, else None."""
+        endpoint = endpoint_identity(base_url)
+        for item in (record, record.get('fallback') or {}):
+            if item.get('model') == model and item.get('endpoint_identity') == endpoint:
+                return item['provider']
+        return None
+
+    def authorizes(self, wid, model, base_url):
+        """True when this workflow may send calls to model at base_url."""
+        with self.transaction() as db:
+            return self._authorized_provider(self._read(db, wid), model, base_url) is not None
 
     def finish(self, ticket, *, status, usage=None, http_status=None):
         if not isinstance(usage, dict):
@@ -480,6 +503,14 @@ def execution_scope(ledger, wid, stage, *, epoch=None):
         yield scope
     finally:
         _SCOPE.reset(token)
+
+
+def scope_authorizes(model, base_url):
+    """True when the current workflow scope may call model at base_url."""
+    scope = current_scope()
+    if scope is None:
+        return _ALLOW_UNSCOPED
+    return scope.ledger.authorizes(scope.workflow_id, model, base_url)
 
 
 @contextmanager

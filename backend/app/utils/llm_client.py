@@ -6,6 +6,8 @@ Supports Ollama num_ctx parameter to prevent prompt truncation
 
 from .model_limits import anthropic_output_settings
 from .llm_text import clean_model_text
+from .llm_fallback import (fallback_settings, is_limit_error, mark_primary_limited, primary_limited,
+                           same_endpoint, usable_backup)
 
 import json
 import os
@@ -36,8 +38,12 @@ class LLMClient:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         model: Optional[str] = None,
-        timeout: float = 300.0
+        timeout: float = 300.0,
+        *,
+        fallback: bool = True,
     ):
+        self.fallback = fallback
+        self._backup_client = None
         self.api_key = api_key or Config.LLM_API_KEY
         self.base_url = base_url or Config.LLM_BASE_URL
         self.model = model or Config.LLM_MODEL_NAME
@@ -70,7 +76,7 @@ class LLMClient:
         messages: List[Dict[str, str]],
         temperature: float = 0.7,
         max_tokens: int = 4096,
-        *, request_timeout=None, request_max_retries=None, usage_callback=None,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None, failover_on_limit=False,
     ) -> str:
         """Send chat request to an Anthropic Messages compatible endpoint."""
         system_messages = [m.get("content", "") for m in messages if m.get("role") == "system"]
@@ -99,7 +105,8 @@ class LLMClient:
         started = time.monotonic()
         try:
             response = self._post_anthropic_with_retry(url, headers, body,
-                request_timeout=request_timeout, request_max_retries=request_max_retries)
+                request_timeout=request_timeout, request_max_retries=request_max_retries,
+                failover_on_limit=failover_on_limit)
             data = response.json()
         except Exception:
             if usage_callback:
@@ -131,7 +138,7 @@ class LLMClient:
         url: str,
         headers: Dict[str, str],
         body: Dict[str, Any],
-        *, request_timeout=None, request_max_retries=None,
+        *, request_timeout=None, request_max_retries=None, failover_on_limit=False,
     ) -> requests.Response:
         max_retries = int(os.environ.get("LLM_HTTP_MAX_RETRIES", "4")) if request_max_retries is None else request_max_retries
         base_delay = float(os.environ.get("LLM_HTTP_RETRY_BASE_SECONDS", "2"))
@@ -157,6 +164,8 @@ class LLMClient:
                 requests.exceptions.Timeout,
                 requests.exceptions.HTTPError,
             ) as exc:
+                if failover_on_limit and is_limit_error(exc):
+                    raise
                 if isinstance(exc, requests.exceptions.HTTPError):
                     status_code = exc.response.status_code if exc.response is not None else 0
                     if status_code and status_code < 500 and status_code != 429:
@@ -175,6 +184,20 @@ class LLMClient:
 
         raise last_error or RuntimeError("Anthropic-compatible LLM request failed")
 
+    def _backup(self):
+        """The backup client, or None when no backup is configured and authorized."""
+        if not getattr(self, 'fallback', True):
+            return None
+        settings = fallback_settings()
+        if (not settings or same_endpoint(settings['model'], settings['base_url'], self.model, self.base_url)
+                or not usable_backup(settings)):
+            return None
+        if getattr(self, '_backup_client', None) is None:
+            self._backup_client = LLMClient(api_key=settings['api_key'], base_url=settings['base_url'],
+                                            model=settings['model'], timeout=self.timeout, fallback=False)
+            self._backup_client.extra_body = settings['extra_body']
+        return self._backup_client
+
     def chat(
         self,
         messages: List[Dict[str, str]],
@@ -182,6 +205,30 @@ class LLMClient:
         max_tokens: int = 4096,
         response_format: Optional[Dict] = None,
         *, request_timeout=None, request_max_retries=None, usage_callback=None,
+    ) -> str:
+        """Send a chat request; use the backup model when the main one is rate limited."""
+        call = dict(messages=messages, temperature=temperature, max_tokens=max_tokens,
+                    response_format=response_format, request_timeout=request_timeout,
+                    request_max_retries=request_max_retries, usage_callback=usage_callback)
+        backup = self._backup()
+        if backup and primary_limited(self.model, self.base_url):
+            return backup.chat(**call)
+        try:
+            return self._chat_once(**call, failover_on_limit=backup is not None)
+        except Exception as exc:
+            if not backup or not is_limit_error(exc):
+                raise
+            logger.warning("Main LLM %s is rate limited (%s); using backup %s", self.model, exc, backup.model)
+            mark_primary_limited(self.model, self.base_url)
+            return backup.chat(**call)
+
+    def _chat_once(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float = 0.7,
+        max_tokens: int = 4096,
+        response_format: Optional[Dict] = None,
+        *, request_timeout=None, request_max_retries=None, usage_callback=None, failover_on_limit=False,
     ) -> str:
         """
         Send chat request
@@ -201,6 +248,7 @@ class LLMClient:
                 temperature=temperature,
                 max_tokens=max_tokens,
                 request_timeout=request_timeout, request_max_retries=request_max_retries, usage_callback=usage_callback,
+                failover_on_limit=failover_on_limit,
             )
 
         kwargs = {
@@ -218,6 +266,8 @@ class LLMClient:
             kwargs["extra_body"] = {
                 "options": {"num_ctx": self._num_ctx}
             }
+        if getattr(self, 'extra_body', None):
+            kwargs["extra_body"] = dict(kwargs.get("extra_body") or {}, **self.extra_body)
 
         client = self.client
         overrides = {}
@@ -237,6 +287,8 @@ class LLMClient:
                         receipt['http_status'] = 200
                     break
                 except (APIConnectionError, APITimeoutError, APIStatusError) as exc:
+                    if failover_on_limit and is_limit_error(exc):
+                        raise
                     status = getattr(exc, 'status_code', None)
                     if attempt >= retries or (status and status < 500 and status != 429):
                         raise

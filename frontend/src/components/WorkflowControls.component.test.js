@@ -187,3 +187,25 @@ it('does not present an omitted unknown-usage count as zero', async () => {
   await flushPromises()
   expect(wrapper.text()).toContain('Unknown token usage count not reported')
 })
+it('names the backup model before authorization', async () => {
+  getExecutionConfiguration.mockResolvedValueOnce({data:{provider:'minimax',model:'main',controls_available:true,configured:true,
+    fallback:{provider:'openrouter',model:'deepseek/deepseek-v4.1-flash'}}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,inputDescription:'fictional',inputFingerprint:'abc'}})
+  await flushPromises()
+  expect(wrapper.get('.fallback-provider').text()).toContain('openrouter · Model: deepseek/deepseek-v4.1-flash')
+})
+it('shows no backup line when no backup is configured', async () => {
+  wrapper = mount(WorkflowControls, {props:{authorize:true,inputDescription:'fictional',inputFingerprint:'abc'}})
+  await flushPromises()
+  expect(wrapper.find('.fallback-provider').exists()).toBe(false)
+})
+it('sends the backup it showed with the authorization', async () => {
+  const fallback = {provider:'openrouter',model:'deepseek/deepseek-v4.1-flash'}
+  getExecutionConfiguration.mockResolvedValueOnce({data:{provider:'minimax',model:'main',controls_available:true,configured:true,fallback}})
+  authorizeWorkflow.mockResolvedValueOnce({data:{workflow_id:'wf_backup',state:'authorized',admitted:0,max_requests:60,in_flight:0}})
+  wrapper = mount(WorkflowControls, {props:{authorize:true,inputDescription:'fictional',inputFingerprint:'abc'}})
+  await flushPromises()
+  await wrapper.get('button').trigger('click')
+  await flushPromises()
+  expect(authorizeWorkflow.mock.calls[0][0].fallback).toEqual(fallback)
+})

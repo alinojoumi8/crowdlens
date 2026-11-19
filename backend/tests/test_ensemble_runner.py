@@ -59,3 +59,25 @@ def test_ensemble_preserves_final_economic_evidence(monkeypatch, harness):
     monkeypatch.setattr(ForecastSynthesizer, 'build_simulation_signal', lambda self: {'net_sentiment': 0.2, 'total_actions': 3})
     EnsembleRunner.run_ensemble('sim_test', runs=2)
     assert (directory / 'economy.db').read_text() == 'last sample evidence'
+
+
+def test_sample_time_limit_grows_with_rounds(monkeypatch, harness):
+    # A 72-round sample needs about 24 minutes; the old fixed 20-minute limit stopped it.
+    timeouts = []
+    def wait(simulation_id, timeout):
+        timeouts.append(timeout)
+        return True
+    monkeypatch.setattr(EnsembleRunner, '_wait_for_completion', staticmethod(wait))
+    monkeypatch.setattr(ForecastSynthesizer, 'build_simulation_signal', lambda self: {'net_sentiment': 0.1, 'total_actions': 2})
+    EnsembleRunner.run_ensemble('sim_test', runs=1)
+    # The harness config has no time_config: 72 hours at 30 minutes per round = 144 rounds.
+    assert timeouts == [144 * 60.0]
+
+
+@pytest.mark.parametrize('time_config, max_rounds, expected', [
+    ({'total_simulation_hours': 72, 'minutes_per_round': 60}, None, 72 * 60.0),
+    ({'total_simulation_hours': 72, 'minutes_per_round': 60}, 10, 1200.0),
+    ({}, None, 144 * 60.0),
+])
+def test_run_timeout(time_config, max_rounds, expected):
+    assert EnsembleRunner._run_timeout({'time_config': time_config}, max_rounds) == expected

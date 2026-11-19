@@ -40,6 +40,8 @@ logger = get_logger("mirofish.ensemble")
 class EnsembleRunner:
     DEFAULT_RUNS = 3
     MAX_RUNS = 10
+    MIN_RUN_TIMEOUT = 1200.0
+    SECONDS_PER_ROUND = 60.0
 
     @classmethod
     def run_ensemble(
@@ -51,7 +53,7 @@ class EnsembleRunner:
         storage: Any = None,
         memory_mode: str = "practical",
         economy: Optional[Dict[str, Any]] = None,
-        per_run_timeout: float = 1200.0,
+        per_run_timeout: Optional[float] = None,
         progress_callback: Optional[Callable[[int, int, Optional[Dict[str, Any]]], None]] = None,
     ) -> Dict[str, Any]:
         config = cls._load_config(simulation_id)
@@ -66,6 +68,8 @@ class EnsembleRunner:
         runs = max(1, min(int(runs or settings.ensemble_runs or cls.DEFAULT_RUNS), cls.MAX_RUNS))
         graph_id = config.get("graph_id")
         economy = config.get("economy") if economy is None else economy
+        if per_run_timeout is None:
+            per_run_timeout = cls._run_timeout(config, max_rounds)
 
         per_run_net: List[float] = []
         per_run_probs: List[List[float]] = []
@@ -181,6 +185,17 @@ class EnsembleRunner:
             raise
         except Exception as exc:
             logger.debug("stop_simulation during reset: %s", exc)
+
+    @classmethod
+    def _run_timeout(cls, config: Dict[str, Any], max_rounds: Optional[int]) -> float:
+        """Allow each sample time for every round it must run."""
+        time_config = config.get("time_config") or {}
+        hours = time_config.get("total_simulation_hours", 72)
+        minutes = time_config.get("minutes_per_round", 30) or 30
+        rounds = int(hours * 60 / minutes)
+        if max_rounds is not None and max_rounds > 0:
+            rounds = min(rounds, max_rounds)
+        return max(cls.MIN_RUN_TIMEOUT, rounds * cls.SECONDS_PER_ROUND)
 
     @staticmethod
     def _wait_for_completion(simulation_id: str, timeout: float) -> bool:
