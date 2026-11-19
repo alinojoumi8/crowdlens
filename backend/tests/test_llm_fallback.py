@@ -31,9 +31,9 @@ def backup_env(monkeypatch):
     llm_fallback.reset()
 
 
-def authorize(ledger, fallback=FALLBACK, spend=None, key='fallback'):
+def authorize(ledger, fallback=FALLBACK, spend=None, key='fallback', max_requests=10):
     return ledger.authorize(request_key=key, provider='minimax', model='main-model', base_url=MAIN,
-        input_description='fictional fixture', max_requests=10, max_seconds=60, confirmed=True,
+        input_description='fictional fixture', max_requests=max_requests, max_seconds=60, confirmed=True,
         fallback=fallback, spend=spend)['workflow_id']
 
 
@@ -240,3 +240,42 @@ def test_thinking_off_is_opt_in_for_openrouter(monkeypatch, provider, setting, e
     if setting:
         monkeypatch.setenv('LLM_FALLBACK_REASONING', setting)
     assert llm_fallback.fallback_settings()['extra_body'] == expected
+
+
+@pytest.mark.parametrize('transport', ['app-anthropic', 'app-openai', 'simulation-anthropic', 'simulation-openai'])
+def test_authorized_backup_gets_a_turn_before_retries_exhaust_allowance(monkeypatch, tmp_path, transport):
+    ledger = WorkflowLedger(tmp_path / 'control.sqlite')
+    wid = authorize(ledger, max_requests=2)
+    calls = []
+
+    def post(url, **kwargs):
+        if url.startswith(MAIN):
+            calls.append('main')
+            return response(429, {'error': {'type': 'rate_limit_error'}})
+        calls.append('backup')
+        return response(200, REPLY)
+
+    monkeypatch.setattr(requests, 'post', post)
+    messages = [{'role': 'user', 'content': 'fixture'}]
+    with execution_scope(ledger, wid, 'report'):
+        if transport.startswith('app'):
+            client = LLMClient(api_key='synthetic', base_url=MAIN, model='main-model')
+            backup_transport(client, calls)
+            if transport == 'app-openai':
+                def limited(request):
+                    calls.append('main')
+                    return httpx.Response(429, json={'error': {'type': 'rate_limit_error'}})
+                client.client = OpenAI(api_key='synthetic', base_url=MAIN, max_retries=0,
+                    http_client=httpx.Client(transport=httpx.MockTransport(limited)))
+                monkeypatch.setattr(client, '_is_anthropic_compatible', lambda: False)
+            assert client.chat(messages, request_max_retries=2) == 'from backup'
+        else:
+            from scripts.llm_provider_adapter import AnthropicMessagesModel, CountedOpenAIModel
+            model_class = AnthropicMessagesModel if transport == 'simulation-anthropic' else CountedOpenAIModel
+            model = model_class(model_type='main-model', api_key='synthetic', url=MAIN, max_retries=2)
+            assert model.run(messages).choices[0].message.content == 'from backup'
+        with pytest.raises(WorkflowHalt, match='request_limit'):
+            ledger.admit(wid, 1, 'report', 'backup-model', BACKUP)
+
+    assert calls == ['main', 'backup']
+    assert [a['model'] for a in ledger.status(wid)['attempts']] == ['main-model', 'backup-model']

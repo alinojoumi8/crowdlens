@@ -224,7 +224,7 @@ class AnthropicMessagesModel(BaseModelBackend):
             return backup._run(messages, response_format, tools)
         try:
             body = self._build_request_body(messages, response_format, tools)
-            data = self._post_messages(body)
+            data = self._post_messages(body, failover_on_limit=backup is not None)
             return self._to_chat_completion(data)
         except Exception as exc:
             if not backup or not is_limit_error(exc):
@@ -302,7 +302,7 @@ class AnthropicMessagesModel(BaseModelBackend):
 
         return body
 
-    def _post_messages(self, body: Dict[str, Any]) -> Dict[str, Any]:
+    def _post_messages(self, body: Dict[str, Any], *, failover_on_limit=False) -> Dict[str, Any]:
         base = self._url.rstrip('/')
         openai_transport = isinstance(self, CountedOpenAIModel)
         url = (base + ('/chat/completions' if base.endswith('/v1') else '/v1/chat/completions')) if openai_transport else base + '/v1/messages'
@@ -325,6 +325,8 @@ class AnthropicMessagesModel(BaseModelBackend):
                     receipt['usage'] = data.get('usage')
                 return data
             except requests.RequestException as exc:
+                if failover_on_limit and is_limit_error(exc):
+                    raise
                 status = exc.response.status_code if exc.response is not None else None
                 if status and status < 500 and status != 429:
                     raise
